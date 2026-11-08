@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.0.0 · 8 novembre 2026
+
+Bank et Studio prennent dans le design system tout ce qu’ils partagent, et ne gardent que ce qui leur est propre.
+
+- Nouveau : la coque des applis (`shell.css`) avec la page, l’en-tête et ses onglets, le chargement, les cartes et leurs titres, les messages, les listes et les sources en bas de page. Les règles qui avaient dérivé entre les deux applis n’ont plus qu’une version.
+- Nouveau : la base (`base.css`) avec les champs, les cases à cocher et le focus.
+- Nouveau : la page de réglages commune (`settings.css`), sous `body.settings`.
+- Les boutons s’appellent `.btn` (plus de préfixe `ds-`) ; Studio les prend aussi.
+- Retirés, faute d’appli qui les utilise : `ds-field`, `ds-check`, `ds-dates`, `ds-pill`, `ds-card`, `ds-tiles`, `ds-chip`, `ds-group`, `ds-amount`, `ds-spin`, `ds-progress`, `ds-sheet`.
+
 ## 1.0.0 · 8 novembre 2026
 
 Première version, tirée de Bank et Studio.

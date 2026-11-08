@@ -25,7 +25,8 @@
   .sw i { display: block; height: 34px; }
   .sw span { display: block; padding: 6px 8px; }
   .note { margin: 0; font-size: 13px; color: var(--dim); }
-  .demo-sheet { position: static; background: none; padding: 0; display: block; }
+  .theme header.top { padding-bottom: 12px; }
+  .theme .tabs { position: static; transform: none; }
   .rules { margin-top: 28px; }
   .rules li { margin: 4px 0; color: var(--dim); }
   .rules b { color: var(--ink); }
@@ -34,11 +35,11 @@
 <body>
 <div class="page">
   <h1>Design system</h1>
-  <p>Les couleurs, les polices et les composants communs à Bank, Studio, Selecta et alexispaoleschi.com. Chaque appli en garde une copie figée, <code>static/ds/ds-1.0.0.css</code>. Un style commun ne change qu’ici.</p>
+  <p>Les couleurs, les polices et les composants communs à Bank, Studio, Selecta et alexispaoleschi.com. Chaque appli en garde une copie figée, <code>static/ds/ds-2.0.0.css</code>, et ne garde dans ses pages que ce qui lui est propre. Un style commun ne change qu’ici.</p>
   <div class="themes" id="themes"></div>
 
-  <div class="ds-card rules">
-    <h2 class="ds-card-title">Règles</h2>
+  <div class="card rules">
+    <h2 class="ct">Règles</h2>
     <ul>
       <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer ou se déconnecter. Un seul bouton plein par écran.</li>
       <li><b>Couleurs.</b> Les applis n’utilisent que les rôles (<code>--accent</code>, <code>--panel</code>…). Le vert et le rouge sont réservés aux entrées et sorties d’argent et aux états. Pas de gris mêlé à une couleur dans un graphique.</li>
@@ -52,51 +53,33 @@
 <template id="theme">
   <section class="theme">
     <h2 class="t-name"><span></span><small></small></h2>
-    <div class="swatches">
-      <div class="sw"><i style="background:var(--bg)"></i><span>--bg</span></div>
-      <div class="sw"><i style="background:var(--panel)"></i><span>--panel</span></div>
-      <div class="sw"><i style="background:var(--accent)"></i><span>--accent</span></div>
-      <div class="sw"><i style="background:var(--ink)"></i><span>--ink</span></div>
-    </div>
-    <div class="ds-card">
-      <h3 class="ds-card-title">Boutons <button class="ds-btn is-act" type="button">Nouveau voyage</button></h3>
+    <header class="top"><span class="brand">Bank</span><nav class="tabs"><button type="button" aria-selected="true">Comptes</button><button type="button" aria-selected="false">Opérations</button></nav></header>
+    <div class="card">
+      <h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
       <div class="row">
-        <a class="ds-btn" href="#">Voir les opérations</a>
-        <button class="ds-btn is-act" type="button">Modifier</button>
-        <button class="ds-btn is-save" type="button">Enregistrer</button>
-        <button class="ds-btn is-danger" type="button">Supprimer</button>
-        <button class="ds-btn" type="button" disabled>Indisponible</button>
+        <a class="btn" href="#">Voir les opérations</a>
+        <button class="btn is-act" type="button">Modifier</button>
+        <button class="btn is-save" type="button">Enregistrer</button>
+        <button class="btn is-danger" type="button">Supprimer</button>
+        <button class="btn" type="button" disabled>Indisponible</button>
       </div>
     </div>
-    <div class="ds-card">
-      <h3 class="ds-card-title">Champs et menus</h3>
-      <div class="row" style="margin-bottom:10px">
-        <label class="ds-pill"><span>Tous les comptes</span><select aria-label="Comptes"><option>Tous les comptes</option></select></label>
-        <label class="ds-pill is-on"><span>Sorties</span><select aria-label="Sens"><option>Sorties</option></select></label>
-      </div>
-      <input class="ds-field" style="width:100%" placeholder="Nom, libellé ou montant">
-      <div class="ds-dates" style="margin-top:10px"><label>Du <input class="ds-field" type="date" value="2026-08-15"></label><label>au <input class="ds-field" type="date" value="2026-08-18"></label></div>
-      <div class="row" style="margin-top:10px"><label class="row"><input class="ds-check" type="checkbox" checked> Seulement cette opération</label></div>
+    <div class="card">
+      <h3 class="ct">Champs</h3>
+      <input style="width:100%" placeholder="Nom, libellé ou montant">
+      <div class="row" style="margin-top:10px"><select><option>Revenus › Salaire</option></select><input type="date" value="2026-08-15"></div>
+      <div class="row" style="margin-top:10px"><label class="row"><input type="checkbox" checked> Seulement cette opération</label></div>
     </div>
-    <div class="ds-tiles">
-      <div class="ds-tile"><span>Opérations</span><b>128</b></div>
-      <div class="ds-tile"><span>Entrées</span><b class="is-up">+3 225,00€</b></div>
-      <div class="ds-tile"><span>Sorties</span><b class="is-down">−1 263,08€</b></div>
+    <div class="card">
+      <h3 class="ct">Messages</h3>
+      <div class="msg good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
+      <div class="msg bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
     </div>
-    <div class="ds-card">
-      <h3 class="ds-card-title">Listes</h3>
-      <div class="ds-group">15 août 2026</div>
-      <div class="row" style="justify-content:space-between;margin-top:8px"><span>Magasins U <span class="ds-chip">Vendée 2026</span></span><span class="ds-amount">−119,89€</span></div>
-      <div class="row" style="justify-content:space-between;margin-top:8px"><span>Remboursement <span class="ds-chip is-good">Remboursé</span></span><span class="ds-amount is-up">+25,00€</span></div>
-      <div class="row" style="margin-top:14px"><span class="ds-progress"><i class="ds-spin is-lg"></i>42%</span><span class="note">Chargement des comptes…</span></div>
-    </div>
-    <div class="ds-sheet demo-sheet">
-      <div class="ds-sheet-card" style="width:100%">
-        <h3 class="ds-sheet-title">Modifier le voyage</h3>
-        <button class="ds-btn is-icon ds-sheet-x" type="button" aria-label="Fermer">×</button>
-        <input class="ds-field" style="width:100%" value="Vendée 2026">
-        <div class="ds-sheet-acts"><button class="ds-btn is-danger" type="button">Supprimer le voyage</button><button class="ds-btn is-save is-end" type="button">Enregistrer</button></div>
-      </div>
+    <div class="card">
+      <h3 class="ct">Listes</h3>
+      <h4 class="sect">Revolut</h4>
+      <ul class="rows"><li><span class="ttl">Compte courant</span></li><li><span class="ttl">Épargne</span></li></ul>
+      <p class="empty">Aucune opération pour ces filtres.</p>
     </div>
   </section>
 </template>
