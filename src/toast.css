@@ -1,0 +1,23 @@
+/* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
+   ds.js puts it on the page (ds.toast). */
+  .toasts { position: fixed; z-index: var(--z-toast); right: max(var(--s-16), env(safe-area-inset-right, 0px)); bottom: max(var(--s-16), env(safe-area-inset-bottom, 0px));
+    display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-8); pointer-events: none; }
+  .toast { pointer-events: auto; display: flex; align-items: center; gap: var(--s-10); box-sizing: border-box; max-width: min(400px, calc(100vw - 32px));
+    padding: var(--s-8) var(--s-8) var(--s-8) var(--s-14); background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--r-l);
+    box-shadow: var(--shadow-pop); color: var(--ink); font: 500 var(--fs-13)/var(--lh-ui) var(--body); animation: toast-in var(--t-mid) ease-out; }
+  .toast.out { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
+  .toast .mark { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .toast.is-good .mark { background: var(--good); }
+  .toast.is-bad .mark { background: var(--bad); }
+  .toast.is-busy .mark { width: 12px; height: 12px; box-sizing: border-box; background: none; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  .toast .txt { flex: 1 1 auto; min-width: 0; }
+  .toast .act, .toast .x { flex: none; background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
+  .toast .act { color: var(--accent); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
+  .toast .x { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
+  .toast .act:hover, .toast .x:hover { color: var(--ink); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @media (prefers-reduced-motion: reduce) { .toast, .toast.out { animation: none; transition: none; transform: none; } }
+@media (max-width: 640px) {
+    .toasts { left: var(--s-12); right: var(--s-12); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
+    .toast { max-width: none; }
+}

@@ -34,6 +34,8 @@
   --shadow-sheet: 0 12px 32px color-mix(in srgb, var(--black) 45%, transparent);
   /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
      the same four everywhere, 420, 640, 980 and 1280px */
+  /* the widest a page grows, the same in every app */
+  --page-max: 1500px;
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
   --r-s: 4px; --r-m: 6px; --r-l: 8px;
   --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;

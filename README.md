@@ -14,12 +14,13 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 - `src/panel.css` : le panneau de filtres, venu de Studio : l’onglet sur le bord, le panneau, ses groupes de boutons à allumer ou éteindre, le tiroir sur téléphone.
 - `src/period.css` : l’en-tête de période, le même pour les opérations de Bank et le calendrier de Studio : le grand titre qui ouvre le sélecteur, les flèches à droite.
 - `src/doc.css` : les petites pages d’une appli (confidentialité, conditions, déconnexion), sous `body.doc`.
+- `src/toast.css` et `src/ds.js` : le message passager, en bas à droite (au-dessus de la barre d’onglets sur téléphone). `ds.toast({type, text, action})`, type `good`, `info`, `busy` ou `bad`. `dist/ds.js` est le seul code commun ; une appli le copie comme `dist/ds.css`.
 - `src/settings.css` : la page de réglages commune, rangée sous `body.settings`.
 - `dist/ds.css` : tout réuni, le seul fichier que les applis copient. Il se refait avec `scripts/build.sh`.
 
 ## Dans une appli
 
-Chaque appli garde une copie figée d’une version : `static/ds/ds-2.8.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.9.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
 
 Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
 

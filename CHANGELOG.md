@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.9.0 · 8 novembre 2026
+
+Une seule largeur, et le message passager.
+
+- `--page-max: 1500px` et `.wrap` : toutes les applis ont la même largeur de page, celle de Studio (Bank passe de 1100 à 1500px).
+- Nouveau : le message passager (`toast.css`) et le premier code commun (`dist/ds.js`) : `ds.toast({type, text, action, duration})`, en bas à droite, trois au plus, la même phrase ne s’empile pas, le compte à rebours attend tant qu’on le survole. Bank y passe ses messages.
+- Bank : dans le panneau de filtres, chaque compte tient sur une ligne : la banque seule pour son compte principal, le nom du compte seul pour les autres.
+
 ## 2.8.0 · 8 novembre 2026
 
 Un seul jeu d’onglets.

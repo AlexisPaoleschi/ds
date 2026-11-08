@@ -114,3 +114,5 @@
 @media (max-width: 640px) {
     .v { font-size: var(--fs-12); min-width: 68px; }
 }
+  /* the page: one width for every app, the margins clear of the phone's edges */
+  .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(var(--s-16), env(safe-area-inset-left, 0px)); padding-right: max(var(--s-16), env(safe-area-inset-right, 0px)); }

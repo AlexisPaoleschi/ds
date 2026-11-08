@@ -1,4 +1,4 @@
-/* ds 2.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.9.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -35,6 +35,8 @@
   --shadow-sheet: 0 12px 32px color-mix(in srgb, var(--black) 45%, transparent);
   /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
      the same four everywhere, 420, 640, 980 and 1280px */
+  /* the widest a page grows, the same in every app */
+  --page-max: 1500px;
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
   --r-s: 4px; --r-m: 6px; --r-l: 8px;
   --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -188,6 +190,8 @@
 @media (max-width: 640px) {
     .v { font-size: var(--fs-12); min-width: 68px; }
 }
+  /* the page: one width for every app, the margins clear of the phone's edges */
+  .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(var(--s-16), env(safe-area-inset-left, 0px)); padding-right: max(var(--s-16), env(safe-area-inset-right, 0px)); }
 /* buttons: one height, one font, one corner; only the colours tell them apart.
    grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
 .btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-6); min-height: 34px; padding: 0 var(--s-12);
@@ -313,6 +317,29 @@
   body.doc h1 { margin: 0 0 var(--s-10); font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); }
   body.doc p { margin: 0 0 var(--s-16); color: var(--dim); }
   body.doc p a { color: var(--accent); }
+/* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
+   ds.js puts it on the page (ds.toast). */
+  .toasts { position: fixed; z-index: var(--z-toast); right: max(var(--s-16), env(safe-area-inset-right, 0px)); bottom: max(var(--s-16), env(safe-area-inset-bottom, 0px));
+    display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-8); pointer-events: none; }
+  .toast { pointer-events: auto; display: flex; align-items: center; gap: var(--s-10); box-sizing: border-box; max-width: min(400px, calc(100vw - 32px));
+    padding: var(--s-8) var(--s-8) var(--s-8) var(--s-14); background: var(--panel-2); border: 1px solid var(--line-2); border-radius: var(--r-l);
+    box-shadow: var(--shadow-pop); color: var(--ink); font: 500 var(--fs-13)/var(--lh-ui) var(--body); animation: toast-in var(--t-mid) ease-out; }
+  .toast.out { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
+  .toast .mark { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .toast.is-good .mark { background: var(--good); }
+  .toast.is-bad .mark { background: var(--bad); }
+  .toast.is-busy .mark { width: 12px; height: 12px; box-sizing: border-box; background: none; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  .toast .txt { flex: 1 1 auto; min-width: 0; }
+  .toast .act, .toast .x { flex: none; background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
+  .toast .act { color: var(--accent); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
+  .toast .x { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
+  .toast .act:hover, .toast .x:hover { color: var(--ink); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @media (prefers-reduced-motion: reduce) { .toast, .toast.out { animation: none; transition: none; transform: none; } }
+@media (max-width: 640px) {
+    .toasts { left: var(--s-12); right: var(--s-12); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
+    .toast { max-width: none; }
+}
 /* The settings page, shared by the apps: everything on it lives under body.settings,
    with no added weight (:where), so that a page can still change one of its rules. */
   body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--fs-15); line-height: var(--lh-text); margin: 0; }
