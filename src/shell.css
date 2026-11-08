@@ -106,3 +106,10 @@
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
    .boot .boot-p .spin { animation: none; }
 }
+  /* a list's line: its date or time, and its amount or figure */
+  .t { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 12.5px/1.4 var(--mono); }
+  .v { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 13.5px/1 var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
+  .v .x { color: var(--faint); display: block; font-size: 11px; margin-top: 4px; }
+@media (max-width: 560px) {
+    .v { font-size: 12px; min-width: 68px; }
+}

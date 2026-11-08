@@ -1,4 +1,4 @@
-/* ds 2.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -158,6 +158,13 @@
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
    .boot .boot-p .spin { animation: none; }
 }
+  /* a list's line: its date or time, and its amount or figure */
+  .t { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 12.5px/1.4 var(--mono); }
+  .v { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 13.5px/1 var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
+  .v .x { color: var(--faint); display: block; font-size: 11px; margin-top: 4px; }
+@media (max-width: 560px) {
+    .v { font-size: 12px; min-width: 68px; }
+}
 /* buttons: one height, one font, one corner; only the colours tell them apart.
    grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
 .btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 0 12px;
@@ -175,6 +182,28 @@
 /* a square button with only an icon (reload, settings) */
 .btn.is-icon { width: 34px; padding: 0; }
 
+/* Figures in tiles: a label, a big figure, a note; in a grid. The compact form is for the top of a screen. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin-top: 18px; background: var(--line); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .tile { background: var(--panel); padding: 14px 14px 13px; min-width: 0; border-top: 3px solid var(--n, var(--line)); }
+  .tile dt { display: flex; align-items: center; gap: 7px; font: 700 13px/1 var(--display); letter-spacing: .04em; color: var(--n, var(--ink)); margin-bottom: 10px; }
+  .tile dt i { width: 9px; height: 9px; border-radius: 2px; background: var(--n, var(--dim)); flex: 0 0 auto; }
+  .tile dd { margin: 0; font: 700 26px/1 var(--display); font-variant-numeric: tabular-nums; }
+  .tile .u { font: 500 12px/1 var(--body); color: var(--dim); margin-left: 6px; letter-spacing: 0; }
+  .tile .d { display: block; font: 600 12px/1 var(--body); margin-top: 6px; color: var(--good); letter-spacing: 0; }
+  .tile .h { display: inline-block; font: 400 11px/1.4 var(--mono); color: var(--faint); margin-top: 8px; text-decoration: none; }
+  .tile a.h:hover, .tile a.h:focus-visible { color: var(--ink); text-decoration: underline; }
+/* analysis: follower lines, weekly arrivals and departures */
+  .tile .d.neg { color: var(--bad); }
+  .tile dt { text-transform: none; }
+/* revenue: month bars stacked by kind, the selected month summed up above */
+  .tile .d.n { color: var(--dim); font-weight: 500; }
+  .tile .d { line-height: 1.35; }
+  /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
+  .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: 8px; margin-top: 0; overflow: visible; }
+  .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+  .tiles.is-compact .tile dt { display: block; margin-bottom: 7px; font: 700 10px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+  .tiles.is-compact .tile dd { font: 700 17px/1 var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
 /* The settings page, shared by the apps: everything on it lives under body.settings,
    with no added weight (:where), so that a page can still change one of its rules. */
   body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; margin: 0; }

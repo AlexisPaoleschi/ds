@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.1.0 · 8 novembre 2026
+
+Un nom, un seul sens, et un seul composant pour les chiffres.
+
+- Nouveau : les tuiles de chiffres (`tiles.css`), venues de l’analyse de Studio, et leur forme compacte (`.tiles.is-compact`) pour le haut des écrans de Bank.
+- Nouveau dans la coque : la date (`.t`) et le montant (`.v`) d’une ligne de liste, une seule version pour les deux applis.
+- Studio renomme ce qui portait un nom de Bank pour autre chose : `.pill` devient `.score`, `.bar` devient `.tick`, `.sub` devient `.subtitle`, `.more` devient `.count`.
+
 ## 2.0.0 · 8 novembre 2026
 
 Bank et Studio prennent dans le design system tout ce qu’ils partagent, et ne gardent que ce qui leur est propre.
