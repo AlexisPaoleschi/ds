@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.7.0 · 8 novembre 2026
+
+Des garde-fous, et les dernières pages.
+
+- Le texte pâle (`--faint`) est plus lisible : un contraste d’au moins 4,5 sur les fonds sombres et clairs, au lieu de 3,4.
+- Nouveau : les petites pages d’une appli (`doc.css`, sous `body.doc`) : confidentialité, conditions, déconnexion.
+- Nouveau : `--fs-display` et `--fs-display-2`, les deux tailles des grandes sommes en haut d’un écran.
+- Chaque appli reçoit un test qui refuse toute valeur écrite en dur, et un CLAUDE.md qui rappelle les règles.
+
 ## 2.6.1 · 8 novembre 2026
 
 - Panneau de filtres : l’en-tête d’un groupe garde la même hauteur, que « Tout » y soit ou non ; la liste ne bouge plus quand on passe en « seul ».
