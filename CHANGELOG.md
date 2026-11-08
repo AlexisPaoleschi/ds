@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.6.1 · 8 novembre 2026
+
+- Panneau de filtres : l’en-tête d’un groupe garde la même hauteur, que « Tout » y soit ou non ; la liste ne bouge plus quand on passe en « seul ».
+
 ## 2.6.0 · 8 novembre 2026
 
 Un seul en-tête de période.
