@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="fr" data-theme="atelier">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design system · Alexis Paoleschi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Gilda+Display&family=Urbanist:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="dist/ds.css">
+<style>
+  /* the page itself: every token and component of the design system, in both themes side by side */
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--fs-15)/var(--lh-text) var(--body); }
+  .page { max-width: 1320px; margin: 0 auto; padding: var(--s-32) var(--s-20) var(--s-48); }
+  .page > h1 { margin: 0 0 var(--s-6); font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); }
+  .page > p { margin: 0 0 var(--s-24); color: var(--dim); max-width: 780px; }
+  .themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(560px, 1fr)); gap: var(--s-20); }
+  @media (max-width: 640px) { .themes { grid-template-columns: 1fr; } }
+  .theme { background: var(--bg); color: var(--ink); font-family: var(--body); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-20); display: grid; gap: var(--s-16); min-width: 0; }
+  .theme > h2 { margin: 0; font: 800 var(--fs-22)/var(--lh-tight) var(--display); }
+  .theme > h2 small { display: block; margin-top: var(--s-4); font: 500 var(--fs-13)/var(--lh-ui) var(--body); color: var(--dim); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--s-8); align-items: center; }
+  .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: var(--s-8); }
+  .sw div { border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; font: 500 var(--fs-11)/var(--lh-ui) var(--mono); color: var(--dim); }
+  .sw i { display: block; height: 30px; }
+  .sw span { display: block; padding: var(--s-4) var(--s-6); }
+  .scale { display: grid; gap: var(--s-6); }
+  .scale div { display: flex; align-items: baseline; gap: var(--s-12); }
+  .scale code { min-width: 64px; font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--faint); }
+  .bar { height: 10px; background: var(--accent); border-radius: var(--r-s); }
+  .boxes { display: flex; gap: var(--s-12); flex-wrap: wrap; }
+  .boxes div { width: 76px; height: 48px; background: var(--panel-2); border: 1px solid var(--line-2); display: grid; place-items: center; font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--dim); }
+  /* the panel and the picker, shown in place instead of over the page */
+  .demo .side-layout.open { grid-template-columns: 230px minmax(0, 1fr); }
+  .demo .side-layout.open .side { position: static; width: auto; height: auto; border-radius: var(--r-l); }
+  .demo .scrim { display: none !important; }
+  .demo button.edgetab { position: static; }
+  .demo .periodpop { position: static; margin-top: var(--s-8); width: 100%; }
+  .demo .toasts { position: static; pointer-events: auto; }
+  .demo .toast { animation: none; }
+  .demo .dialog { width: 100%; }
+  .demo .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); margin-top: var(--s-8); }
+  .rules ul { margin: 0; padding-left: var(--s-20); }
+  .rules li { margin: var(--s-4) 0; color: var(--dim); }
+  .rules b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Design system</h1>
+  <p>Tout ce que Bank, Studio, Selecta et alexispaoleschi.com partagent : couleurs, tailles, espaces, et chaque composant, dans les deux thèmes. Chaque appli en garde une copie figée et ne garde dans ses pages que ce qui lui est propre.</p>
+  <div class="themes" id="themes"></div>
+  <div class="card rules" style="margin-top: var(--s-24)">
+    <h2 class="ct">Règles</h2>
+    <ul>
+      <li><b>Couleurs.</b> Toutes ici. Une appli ne nomme qu’un jeton (<code>var(--c-bleu)</code>, <code>var(--good)</code>…), jamais un code couleur. Le vert, le rouge et le jaune sont réservés aux entrées, aux sorties et aux alertes.</li>
+      <li><b>Réglages.</b> Tailles de texte, interlignes, marges, arrondis, superpositions, durées et ombres sont des jetons. Les largeurs d’écran sont les quatre mêmes partout : 420, 640, 980 et 1280px.</li>
+      <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer. Un seul bouton plein par écran.</li>
+      <li><b>Angles nets.</b> 4, 6 ou 8px, jamais plus.</li>
+      <li><b>Écriture.</b> Pas d’espace entre un chiffre et son unité : 2,3%, 578k, 12,50€.</li>
+      <li><b>Messages.</b> Le retour d’une action passe par la bulle (<code>ds.toast</code>), une question par la fenêtre (<code>ds.confirm</code>), jamais par une boîte du navigateur.</li>
+      <li><b>Nouveau composant.</b> Il naît dans une appli et monte ici dès qu’une deuxième en a besoin.</li>
+    </ul>
+  </div>
+</div>
+<template id="theme">
+  <section class="theme demo">
+    <h2 class="t-name"><span></span><small></small></h2>
+    <div class="card"><h3 class="ct">Couleurs</h3>
+      <div class="sw" data-swatches="--bg --panel --panel-2 --line --line-2 --ink --dim --faint --accent --good --bad --mid --c-bleu --c-ciel --c-turquoise --c-violet --c-mauve --c-rose --c-orange --c-ardoise"></div>
+    </div>
+    <div class="card"><h3 class="ct">Texte et espaces</h3>
+      <div class="scale" data-fs="9 10 11 12 13 14 15 17 22 28"></div>
+      <div class="scale" style="margin-top: var(--s-14)" data-sp="2 4 6 8 10 12 14 16 20 24 32 48"></div>
+      <div class="boxes" style="margin-top: var(--s-14)">
+        <div style="border-radius: var(--r-s)">--r-s</div><div style="border-radius: var(--r-m)">--r-m</div><div style="border-radius: var(--r-l)">--r-l</div>
+        <div style="box-shadow: var(--shadow-pop)">pop</div><div style="box-shadow: var(--shadow-sheet)">sheet</div>
+      </div>
+    </div>
+    <header class="top"><span class="brand">Bank</span><nav class="tabs"><button type="button" aria-selected="true">Comptes</button><button type="button" aria-selected="false">Opérations</button><button type="button" aria-selected="false">Voyages</button></nav></header>
+    <div class="periodhead">
+      <div class="periodleft"><button class="periodtitle" type="button"><h3>Novembre <span class="yr">2026</span></h3><span class="caret">▾</span></button></div>
+      <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent">‹</button><button class="btn" type="button">Aujourd’hui</button><button class="btn is-icon" type="button" aria-label="Suivant">›</button></div>
+    </div>
+    <div class="periodpop">
+      <div class="row"><button type="button" class="on">Ce mois-ci</button><button type="button">Le mois dernier</button><button type="button">Cette année</button></div>
+      <div class="tabs pp-tabs" style="margin-top: var(--s-8)"><button type="button">Jour</button><button type="button" class="on">Mois</button><button type="button">Année</button><button type="button">Dates</button></div>
+      <div class="grid4"><button type="button">janv.</button><button type="button">févr.</button><button type="button">mars</button><button type="button" class="on">nov.</button></div>
+    </div>
+    <div class="card"><h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
+      <div class="row"><a class="btn" href="#">Voir les opérations</a><button class="btn is-act" type="button">Modifier</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn is-danger" type="button">Supprimer</button><button class="btn" type="button" disabled>Indisponible</button></div>
+    </div>
+    <div class="card"><h3 class="ct">Champs</h3>
+      <input style="width:100%" placeholder="Nom, libellé ou montant">
+      <div class="row" style="margin-top: var(--s-10)"><select><option>Loisirs › Restaurant</option></select><input type="date" value="2026-08-15"><label class="row"><input type="checkbox" checked> Seulement cette opération</label></div>
+    </div>
+    <dl class="tiles is-compact"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile up"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile down"><dt>Sorties</dt><dd>−1 263,08€</dd></div></dl>
+    <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="u">membres</span></dd><span class="d">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-mauve)"><dt><i></i>Katline</dt><dd>860<span class="u">membres</span></dd><span class="d neg">−1,1% sur 30 jours</span></div></dl>
+    <div class="side-layout open">
+      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer">×</button></div>
+        <div class="filters">
+          <div class="fgroup"><span class="fhead">Comptes<button type="button" class="fall">Tout</button></span>
+            <span class="frow"><button type="button" class="chip" aria-pressed="true"><i class="sq on" style="--a:var(--c-ciel)"></i>Revolut</button><button type="button" class="only">seul</button></span>
+            <span class="frow"><button type="button" class="chip" aria-pressed="false"><i class="sq on" style="--a:var(--c-mauve)"></i>BoursoBank</button><button type="button" class="only">seul</button></span>
+          </div>
+          <div class="fgroup"><span class="fhead">Sens</span><span class="frow"><button type="button" class="chip" aria-pressed="true">Entrées</button></span><span class="frow"><button type="button" class="chip" aria-pressed="true">Sorties</button></span></div>
+        </div>
+      </aside>
+      <div class="card"><h3 class="ct">Listes <button class="edgetab on" type="button" style="margin-left:auto"><span class="vt">Filtres</span><i class="fdot"></i></button></h3>
+        <h4 class="sect">15 août 2026</h4>
+        <ul class="rows"><li><span class="t">15/08</span><span class="ttl">Magasins U</span><span class="who" style="--n:var(--c-ciel)">REVOLUT</span><span class="v">−119,89€</span></li><li><span class="t">16/08</span><span class="ttl">Remboursement</span><span class="v" style="color:var(--good)">+25,00€</span></li></ul>
+        <p class="empty">Aucune opération pour ces filtres.</p>
+      </div>
+    </div>
+    <div class="msg good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
+    <div class="msg bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
+    <div class="toasts">
+      <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+    </div>
+    <div class="dialog" role="dialog" aria-label="Exemple de fenêtre"><h2 class="dialog-t">Supprimer le voyage « Vendée 2026 » ?</h2><p class="dialog-x">Ses opérations restent, sans voyage.</p><div class="dialog-b"><button type="button" class="btn dialog-no">Annuler</button><button type="button" class="btn dialog-ok is-danger">Supprimer</button></div></div>
+  </section>
+</template>
+<script>
+  // one column per theme, from the same template; the swatches and scales read the tokens themselves
+  const themes = [["atelier", "Atelier", "Les outils : Bank, Studio. Sombre, à l’or du site."], ["vitrine", "Vitrine", "Les sites publics : alexispaoleschi.com, Selecta. Clair et doré."]];
+  for (const [id, name, what] of themes) {
+    const node = document.getElementById("theme").content.cloneNode(true), sec = node.querySelector(".theme");
+    sec.dataset.theme = id;
+    node.querySelector(".t-name span").textContent = name;
+    node.querySelector(".t-name small").textContent = what;
+    for (const t of node.querySelector("[data-swatches]").dataset.swatches.split(" "))
+      node.querySelector("[data-swatches]").insertAdjacentHTML("beforeend", `<div><i style="background:var(${t})"></i><span>${t}</span></div>`);
+    for (const n of node.querySelector("[data-fs]").dataset.fs.split(" "))
+      node.querySelector("[data-fs]").insertAdjacentHTML("beforeend", `<div><code>--fs-${n}</code><span style="font-size:var(--fs-${n})">Toutes les opérations</span></div>`);
+    for (const n of node.querySelector("[data-sp]").dataset.sp.split(" "))
+      node.querySelector("[data-sp]").insertAdjacentHTML("beforeend", `<div><code>--s-${n}</code><span class="bar" style="width:calc(var(--s-${n}) * 4)"></span></div>`);
+    document.getElementById("themes").append(node);
+  }
+</script>
+</body>
+</html>
