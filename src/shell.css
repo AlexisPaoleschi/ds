@@ -59,7 +59,8 @@
   footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: wrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
   .tabs button { font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--s-8) var(--s-14); cursor: pointer; }
-  .tabs button[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); }
+  /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
+  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--accent-soft); color: var(--accent); }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   header.top .busy .pc { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
   header.top .busy .okc { display: none; width: 16px; height: 16px; border-radius: 50%; background: color-mix(in srgb, var(--good) 16%, transparent); place-items: center; }

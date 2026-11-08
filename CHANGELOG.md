@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.8.0 · 8 novembre 2026
+
+Un seul jeu d’onglets.
+
+- Les onglets (`.tabs`) servent à tout choix entre quelques vues ou périodes : l’en-tête, la vue du calendrier, les périodes de l’analyse de Studio (avant `.seg`) et les sortes de période du sélecteur de Bank. Un onglet s’allume pour `aria-selected`, `aria-pressed` ou `.on`.
+
 ## 2.7.0 · 8 novembre 2026
 
 Des garde-fous, et les dernières pages.
