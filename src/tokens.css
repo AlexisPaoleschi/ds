@@ -14,6 +14,8 @@
   --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-plex-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --font-gilda: "Gilda Display", Georgia, serif;
+  /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
+  --r-s: 4px; --r-m: 6px; --r-l: 8px;
   --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 

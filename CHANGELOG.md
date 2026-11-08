@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.3.0 · 8 novembre 2026
+
+Des angles plus nets.
+
+- Trois jetons d’arrondi : `--r-s` 4px (badges, cases à cocher), `--r-m` 6px (boutons, champs, tuiles, pastilles), `--r-l` 8px (cartes, panneaux, fiches). Ils remplacent les arrondis écrits en dur, jusqu’à 22px, dans le design system et dans Bank et Studio.
+- Les pastilles en gélule (999px) prennent l’arrondi moyen. Les ronds (50%) et les petits traits restent tels quels.
+
 ## 2.2.0 · 8 novembre 2026
 
 Un seul panneau de filtres pour les deux applis.

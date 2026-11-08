@@ -6,7 +6,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Ce qu’il contient
 
-- `src/tokens.css` : les couleurs, les polices et les deux thèmes, **Atelier** (sombre, les outils) et **Vitrine** (clair, les sites publics), tous deux à l’or `#c9a961` du site.
+- `src/tokens.css` : les couleurs, les polices, les trois tailles d’arrondi (`--r-s`, `--r-m`, `--r-l`) et les deux thèmes, **Atelier** (sombre, les outils) et **Vitrine** (clair, les sites publics), tous deux à l’or `#c9a961` du site.
 - `src/base.css` : les champs, les cases à cocher et le focus, les mêmes dans toutes les pages.
 - `src/shell.css` : la coque des applis Bank et Studio : page, en-tête et onglets, chargement, cartes, messages, listes, sources en bas de page.
 - `src/buttons.css` : les boutons, `.btn` et ses variantes `is-act`, `is-save`, `is-danger`, `is-icon`.
@@ -17,7 +17,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Dans une appli
 
-Chaque appli garde une copie figée d’une version : `static/ds/ds-2.2.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.3.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
 
 Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
 
