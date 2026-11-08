@@ -1,0 +1,86 @@
+/* Components of the design system. Every class starts with ds- so that an app can take them one by one,
+   next to its own styles, without a clash. They only use the roles of the theme. */
+
+/* buttons: one height, one font, one corner; only the colours tell them apart.
+   grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
+.ds-btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: 6px; min-height: 34px; padding: 0 12px;
+  font: 600 13px/1 var(--body); letter-spacing: 0; text-transform: none; white-space: nowrap; text-decoration: none;
+  border: 1px solid var(--line); border-radius: 9px; background: var(--panel-2); color: var(--dim); cursor: pointer; }
+.ds-btn:hover { color: var(--accent); border-color: var(--accent-line); }
+.ds-btn.is-act { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-line); }
+.ds-btn.is-act:hover { border-color: var(--accent-strong); }
+.ds-btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.ds-btn.is-save:hover { filter: brightness(1.08); }
+.ds-btn.is-danger { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+.ds-btn.is-danger:hover { border-color: var(--bad); }
+.ds-btn:disabled { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
+.ds-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* a square button with only an icon (reload, settings) */
+.ds-btn.is-icon { width: 34px; padding: 0; }
+
+/* fields: as the search box of Bank's Opérations */
+.ds-field { box-sizing: border-box; font: 500 14px/1.2 var(--body); color: var(--ink); background: var(--panel-2);
+  border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; min-width: 0; }
+.ds-field::placeholder { color: var(--faint); }
+.ds-field:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+textarea.ds-field { line-height: 1.4; resize: vertical; }
+.ds-check { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
+/* two dates side by side, « Du » and « au » in grey */
+.ds-dates { display: flex; gap: 8px; flex-wrap: wrap; }
+.ds-dates label { display: flex; align-items: center; gap: 8px; font: 500 13px/1 var(--body); color: var(--faint); flex: 1 1 200px; }
+.ds-dates .ds-field { flex: 1; }
+
+/* a menu shown as a pill: the select is laid over it, invisible; the pill shows the choice */
+.ds-pill { position: relative; display: inline-flex; align-items: center; gap: 4px; padding: 7px 12px; border: 1px solid var(--line);
+  border-radius: 999px; background: var(--panel-2); font: 500 13px/1.2 var(--body); color: var(--ink); cursor: pointer; }
+.ds-pill::after { content: "▾"; font-size: 10px; color: var(--faint); }
+.ds-pill select { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.ds-pill.is-on { border-color: var(--accent-line); background: var(--accent-soft); color: var(--accent); }
+
+/* cards and their title */
+.ds-card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; }
+.ds-card-title { display: flex; align-items: center; gap: 10px; margin: 0 0 14px; font: 700 12px/1 var(--display);
+  letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+.ds-card-title > :last-child:not(:first-child) { margin-left: auto; text-transform: none; letter-spacing: 0; }
+
+/* figures at the top of a screen */
+.ds-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.ds-tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; min-width: 0; }
+.ds-tile > span { display: block; font: 700 10px/1 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+.ds-tile > b { display: block; margin-top: 6px; font: 700 17px/1 var(--display); color: var(--ink); font-variant-numeric: tabular-nums;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ds-tile > b.is-up { color: var(--good); } .ds-tile > b.is-down { color: var(--bad); }
+
+/* a small label: a trip, a state */
+.ds-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font: 600 11px/1.6 var(--body); }
+.ds-chip.is-good { background: rgba(78,201,138,.14); color: var(--good); }
+.ds-chip.is-bad { background: var(--bad-soft); color: var(--bad); }
+
+/* a group header in a list (a day, a year) */
+.ds-group { font: 700 11px/1.35 var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--faint); }
+
+/* amounts: the figures' font; entries in green */
+.ds-amount { font: 600 13.5px/1 var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--ink); }
+.ds-amount.is-up { color: var(--good); }
+
+/* loading: the spinner, and the share beside it */
+.ds-spin { display: inline-block; box-sizing: border-box; width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--accent-line);
+  border-top-color: var(--accent); animation: ds-spin .8s linear infinite; vertical-align: middle; }
+.ds-spin.is-lg { width: 18px; height: 18px; }
+.ds-progress { display: inline-flex; align-items: center; gap: 9px; font: 600 13px/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+@keyframes ds-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ds-spin { animation: none; } }
+
+/* a sheet: a window in the middle on a computer, a drawer from the bottom on a phone */
+.ds-sheet { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.55); }
+.ds-sheet[hidden] { display: none; }
+.ds-sheet-card { position: relative; width: min(540px, 100%); max-height: min(86vh, 900px); overflow: auto; box-sizing: border-box;
+  background: var(--panel); border: 1px solid var(--line-2); border-radius: 16px; padding: 22px 20px 18px; }
+.ds-sheet-title { margin: 0 44px 12px 0; font: 800 22px/1.15 var(--display); color: var(--ink); }
+.ds-sheet-x { position: absolute; top: 14px; right: 14px; }
+.ds-sheet-acts { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.ds-sheet-acts .is-end { margin-left: auto; }
+@media (max-width: 640px) {
+  .ds-sheet { place-items: end stretch; padding: 0; }
+  .ds-sheet-card { width: 100%; max-height: 88vh; border-radius: 16px 16px 0 0; padding-bottom: calc(18px + env(safe-area-inset-bottom, 0px)); }
+}
