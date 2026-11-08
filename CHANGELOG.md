@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.6.0 · 8 novembre 2026
+
+Un seul en-tête de période.
+
+- Nouveau : l’en-tête de période (`period.css`) : le grand titre qui ouvre le sélecteur, les flèches (et « Aujourd’hui ») à droite, le sélecteur sous le titre avec ses boutons qui s’allument en or. Sur téléphone, les flèches passent sous le titre.
+- Bank prend le grand titre à gauche de Studio, ses flèches deviennent des boutons carrés comme ceux de Studio. Le calendrier de Studio et le sélecteur de période de Bank ont le même panneau.
+
 ## 2.5.0 · 8 novembre 2026
 
 Moins de valeurs différentes, une seule échelle par réglage.
