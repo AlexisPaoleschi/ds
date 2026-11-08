@@ -1,0 +1,22 @@
+/* Figures in tiles: a label, a big figure, a note; in a grid. The compact form is for the top of a screen. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin-top: var(--s-16); background: var(--line); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+  .tile { background: var(--panel); padding: var(--s-14) var(--s-14) var(--s-12); min-width: 0; border-top: 3px solid var(--n, var(--line)); }
+  .tile dt { display: flex; align-items: center; gap: var(--s-6); font: 700 var(--fs-13)/var(--lh-tight) var(--display); letter-spacing: 0; color: var(--n, var(--ink)); margin-bottom: var(--s-10); }
+  .tile dt i { width: 9px; height: 9px; border-radius: 2px; background: var(--n, var(--dim)); flex: 0 0 auto; }
+  .tile dd { margin: 0; font: 700 var(--fs-28)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; }
+  .tile .u { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
+  .tile .d { display: block; font: 600 var(--fs-12)/var(--lh-tight) var(--body); margin-top: var(--s-6); color: var(--good); letter-spacing: 0; }
+  .tile .h { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
+  .tile a.h:hover, .tile a.h:focus-visible { color: var(--ink); text-decoration: underline; }
+/* analysis: follower lines, weekly arrivals and departures */
+  .tile .d.neg { color: var(--bad); }
+  .tile dt { text-transform: none; }
+/* revenue: month bars stacked by kind, the selected month summed up above */
+  .tile .d.n { color: var(--dim); font-weight: 500; }
+  .tile .d { line-height: var(--lh-ui); }
+  /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
+  .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
+  .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
+  .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: 700 var(--fs-10)/var(--lh-tight) var(--display); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); }
+  .tiles.is-compact .tile dd { font: 700 var(--fs-17)/var(--lh-tight) var(--display); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
