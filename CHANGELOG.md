@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.10.0 · 8 novembre 2026
+
+Plus de boîtes du navigateur.
+
+- Nouveau : la fenêtre de confirmation (`dialog.css`, `ds.confirm`) : une question, « Annuler » et la réponse, rouge pour une suppression (le curseur part alors sur « Annuler »), ou un champ pour un court texte. Échap ou un clic à côté annulent.
+- Bank et Studio n’ont plus d’`alert()`, de `confirm()` ni de `prompt()` : les erreurs passent dans la bulle, les questions dans la fenêtre.
+
 ## 2.9.2 · 8 novembre 2026
 
 - Sélecteur de période : ses onglets se partagent sa largeur en quatre parts égales, sur une seule ligne, alignées sur les quatre colonnes de mois.
