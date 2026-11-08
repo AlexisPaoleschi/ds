@@ -1,0 +1,108 @@
+/* The shell of the apps (Bank, Studio): page, header and its tabs, loading, cards, banners, lists, sources at the bottom.
+   Taken from both apps, one version each; an app keeps only what is its own. */
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ico { width: 16px; height: 16px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: 12px; justify-content: space-between; padding-bottom: 12px; position: relative; }
+  .brand { font: 800 13px/1 var(--display); letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+  header.top .busy { align-items: center; color: var(--accent); display: inline-flex; font: 600 11px/1 var(--mono); gap: 7px; margin-right: auto; visibility: hidden; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; min-width: 0; }
+  .ct { align-items: center; color: var(--faint); display: flex; font: 700 12px/1 var(--display); gap: 10px; letter-spacing: .16em; margin: 0 0 12px; text-transform: uppercase; }
+  h4.sect { align-items: center; color: var(--n, var(--faint)); display: flex; font: 700 10px/1 var(--display); gap: 7px; letter-spacing: .17em; margin: 16px 0 6px; text-transform: uppercase; }
+  h4.sect:first-of-type { margin-top: 0; }
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  ul.rows li { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: 4px 10px; padding: 9px 0; }
+  ul.rows li:first-child { border-top: none; padding-top: 0; }
+  .ttl { flex: 1 1 150px; font-size: 14px; font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
+  .pl { font-size: 12.5px; color: var(--faint); }
+  .who { background: color-mix(in srgb, var(--n, var(--accent)) 15%, transparent); border-radius: 5px; color: var(--n, var(--accent)); flex: 0 0 auto; font: 700 10px/1 var(--display); letter-spacing: .1em; padding: 3px 6px; text-transform: uppercase; }
+  
+  .errs { display: grid; gap: 8px; margin-bottom: 4px; }
+  .msg { align-items: flex-start; background: var(--panel-2); border-radius: 9px; border: 1px solid var(--line); color: var(--dim); display: flex; font-size: 13px; gap: 9px; margin-top: 10px; padding: 11px 13px; }
+  .msg .ico { color: var(--accent); margin-top: 2px; flex: none; height: 14px; width: 14px; }
+  .msg.bad { background: var(--bad-soft); border-color: rgba(232,104,107,.35); }
+  .msg.bad .ico { color: var(--bad); }
+  .msg.good { background: rgba(78,201,138,.10); border-color: rgba(78,201,138,.35); }
+  .msg.good .ico { color: var(--good); }
+  .msg > .txt { flex: 1 1 auto; min-width: 0; }
+  .msg .txt b { color: var(--ink); font-weight: 600; }
+  .msg .txt small { display: block; margin-top: 4px; font-size: 11.5px; color: var(--faint); }
+  .msg .txt small.again { color: var(--bad); }
+  .msg .txt small.det { font-family: var(--mono); font-size: 10.5px; overflow-wrap: anywhere; }
+  .msg .act { align-items: center; align-self: center; background: var(--panel-2); border-radius: 7px; border: 1px solid var(--line); color: var(--ink); cursor: pointer; display: inline-flex; flex: none; font: 600 12px/1 var(--body); gap: 6px; padding: 7px 11px; white-space: nowrap; text-decoration: none; }
+  .msg .act:hover { border-color: var(--faint); }
+  .msg .act .ico { color: var(--dim); margin: 0; width: 13px; height: 13px; }
+  .msg .act:disabled { opacity: .75; cursor: default; }
+  .msg .act .spin { width: 11px; height: 11px; border-radius: 50%; border: 2px solid var(--line-2); border-top-color: var(--ink); animation: spin .8s linear infinite; }
+  details.status summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: 8px; }
+  details.status summary::-webkit-details-marker { display: none; }
+  details.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  details.status .dot.warn { background: var(--accent); }
+  details.status ul { list-style: none; margin: 10px 0 0; padding: 10px 12px; display: grid; gap: 6px; background: var(--panel); border: 1px solid var(--line); border-radius: 10px; }
+  details.status li { display: grid; grid-template-columns: 150px 1fr auto; gap: 10px; }
+  details.status .sn { color: var(--dim); }
+  details.status .sn, details.status .sw { display: inline-flex; align-items: center; gap: 7px; }
+  details.status .ico { flex: none; height: 13px; opacity: .75; width: 13px; color: currentColor; }
+  details.status .sw .ico { color: var(--good); opacity: 1; }
+  details.status li.late .sw { color: var(--accent); }
+  details.status li.late .sw .ico { color: var(--accent); }
+  details.status .sd { grid-column: 2 / -1; color: var(--faint); font-size: 12px; margin-top: -3px; }
+  details.status li:not(.late) .sd { display: none; }
+  details.status .sf { color: var(--faint); font-family: var(--mono); font-size: 11px; }
+  details.status li.sl { display: block; padding-top: 4px; border-top: 1px solid var(--line); }
+  details.status li.sl a { color: var(--accent); text-decoration: none; font-weight: 600; }
+  .late { font: 600 10px/1 var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid rgba(232,104,107,.3); padding: 3px 6px; border-radius: 5px; }
+  .empty { color: var(--dim); margin: 0; }
+  footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: wrap; font-size: 12px; gap: 10px; justify-content: space-between; }
+  .tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 9px; padding: 3px; width: fit-content; }
+  .tabs button { font: 700 12px/1 var(--display); letter-spacing: .1em; text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: 6px; padding: 8px 14px; cursor: pointer; }
+  .tabs button[aria-selected="true"] { background: var(--accent-soft); color: var(--accent); }
+/* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
+  header.top .busy .pc { font: 600 11px/1 var(--mono); color: var(--accent); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  header.top .busy .okc { display: none; width: 16px; height: 16px; border-radius: 50%; background: rgba(78,201,138,.16); place-items: center; }
+  header.top .busy .okc svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
+  header.top.loading-done .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
+  header.top.loading-done .busy .spin, header.top.loading-done .busy .pc { display: none; }
+  header.top.loading-done .busy .okc { display: inline-grid; animation: okpop .35s ease-out; }
+  header.top.loading-done .busy .okc svg { animation: okdraw .35s .1s ease-out forwards; }
+  @keyframes okpop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes okdraw { to { stroke-dashoffset: 0; } }
+  @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+  
+  header.top .busy .spin { animation: spin .8s linear infinite; border-radius: 50%; border-top-color: var(--accent); border: 2px solid var(--accent-line); height: 14px; width: 14px; box-sizing: border-box; display: block; flex: 0 0 14px; }
+  .boot[hidden] { display: none; }
+  .boot.gone { opacity: 0; }
+  .boot .boot-t { margin: 0; font-size: 17px; font-weight: 600; color: var(--ink); }
+  .boot .boot-s { margin: 8px 0 0; font-size: 13px; color: var(--dim); min-height: 1.3em; }
+  .boot .boot-x { margin-top: 16px; }
+/* over the page below the header, so that nothing moves when it goes: the page is drawn under it, then it fades */
+  .boot { position: fixed; inset: calc(72px + env(safe-area-inset-top, 0px)) 0 0 0; z-index: 30; background: var(--bg); min-height: 0; }
+/* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
+  .boot .boot-p { display: inline-flex; align-items: center; gap: 9px; margin-bottom: 14px; font: 600 13px/1 var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--accent-line); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  .boot .boot-p span { min-width: 3.2ch; text-align: left; }
+  .boot .boot-p span:empty { display: none; }
+  .boot.failed .boot-p { display: none; }
+/* on an iPhone app, a page shorter than the screen puts the bottom bar higher, by the status bar's height:
+     the page always fills the screen, so that the bar stays in the same place while loading and after */
+  html { min-height: calc(100% + env(safe-area-inset-top, 0px)); }
+@media (max-width: 560px) {
+   details.status li { grid-template-columns: 1fr auto; }
+   details.status .sf { display: none; }
+}
+@media (max-width: 420px) {
+   header.top { gap: 6px; }
+   header.top .brand { letter-spacing: .14em; }
+   header.top .tabs button { padding: 8px 8px; letter-spacing: .06em; }
+   header.top .gear { width: 32px; height: 32px; }
+}
+@media (max-width: 640px) {
+    body:not(.settings) { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+   header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
+   .boot .boot-p .spin { animation: none; }
+}
