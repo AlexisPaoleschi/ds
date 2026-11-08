@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="fr" data-theme="atelier">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design system · Alexis Paoleschi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&family=Gilda+Display&family=Urbanist:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="dist/ds.css">
+<style>
+  /* the page itself: the two themes side by side, each component in each */
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 15px/1.5 var(--body); }
+  .page { max-width: 1240px; margin: 0 auto; padding: 32px 20px 60px; }
+  .page > h1 { margin: 0 0 6px; font: 800 30px/1.1 var(--display); }
+  .page > p { margin: 0 0 24px; color: var(--dim); max-width: 760px; }
+  .themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(520px, 1fr)); gap: 20px; }
+  @media (max-width: 600px) { .themes { grid-template-columns: 1fr; } }
+  .theme { background: var(--bg); color: var(--ink); font-family: var(--body); border: 1px solid var(--line); border-radius: 18px; padding: 20px; display: grid; gap: 16px; }
+  .theme > h2 { margin: 0; font: 800 22px/1.1 var(--display); }
+  .theme > h2 small { display: block; margin-top: 4px; font: 500 13px/1.4 var(--body); color: var(--dim); }
+  .row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .swatches { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .sw { border: 1px solid var(--line); border-radius: 10px; overflow: hidden; font: 500 11px/1.3 var(--mono); color: var(--dim); }
+  .sw i { display: block; height: 34px; }
+  .sw span { display: block; padding: 6px 8px; }
+  .note { margin: 0; font-size: 13px; color: var(--dim); }
+  .theme header.top { padding-bottom: 12px; }
+  .theme .tabs { position: static; transform: none; }
+  .rules { margin-top: 28px; }
+  .rules li { margin: 4px 0; color: var(--dim); }
+  .rules b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Design system</h1>
+  <p>Les couleurs, les polices et les composants communs à Bank, Studio, Selecta et alexispaoleschi.com. Chaque appli en garde une copie figée, <code>static/ds/ds-2.0.0.css</code>, et ne garde dans ses pages que ce qui lui est propre. Un style commun ne change qu’ici.</p>
+  <div class="themes" id="themes"></div>
+
+  <div class="card rules">
+    <h2 class="ct">Règles</h2>
+    <ul>
+      <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer ou se déconnecter. Un seul bouton plein par écran.</li>
+      <li><b>Couleurs.</b> Les applis n’utilisent que les rôles (<code>--accent</code>, <code>--panel</code>…). Le vert et le rouge sont réservés aux entrées et sorties d’argent et aux états. Pas de gris mêlé à une couleur dans un graphique.</li>
+      <li><b>Écriture.</b> Pas d’espace entre un chiffre et son unité : 2,3%, 578k, 12,50€. Apostrophes et guillemets typographiques.</li>
+      <li><b>Téléphone.</b> La barre d’onglets est en bas, les fiches s’ouvrent en tiroir depuis le bas.</li>
+      <li><b>Nouveau composant.</b> Il naît dans une appli et monte ici quand une deuxième appli en a besoin.</li>
+    </ul>
+  </div>
+</div>
+
+<template id="theme">
+  <section class="theme">
+    <h2 class="t-name"><span></span><small></small></h2>
+    <header class="top"><span class="brand">Bank</span><nav class="tabs"><button type="button" aria-selected="true">Comptes</button><button type="button" aria-selected="false">Opérations</button></nav></header>
+    <div class="card">
+      <h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
+      <div class="row">
+        <a class="btn" href="#">Voir les opérations</a>
+        <button class="btn is-act" type="button">Modifier</button>
+        <button class="btn is-save" type="button">Enregistrer</button>
+        <button class="btn is-danger" type="button">Supprimer</button>
+        <button class="btn" type="button" disabled>Indisponible</button>
+      </div>
+    </div>
+    <div class="card">
+      <h3 class="ct">Champs</h3>
+      <input style="width:100%" placeholder="Nom, libellé ou montant">
+      <div class="row" style="margin-top:10px"><select><option>Revenus › Salaire</option></select><input type="date" value="2026-08-15"></div>
+      <div class="row" style="margin-top:10px"><label class="row"><input type="checkbox" checked> Seulement cette opération</label></div>
+    </div>
+    <div class="card">
+      <h3 class="ct">Messages</h3>
+      <div class="msg good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
+      <div class="msg bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
+    </div>
+    <div class="card">
+      <h3 class="ct">Listes</h3>
+      <h4 class="sect">Revolut</h4>
+      <ul class="rows"><li><span class="ttl">Compte courant</span></li><li><span class="ttl">Épargne</span></li></ul>
+      <p class="empty">Aucune opération pour ces filtres.</p>
+    </div>
+  </section>
+</template>
+<script>
+  // one column per theme, from the same template
+  const themes = [["atelier", "Atelier", "Les outils : Bank, Studio. Sombre, à l’or du site."], ["vitrine", "Vitrine", "Les sites publics : alexispaoleschi.com, Selecta. Clair et doré."]];
+  for (const [id, name, what] of themes) {
+    const node = document.getElementById("theme").content.cloneNode(true);
+    node.querySelector(".theme").dataset.theme = id;
+    node.querySelector(".t-name span").textContent = name;
+    node.querySelector(".t-name small").textContent = what;
+    document.getElementById("themes").append(node);
+  }
+</script>
+</body>
+</html>
