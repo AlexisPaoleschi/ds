@@ -3,5 +3,5 @@
 set -e
 cd "$(dirname "$0")/.."
 version=$(cat VERSION)
-{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/tokens.css src/base.css src/shell.css src/buttons.css src/tiles.css src/settings.css; } > dist/ds.css
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/tokens.css src/base.css src/shell.css src/buttons.css src/tiles.css src/panel.css src/settings.css; } > dist/ds.css
 echo "dist/ds.css $version"

@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.0 · 8 novembre 2026
+
+Un seul panneau de filtres pour les deux applis.
+
+- Nouveau : le panneau de filtres (`panel.css`), celui de Studio : l’onglet « Filtres » sur le bord avec son point quand un filtre est actif, le panneau à côté du contenu sur ordinateur, le tiroir sur téléphone, les groupes de boutons à allumer ou éteindre avec leur carré de couleur (`.sq`).
+- La mise en page s’appelle `.side-layout` (dans Studio, elle s’appelait `.cal-layout`).
+- Bank filtre avec ce panneau : ses comptes, le sens, ses catégories et l’ordre. Ses menus de filtres disparaissent ; en haut restent la période, la recherche et les chiffres.
+
 ## 2.1.0 · 8 novembre 2026
 
 Un nom, un seul sens, et un seul composant pour les chiffres.
