@@ -19,8 +19,8 @@
   .periodpop button:hover { border-color: var(--line-2); color: var(--ink); }
   .periodpop button.on { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
   /* tabs inside the picker keep their look, not the picker's framed buttons */
-  .periodpop .tabs { flex-wrap: wrap; width: auto; }
-  .periodpop .tabs button { background: none; border: 0; border-radius: var(--r-s); color: var(--faint); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-caps); text-transform: uppercase; padding: var(--s-6) var(--s-10); }
+  .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; }
+  .periodpop .tabs button { text-align: center; background: none; border: 0; border-radius: var(--r-s); color: var(--faint); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-caps); text-transform: uppercase; padding: var(--s-6) var(--s-10); }
   .periodpop .tabs button.on { background: var(--accent-soft); color: var(--accent); }
 @media (max-width: 640px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }

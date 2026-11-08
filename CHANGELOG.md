@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.9.2 · 8 novembre 2026
+
+- Sélecteur de période : ses onglets se partagent sa largeur en quatre parts égales, sur une seule ligne, alignées sur les quatre colonnes de mois.
+
 ## 2.9.1 · 8 novembre 2026
 
 - Les pages de réglages prennent la même largeur que le reste, `--page-max` (1500px), au lieu de 960px.
