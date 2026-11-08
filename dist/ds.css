@@ -1,4 +1,4 @@
-/* ds 2.10.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.10.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -37,6 +37,9 @@
      the same four everywhere, 420, 640, 980 and 1280px */
   /* the widest a page grows, the same in every app */
   --page-max: 1500px;
+  /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
+     as each other; read by fixed elements, so 100% is the screen's width */
+  --tabbar-w: min(calc(100% - 40px), 420px);
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
   --r-s: 4px; --r-m: 6px; --r-l: 8px;
   --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -337,7 +340,8 @@
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.out { animation: none; transition: none; transform: none; } }
 @media (max-width: 640px) {
-    .toasts { left: var(--s-12); right: var(--s-12); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
+    /* as wide as the tab bar under them, and centred like it */
+    .toasts { left: 0; right: 0; margin-inline: auto; width: var(--tabbar-w); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
     .toast { max-width: none; }
 }
 /* The window that asks before something that cannot be undone, or for a short text: the question over a veil,

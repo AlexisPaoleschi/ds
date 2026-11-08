@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.10.1 · 8 novembre 2026
+
+- Correction : sur téléphone, la bulle (`ds.toast`) prend la largeur de la barre d’onglets du bas, centrée comme elle, au lieu de toute la largeur de l’écran. Les deux lisent le nouveau jeton `--tabbar-w` ; Bank l’utilise pour sa barre.
+- `scripts/sync.sh` copie aussi `ds.js`.
+
 ## 2.10.0 · 8 novembre 2026
 
 Plus de boîtes du navigateur.

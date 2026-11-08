@@ -36,6 +36,9 @@
   .demo .scrim { display: none !important; }
   .demo button.edgetab { position: static; }
   .demo .periodpop { position: static; margin-top: var(--s-8); width: 100%; }
+  .demo .toasts { position: static; pointer-events: auto; }
+  .demo .toast { animation: none; }
+  .demo .dialog { width: 100%; }
   .demo .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); margin-top: var(--s-8); }
   .rules ul { margin: 0; padding-left: var(--s-20); }
   .rules li { margin: var(--s-4) 0; color: var(--dim); }
@@ -55,6 +58,7 @@
       <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer. Un seul bouton plein par écran.</li>
       <li><b>Angles nets.</b> 4, 6 ou 8px, jamais plus.</li>
       <li><b>Écriture.</b> Pas d’espace entre un chiffre et son unité : 2,3%, 578k, 12,50€.</li>
+      <li><b>Messages.</b> Le retour d’une action passe par la bulle (<code>ds.toast</code>), une question par la fenêtre (<code>ds.confirm</code>), jamais par une boîte du navigateur.</li>
       <li><b>Nouveau composant.</b> Il naît dans une appli et monte ici dès qu’une deuxième en a besoin.</li>
     </ul>
   </div>
@@ -80,6 +84,7 @@
     </div>
     <div class="periodpop">
       <div class="row"><button type="button" class="on">Ce mois-ci</button><button type="button">Le mois dernier</button><button type="button">Cette année</button></div>
+      <div class="tabs pp-tabs" style="margin-top: var(--s-8)"><button type="button">Jour</button><button type="button" class="on">Mois</button><button type="button">Année</button><button type="button">Dates</button></div>
       <div class="grid4"><button type="button">janv.</button><button type="button">févr.</button><button type="button">mars</button><button type="button" class="on">nov.</button></div>
     </div>
     <div class="card"><h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
@@ -109,6 +114,12 @@
     </div>
     <div class="msg good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
     <div class="msg bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
+    <div class="toasts">
+      <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+    </div>
+    <div class="dialog" role="dialog" aria-label="Exemple de fenêtre"><h2 class="dialog-t">Supprimer le voyage « Vendée 2026 » ?</h2><p class="dialog-x">Ses opérations restent, sans voyage.</p><div class="dialog-b"><button type="button" class="btn dialog-no">Annuler</button><button type="button" class="btn dialog-ok is-danger">Supprimer</button></div></div>
   </section>
 </template>
 <script>

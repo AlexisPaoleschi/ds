@@ -18,6 +18,7 @@
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.out { animation: none; transition: none; transform: none; } }
 @media (max-width: 640px) {
-    .toasts { left: var(--s-12); right: var(--s-12); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
+    /* as wide as the tab bar under them, and centred like it */
+    .toasts { left: 0; right: 0; margin-inline: auto; width: var(--tabbar-w); align-items: stretch; bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-48) + var(--s-48)); }
     .toast { max-width: none; }
 }

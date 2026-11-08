@@ -36,6 +36,9 @@
      the same four everywhere, 420, 640, 980 and 1280px */
   /* the widest a page grows, the same in every app */
   --page-max: 1500px;
+  /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
+     as each other; read by fixed elements, so 100% is the screen's width */
+  --tabbar-w: min(calc(100% - 40px), 420px);
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
   --r-s: 4px; --r-m: 6px; --r-l: 8px;
   --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
