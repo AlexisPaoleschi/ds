@@ -1,0 +1,69 @@
+/* Tokens of the design system shared by Alexis's apps.
+   Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
+   (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
+   Apps only use the roles (--bg, --ink, --accent…), never a raw value, so that a theme changes everything at once. */
+
+/* raw values */
+:root {
+  --gold-500: #c9a961; --gold-600: #b39654;
+  --night-900: #0e0f12; --night-800: #16181d; --night-700: #1c1f26; --night-600: #262a33; --night-500: #333845;
+  --mist-100: #eceef3; --mist-300: #9ba3b2; --mist-500: #7e8795;
+  --green-400: #4ec98a; --red-400: #e8686b; --yellow-400: #e3b341;
+  --cream-50: #fdfcfa; --beige-100: #f7f4ef; --coal-900: #1a1a1a; --wine-600: #a3403e;
+  --font-archivo: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-plex-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-gilda: "Gilda Display", Georgia, serif;
+  /* the palette: eight colours of one lightness and one intensity, for banks, categories, networks and agendas;
+     green, red and yellow stay for money in, money out and what needs a look */
+  --c-bleu: #64a1ee; --c-ciel: #45bde7; --c-turquoise: #3fc0c0; --c-violet: #a58de6; --c-mauve: #cb7fc5; --c-rose: #df7a9b; --c-orange: #e99355; --c-ardoise: #8e99ab;
+  --black: #000000; --white: #ffffff;
+  /* text: ten sizes, three line heights, four letter spacings */
+  --fs-9: 9px; --fs-10: 10px; --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
+  /* the big sums at the top of a screen grow with it */
+  --fs-display: clamp(34px, 9vw, 50px); --fs-display-2: clamp(var(--fs-22), 6.5vw, 30px);
+  --lh-tight: 1; --lh-ui: 1.3; --lh-text: 1.5;
+  --ls-tight: -.015em; --ls-caps: .12em; --ls-wide: .17em; --ls-brand: .22em;
+  /* space: one scale for paddings, margins and gaps */
+  --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-20: 20px; --s-24: 24px; --s-32: 32px; --s-48: 48px;
+  /* layers, from the page up: raised, edge tab, veil, overlay, tab bar, sheet, passing message */
+  --z-raise: 2; --z-edge: 25; --z-veil: 29; --z-over: 30; --z-bar: 40; --z-sheet: 50; --z-toast: 60;
+  /* durations, and the two shadows: menus, then sheets and drawers */
+  --t-fast: .15s; --t-mid: .3s;
+  --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
+  --shadow-sheet: 0 12px 32px color-mix(in srgb, var(--black) 45%, transparent);
+  /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
+     the same four everywhere, 420, 640, 980 and 1280px */
+  /* the widest a page grows, the same in every app */
+  --page-max: 1500px;
+  /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
+  --r-s: 4px; --r-m: 6px; --r-l: 8px;
+  --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* atelier: the default theme */
+:root, [data-theme="atelier"] {
+  color-scheme: dark;
+  --bg: var(--night-900); --panel: var(--night-800); --panel-2: var(--night-700);
+  --line: var(--night-600); --line-2: var(--night-500);
+  --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
+  --accent: var(--gold-500); --accent-soft: rgba(201,169,97,.12); --accent-line: rgba(201,169,97,.35); --accent-strong: rgba(201,169,97,.5);
+  --on-accent: var(--night-800);
+  --good: var(--green-400); --bad: var(--red-400); --bad-soft: rgba(232,104,107,.12); --bad-line: rgba(232,104,107,.35);
+  --mid: var(--yellow-400);
+  --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
+}
+
+/* vitrine: the public sites */
+[data-theme="vitrine"] {
+  color-scheme: light;
+  --bg: var(--beige-100); --panel: var(--cream-50); --panel-2: #fff;
+  --line: rgba(26,26,26,.12); --line-2: rgba(26,26,26,.2);
+  --ink: var(--coal-900); --dim: rgba(26,26,26,.7); --faint: rgba(26,26,26,.62);
+  /* on a light page the site's darker gold, so that gold words stay readable */
+  --accent: var(--gold-600); --accent-soft: rgba(201,169,97,.14); --accent-line: rgba(179,150,84,.5); --accent-strong: var(--gold-600);
+  --on-accent: #fff;
+  --good: #3d8b5f; --bad: var(--wine-600); --bad-soft: rgba(163,64,62,.08); --bad-line: rgba(163,64,62,.35);
+  --mid: #b8860b;
+  --display: var(--font-gilda); --body: var(--font-urbanist); --mono: var(--font-plex-mono);
+}
