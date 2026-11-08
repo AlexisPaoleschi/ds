@@ -1,0 +1,47 @@
+/* The filter panel, taken from Studio: a tab on the left edge, the panel beside the content on a computer,
+   a drawer over the page on a phone; inside, groups of buttons that switch a source on or off,
+   each with its colour square. */
+  .sq { width: 10px; height: 10px; border-radius: 2px; border: 1.5px solid var(--a, var(--dim)); flex: 0 0 auto; }
+  .sq.on { background: var(--a, var(--dim)); }
+  .fdot { position: absolute; top: 4px; right: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
+  button.edgetab:hover, button.edgetab.on { color: var(--accent); border-color: var(--accent-line); }
+  button.edgetab .vt { writing-mode: vertical-rl; transform: rotate(180deg); font: 700 var(--fs-11)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+  button.edgetab .fdot { position: static; }
+  .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
+  .side-layout.open { grid-template-columns: 230px minmax(0, 1fr); }
+  .side-layout .side { order: 0; }
+  .side { display: none; position: sticky; top: calc(env(safe-area-inset-top, 0px) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
+  .side-layout.open .side { display: block; }
+  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: 700 var(--fs-11)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--faint); }
+  .sidehead button { background: none; border: none; color: var(--faint); font-size: var(--fs-22); line-height: var(--lh-tight); cursor: pointer; padding: 0 var(--s-2); }
+  .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
+  .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
+  .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed] { text-align: left; border-radius: var(--r-m); background: none; border-color: transparent; padding: var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed]:hover { background: var(--panel-2); }
+  .scrim { display: none; }
+  .fgroup { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: center; }
+  .fhead { font: 700 var(--fs-10)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); text-transform: uppercase; color: var(--faint); min-width: 92px; }
+  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
+  button.chip[aria-pressed]:hover { border-color: var(--line-2); }
+  button.chip[aria-pressed] .ico { color: var(--accent); width: 12px; height: 12px; margin-left: calc(-1 * var(--s-2)); }
+  button.chip[aria-pressed="false"] { opacity: .38; }
+  button.chip[aria-pressed="false"] .sq.on { background: transparent; }
+@media (max-width: 640px) {
+    .side-layout.open { grid-template-columns: minmax(0, 1fr); }
+    .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-over); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-16)); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-16)); }
+    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: color-mix(in srgb, var(--black) 55%, transparent); z-index: var(--z-veil); }
+}
+@media (max-width: 640px) {
+   .fhead { min-width: 100%; }
+}
+  /* « seul » keeps one source alone in its group; « Tout », in the group's head, switches the group back on */
+  .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
+  .side button.fall, .side button.only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.fall:hover, .side button.only:hover, .side button.fall:focus-visible, .side button.only:focus-visible { color: var(--accent); }
+  .side .frow { display: flex; align-items: center; }
+  .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
+  .side .frow button.only { opacity: 0; }
+  .side .frow:hover button.only, .side .frow:focus-within button.only { opacity: 1; }
+  @media (hover: none) { .side .frow button.only { opacity: .8; } }
