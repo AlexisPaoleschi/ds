@@ -13,7 +13,7 @@
   :where(body.settings) .hacts { align-items: center; display: flex; gap: 8px; }
   :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: 10px 16px; justify-content: space-between; }
   :where(body.settings) .outrow .lede { margin: 0; }
-  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: rgba(232,104,107,.35); color: var(--bad); margin-left: auto; }
+  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); color: var(--bad); margin-left: auto; }
   :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: 34px; }
   :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent); }
   :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
@@ -74,7 +74,7 @@
   :where(body.settings) .conn a:hover { text-decoration: underline; }
   :where(body.settings) .mem { color: var(--faint); font: 400 12px/1.4 var(--mono); }
   :where(body.settings) .err { color: var(--bad); font-size: 14px; }
-  :where(body.settings) .logbox { background: #0a0b0e; border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: 6px; overflow: hidden; }
+  :where(body.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: 6px; overflow: hidden; }
   :where(body.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: 12px; gap: 10px; justify-content: space-between; padding: 8px 12px; }
   :where(body.settings) .loghead .live { align-items: center; display: inline-flex; gap: 8px; }
   :where(body.settings) .loghead a { color: var(--dim); text-decoration: none; white-space: nowrap; }
@@ -82,7 +82,7 @@
   :where(body.settings) .logs { font: 400 12px/1.55 var(--mono); max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: 8px 0 10px; }
   :where(body.settings) .ll { display: grid; gap: 10px; grid-template-columns: 64px minmax(0, 1fr); padding: 0 12px; }
   :where(body.settings) .ll .lt { color: var(--faint); font-variant-numeric: tabular-nums; }
-  :where(body.settings) .ll .lx { color: #c4c9d3; overflow-wrap: anywhere; white-space: pre-wrap; }
+  :where(body.settings) .ll .lx { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
   :where(body.settings) .ll.banner { margin-top: 8px; }
   :where(body.settings) .ll.banner:first-child { margin-top: 0; }
   :where(body.settings) .ll.banner .lx { color: var(--accent); font-weight: 600; }

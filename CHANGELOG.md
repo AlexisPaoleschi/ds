@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.4.0 · 8 novembre 2026
+
+Toutes les couleurs ici, et « seul » dans le panneau de filtres.
+
+- Nouveau : une palette de huit couleurs de même clarté et de même intensité (`--c-bleu`, `--c-ciel`, `--c-turquoise`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-orange`, `--c-ardoise`), plus `--black` et `--white`. Banques, catégories, types de voyage, réseaux et agendas y prennent leur couleur.
+- Le vert, le rouge et le jaune ne servent plus qu’aux entrées, aux sorties et aux alertes (Revenus garde le vert : ce sont des entrées).
+- Les transparences sont calculées depuis les jetons (`color-mix`) au lieu d’être écrites à la main. Bank et Studio n’ont plus aucun code couleur, sauf la couleur de barre du navigateur, qu’une balise meta ne sait pas lire depuis un jeton.
+- Le panneau de filtres gagne « seul », au bout de chaque ligne, qui garde une source seule dans son groupe, et « Tout », dans l’en-tête du groupe, qui rallume tout.
+
 ## 2.3.0 · 8 novembre 2026
 
 Des angles plus nets.

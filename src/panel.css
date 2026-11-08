@@ -31,8 +31,17 @@
 @media (max-width: 760px) {
     .side-layout.open { grid-template-columns: minmax(0, 1fr); }
     .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: 30; border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; padding-top: calc(env(safe-area-inset-top, 0px) + 16px); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px); }
-    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 29; }
+    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: color-mix(in srgb, var(--black) 55%, transparent); z-index: 29; }
 }
 @media (max-width: 560px) {
    .fhead { min-width: 100%; }
 }
+  /* « seul » keeps one source alone in its group; « Tout », in the group's head, switches the group back on */
+  .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  .side button.fall, .side button.only { background: none; border: 0; border-radius: var(--r-s); padding: 4px 6px; font: 600 11px/1 var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.fall:hover, .side button.only:hover, .side button.fall:focus-visible, .side button.only:focus-visible { color: var(--accent); }
+  .side .frow { display: flex; align-items: center; }
+  .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
+  .side .frow button.only { opacity: 0; }
+  .side .frow:hover button.only, .side .frow:focus-within button.only { opacity: 1; }
+  @media (hover: none) { .side .frow button.only { opacity: .8; } }
