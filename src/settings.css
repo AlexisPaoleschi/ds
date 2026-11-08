@@ -1,0 +1,109 @@
+/* The settings page, shared by the apps: everything on it lives under body.settings,
+   with no added weight (:where), so that a page can still change one of its rules. */
+  body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--fs-15); line-height: var(--lh-text); margin: 0; }
+  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  :where(body.settings) a { color: inherit; }
+  :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: 2px; outline: 2px solid var(--accent); }
+  :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
+  :where(body.settings) .eyebrow { color: var(--accent); font: 700 var(--fs-11)/var(--lh-tight) var(--display); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
+  :where(body.settings) h1 { font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); margin: 0; }
+  :where(body.settings) .back, :where(body.settings) .reload, :where(body.settings) .jump a, :where(body.settings) button.jl, :where(body.settings) .go, :where(body.settings) button.save { align-items: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); box-sizing: border-box; color: var(--dim); cursor: pointer; display: inline-flex; font: 600 var(--fs-13)/var(--lh-tight) var(--body); gap: var(--s-6); justify-content: center; letter-spacing: 0; min-height: 34px; padding: 0 var(--s-12); text-decoration: none; text-transform: none; white-space: nowrap; }
+  :where(body.settings) .back:hover, :where(body.settings) .jump a:hover, :where(body.settings) button.jl:hover, :where(body.settings) button.jl[aria-expanded="true"] { border-color: var(--accent-line); color: var(--accent); }
+  :where(body.settings) button.jl[aria-expanded="true"] { background: var(--accent-soft); }
+  :where(body.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
+  :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
+  :where(body.settings) .outrow .lede { margin: 0; }
+  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); color: var(--bad); margin-left: auto; }
+  :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: 34px; }
+  :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent); }
+  :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
+  :where(body.settings) .job, :where(body.settings) section.card { scroll-margin-top: 14px; }
+  :where(body.settings) .reload .pip { background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 2px var(--panel); display: none; height: 7px; position: absolute; right: 5px; top: 5px; width: 7px; }
+  :where(body.settings) .reload.new { border-color: var(--accent-line); color: var(--accent); }
+  :where(body.settings) .reload.new .pip { display: block; }
+  :where(body.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
+  :where(body.settings) .jump::-webkit-scrollbar { display: none; }
+  :where(body.settings) .jump a { flex: none; }
+  :where(body.settings) .card { background: var(--panel); border-radius: var(--r-l); border: 1px solid var(--line); min-width: 0; padding: var(--s-16); }
+  :where(body.settings) .ct { color: var(--faint); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-4); text-transform: uppercase; }
+  :where(body.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
+  :where(body.settings) .job { border-top: 1px solid var(--line); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); padding: var(--s-12) 0; }
+  :where(body.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(body.settings) .job .name { align-items: center; display: flex; font: 700 var(--fs-15)/var(--lh-ui) var(--display); gap: var(--s-8); }
+  :where(body.settings) .dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
+  :where(body.settings) .dot.ok { background: var(--good); }
+  :where(body.settings) .dot.bad { background: var(--bad); }
+  :where(body.settings) .dot.run { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
+  @keyframes pulse { 50% { opacity: .35; } }
+  :where(body.settings) .job .when { color: var(--dim); font-size: var(--fs-13); }
+  :where(body.settings) .job .sum { color: var(--faint); font-size: var(--fs-13); }
+  :where(body.settings) .job .sum.bad { color: var(--bad); }
+  :where(body.settings) .subs { display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-16); margin-top: var(--s-2); }
+  :where(body.settings) .job .acts { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-10); margin-top: var(--s-2); }
+  :where(body.settings) .job .acts .btns { display: flex; gap: var(--s-8); margin-left: auto; }
+  :where(body.settings) .go { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
+  :where(body.settings) .go:disabled { background: none; border-color: var(--line); color: var(--faint); cursor: default; }
+  :where(body.settings) label.sw { align-items: center; color: var(--dim); cursor: pointer; display: inline-flex; font-size: var(--fs-13); gap: var(--s-8); user-select: none; white-space: nowrap; }
+  :where(body.settings) label.sw input { -webkit-appearance: none; appearance: none; background: var(--line-2); border-radius: var(--r-m); cursor: pointer; flex: none; height: 20px; margin: 0; position: relative; transition: background var(--t-fast); width: 34px; }
+  :where(body.settings) label.sw input::after { background: var(--ink); border-radius: 50%; content: ""; height: 14px; left: 3px; position: absolute; top: 3px; transition: left var(--t-fast); width: 14px; }
+  :where(body.settings) label.sw input:checked { background: var(--good); }
+  :where(body.settings) label.sw input:checked::after { left: 17px; }
+  :where(body.settings) .group { margin-top: var(--s-16); }
+  :where(body.settings) .group:first-of-type { margin-top: var(--s-4); }
+  :where(body.settings) .group h3 { color: var(--accent); font: 700 var(--fs-13)/var(--lh-tight) var(--display); letter-spacing: 0; margin: 0 0 var(--s-6); }
+  :where(body.settings) .field { align-items: center; border-top: 1px solid var(--line); display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; padding: var(--s-8) 0; }
+  :where(body.settings) .field .lab { font-size: var(--fs-14); }
+  :where(body.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
+  :where(body.settings) .field .inp { align-items: center; display: flex; gap: var(--s-8); grid-column: 2; grid-row: 1 / span 2; }
+  :where(body.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: 600 var(--fs-15)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; }
+  :where(body.settings) .field input.changed { border-color: var(--accent); }
+  :where(body.settings) .field input.wrong { background: var(--bad-soft); border-color: var(--bad); }
+  :where(body.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
+  :where(body.settings) .field .def { white-space: nowrap; }
+  :where(body.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
+  :where(body.settings) .bar .msg { color: var(--dim); font-size: var(--fs-13); margin-right: auto; }
+  :where(body.settings) .bar .msg.bad { color: var(--bad); }
+  :where(body.settings) .bar .msg.ok { color: var(--good); }
+  :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  :where(body.settings) button.save:disabled { background: var(--line-2); border-color: var(--line-2); color: var(--faint); cursor: default; }
+  :where(body.settings) .conn { align-items: center; border-top: 1px solid var(--line); display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; padding: var(--s-10) 0; }
+  :where(body.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(body.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
+  :where(body.settings) .conn .det { color: var(--dim); font-size: var(--fs-13); grid-column: 1; overflow-wrap: anywhere; }
+  :where(body.settings) .conn a { color: var(--accent); font: 600 var(--fs-13)/var(--lh-tight) var(--body); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; }
+  :where(body.settings) .conn a:hover { text-decoration: underline; }
+  :where(body.settings) .mem { color: var(--faint); font: 400 var(--fs-12)/var(--lh-text) var(--mono); }
+  :where(body.settings) .err { color: var(--bad); font-size: var(--fs-14); }
+  :where(body.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: var(--s-6); overflow: hidden; }
+  :where(body.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; padding: var(--s-8) var(--s-12); }
+  :where(body.settings) .loghead .live { align-items: center; display: inline-flex; gap: var(--s-8); }
+  :where(body.settings) .loghead a { color: var(--dim); text-decoration: none; white-space: nowrap; }
+  :where(body.settings) .loghead a:hover { color: var(--accent); }
+  :where(body.settings) .logs { font: 400 var(--fs-12)/var(--lh-text) var(--mono); max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: var(--s-8) 0 var(--s-10); }
+  :where(body.settings) .ll { display: grid; gap: var(--s-10); grid-template-columns: 64px minmax(0, 1fr); padding: 0 var(--s-12); }
+  :where(body.settings) .ll .lt { color: var(--faint); font-variant-numeric: tabular-nums; }
+  :where(body.settings) .ll .lx { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
+  :where(body.settings) .ll.banner { margin-top: var(--s-8); }
+  :where(body.settings) .ll.banner:first-child { margin-top: 0; }
+  :where(body.settings) .ll.banner .lx { color: var(--accent); font-weight: 600; }
+  :where(body.settings) .ll.lwarn .lx { color: var(--mid); }
+  :where(body.settings) .ll.lbad .lx { color: var(--bad); }
+  :where(body.settings) .logs .none { color: var(--faint); padding: 0 var(--s-12); }
+@media (max-width: 640px) {
+  :where(body.settings) .ll { gap: 0; grid-template-columns: 1fr; }
+  :where(body.settings) .ll .lt { font-size: var(--fs-11); }
+  :where(body.settings) h1 { font-size: var(--fs-22); }
+  :where(body.settings) .subs { display: grid; gap: var(--s-10) var(--s-12); grid-template-columns: 1fr 1fr; }
+  :where(body.settings) .go, :where(body.settings) button.jl { padding: 0 var(--s-10); }
+  :where(body.settings) .job .acts { flex-wrap: nowrap; }
+  :where(body.settings) .job .acts .btns { gap: var(--s-6); }
+  :where(body.settings) .field { align-items: start; }
+  :where(body.settings) .field .help { grid-column: 1 / -1; }
+  :where(body.settings) .field .inp { gap: var(--s-6); grid-row: 1; }
+  :where(body.settings) .field input { width: 72px; }
+  :where(body.settings) .conn .det { grid-column: 1 / -1; }
+  :where(body.settings) .conn a { grid-row: 1; }
+}
+@media (max-width: 420px) {
+  :where(body.settings) .go .mx { display: none; }
+}
