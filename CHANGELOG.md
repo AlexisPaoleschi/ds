@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.5.0 · 8 novembre 2026
+
+Moins de valeurs différentes, une seule échelle par réglage.
+
+- Texte : 10 tailles (`--fs-9` à `--fs-28`) au lieu de 25, 3 interlignes au lieu de 12, 4 espacements de lettres au lieu de 16.
+- Espaces : une échelle de 12 valeurs (`--s-2` à `--s-48`) au lieu de 26 pour les marges et les écarts.
+- Superpositions nommées (`--z-raise` à `--z-toast`), deux durées (`--t-fast`, `--t-mid`), deux ombres (`--shadow-pop`, `--shadow-sheet`).
+- Largeurs d’écran : les quatre mêmes partout, 420, 640, 980 et 1280px, au lieu de 13.
+- Bank et Studio passent sur ces jetons.
+
 ## 2.4.0 · 8 novembre 2026
 
 Toutes les couleurs ici, et « seul » dans le panneau de filtres.

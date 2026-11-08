@@ -17,13 +17,14 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Dans une appli
 
-Chaque appli garde une copie figée d’une version : `static/ds/ds-2.4.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.5.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
 
 Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
 
 ## Règles
 
 - Couleurs : toutes ici. Une appli ne nomme qu’un jeton (`var(--c-bleu)`, `var(--good)`…), jamais un code couleur. Le vert, le rouge et le jaune sont réservés aux entrées, aux sorties et à ce qui demande un coup d’œil.
+- Réglages : toutes les tailles de texte, interlignes, espacements de lettres, marges, superpositions, durées et ombres sont des jetons (`--fs-14`, `--s-12`, `--z-sheet`…). Les largeurs d’écran sont les quatre mêmes partout : 420, 640, 980, 1280px.
 - Boutons : gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer.
 - Une appli n’utilise que les rôles (`--accent`, `--panel`…) et ne les redéfinit jamais.
 - Une appli ne garde dans ses pages que ce qui lui est propre (le calendrier de Studio, les voyages de Bank…). Tout ce qui sert à deux applis vit ici.
