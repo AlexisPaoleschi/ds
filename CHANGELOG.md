@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.9.1 · 8 novembre 2026
+
+- Les pages de réglages prennent la même largeur que le reste, `--page-max` (1500px), au lieu de 960px.
+- Correction : une règle des réglages pour les très petits écrans était mal écrite et ignorée par les navigateurs.
+
 ## 2.9.0 · 8 novembre 2026
 
 Une seule largeur, et le message passager.

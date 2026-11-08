@@ -1,4 +1,4 @@
-/* ds 2.9.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.9.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -343,7 +343,7 @@
 /* The settings page, shared by the apps: everything on it lives under body.settings,
    with no added weight (:where), so that a page can still change one of its rules. */
   body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--fs-15); line-height: var(--lh-text); margin: 0; }
-  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: 960px; padding-block: var(--s-24) 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   :where(body.settings) a { color: inherit; }
   :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: 2px; outline: 2px solid var(--accent); }
   :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
@@ -446,6 +446,6 @@
   :where(body.settings) .conn .det { grid-column: 1 / -1; }
   :where(body.settings) .conn a { grid-row: 1; }
 }
-@media (max-width: 640px) @media (max-width: 420px) {
+@media (max-width: 420px) {
   :where(body.settings) .go .mx { display: none; }
 }

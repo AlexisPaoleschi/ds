@@ -20,7 +20,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Dans une appli
 
-Chaque appli garde une copie figée d’une version : `static/ds/ds-2.9.0.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.9.1.css`, liée avant ses propres styles. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
 
 Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
 
