@@ -1,0 +1,68 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="version" content="2.17.0">
+<link rel="stylesheet" href="../dist/ds.css"><script src="../dist/ds.js" defer></script></head>
+<body>
+<div class="wrap">
+  <div id="cal"></div>
+  <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240</dd><div id="line"></div></div></dl>
+  <div id="line-none"></div>
+  <div id="bars"></div>
+  <div id="bars-long"></div>
+  <div id="heat"></div>
+  <div id="spark"></div>
+  <div id="split"></div>
+  <div id="ranks" class="ranks"></div>
+  <div id="mini"></div>
+  <div id="verdicts"></div>
+  <div id="period"></div>
+  <button class="btn is-icon" id="reload" type="button"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button>
+</div>
+<script>
+  // the same made-up agenda and figures as the checks expect, around a fixed today: Monday 9 November 2026
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = "2026-11-09";
+    window.changes = [];
+    window.agenda = {
+      "2026-11-09": [
+        { title: "Série Irina", color: "--c-bleu", codes: [{ text: "P", color: "--c-bleu", title: "Patreon" }], time: "16h00" },
+        { title: "Preview Léa", color: "--c-rouge", codes: "IG", open: true, late: true, lateText: "pas publié" },
+        { title: "Shooting Zoé", mark: "thick", color: "--c-vert", time: "10h00", place: "Annecy" },
+        { title: "Pilates", mark: "bar", color: "--c-rouge", time: "18h30" },
+        { title: "Newsletter", mark: "dot", color: "--c-ambre", count: "2/4" }
+      ],
+      "2026-11-12": Array.from({ length: 10 }, (_, i) => ({ title: "Post " + (i + 1), color: "--c-ciel", open: i % 2 === 0, done: i % 2 === 1 })),
+      "2026-11-02": [{ title: "Rendez-vous imprimeur", mark: "bar", color: "--c-bleu", time: "14h00" }]
+    };
+    window.cal = ds.calendar(document.getElementById("cal"), { today, items: k => agenda[k] || [], onChange: s => changes.push(s) });
+
+    const pts = Array.from({ length: 30 }, (_, i) => ({ x: "2026-10-" + String(i + 1).padStart(2, "0"), v: 1200 + i * 2 + (i === 10 ? 30 : 0) }));
+    window.line = ds.chart.line(document.getElementById("line"), pts, { color: "--c-bleu" });
+    window.lineNone = ds.chart.line(document.getElementById("line-none"), [{ x: "2026-10-01", v: 3 }]);
+
+    window.picked = [];
+    window.months = ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11"].map((k, i) => ({
+      key: k, value: 1000 + i * 50, live: k === "2026-11", parts: [{ value: 800 + i * 40, color: "--c-bleu" }, { value: 200 + i * 10, color: "--accent" }] }));
+    window.bars = ds.chart.bars(document.getElementById("bars"), months, { color: "--c-bleu", average: 1200, unit: "€", selected: "2026-11", pick: k => picked.push(k) });
+    const long = Array.from({ length: 30 }, (_, i) => { const d = new Date(Date.UTC(2024, 5 + i, 15)); return { key: d.toISOString().slice(0, 7), value: 500 + i * 10 }; });
+    window.barsLong = ds.chart.bars(document.getElementById("bars-long"), long);
+
+    window.counts = { "2026-11-09": 2, "2026-11-08": 1, "2026-11-02": 1, "2026-06-01": 3, "2025-11-10": 1, "2026-11-10": 1 };
+    window.heat = ds.chart.heat(document.getElementById("heat"), counts, { color: "--c-rouge", to: today, from: "2026-05-01", below: ws => ws >= "2026-10-01" ? "+" + (Number(ws.slice(8)) + 10) : null, note: "en vert : abonnés gagnés" });
+    window.spark = ds.chart.spark(document.getElementById("spark"), [400, 800, 1200], { color: "--c-rouge", top: 1600 });
+    window.split = ds.chart.split(document.getElementById("split"), [{ label: "Abonnements", value: 750, color: "--c-bleu" }, { label: "Achats uniques", value: 250, color: "--accent" }, { label: "Rien", value: 0 }],
+      { format: n => ds.money(n, { decimals: 0 }) });
+
+    const people = [["Irina", 1260], ["Rebecca", 840], ["Léa", 515], ["Zoé", 95]];
+    document.getElementById("ranks").append(
+      ds.rank(people.map(p => ({ name: p[0], href: "https://www.patreon.com/", sub: "ventes", value: ds.money(p[1], { decimals: 0 }), share: p[1] / people[0][1] })), { title: "Par modèle", note: "30 jours" }),
+      ds.rank([{ name: "Série", sub: "9 posts", value: ds.verdict(1.3) }], { title: "Par type", plain: true }),
+      ds.rank([], { title: "Vide" }));
+    document.getElementById("mini").append(ds.minitiles([{ label: "Médiane", value: "1 240", unit: "vues", note: "48 posts" }, { label: "Posts", value: "4,5" }, { label: "Gagnés", value: "+86" }, { label: "Payants", value: "+3" }]));
+    window.verdicts = [ds.verdict(1.43), ds.verdict(1), ds.verdict(0.62), ds.verdict(1.25, { words: true }), ds.verdict(null)];
+    document.getElementById("verdicts").append(...verdicts);
+    window.periods = [];
+    document.getElementById("period").append(ds.periodPick([[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]], 90, v => periods.push(v)));
+    window.light = ds.version(document.getElementById("reload"));
+    window.ready = true;
+  });
+</script></body></html>
