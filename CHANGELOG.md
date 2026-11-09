@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.21.1 · 9 novembre 2026
+
+- Classement (`ds.rank`) : un nom donné comme un élément (le lien d’une personne, un nom suivi de son étiquette) garde la couleur des noms, sans soulignement, et passe en or au survol, comme un nom donné en texte avec son adresse.
+- Classement : le nom et sa ligne grise reprennent l’interligne du texte (1,5), celui des classements de Studio, au lieu de 1,3 : les lignes respirent comme dans Studio en ligne.
+- Petites tuiles (`ds.minitiles`) sur téléphone : le titre ne passe sur deux lignes que pour quatre tuiles rangées deux par deux. Deux ou trois tuiles gardent leur titre sur une ligne, comme dans Studio, pour que leurs chiffres restent alignés.
+
 ## 2.21.0 · 9 novembre 2026
 
 - Année de jours (`ds.chart.heat`) : ce qu’une semaine a gagné, écrit sous elle (`below`), peut dire plus au survol : `below(lundi)` rend un chiffre, ou `{text, title}` (« semaine du 2 nov. · +12 abonnés · 3 posts », comme dans Studio).
