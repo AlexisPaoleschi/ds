@@ -1,0 +1,105 @@
+/* The calendar, taken from Studio's agenda (ds.calendar): under the period head, a month of day cells and the panel of the
+   selected day, a week of columns, or a list of days. Each item is a line with its coloured mark: a square (filled once
+   done), a dot, or a bar for what has a time (an appointment, a shooting); on a phone the cells only keep the marks, as dots. */
+  .cal-body { display: block; min-width: 0; }
+  .cal-dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); margin-bottom: var(--s-6); }
+  .cal-dow span { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-align: center; text-transform: uppercase; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); }
+  /* a cell is as tall as eight lines, the most it shows before « +N » */
+  .cal-grid { container-type: inline-size; }
+  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8);
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .cal-cell:hover { border-color: var(--line-2); }
+  .cal-cell.is-off { opacity: var(--o-off); }
+  .cal-cell.is-today { border-color: var(--accent); }
+  /* the chosen day takes the chosen gold (chosen.css), with the full gold edge and its own text's colour */
+  .cal-cell { --chosen-line: var(--accent); --chosen-ink: currentColor; }
+  .cal-n { margin-bottom: var(--s-2); color: var(--dim); font: 700 var(--fs-15)/var(--lh-tight) var(--mono); }
+  .cal-cell.is-today .cal-n { color: var(--accent-text); }
+  .cal-line { display: flex; align-items: center; gap: var(--s-4); min-width: 0; }
+  .cal-lt { min-width: 0; overflow: hidden; color: var(--ink); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
+  /* what has a time (a bar) reads a little quieter than what is to publish; what is done fades, what is late is red */
+  .cal-line.is-bar .cal-lt { color: var(--dim); }
+  .cal-line.is-done .cal-lt { color: var(--faint); }
+  .cal-line.is-late .cal-lt { color: var(--bad); }
+  /* what runs over several days: one bar in its colour across them, reaching over the cells' edges and the gap between
+     them, the same height in every cell it crosses (an empty line keeps a free lane); its title, where it starts and on
+     each Monday, runs over the days it goes on to */
+  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--fs-12) * var(--lh-text)); }
+  .cal-line.is-run { --reach: calc(var(--s-8) + 1px + var(--s-6) / 2); position: relative; margin: 0 calc(-1 * var(--reach)); padding: 0 var(--s-6);
+    background: color-mix(in srgb, var(--n, var(--dim)) 30%, var(--panel)); }
+  .cal-line.is-run.is-first { margin-left: 0; border-top-left-radius: var(--r-s); border-bottom-left-radius: var(--r-s); }
+  .cal-line.is-run.is-last { margin-right: 0; border-top-right-radius: var(--r-s); border-bottom-right-radius: var(--r-s); }
+  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: 600;
+    max-width: calc(var(--run, 1) * (100cqw - 6 * var(--s-6)) / 7 + (var(--run, 1) - 1) * var(--s-6) - 2 * var(--s-8) - 2 * var(--s-6)); }
+  .cal-line.is-run.is-done { opacity: .55; }
+  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  /* a group's codes, after its count, are the first thing a narrow cell lets go */
+  @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
+  .cal-more { padding-left: var(--s-2); color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-more-dots { display: none; }
+  /* the marks: a square, filled once done; a dot; a bar, thin or thick (a shooting) */
+  .cal-mark.is-dot { border-radius: 50%; }
+  .cal-mark.is-bar, .cal-mark.is-thick { width: 2px; height: 12px; border: 0; border-radius: calc(var(--r-s) / 4); }
+  .cal-mark.is-thick { width: 3px; }
+  /* a short coloured code (a network: « IG », « P »), its full name on hover */
+  .cal-code { display: inline-grid; flex: none; place-items: center; min-width: 18px; height: 15px; padding: 0 var(--s-2); border-radius: var(--r-s);
+    color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--dim)) var(--tint-soft), transparent); font: 700 var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; }
+  /* the day's panel, under the month or one per day in the list */
+  .cal-day { margin-top: var(--s-14); padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); box-shadow: var(--card-shadow); }
+  .cal-day.is-today { border-color: var(--accent-line); }
+  .cal-day-t { margin: 0 0 var(--s-12); font: var(--head-weight) var(--fs-17)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .cal-day-t::first-letter { text-transform: uppercase; }
+  .cal-day .rows .cal-mark, .cal-wcol .rows .cal-mark { align-self: center; }
+  .cal-day li.is-done .row-title, .cal-wcol li.is-done .row-title { color: var(--faint); }
+  .cal-day a.row-title:hover, .cal-wcol a.row-title:hover { color: var(--accent-text); }
+  /* the week: seven columns, today's in gold */
+  .cal-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); align-items: start; }
+  .cal-wcol { min-width: 0; min-height: 160px; padding: var(--s-12) var(--s-10); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); }
+  .cal-wcol.is-today { border-color: var(--accent); }
+  .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .cal-wcol.is-today h3 { color: var(--accent-text); }
+  .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* a narrow column cuts its titles between syllables, never in the middle of one */
+  .cal-wcol .row-title { overflow-wrap: break-word; hyphens: auto; }
+  .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-11)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
+  /* the list: the week before folded above its first day */
+  .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
+    color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
+  .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
+  .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
+  /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
+  .cal-head .periodnav { align-items: stretch; }
+  .cal-head .periodnav .btn { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
+  /* the arrows, the sprite's chevrons, in square buttons */
+  .cal-head .periodnav .btn.is-icon { width: auto; height: auto; aspect-ratio: 1; padding: 0; }
+  .cal-arrows { display: flex; gap: var(--s-6); }
+  /* the month picker under the title is ds.datePick on months (datepick.css): it floats there as every picker under a
+     period's title does */
+@media (max-width: 768px) {
+  /* the views and the arrows share one row under the title; the arrows go under the views where the row is too narrow */
+  .cal-head .periodnav { flex-wrap: wrap; justify-content: space-between; gap: var(--s-6) var(--s-4); }
+  .cal-head .periodnav .tabs { flex: 1 1 auto; min-width: 0; }
+  .cal-head .periodnav .tabs button { flex: 1 1 0; padding: var(--s-6) var(--s-8); font-size: var(--fs-11); letter-spacing: 0; text-align: center; }
+  .cal-arrows { margin-left: auto; gap: var(--s-4); }
+  .cal-head .periodnav .btn { flex: none; padding: 0 var(--s-8); }
+  .cal-dow, .cal-grid { gap: var(--s-4); }
+  /* a phone's month: each item a dot in its colour, three at most, then « +N »; the panel below says the rest */
+  .cal-cell { flex-direction: row; flex-wrap: wrap; align-content: space-between; align-items: center; gap: var(--s-2); min-height: 54px; padding: var(--s-4) var(--s-4) var(--s-6); }
+  .cal-n { flex: 0 0 100%; margin: 0; }
+  .cal-cell .cal-line { gap: 0; }
+  .cal-cell .cal-line.is-extra, .cal-cell .cal-lt, .cal-cell .cal-code, .cal-cell .cal-count, .cal-cell .cal-more { display: none; }
+  /* a run stays a bar across its days, thin, without its title (the panel says it), right under the day's number in
+     every cell it crosses, the day's dots under it */
+  .cal-cell:has(> .is-run, > .is-gap) { align-content: flex-start; }
+  .cal-cell .cal-line.is-run, .cal-cell .cal-line.is-gap { flex: 0 0 100%; height: var(--s-4); padding: 0; }
+  .cal-cell .cal-line.is-run { --reach: calc(var(--s-4) + 1px + var(--s-4) / 2); flex-basis: calc(100% + 2 * var(--reach)); background: var(--n, var(--dim)); }
+  .cal-cell .cal-line.is-run.is-first, .cal-cell .cal-line.is-run.is-last { flex-basis: calc(100% + var(--reach)); }
+  .cal-cell .cal-line.is-run.is-first.is-last { flex-basis: 100%; }
+  .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
+  .cal-cell .cal-mark.is-open { background: transparent; }
+  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-week { grid-template-columns: minmax(0, 1fr); }
+  .cal-wcol { min-height: 0; }
+  .cal-wcol h3 { font-size: var(--fs-12); }
+}
