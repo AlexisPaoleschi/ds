@@ -1,0 +1,7 @@
+/* The « new version » light, taken from Studio (ds.version): a page's reload button, <button class="btn is-icon newver">
+   with its .newver-pip, takes the gold and a gold dot on its corner when the server says a newer version is on line.
+   The dot's ring is the ground behind it, so that it reads apart from the button's edge. */
+  .newver { position: relative; }
+  .newver-pip { display: none; position: absolute; top: var(--s-4); right: var(--s-4); width: 7px; height: 7px; background: var(--accent); border-radius: 50%; outline: 2px solid var(--panel); }
+  .newver.is-on { color: var(--accent); border-color: var(--accent-strong); }
+  .newver.is-on .newver-pip { display: block; }
