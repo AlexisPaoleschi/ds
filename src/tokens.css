@@ -1,0 +1,339 @@
+/* Tokens of the design system shared by Alexis's apps.
+   Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
+   (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
+   Apps only use the roles (--bg, --ink, --accent…), never a raw value, so that a theme changes everything at once. */
+
+/* raw values */
+:root {
+  --gold-500: #c9a961; --gold-600: #b39654;
+  --night-900: #0e0f12; --night-800: #16181d; --night-700: #1c1f26; --night-600: #262a33; --night-500: #333845;
+  --mist-100: #eceef3; --mist-300: #9ba3b2; --mist-500: #8892a0;
+  /* money in, money out, what needs a look: vivid, as the palette is; Atelier's colours no longer follow the gold's
+     lightness (that made them pale), the gold alone stays as it is */
+  --green-400: #4ec98a; --red-400: #e8686b; --yellow-400: #e3b341;
+  --cream-50: #fdfcfa; --beige-100: #f7f4ef; --coal-900: #1a1a1a; --wine-600: #a3403e;
+  /* vitrine's « needs a look », a rust that reads on white and on the beige (5.6:1 and 5.1:1) and stays apart from its gold */
+  --rust-600: #995632;
+  --font-archivo: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-plex-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  --font-gilda: "Gilda Display", Georgia, serif;
+  /* the palette, for banks, categories, networks and agendas: the vivid colours the apps had before the design system,
+     made lighter where they were too dark to read on the night background (4.8:1 or more on a panel), and kept apart
+     wherever they are shown together (a bank's list, a month's spending, a trip, Studio's networks and agendas).
+     Its red, green and yellow name a bank, a category or an agenda; --good, --bad and --mid alone mean money in,
+     money out and what needs a look */
+  --c-rouge: #f1453f; --c-corail: #e8686b; --c-orange: #fb8139; --c-ambre: #da942c; --c-jaune: #e3b341; --c-vert: #4ec98a; --c-emeraude: #21a475;
+  --c-turquoise: #2bc5c8; --c-ciel: #3fb6f2; --c-bleu: #498fee; --c-violet: #9b8cf2; --c-mauve: #cc7fd9; --c-rose: #e05b9e; --c-ardoise: #8e99ab;
+  --black: #000000; --white: #ffffff;
+  /* over a photo, whatever the theme: white and black veils, and the shadows that keep a text readable on it */
+  --overlay-white-strong: color-mix(in srgb, var(--white) 80%, transparent); --overlay-white-medium: color-mix(in srgb, var(--white) 50%, transparent);
+  --overlay-white-light: color-mix(in srgb, var(--white) 25%, transparent); --overlay-white-lighter: color-mix(in srgb, var(--white) 10%, transparent);
+  --overlay-black-strong: color-mix(in srgb, var(--black) 90%, transparent); --overlay-black-medium: color-mix(in srgb, var(--black) 50%, transparent);
+  --overlay-black-soft: color-mix(in srgb, var(--black) 35%, transparent);
+  --text-shadow-sm: 0 2px 4px color-mix(in srgb, var(--black) 60%, transparent); --text-shadow-md: 0 2px 6px color-mix(in srgb, var(--black) 60%, transparent);
+  --text-shadow-lg: 0 2px 8px color-mix(in srgb, var(--black) 60%, transparent);
+  /* the veil behind a window, a sheet or a phone's drawer */
+  --veil: color-mix(in srgb, var(--black) 55%, transparent);
+  /* a white button over a photo (the way back on a hero): its soft shadow, and the one it takes when it rises */
+  --photo-shadow: 0 2px 8px color-mix(in srgb, var(--black) 10%, transparent); --photo-shadow-up: 0 4px 16px color-mix(in srgb, var(--black) 10%, transparent);
+  /* the photo viewer's controls, over its black veil: their signs and their thin ring */
+  --viewer-ink: color-mix(in srgb, var(--white) 70%, transparent); --viewer-line: color-mix(in srgb, var(--white) 30%, transparent);
+  /* the frosted glass over a photo (the viewer's buttons and count, the home's bars): how much it blurs, and the blurs of a
+     way back over a photo (small), a blurred thumbnail and the phone's tab bar (large) */
+  --blur-s: 8px; --blur: 10px; --blur-m: 12px; --blur-l: 18px; --glass-blur: blur(var(--blur));
+  /* text: eight sizes, three line heights, four letter spacings; 11px is the least, for a short label in capitals or an axis */
+  --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
+  /* the sizes of alexispaoleschi.com: its text, its subtitles, its section titles */
+  --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px; --fs-36: 36px; --fs-56: 56px;
+  /* the site's bigger words: its gallery and box titles, its home name, its prices, the title over an event page's photo
+     (each a step apart from the next: no two within 4px) */
+  --fs-26: 26px; --fs-32: 32px; --fs-42: 42px; --fs-48: 48px; --fs-64: 64px; --fs-80: 80px; --fs-104: 104px;
+  /* four sizes by role, a step bigger on a computer (from 769px, below): the text, a lead, a box's title, a big title of
+     a public page (Selecta's text and titles, the site's boxes, Vitrine's compact figures) */
+  --text-md: var(--fs-15); --text-lg: var(--fs-18); --text-xl: var(--fs-20); --text-2xl: var(--fs-22);
+  /* the big sums at the top of a screen grow with it */
+  --fs-display: clamp(34px, 9vw, 50px); --fs-display-2: clamp(var(--fs-22), 6.5vw, 30px);
+  --lh-tight: 1; --lh-ui: 1.3; --lh-text: 1.5;
+  /* the airy line of the public sites: their titles, Selecta's text */
+  --lh-loose: 1.8;
+  /* the site's notes (1.6) and its running text (2) */
+  --lh-relaxed: 1.6; --lh-airy: 2;
+  --ls-tight: -.015em; --ls-caps: .12em; --ls-wide: .17em; --ls-brand: .22em;
+  /* a little air between the letters: Selecta's titles and its footer */
+  --ls-loose: .07em;
+  /* the letter spacings of alexispaoleschi.com and of Vitrine, in em like the rest, so that they follow a title that shrinks
+     on a phone; named by their thousandths of the text's size (--ls-125: .125em). Each gives, at the size it is used at on
+     a computer, the very pixels the site wrote (2px on a 24px title: --ls-083, a twelfth of the size) */
+  --ls-031: calc(1em / 32); --ls-036: calc(1em / 28); --ls-038: calc(1em / 26); --ls-045: calc(1em / 22); --ls-050: .05em;
+  --ls-056: calc(1em / 18); --ls-063: .0625em; --ls-068: calc(1.5em / 22); --ls-071: calc(1em / 14); --ls-075: .075em; --ls-077: calc(1em / 13);
+  --ls-083: calc(1em / 12); --ls-091: calc(1em / 11); --ls-094: .09375em; --ls-096: calc(2.5em / 26); --ls-100: .1em; --ls-107: calc(1.5em / 14);
+  --ls-119: calc(5em / 42); --ls-125: .125em; --ls-133: calc(2em / 15); --ls-136: calc(1.5em / 11); --ls-143: calc(1em / 7); --ls-150: .15em;
+  --ls-154: calc(2em / 13); --ls-167: calc(1em / 6); --ls-179: calc(2.5em / 14); --ls-182: calc(2em / 11); --ls-188: .1875em; --ls-214: calc(1.5em / 7);
+  /* space: one scale for paddings, margins and gaps */
+  --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-18: 18px; --s-20: 20px; --s-24: 24px; --s-28: 28px;
+  --s-32: 32px; --s-36: 36px; --s-40: 40px; --s-48: 48px;
+  --s-56: 56px; --s-60: 60px; --s-80: 80px;
+  /* layers, from the page up: raised, edge tab, overlay, tab bar, the veil under a phone's drawer, the drawer (above the
+     tab bar), a sheet and the photo viewer, a window over them, passing message */
+  --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-dialog: 55; --z-toast: 60;
+  /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
+  --t-loop: 2s;
+  /* how much shows of what is turned off (a day outside the month, a source switched off), and of what waits */
+  --o-off: .38; --o-muted: .75;
+  /* icons: small (a row's, a figure's unit), medium (a button's) */
+  --ico-s: 12px; --ico-m: 16px;
+  /* the least a finger can aim at */
+  --touch-target: 44px;
+  /* the room a phone keeps at its edges (its notch, its bar) */
+  --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px);
+  /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
+     the same three everywhere, those of alexispaoleschi.com: 480 (a phone), 768 (a tablet held upright), 1024px (one held sideways),
+     769px for « wider than a phone », and 1280px for a very large screen. The site kit alone may also ask for a phone held
+     sideways: (max-width: 956px) and (orientation: landscape) */
+  /* the widest a page grows, the same in every app */
+  --page-max: 1500px;
+  /* the width of a public site's pages, made to be read as much as looked at (alexispaoleschi.com) */
+  --page-site: 1200px;
+  /* reading widths: a short form or a band's words, a page of text, a page's introduction, a hero's words */
+  --read-s: 560px; --read-m: 640px; --read-l: 720px; --read-xl: 900px;
+  /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
+     as each other; read by fixed elements, so 100% is the screen's width */
+  --tabbar-w: min(calc(100% - 40px), 420px);
+  --font-urbanist: "Urbanist", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+/* atelier: the default theme */
+:root, [data-theme="atelier"] {
+  color-scheme: dark;
+  --bg: var(--night-900); --panel: var(--night-800); --panel-2: var(--night-700);
+  --line: var(--night-600); --line-2: var(--night-500);
+  --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
+  --accent: var(--gold-500); --accent-soft: color-mix(in srgb, var(--gold-500) 12%, transparent);
+  --accent-line: color-mix(in srgb, var(--gold-500) 35%, transparent); --accent-strong: color-mix(in srgb, var(--gold-500) 50%, transparent);
+  /* the gold of a word: the gold itself, in both themes; a theme could darken it alone */
+  --accent-text: var(--accent);
+  --on-accent: var(--night-800);
+  --good: var(--green-400); --bad: var(--red-400); --mid: var(--yellow-400);
+  /* how much of a status colour (good, bad, mid) its soft ground and its line keep */
+  --soft-mix: 12%; --line-mix: 35%;
+  /* how much of a palette colour a word keeps, the rest being ink: all of it on the night background */
+  --tint-ink: 100%;
+  --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
+  /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
+  --r-s: 4px; --r-m: 6px; --r-l: 8px;
+  /* durations, and the shadows: menus, then sheets and drawers; the public sites' soft ones have none here */
+  --t-fast: .15s; --t-mid: .3s; --t-slow: .4s;
+  --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
+  --shadow-sheet: 0 12px 32px color-mix(in srgb, var(--black) 45%, transparent);
+  --shadow-soft: none; --shadow-card: none;
+}
+
+/* roles: what the components read, so that each theme gives them its own character.
+   Declared again on every element that sets a theme, so that they follow that theme's fonts and colours.
+   These are atelier's; vitrine changes the ones it needs in its own block below. */
+:root, [data-theme] {
+  /* titles: the big ones (a page's, a period's), then the small headings (a window's, a tile's) */
+  --title-font: var(--display); --title-weight: 800; --title-lh: var(--lh-tight); --title-ls: var(--ls-tight); --title-case: none;
+  --head-weight: 700; --head-lh: var(--lh-ui);
+  /* labels: the small capitals over a card, a tab, a group of filters, all spaced alike */
+  --label-font: var(--display); --label-weight: 700; --label-ls: var(--ls-caps);
+  /* running text */
+  --text-size: var(--fs-15); --text-weight: 400; --text-lh: var(--lh-text);
+  /* a short line beside something: a message, a passing message */
+  --note-size: var(--fs-13);
+  /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
+  --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
+  /* the height of a control: a field, a menu and a button side by side line up */
+  --control-h: 34px;
+  /* buttons: one height and one font for all of them */
+  --btn-size: var(--fs-13); --btn-weight: 600; --btn-ls: 0; --btn-case: none; --btn-h: var(--control-h); --btn-px: var(--s-12);
+  --btn-bg: var(--panel-2); --btn-shadow: none; --btn-lift: 0px;
+  /* the small button: a row's actions, a way back */
+  --btn-s-h: 28px; --btn-s-px: var(--s-10); --btn-s-size: var(--fs-12); --btn-s-ls: 0;
+  /* a button with only an icon (reload, settings, a pencil, a cross): one size everywhere, square */
+  --btn-icon-h: 32px;
+  /* the large one (.is-large): a public site's call to act, on its hero or a section; a tool's is its usual button */
+  --btn-l-h: var(--btn-h); --btn-l-px: var(--btn-px); --btn-l-ls: var(--btn-ls);
+  /* fields */
+  --field-size: var(--fs-14); --field-weight: 500; --field-lh: var(--lh-ui); --field-ls: normal; --field-py: var(--s-8); --field-px: var(--s-10);
+  --field-bg: var(--panel-2); --field-line: var(--line); --field-halo: none;
+  /* the line under a field: what happened to it */
+  --field-note-size: var(--fs-12); --field-note-weight: 500; --field-note-lh: var(--lh-ui); --field-note-ls: normal;
+  /* cards */
+  --card-bg: var(--panel); --card-line: var(--line); --card-pad: var(--s-16); --card-shadow: none;
+  /* a card you click: how far it rises on hover, and its shadow then */
+  --card-lift: 0px; --card-hover-shadow: var(--card-shadow);
+  /* a card's title, its lines of details (a place, a date), and the room between them */
+  --card-title-size: var(--fs-17); --card-title-ls: var(--title-ls); --card-gap: var(--s-8);
+  --card-meta-size: var(--fs-12); --card-meta-weight: 500; --card-meta-ls: var(--ls-caps); --card-meta-lh: var(--lh-ui);
+  /* a message: a sentence in a box, with its icon */
+  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: 14px; --msg-icon-top: var(--s-2);
+  /* a passing message */
+  --toast-weight: 500; --toast-py: var(--s-8); --toast-pl: var(--s-14); --toast-pr: var(--s-8);
+  /* the smallest corner: a swatch, a small bar */
+  --r-xs: calc(var(--r-s) / 2);
+  /* the soft ground and the line of each status colour, and the soft ground an item's colour (--n) tints */
+  --good-soft: color-mix(in srgb, var(--good) var(--soft-mix), transparent); --good-line: color-mix(in srgb, var(--good) var(--line-mix), transparent);
+  --bad-soft: color-mix(in srgb, var(--bad) var(--soft-mix), transparent); --bad-line: color-mix(in srgb, var(--bad) var(--line-mix), transparent);
+  --mid-soft: color-mix(in srgb, var(--mid) var(--soft-mix), transparent); --mid-line: color-mix(in srgb, var(--mid) var(--line-mix), transparent);
+  --tint-soft: 14%;
+  /* a passing message's action: as the buttons are, unless the theme spells it in capitals */
+  --act-ls: normal; --act-case: none;
+  /* a way back's spacing, a slider's track, a sheet's pairs of words, a table's words and heads */
+  --back-ls: var(--ls-caps); --zoom-track: var(--line-2); --kv-k-size: var(--fs-11); --kv-v-size: var(--fs-14);
+  --tbl-size: var(--fs-14); --tbl-th-size: var(--fs-11); --tbl-th-ls: var(--ls-caps);
+  /* the buttons of a window, of a sheet's actions, and the controls of a list's selection bar */
+  --dialog-btn-px: var(--btn-px); --sheet-acts-btn-px: var(--btn-px); --sheet-acts-btn-ls: var(--btn-ls); --sheet-acts-btn-size: var(--btn-size);
+  --selbar-field-size: var(--field-size); --selbar-field-py: var(--s-6); --selbar-field-px: var(--field-px); --selbar-btn-px: var(--btn-s-px);
+  /* a choice made: its gold (chosen.css), and a tab's ground when it is the one shown */
+  --chosen-ink: var(--accent-text); --chosen-bg: var(--accent-soft); --chosen-line: var(--accent-line); --tab-on-bg: var(--accent-soft);
+  /* the spinner: its ring and how long a turn takes, the same in both themes */
+  --spin-ring: var(--accent-line); --spin-time: .8s;
+  /* the small pages (privacy, terms): their headings, the line under a heading, bold words */
+  --doc-h2-size: var(--fs-17); --doc-rule: var(--line); --doc-h3-weight: 600; --doc-strong: 600;
+  /* the top bar: its ground, its line of shadow, its room; the name on its left */
+  --topbar-bg: var(--panel); --topbar-blur: none; --topbar-shadow: none; --topbar-py: var(--s-12); --topbar-px: var(--s-16); --topbar-gap: var(--s-16);
+  --brand-size: var(--fs-13); --brand-ls: var(--ls-brand); --brand-color: var(--accent);
+  --topbar-link-size: var(--fs-13); --topbar-link-ls: var(--ls-caps);
+  --topbar-btn-h: var(--btn-h); --topbar-btn-px: var(--btn-px);
+  /* windows: the room inside, the size of the question and of the text under it */
+  --sheet-pad: var(--s-20); --dialog-t-size: var(--fs-17); --dialog-x-size: var(--fs-14);
+  /* a card's cover photo: how much it grows on hover and how slowly, where its badge sits */
+  --cover-zoom: 1.03; --cover-time: var(--t-mid); --cover-badge: var(--s-10);
+  /* a small card, for narrow columns: a smaller title, less room inside */
+  --card-s-title-size: var(--fs-15); --card-s-title-ls: var(--title-ls); --card-s-pad: var(--s-12); --card-s-gap: var(--s-6); --card-s-meta-size: var(--fs-11); --card-s-badge: var(--s-8);
+  /* a badge: a few capitals on a filled ground */
+  --badge-weight: var(--label-weight); --badge-size: var(--fs-11); --badge-lh: var(--lh-tight); --badge-ls: var(--ls-caps);
+  --badge-py: var(--s-2); --badge-px: var(--s-6);
+  /* a section's head: its title over a short gold line, then a line in gold capitals */
+  --section-size: var(--fs-28); --section-ls: var(--title-ls); --section-sub-size: var(--fs-13); --section-sub-ls: var(--ls-caps);
+  /* a site's footer */
+  --footer-size: var(--fs-13); --footer-ls: 0; --footer-py: var(--s-24);
+  /* a word on a tint of its own colour (a network's code, a bank's name in a chip) keeps less of it */
+  --tint-ink-on-tint: calc(var(--tint-ink) * .75);
+  /* the outline that shows where the keyboard is */
+  --focus: 2px solid var(--accent); --focus-offset: 2px;
+}
+
+/* vitrine: the public sites, alexispaoleschi.com and Selecta. Every value here is the site's own. */
+[data-theme="vitrine"] {
+  color-scheme: light;
+  /* the site's grounds: a cream page, white cards and fields, beige bands */
+  --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100);
+  /* every line in the site's soft gold; the full gold to underline */
+  --line: color-mix(in srgb, var(--gold-500) 20%, transparent); --line-2: var(--gold-500); --pop-line: var(--line);
+  /* the site's two greys: 85% for what is read, 60% for what stays quiet */
+  --ink: var(--coal-900); --dim: color-mix(in srgb, var(--coal-900) 85%, transparent); --faint: color-mix(in srgb, var(--coal-900) 60%, transparent);
+  /* the gold of alexispaoleschi.com, the reference every colour is matched to; its darker gold on hover, and for a success */
+  --accent: var(--gold-500); --accent-soft: color-mix(in srgb, var(--gold-500) 5%, transparent); --accent-line: var(--gold-500); --accent-strong: var(--gold-600);
+  /* a word in gold keeps the site's gold, and a word on gold its white, a choice made knowing they read less on white (2.2:1) */
+  --accent-text: var(--accent); --on-accent: var(--white);
+  --good: var(--gold-600); --bad: var(--wine-600); --mid: var(--rust-600); --soft-mix: 8%;
+  /* a word in a palette colour keeps 55% of it and takes 45% of ink, so that every colour reads on white and on the beige */
+  --tint-ink: 55%;
+  --display: var(--font-gilda); --body: var(--font-urbanist); --mono: var(--font-plex-mono);
+  /* square corners */
+  --r-s: 0; --r-m: 0; --r-l: 0;
+  /* the site's soft shadows: a bar or a table (the lightest), a card at rest, then anything raised (on hover, a passing
+     message, a window) */
+  --shadow-soft: var(--photo-shadow); --shadow-card: var(--photo-shadow-up); --shadow-pop: 0 8px 24px color-mix(in srgb, var(--black) 10%, transparent); --shadow-sheet: var(--shadow-pop);
+  /* the site moves more slowly */
+  --t-fast: .3s; --t-mid: .4s; --t-slow: .5s;
+  /* titles in Gilda Display, never bold, in spaced capitals, with a line height of their own */
+  --title-weight: 400; --head-weight: 400; --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --title-ls: .1em; --title-case: uppercase;
+  /* small capitals in Urbanist */
+  --label-font: var(--body); --label-weight: 500;
+  /* text: 16px, light, with room between the lines */
+  --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
+  --box-bg: var(--accent-soft);
+  /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
+  --control-h: 45px;
+  /* buttons: 14px spaced capitals, white with a soft gold edge and a soft shadow; they rise on hover */
+  --btn-size: var(--fs-14); --btn-weight: 500; --btn-ls: var(--ls-caps); --btn-case: uppercase; --btn-px: var(--s-28);
+  /* the large one, the site's: 63px high, more spaced, 48px on each side */
+  --btn-l-h: 63px; --btn-l-px: var(--s-48); --btn-l-ls: var(--ls-179);
+  --btn-bg: var(--overlay-white-strong); --btn-shadow: var(--shadow-card); --btn-lift: calc(-1 * var(--s-2));
+  /* the small one is the site's way back (« ← Events ») */
+  --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-167);
+  /* a button with only an icon: as high as the others */
+  --btn-icon-h: var(--btn-h);
+  /* the action of a passing message, in the buttons' capitals */
+  --act-ls: var(--ls-caps); --act-case: uppercase;
+  /* fields: 16px, the least that keeps an iPhone from zooming in on them; roomy, a soft gold edge;
+     in use, the full gold edge and a faint gold halo */
+  --field-size: var(--fs-16); --field-weight: 400; --field-lh: normal; --field-ls: var(--ls-031); --field-py: var(--s-12); --field-px: var(--s-20);
+  --field-bg: var(--white); --field-line: var(--line); --field-halo: 0 0 0 3px var(--accent-soft);
+  /* the line under a field, as under the site's newsletter field: 13px, medium, a little spaced */
+  --field-note-size: var(--fs-13); --field-note-weight: 500; --field-note-lh: 1.4; --field-note-ls: var(--ls-038);
+  /* cards: white, a soft gold edge, a soft shadow, 32px inside; one you click rises 4px */
+  --card-bg: var(--white); --card-line: var(--line); --card-pad: var(--s-32); --card-shadow: var(--shadow-card);
+  --card-lift: calc(-1 * var(--s-4)); --card-hover-shadow: var(--shadow-pop);
+  /* a card's title in 28px spaced capitals; its details in 14px grey capitals, with a gold icon; 16px between them */
+  --card-title-size: var(--fs-28); --card-title-ls: var(--ls-107); --card-gap: var(--s-16);
+  --card-meta-size: var(--fs-14); --card-meta-weight: 400; --card-meta-ls: var(--ls-107); --card-meta-lh: 1.8;
+  /* a message as the site's notes (« Transport… is included »): 16px light text, a 24px gold icon, 20 × 28px inside */
+  --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: 24px; --msg-icon-top: 0px;
+  /* a passing message with the room of the site's pieces, in its regular weight */
+  --toast-weight: 400; --toast-py: var(--s-14); --toast-pl: var(--s-20); --toast-pr: var(--s-14);
+  /* a window: 32px inside, its question as the site's box titles (24px), its text as running text */
+  --sheet-pad: var(--s-32); --dialog-t-size: var(--fs-24); --dialog-x-size: var(--text-size);
+  /* the top bar of the site: translucent white over a blur, a soft shadow, 20 × 40px of room; its name in 20px Gilda,
+     its links in 14px capitals 32px apart */
+  --topbar-bg: var(--overlay-white-strong); --topbar-blur: var(--glass-blur); --topbar-shadow: var(--shadow-soft);
+  --topbar-py: var(--s-20); --topbar-px: var(--s-40); --topbar-gap: var(--s-32);
+  --brand-size: var(--fs-20); --brand-ls: var(--ls-100); --brand-color: var(--ink);
+  --topbar-link-size: var(--fs-14); --topbar-link-ls: var(--ls-107);
+  /* its action is lower than the page's buttons: 14 × 36px of room, 55px high */
+  --topbar-btn-h: 55px; --topbar-btn-px: var(--s-36);
+  /* a card's cover photo grows 5% on hover, over .6s; its badge 20px from the corner */
+  --cover-zoom: 1.05; --cover-time: .6s; --cover-badge: var(--s-20);
+  /* a small card: a 20px title spaced 2px, 20px inside, 12px between its lines, 12px details */
+  --card-s-title-size: var(--fs-20); --card-s-title-ls: var(--ls-100); --card-s-pad: var(--s-20); --card-s-gap: var(--s-12); --card-s-meta-size: var(--fs-12); --card-s-badge: var(--s-12);
+  /* a way back's spacing, the slider's soft track, a sheet's and a table's bigger words, the room of the buttons of a
+     window, of a sheet's actions and of a list's selection bar */
+  --back-ls: var(--ls-167); --zoom-track: var(--line); --kv-k-size: var(--fs-12); --kv-v-size: var(--fs-15);
+  --tbl-size: var(--fs-15); --tbl-th-size: var(--fs-12); --tbl-th-ls: var(--ls-125);
+  --dialog-btn-px: var(--s-24); --sheet-acts-btn-px: var(--s-20); --sheet-acts-btn-ls: var(--ls-107);
+  --selbar-field-size: var(--fs-14); --selbar-field-py: var(--s-8); --selbar-field-px: var(--s-12); --selbar-btn-px: var(--s-14);
+  /* a tab shown, at 18 % of the gold: its 5 % ground would hardly show on white (a framed choice keeps it) */
+  --tab-on-bg: color-mix(in srgb, var(--accent) 18%, transparent);
+  /* the site's spinner: a soft gold ring, a gold top */
+  --spin-ring: var(--line);
+  /* the legal pages: a heading as the site's box titles, a gold line under it; bold in medium */
+  --doc-h2-size: var(--fs-24); --doc-rule: var(--accent); --doc-h3-weight: 500; --doc-strong: 500;
+  /* badges: 12px bold capitals, white on gold */
+  --badge-weight: 600; --badge-size: var(--fs-12); --badge-lh: 1.8; --badge-ls: var(--ls-167); --badge-py: var(--s-6); --badge-px: var(--s-16);
+  /* a section's head: 56px spaced capitals, then 18px gold capitals */
+  --section-size: var(--fs-56); --section-ls: var(--ls-071); --section-sub-size: var(--fs-18); --section-sub-ls: var(--ls-167);
+  --footer-size: var(--fs-16); --footer-ls: var(--ls-063); --footer-py: var(--s-48);
+}
+/* a computer, wider than a phone: the sizes by role grow a step */
+@media (min-width: 769px) {
+  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28); }
+}
+/* the site's smaller computers, tablets and phones */
+@media (max-width: 1024px) {
+  [data-theme="vitrine"] { --topbar-py: var(--s-16); --topbar-px: var(--s-24); --topbar-gap: var(--s-24); --topbar-btn-h: 47px; --topbar-btn-px: var(--s-24); }
+}
+@media (max-width: 768px) {
+  [data-theme="vitrine"] { --badge-size: var(--fs-11); --badge-py: 5px; --badge-px: var(--s-12);
+    --section-size: var(--fs-36); --section-sub-size: var(--fs-15); --section-sub-ls: var(--ls-133);
+    --footer-size: var(--fs-14); --footer-py: var(--s-24); --card-pad: var(--s-24); --card-title-size: var(--fs-24); }
+}
+@media (max-width: 480px) {
+  [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --btn-s-h: 29px; --btn-s-px: var(--s-14); --btn-s-size: var(--fs-11); --btn-s-ls: var(--ls-136);
+    --topbar-px: var(--s-16); --topbar-gap: var(--s-8); --brand-size: var(--fs-17);
+    --card-pad: var(--s-20); --badge-size: var(--fs-11); --card-title-size: var(--fs-22); --card-gap: var(--s-12); --card-meta-size: var(--fs-12); --cover-badge: var(--s-12);
+    /* a phone gives a window's and a sheet's words the width, and a sheet's actions smaller capitals */
+    --sheet-pad: var(--s-20); --sheet-acts-btn-ls: var(--ls-083); --sheet-acts-btn-size: var(--fs-12); }
+}
+/* Less motion, when the device asks for it, in one place: nothing takes time, nothing lifts or zooms on hover, and every
+   animation, the looping ones included (the wheels, the site's pulses and bounces), stands still at once. A component
+   that must not even show its last frame (the header's tick) says so in its own file. */
+@media (prefers-reduced-motion: reduce) {
+  :root, [data-theme] { --t-fast: 0s; --t-mid: 0s; --t-slow: 0s; --t-loop: 0s; --btn-lift: 0px; --card-lift: 0px; --cover-zoom: 1; }
+  *, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important; }
+}
