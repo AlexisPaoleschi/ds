@@ -1,0 +1,5 @@
+/* Chosen: the gold every framed choice takes, the same everywhere: a pill in use, a period in the date picker, a gold
+   button, the chosen day of the calendar. Its colours are roles (--chosen-ink, --chosen-bg, --chosen-line), which a
+   component may change (the calendar's day keeps the full gold edge). Last of the controls, so that it wins over their
+   hover. The tabs' chosen one is their own (--tab-on-bg). */
+  .pill.is-on, .periodpop button.on, .btn.is-act, .cal-cell.is-sel { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }

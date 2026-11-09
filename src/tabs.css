@@ -1,0 +1,38 @@
+/* The tabs: one choice among a few views or periods; a page's main views as a bar at the bottom of a phone. */
+  .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
+  .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); cursor: pointer; }
+  /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
+  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--tab-on-bg); color: var(--accent-text); }
+  /* a tab may also be a link (a choice of language: the page's own is aria-current) or a choice among radio buttons (a
+     setting: <label><input type="radio" class="visually-hidden">…</label>); .tabs.is-icons holds only icons, each tab
+     square around its icon, its name in aria-label and title */
+  .tabs > a, .tabs > label { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: var(--s-24);
+    padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); border-radius: var(--r-s); color: var(--faint); cursor: pointer; text-decoration: none;
+    font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .tabs > a[aria-current="page"], .tabs > a[aria-current="true"], .tabs > a.on, .tabs > label:has(input:checked) { background: var(--tab-on-bg); color: var(--accent-text); }
+  .tabs > label:has(input:focus-visible) { outline: var(--focus); outline-offset: var(--focus-offset); }
+  .tabs.is-icons > :is(button, a, label) { display: inline-grid; place-items: center; --tab-py: var(--s-4); --tab-px: var(--s-8); }
+  .tabs.is-icons .ico { display: block; }
+  @media (hover: hover) { .tabs > :is(a, label):not([aria-current="page"]):not([aria-current="true"]):not(:has(input:checked)):hover { color: var(--accent-text); } }
+/* a page's main views (Bank: Comptes, Opérations, Analyse, Voyages; Studio: Agenda, Analyse) in <div class="tabs is-bar">,
+   each button holding <svg class="ico"> and <span class="tl">: in the header with their names on a computer; on a phone,
+   a bar at the bottom within the thumb's reach, the icon above the name. A gold dot <i class="tabn"> says something waits
+   in a view (Bank: the operations left to file); it sits on the icon's corner on a phone, so the name stays centred */
+  .tabs.is-bar button { display: inline-flex; align-items: center; position: relative; }
+  .tabs.is-bar button .ico { display: none; }
+  .tabs .tabn { --pip-size: 6px; display: inline-block; margin-left: var(--s-6); vertical-align: middle; }
+@media (max-width: 768px) {
+  header.top .tabs.is-bar, .tabs.is-bar { position: fixed; z-index: var(--z-bar); left: 50%; transform: translateX(-50%); bottom: calc(14px + var(--safe-bottom));
+    width: var(--tabbar-w); height: 54px; justify-content: space-between; gap: var(--s-6); padding: var(--s-6); border: 1px solid var(--line); border-radius: var(--r-m);
+    background: color-mix(in srgb, var(--panel) 84%, transparent); -webkit-backdrop-filter: blur(var(--blur-l)); backdrop-filter: blur(var(--blur-l)); box-shadow: var(--shadow-sheet); }
+  header.top .tabs.is-bar button, .tabs.is-bar button { flex: 1; flex-direction: column; justify-content: center; gap: var(--s-2); height: 40px; padding: 0; border-radius: var(--r-m); }
+  .tabs.is-bar button .ico { display: block; width: 19px; height: 19px; }
+  .tabs.is-bar button .tl { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
+  .tabs.is-bar .tabn { position: absolute; top: var(--s-4); left: calc(50% + var(--s-8)); margin: 0; }
+  /* five views or more (Bank, with its Placements): the bar, and the passing messages above it, take the screen's width
+     less 8px a side, and its buttons sit closer, so that every name holds; on the narrowest phones a name is shortened */
+  :root:has(.tabs.is-bar > button:nth-of-type(5)) { --tabbar-w: min(calc(100% - var(--s-16)), 480px); }
+  .tabs.is-bar:has(> button:nth-of-type(5)) { gap: var(--s-2); padding: var(--s-4); }
+  .tabs.is-bar:has(> button:nth-of-type(5)) button { flex: 1 1 auto; min-width: 0; }
+  .tabs.is-bar:has(> button:nth-of-type(5)) .tl { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
