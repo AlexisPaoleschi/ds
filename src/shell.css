@@ -121,6 +121,9 @@
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
+   /* the wheel stands still and the tick is drawn at once (as Studio did) */
+   header.top .busy .spin { animation: none; }
+   header.top.loading-done .busy .okc svg { stroke-dashoffset: 0; animation: none; }
    .boot .boot-p .spin { animation: none; }
 }
   /* a list's line: its date or time, and its amount or figure */

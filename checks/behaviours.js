@@ -79,6 +79,15 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const b4 = await p.evaluate(() => ({ on: ds.busy.active(), done: document.querySelector('header.top').classList.contains('loading-done'), pc: document.querySelector('.busy .pc').textContent }));
   assert(b1.on && b1.seen === 'visible' && b1.bt === 'Lecture des banques…' && b2.pc > 10 && b2.boot === b2.pc + '%' && b3 >= b2.pc && !b4.on && b4.done && b4.pc === '',
     'la roue de l’en-tête : visible, le pourcentage monte seul et ne recule jamais, puis la coche ' + JSON.stringify([b1, b2, b3, b4]));
+  // a word in place of the share (Studio's « calcul… »): it stays while the time passes and a share is given, until the end
+  await p.waitForTimeout(2100);
+  await p.evaluate(() => { ds.busy.start('Analyse', { expected: 400 }); ds.busy.say('calcul…'); ds.busy.pct(80); });
+  await p.waitForTimeout(400);
+  const w1 = await p.evaluate(() => [document.querySelector('.busy .pc').textContent, document.getElementById('boot-pc').textContent]);
+  await p.evaluate(() => ds.busy.done());
+  await p.waitForTimeout(500);
+  const w2 = await p.evaluate(() => [ds.busy.active(), document.querySelector('header.top').classList.contains('loading-done')]);
+  assert(w1[0] === 'calcul…' && w1[1] === 'calcul…' && !w2[0] && w2[1], 'un mot à la place du pourcentage (« calcul… ») reste jusqu’à la fin, puis la coche ' + JSON.stringify([w1, w2]));
   // a source that failed: told once, Réessayer, then how it went
   const told = await p.evaluate(async () => {
     window.fails = 1;

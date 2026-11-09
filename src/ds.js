@@ -468,8 +468,9 @@
      and .bt words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top); the share then climbs on its own with the time this kind of
      loading (key) took last time, or expected ms, never stalling; pct(p) brings it to p at once when a step is done. It
      counts one by one, never back, 99% at most. done() shows 100%, then a green tick that fades, and remembers how long
-     it took; done(false) just stops. While a first loading covers the page, its share (#boot-pc) is the same. */
-  var bz = { shown: 0, target: 0, count: null, tick: null, end: null, start: 0, key: null, expected: 3000, top: null };
+     it took; done(false) just stops. say(word) shows a word in place of the share (Studio's « calcul… » once every read
+     is in, while the page draws), until done(). While a first loading covers the page, its share (#boot-pc) is the same. */
+  var bz = { shown: 0, target: 0, count: null, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
   function busyTop() { return bz.top || document.querySelector("header.top"); }
   function busyText(text) {
     var top = busyTop(), pc = top && top.querySelector(".busy .pc"), boot = document.getElementById("boot-pc");
@@ -484,7 +485,7 @@
       var top = busyTop();
       if (!top) return;
       clearTimeout(bz.end); clearInterval(bz.count); clearInterval(bz.tick);
-      bz.count = null; bz.shown = 0; bz.target = 0; bz.start = Date.now(); bz.key = o.key || null;
+      bz.count = null; bz.shown = 0; bz.target = 0; bz.start = Date.now(); bz.key = o.key || null; bz.word = false;
       bz.expected = (bz.key && busyTimes()[bz.key]) || o.expected || 3000;
       top.classList.remove("loading-done");
       top.classList.add("loading");
@@ -494,6 +495,8 @@
       bz.tick = setInterval(function () { busy.pct(95 * (1 - Math.exp(-2.2 * (Date.now() - bz.start) / bz.expected)), true); }, 100);
     },
     pct: function (p) {
+      // a word in its place stays until the end
+      if (bz.word) return;
       bz.target = Math.max(bz.target, Math.min(99, Math.round(p)));
       if (bz.count) return;
       bz.count = setInterval(function () {
@@ -516,6 +519,13 @@
         top.classList.add("loading-done");
         bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
       }, 350);
+    },
+    say: function (word) {
+      var top = busyTop();
+      if (!top || !top.classList.contains("loading")) return;
+      clearInterval(bz.count); clearInterval(bz.tick); bz.count = null;
+      bz.word = true;
+      busyText(word);
     },
     active: function () { var top = busyTop(); return !!top && top.classList.contains("loading"); }
   };

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.19.5 · 9 novembre 2026
+
+- La roue de l’en-tête : `ds.busy.say(mot)` affiche un mot à la place du pourcentage jusqu’à la fin (le « calcul… » de Studio, une fois tout lu, pendant que la page se dessine). Pour qui demande moins d’animations, la roue ne tourne plus et la coche s’affiche d’un coup, comme Studio le faisait de son côté.
+
 ## 2.19.4 · 9 novembre 2026
 
 - Choix de la période (`ds.datePick`) : au-dessus des mois, l’année est écrite simplement entre les deux flèches, comme dans Bank, et non plus dans un menu (venu du « aller à un mois » de Studio). Le choix du mois du calendrier aussi.
