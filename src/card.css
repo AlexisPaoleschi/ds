@@ -1,0 +1,55 @@
+/* The card and its parts: the card, its gold line on top (.is-ruled) and its colour (.is-tinted), one you click (.is-link),
+   its label (.ct, fitted to its line) and the small headings inside it, a card that folds, its title and lines of
+   details, its cover photo, the small one; cards side by side (.grid-cards). */
+  .card { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); padding: var(--card-pad); box-shadow: var(--card-shadow); min-width: 0; }
+  /* the gold line on top of a card, as on the site's event and newsletter cards */
+  .card.is-ruled { border-top: 3px solid var(--accent); }
+  /* a card you click rises a little */
+  .card.is-link { color: inherit; text-decoration: none; transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
+  @media (hover: hover) { .card.is-link:hover { transform: translateY(var(--card-lift)); box-shadow: var(--card-hover-shadow); } }
+  /* a card's label, and what acts on the card beside it; when both do not hold on the line, the action goes under it */
+  .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
+  h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
+  h4.sect:first-of-type { margin-top: 0; }
+  /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
+  .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
+  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }
+  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-045); }
+  .ct.ct-fit-3 .pill { --pill-px: var(--s-8); }
+/* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
+   <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
+   Its chevron turns; a closed card's title takes no room below it. A card's title that folds its card itself, its state
+   kept by the app (Studio), takes the same chevron: <h2 class="ct fold" role="button" aria-expanded="true">. */
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); min-height: var(--s-24); }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary::after, .ct.fold[aria-expanded]::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
+    border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease; }
+  details.fold[open] > summary::after, .ct.fold[aria-expanded="true"]::after { transform: rotate(45deg); }
+  .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
+  details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
+  details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
+/* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */
+  .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
+  /* a card's title, then its lines of details (a place, a date), each with its icon */
+  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--title-weight) var(--card-title-size)/var(--title-lh) var(--title-font);
+    letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
+  .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
+    font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
+  .card-meta svg { flex: none; width: 18px; height: 18px; color: var(--accent); }
+  /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
+     and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
+  .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
+  /* the photo keeps its 16:9 and the line goes under it, on a page that counts borders in sizes (box-sizing) too */
+  .card-cover { position: relative; display: block; box-sizing: content-box; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
+  .card-cover img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--cover-time) ease; }
+  .card-cover .badge { position: absolute; top: var(--cover-badge); right: var(--cover-badge); }
+  @media (hover: hover) { .card.is-link:hover .card-cover img { transform: scale(var(--cover-zoom)); } }
+  .card-body { display: flex; flex: 1; flex-direction: column; gap: var(--card-gap); padding: var(--card-pad); }
+  .card-body > * { margin: 0; }
+  /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
+  .card.is-small { --card-title-size: var(--card-s-title-size); --card-title-ls: var(--card-s-title-ls); --card-pad: var(--card-s-pad);
+    --card-gap: var(--card-s-gap); --card-meta-size: var(--card-s-meta-size); --cover-badge: var(--card-s-badge); }
+/* The ruled card in a colour of its own (Bank: a card per bank, each in its bank's colour, as many a row as fit):
+   .card.is-ruled.is-tinted with --n; its label (.ct) takes the colour too. Without --n, the gold of .is-ruled. */
+  .card.is-ruled.is-tinted { border-top-color: var(--n, var(--accent)); }
+  .card.is-tinted > .ct { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
