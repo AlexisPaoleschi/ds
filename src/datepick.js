@@ -280,17 +280,8 @@
       next.disabled = !canPage(1);
       prev.addEventListener("click", function () { page(-1); });
       next.addEventListener("click", function () { page(1); });
-      if (u === "month") {
-        // the months' year is a pill: a tap opens the phone's own menu, to go far at once
-        var y = st.view.slice(0, 4), sel = el("select");
-        mid = el("label", "pill dp-year");
-        sel.setAttribute("aria-label", w.year);
-        sel.setAttribute("data-dp", "year");
-        for (var yy = +hi.slice(0, 4); yy >= +lo.slice(0, 4); yy--) { var opt = el("option", "", String(yy)); opt.value = String(yy); sel.append(opt); }
-        sel.value = y;
-        sel.addEventListener("change", function () { st.view = clampDay(sel.value + "-" + st.view.slice(5, 7) + "-01"); st.focus = null; draw("year"); });
-        mid.append(el("span", "pv", y), sel);
-      } else mid = el("span", "dp-title", headText());
+      // the month, the year or the years, written between the arrows, as Bank had it: the arrows go a step at a time
+      mid = el("span", "dp-title", headText());
       h.append(prev, mid, next);
       return h;
     }

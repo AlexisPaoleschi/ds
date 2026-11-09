@@ -73,7 +73,8 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.locator('#cal .periodtitle').click();
   const open = await p.evaluate(() => [!document.querySelector('.cal-jump').hidden, document.querySelector('#cal .periodtitle').getAttribute('aria-expanded'), document.querySelectorAll('.cal-months button').length,
     document.querySelector('.cal-months button.on').textContent]);
-  await p.locator('.cal-jump select').selectOption('2025');
+  // the year, written between its arrows: the one before goes to 2025
+  await p.locator('.cal-jump [data-dp="prev"]').click();
   await p.locator('.cal-months button', { hasText: 'mars' }).click();
   const jumped = await p.evaluate(() => [document.querySelector('#cal .periodtitle h3').textContent, document.querySelector('.cal-jump').hidden, cal.state().day]);
   await p.locator('#cal .periodtitle').click();

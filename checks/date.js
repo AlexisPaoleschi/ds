@@ -28,7 +28,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const state = () => p.evaluate(() => {
     const box = document.getElementById('pop'), grid = box.querySelector('.dp-grid');
     return { hidden: box.hidden, expanded: document.getElementById('title').getAttribute('aria-expanded'), tab: (box.querySelector('.dp-tabs [aria-selected="true"]') || {}).textContent,
-      head: (box.querySelector('.dp-title') || box.querySelector('.dp-year .pv') || {}).textContent, on: [...box.querySelectorAll('.dp-grid button.on')].map(x => x.textContent),
+      head: (box.querySelector('.dp-title') || {}).textContent, on: [...box.querySelectorAll('.dp-grid button.on')].map(x => x.textContent),
       cells: grid ? grid.querySelectorAll('button').length : 0, focus: document.activeElement.dataset.key || document.activeElement.id || document.activeElement.getAttribute('data-dp') };
   });
   const cell = text => p.locator(pop + ' .dp-grid button', { hasText: new RegExp('^' + text + '$') });
@@ -41,7 +41,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const s1 = await state();
   const open1 = await p.evaluate(() => { const box = document.getElementById('pop');
     return { quick: [...box.querySelectorAll('.dp-quick button')].map(x => x.textContent + (x.classList.contains('on') ? '*' : '')), tabs: [...box.querySelectorAll('.dp-tabs button')].map(x => x.textContent).join(' '),
-      off: [...box.querySelectorAll('.dp-grid button:disabled')].map(x => x.textContent), today: box.querySelector('.dp-grid .is-today').textContent, year: box.querySelector('.dp-year select').value,
+      off: [...box.querySelectorAll('.dp-grid button:disabled')].map(x => x.textContent), today: box.querySelector('.dp-grid .is-today').textContent, year: box.querySelector('.dp-head .dp-title').textContent,
       next: box.querySelector('[data-dp="next"]').disabled, label: dp.label() }; });
   console.log('      ' + JSON.stringify([s1, open1]));
   assert(same(s0, [true, 'false', 'dialog', true, 'dialog', 'periodpop datepick']) && !s1.hidden && s1.expanded === 'true' && s1.tab === 'Mois' && same(s1.on, ['nov.']) && s1.cells === 12 && s1.focus === '2026-11'
@@ -64,18 +64,18 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     && same(q3, { from: null, to: null, mode: 'all', quick: 'Toutes les dates', label: 'Toutes les dates' }),
     'les périodes rapides : prises tout de suite, le choix fermé, le curseur rendu au titre ; un mois, trois mois (dits par leur nom), toutes les dates ' + JSON.stringify([q2, s3.on]));
 
-  // the months: the year steps by its arrows or its menu, a month is taken
+  // the months: the year steps by its arrows, written between them, a month is taken
   await p.locator('#title').click();
   const m0 = await state();
   await p.locator(pop + ' [data-dp="prev"]').click();
   const m1 = await state();
-  await p.locator(pop + ' .dp-year select').selectOption('2019');
+  for (let i = 0; i < 6; i++) await p.locator(pop + ' [data-dp="prev"]').click();
   const m2 = await state();
   await cell('mars').click();
   const m3 = await last();
-  assert(m0.tab === 'Mois' && m0.head === '2026' && m0.on.length === 0 && m1.head === '2025' && m1.focus === 'prev' && m2.head === '2019' && m2.focus === 'year'
+  assert(m0.tab === 'Mois' && m0.head === '2026' && m0.on.length === 0 && m1.head === '2025' && m1.focus === 'prev' && m2.head === '2019' && m2.focus === 'prev'
     && same(m3, { from: '2019-03-01', to: '2019-03-31', mode: 'month', quick: null, label: 'mars 2019' }),
-    'les mois : toutes les dates ouvrent sur ceux de cette année ; la flèche et le menu changent d’année, un mois est pris');
+    'les mois : toutes les dates ouvrent sur ceux de cette année ; l’année écrite entre les flèches, qui en changent, un mois est pris');
 
   // the days: a month of days from Monday, today ringed, nothing after it; a day is taken
   await p.evaluate(() => dp.set({ from: '2026-11-01', to: '2026-11-30' }));
@@ -289,7 +289,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   // the calendar's month jump is the date picker on months
   await p.locator('#cal .periodtitle').click();
   const cj = await p.evaluate(() => { const j = document.querySelector('#cal .cal-jump');
-    return [j.classList.contains('datepick'), j.querySelectorAll('.dp-tabs').length, j.querySelectorAll('.cal-months button').length, j.querySelector('.cal-months .on').textContent, j.querySelector('.dp-year select').value]; });
+    return [j.classList.contains('datepick'), j.querySelectorAll('.dp-tabs').length, j.querySelectorAll('.cal-months button').length, j.querySelector('.cal-months .on').textContent, j.querySelector('.dp-head .dp-title').textContent]; });
   await p.locator('#cal .dp-step[aria-label="Année suivante"]').click();
   await p.locator('#cal .cal-months button', { hasText: 'janv.' }).click();
   const cj2 = await p.evaluate(() => [document.querySelector('#cal .periodtitle h3').textContent, cal.state().day, document.querySelector('#cal .cal-jump').hidden]);

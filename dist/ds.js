@@ -1,4 +1,4 @@
-/* ds 2.19.3 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.19.4 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -3259,17 +3259,8 @@
       next.disabled = !canPage(1);
       prev.addEventListener("click", function () { page(-1); });
       next.addEventListener("click", function () { page(1); });
-      if (u === "month") {
-        // the months' year is a pill: a tap opens the phone's own menu, to go far at once
-        var y = st.view.slice(0, 4), sel = el("select");
-        mid = el("label", "pill dp-year");
-        sel.setAttribute("aria-label", w.year);
-        sel.setAttribute("data-dp", "year");
-        for (var yy = +hi.slice(0, 4); yy >= +lo.slice(0, 4); yy--) { var opt = el("option", "", String(yy)); opt.value = String(yy); sel.append(opt); }
-        sel.value = y;
-        sel.addEventListener("change", function () { st.view = clampDay(sel.value + "-" + st.view.slice(5, 7) + "-01"); st.focus = null; draw("year"); });
-        mid.append(el("span", "pv", y), sel);
-      } else mid = el("span", "dp-title", headText());
+      // the month, the year or the years, written between the arrows, as Bank had it: the arrows go a step at a time
+      mid = el("span", "dp-title", headText());
       h.append(prev, mid, next);
       return h;
     }

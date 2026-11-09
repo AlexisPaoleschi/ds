@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.19.4 · 9 novembre 2026
+
+- Choix de la période (`ds.datePick`) : au-dessus des mois, l’année est écrite simplement entre les deux flèches, comme dans Bank, et non plus dans un menu (venu du « aller à un mois » de Studio). Le choix du mois du calendrier aussi.
+
 ## 2.19.3 · 9 novembre 2026
 
 - Tiroir de filtres : le mot « seul », qui garde une source seule dans son groupe, devient un œil (`#i-eye`, « ne voir que celle-ci »), nommé « Seulement … » pour les lecteurs d’écran et dans l’infobulle. Toujours caché sur ordinateur jusqu’au survol de la ligne, toujours visible sur téléphone.

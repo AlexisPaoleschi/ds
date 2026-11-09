@@ -11,12 +11,11 @@
   /* the tabs share the width, one part per unit offered (four by default, aligned on the four columns of months) */
   .datepick .tabs { grid-template-columns: repeat(var(--dp-tabs, 4), minmax(0, 1fr)); }
   .dp-quick + .dp-tabs { margin-top: var(--s-2); }
-  /* the head: the arrows in the small buttons' size, the month or the years between them, or the months' year as a pill */
+  /* the head: the arrows in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
   .datepick .dp-step { flex: none; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; font-size: var(--fs-15); }
   .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title::first-letter { text-transform: uppercase; }
-  .dp-head .pill { margin: 0 auto; }
   /* the grid: four columns of months or years, seven of days under their initials */
   .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
   .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
