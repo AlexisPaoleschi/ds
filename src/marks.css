@@ -1,0 +1,28 @@
+/* The small marks, each drawn once.
+   The swatch: the small square of an item's colour (--n), a bank, a category, an agenda, a network: .swatch, and the same
+   square wherever ds shows one (a filter's .sq, the calendar's .cal-mark, a chart's key, a tile's title, a picker's
+   colour alone); --swatch-size (10px) and --swatch-c (its colour, --n by default) may change; .is-open draws it hollow.
+   The filter's square still reads --a, for one version. */
+  .swatch, .sq, .cal-mark, .chart-key, .tile dt i, .picker-av.is-dot {
+    flex: none; box-sizing: border-box; width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); border-radius: var(--r-xs);
+    background: var(--swatch-c, var(--n, var(--dim))); border: 1.5px solid var(--swatch-c, var(--n, var(--dim))); }
+  .swatch.is-open, .cal-mark.is-open, .sq:not(.on) { background: transparent; }
+  .sq { --swatch-c: var(--a, var(--n, var(--dim))); }
+  .picker-av.is-dot { --swatch-c: var(--n, var(--accent)); }
+/* The pip: the small gold dot that says something waits (a filter in use on its tab, a new version on the reload button,
+   a view with news in the tab bar): .pip, and the same dot wherever ds draws one; --pip-size (7px) may change, and on a
+   button it keeps a ring of the button's ground (.newver-pip, the settings' reload). */
+  .pip, .fdot, .newver-pip, .tabs .tabn, :where(body.settings) .reload .pip {
+    flex: none; box-sizing: border-box; width: var(--pip-size, 7px); height: var(--pip-size, 7px); border-radius: 50%; background: var(--accent); }
+  .newver-pip, :where(body.settings) .reload .pip { outline: 2px solid var(--panel); }
+/* The spinner, for every wait, drawn once: a ring (--spin-ring) whose top quarter (--spin-top, the gold) turns at one
+   speed (--spin-time), its size --spin-size: 16px in a line, 28px on a photo's tile, 60px for a whole page; the small
+   ones of a message's action (11px), a passing message (12px), a button at work (13px, in its text's colour so that it
+   shows on a filled button), the header (14px) and the first loading (18px). On a photo, its ring is white. */
+  .spinner, .btn.is-busy::after, .msg .act .spin, header.top .busy .spin, .boot .boot-p .spin, .toast.is-busy .mark {
+    flex: none; box-sizing: border-box; width: var(--spin-size, 16px); height: var(--spin-size, 16px); background: none;
+    border: 2px solid var(--spin-ring); border-top-color: var(--spin-top, var(--accent)); border-radius: 50%; animation: spin var(--spin-time) linear infinite; }
+  .spinner { display: inline-block; }
+  .spinner.is-medium { --spin-size: 28px; }
+  .spinner.is-large { --spin-size: 60px; }
+  .spinner.on-photo { --spin-ring: var(--overlay-white-light); }

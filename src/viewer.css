@@ -1,0 +1,58 @@
+/* The photo viewer, taken from alexispaoleschi.com: a photo over a black veil, a cross to close it, an arrow on each side,
+   all three square buttons in the dark glass of its count, the cross and the arrows those of the icons (Lucide's, as the
+   site's « ← Home »), filled with gold on hover as the site's buttons are. Under the photo, room for an app's own bar
+   (Selecta's name, heart and note); the site lays its position over the photo instead (.viewer-count).
+   It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
+  .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(var(--touch-target) + 2 * var(--viewer-gap));
+    position: fixed; inset: 0; z-index: var(--z-sheet); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
+  .viewer-veil { position: absolute; inset: 0; background: var(--overlay-black-strong); }
+  /* a flex box, so that the photo can be as high as the room it has, and no higher */
+  .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }
+  .viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow-sheet); user-select: none; -webkit-user-select: none; }
+  .viewer-stage .spinner { position: absolute; }
+  .viewer-btn { position: absolute; z-index: var(--z-raise); display: grid; place-items: center; width: var(--touch-target); height: var(--touch-target); padding: 0; color: var(--viewer-ink);
+    background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); border-radius: var(--r-m); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); cursor: pointer;
+    transition: color var(--t-fast) ease, background var(--t-fast) ease, border-color var(--t-fast) ease; }
+  .viewer-btn::before { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
+  @media (hover: hover) { .viewer-btn:hover { color: var(--white); background: var(--accent); border-color: var(--accent); } }
+  .viewer-close { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E"); top: calc(var(--viewer-gap) + var(--safe-top)); right: calc(var(--viewer-gap) + var(--safe-right)); }
+  .viewer-prev, .viewer-next { top: 50%; transform: translateY(-50%); }
+  .viewer-prev { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19-7-7 7-7M19 12H5'/%3E%3C/svg%3E"); left: calc(var(--viewer-gap) + var(--safe-left)); }
+  .viewer-next { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"); right: calc(var(--viewer-gap) + var(--safe-right)); }
+  /* the site's position over the photo: « 2 / 9 » in a blurred pill */
+  .viewer-count { position: absolute; z-index: var(--z-raise); left: 50%; bottom: calc(var(--s-32) + var(--safe-bottom)); transform: translateX(-50%); padding: var(--s-12) var(--s-28);
+    color: var(--viewer-ink); background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
+    font: 300 var(--fs-14)/var(--lh-loose) var(--body); letter-spacing: var(--ls-2); white-space: nowrap; }
+@media (max-width: 768px) {
+  /* on a phone the photo takes the width, and the arrows sit over it */
+  .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); }
+  .viewer-btn { width: 40px; height: 40px; }
+}
+/* What ds.viewer (src/viewer.js) adds to its look: it fades in, the page behind
+   stays still while it is open, the photo hides behind the spinner while it loads (or shows its thumbnail, blurred),
+   follows the finger that swipes it, and a caption can sit under it. */
+  .viewer.is-open { animation: viewer-in var(--t-fast) ease-out; }
+  /* the focus goes to the viewer itself, which needs no ring: its buttons have theirs */
+  .viewer:focus { outline: none; }
+  /* the finger is the viewer's: no page scrolls and no page reloads under it; two fingers still zoom */
+  .viewer { touch-action: pinch-zoom; }
+  :root:has(.viewer.is-open) { overflow: hidden; overscroll-behavior: none; }
+  .viewer-veil { transition: opacity var(--t-fast) ease; }
+  .viewer-stage img { transition: opacity var(--t-fast) ease, filter var(--t-mid) ease, transform var(--t-fast) ease; -webkit-user-drag: none; }
+  .viewer-stage img:not([src]) { visibility: hidden; }
+  .viewer-stage img.is-loading { opacity: 0; }
+  .viewer-stage img.is-placeholder { filter: blur(var(--blur-m)); }
+  /* while a finger holds it, the photo follows it at once */
+  .viewer.is-dragging .viewer-stage img, .viewer.is-dragging .viewer-veil { transition: none; }
+  /* under the photo, in the row viewer.css keeps for an app's bar: a caption, when an item has one */
+  .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
+  .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
+    font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-0-5); }
+  @keyframes viewer-in { from { opacity: 0; } }
+@media (max-width: 768px) {
+  .viewer-bar { padding-inline: var(--s-16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer.is-open { animation: none; }
+  .viewer-stage img, .viewer-veil { transition: none; }
+}
