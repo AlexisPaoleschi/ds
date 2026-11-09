@@ -1,0 +1,97 @@
+/* The settings page, shared by the apps: everything on it lives under .settings (the page's body; the showcase puts
+   its syncs in a box of that class), with no added weight (:where), so that a page can still change one of its rules. */
+  body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); margin: 0; }
+  :where(.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
+  :where(.settings) a { color: inherit; }
+  :where(.settings) a:focus-visible, :where(.settings) button:focus-visible, :where(.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: var(--focus-offset); outline: var(--focus); }
+  :where(.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
+  :where(.settings) .eyebrow { color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
+  :where(.settings) h1 { font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); margin: 0; }
+  :where(.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
+  :where(.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
+  :where(.settings) .outrow .lede { margin: 0; }
+  :where(.settings) .job, :where(.settings) section.card { scroll-margin-top: 14px; }
+  :where(.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
+  :where(.settings) .jump::-webkit-scrollbar { display: none; }
+  :where(.settings) .card { background: var(--card-bg); border-radius: var(--r-l); border: 1px solid var(--card-line); box-shadow: var(--card-shadow); min-width: 0; padding: var(--card-pad); }
+  :where(.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); margin: 0 0 var(--s-4); text-transform: uppercase; }
+  :where(.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
+  :where(.settings) .job { --row-py: var(--s-12); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); }
+  :where(.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(.settings) .job .name { align-items: center; display: flex; font: var(--head-weight) var(--fs-15)/var(--head-lh) var(--title-font); gap: var(--s-8); }
+  /* a sync's dot (a job's, a connection's): grey, is-good, is-bad, or is-running while it runs */
+  :where(.settings) .sync-dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
+  :where(.settings) .sync-dot.is-good { background: var(--good); }
+  :where(.settings) .sync-dot.is-bad { background: var(--bad); }
+  :where(.settings) .sync-dot.is-running { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
+  @keyframes pulse { 50% { opacity: .35; } }
+  :where(.settings) .job .when { color: var(--dim); font-size: var(--fs-13); }
+  :where(.settings) .job .job-sum { color: var(--faint); font-size: var(--fs-13); }
+  :where(.settings) .job .job-sum.is-bad { color: var(--bad); }
+  :where(.settings) .subs { display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-16); margin-top: var(--s-2); }
+  :where(.settings) .job .acts { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-10); margin-top: var(--s-2); }
+  :where(.settings) .job .acts .btns { display: flex; gap: var(--s-8); margin-left: auto; }
+  :where(.settings) label.switch { align-items: center; color: var(--dim); cursor: pointer; display: inline-flex; font-size: var(--fs-13); gap: var(--s-8); user-select: none; white-space: nowrap; }
+  :where(.settings) label.switch input { -webkit-appearance: none; appearance: none; background: var(--line-2); border-radius: var(--r-m); cursor: pointer; flex: none; height: 20px; margin: 0; position: relative; transition: background var(--t-fast); width: 34px; }
+  :where(.settings) label.switch input::after { background: var(--ink); border-radius: 50%; content: ""; height: 14px; left: 3px; position: absolute; top: 3px; transition: left var(--t-fast); width: 14px; }
+  :where(.settings) label.switch input:checked { background: var(--good); }
+  :where(.settings) label.switch input:checked::after { left: 17px; }
+  :where(.settings) .group { margin-top: var(--s-16); }
+  :where(.settings) .group:first-of-type { margin-top: var(--s-4); }
+  :where(.settings) .group h3 { color: var(--accent-text); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; margin: 0 0 var(--s-6); }
+  :where(.settings) .field { align-items: center; display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
+  :where(.settings) .field .lab { font-size: var(--fs-14); }
+  :where(.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
+  :where(.settings) .field .inp { align-items: center; display: flex; gap: var(--s-8); grid-column: 2; grid-row: 1 / span 2; }
+  :where(.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: 600 var(--fs-15)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; }
+  :where(.settings) .field input.is-changed { border-color: var(--accent); }
+  :where(.settings) .field input[aria-invalid="true"] { background: var(--bad-soft); border-color: var(--bad); }
+  :where(.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
+  :where(.settings) .field .def { white-space: nowrap; }
+  :where(.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
+  /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
+  :where(.settings) .bar .msg { display: block; margin: 0 auto 0 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
+  :where(.settings) .bar .msg.is-bad { color: var(--bad); }
+  :where(.settings) .bar .msg.is-good { color: var(--good); }
+  :where(.settings) .conn { --row-py: var(--s-10); align-items: center; display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
+  :where(.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
+  :where(.settings) .conn .det { color: var(--dim); font-size: var(--fs-13); grid-column: 1; overflow-wrap: anywhere; }
+  :where(.settings) .conn a { color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; }
+  :where(.settings) .conn a:hover { text-decoration: underline; }
+  :where(.settings) .mem { color: var(--faint); font: 400 var(--fs-12)/var(--lh-text) var(--mono); }
+  :where(.settings) .err { color: var(--bad); font-size: var(--fs-14); }
+  :where(.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: var(--s-6); overflow: hidden; }
+  :where(.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; padding: var(--s-8) var(--s-12); }
+  :where(.settings) .loghead .live { align-items: center; display: inline-flex; gap: var(--s-8); }
+  :where(.settings) .loghead a { color: var(--dim); text-decoration: none; white-space: nowrap; }
+  :where(.settings) .loghead a:hover { color: var(--accent-text); }
+  :where(.settings) .logs { font: 400 var(--fs-12)/var(--lh-text) var(--mono); max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: var(--s-8) 0 var(--s-10); }
+  :where(.settings) .log-line { display: grid; gap: var(--s-10); grid-template-columns: 64px minmax(0, 1fr); padding: 0 var(--s-12); }
+  :where(.settings) .log-line .log-time { color: var(--faint); font-variant-numeric: tabular-nums; }
+  :where(.settings) .log-line .log-text { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
+  :where(.settings) .log-line.banner { margin-top: var(--s-8); }
+  :where(.settings) .log-line.banner:first-child { margin-top: 0; }
+  :where(.settings) .log-line.banner .log-text { color: var(--accent-text); font-weight: 600; }
+  :where(.settings) .log-line.is-mid .log-text { color: var(--mid); }
+  :where(.settings) .log-line.is-bad .log-text { color: var(--bad); }
+  :where(.settings) .logs .log-empty { color: var(--faint); padding: 0 var(--s-12); }
+@media (max-width: 768px) {
+  /* the bar of links to the cards, for a phone where the page is long */
+  :where(.settings) .jump { display: flex; }
+  :where(.settings) .log-line { gap: 0; grid-template-columns: 1fr; }
+  :where(.settings) .log-line .log-time { font-size: var(--fs-11); }
+  :where(.settings) h1 { font-size: var(--fs-22); }
+  :where(.settings) .subs { display: grid; gap: var(--s-10) var(--s-12); grid-template-columns: 1fr 1fr; }
+  :where(.settings) .job .acts { flex-wrap: nowrap; }
+  :where(.settings) .job .acts .btns { gap: var(--s-6); }
+  :where(.settings) .field { align-items: start; }
+  :where(.settings) .field .help { grid-column: 1 / -1; }
+  :where(.settings) .field .inp { gap: var(--s-6); grid-row: 1; }
+  :where(.settings) .field input { width: 72px; }
+  :where(.settings) .conn .det { grid-column: 1 / -1; }
+  :where(.settings) .conn a { grid-row: 1; }
+}
+@media (max-width: 480px) {
+  :where(.settings) .wide-only { display: none; }
+}

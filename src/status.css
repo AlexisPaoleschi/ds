@@ -1,0 +1,29 @@
+/* The state of a page's sources (ds.status), in an app's footer at the end of its page. */
+  details.status summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: var(--s-8); }
+  details.status summary::-webkit-details-marker { display: none; }
+  details.status .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  details.status .status-dot.is-mid { background: var(--mid); }
+  details.status ul { list-style: none; margin: var(--s-10) 0 0; padding: var(--s-10) var(--s-12); display: grid; gap: var(--s-6); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); }
+  details.status li { display: grid; grid-template-columns: 150px 1fr auto; gap: var(--s-10); }
+  details.status .status-name { color: var(--dim); }
+  details.status .status-name, details.status .status-state { display: inline-flex; align-items: center; gap: var(--s-6); }
+  details.status .ico { flex: none; height: 13px; opacity: var(--o-muted); width: 13px; color: currentColor; }
+  details.status .status-state .ico { color: var(--good); opacity: 1; }
+  details.status li.is-late .status-state, details.status li.is-late .status-state .ico { color: var(--mid); }
+  details.status .status-detail { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
+  details.status li:not(.is-late) .status-detail { display: none; }
+  details.status .status-every { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
+  details.status li.status-link { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
+  details.status li.status-link a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+  /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;
+     any other footer (a site's, Selecta's) keeps its own look */
+  .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
+  .wrap > footer details.status { min-width: 0; }
+@media (max-width: 768px) {
+   details.status li { grid-template-columns: 1fr auto; }
+   details.status .status-every { display: none; }
+   /* on a phone the list takes the page's width, however short its lines */
+   .wrap > footer details.status { flex: 1 1 auto; }
+   /* what went wrong goes under the whole row, lined up with the name, so that it does not squeeze the name */
+   details.status .status-detail { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
+}
