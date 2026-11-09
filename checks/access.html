@@ -1,0 +1,54 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><link rel="stylesheet" href="../dist/ds-tools.css"><script src="../dist/ds.js" defer></script><script src="../dist/ds-icons.js" defer></script><script src="../dist/ds-tools.js" defer></script><script src="../dist/ds-photo.js" defer></script></head>
+<body>
+<!-- every window and menu of ds, reached with the keyboard alone; and the charts, the calendar and the syncs as a screen
+     reader hears them -->
+<button class="edgetab" data-drawer-toggle="kb-side" type="button" id="edgetab"><span class="edgetab-label">Filtres</span></button>
+<div class="side-layout" data-drawer="kb-side">
+  <div class="scrim"></div>
+  <aside class="side"><div class="sidehead">Filtres<button type="button" data-drawer-close="kb-side" aria-label="Fermer les filtres"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div><button class="chip" type="button" aria-pressed="true">Revolut</button><button class="chip" type="button" aria-pressed="false">BoursoBank</button></aside>
+  <main>
+    <p><button class="btn is-danger" type="button" id="ask">Supprimer le voyage</button> <button class="btn" type="button" id="opensheet">Ouvrir la fiche</button> <button class="btn" type="button" id="openviewer">Voir les photos</button> <button class="btn" type="button" id="say">Classer</button></p>
+    <div class="periodhead"><div class="periodleft"><button class="periodtitle" type="button" id="dptitle"><span id="dplabel">Novembre 2026</span><span class="caret" aria-hidden="true">▾</span></button><div id="dp"></div></div></div>
+    <p><span id="period"></span></p>
+    <button class="add-btn" type="button" id="add"><span class="add-plus" aria-hidden="true">+</span><span class="add-t"><b>Connecter une banque</b></span></button>
+    <div id="banks" hidden></div>
+    <div id="cal"></div>
+    <div id="bars"></div><div id="pairs"></div><div id="heat"></div><div id="line"></div><div id="spark"></div><div id="donut"></div>
+    <div class="settings" id="jobs"></div>
+    <p><button class="btn" type="button" id="last">Le dernier bouton</button></p>
+  </main>
+</div>
+<div class="sheet" id="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+  <button class="sheet-close" type="button"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button>
+  <h2 class="sheet-t" id="sheet-t">Magasins U</h2><p class="sheet-fig">−119,89€</p>
+  <div class="sheet-acts"><button class="btn is-act" type="button" id="first-act">Renommer</button><button class="btn is-save" type="button">Enregistrer</button></div>
+</div></div>
+<script>
+  window.log = [];
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = "2026-11-12";
+    window.side = ds.drawer('[data-drawer="kb-side"]');
+    document.getElementById("ask").onclick = () => ds.confirm({ title: "Supprimer le voyage ?", text: "Ses opérations restent.", ok: "Supprimer", danger: true }).then(v => log.push("confirm:" + v));
+    window.sheet = ds.sheet("#sheet", { onClose: () => log.push("sheet:closed") });
+    document.getElementById("opensheet").onclick = e => sheet.open(e.currentTarget);
+    const items = [{ src: "/photo/1.svg", alt: "Un" }, { src: "/photo/2.svg", alt: "Deux" }, { src: "/photo/3.svg", alt: "Trois" }];
+    document.getElementById("openviewer").onclick = e => { window.v = ds.viewer(null, items, { start: 0, label: "Photos", from: e.currentTarget, onChange: i => log.push("viewer:" + i), onClose: () => log.push("viewer:closed") }); };
+    document.getElementById("say").onclick = () => ds.toast({ type: "good", text: "Loisirs › Restaurant", action: { label: "Annuler", run: () => log.push("toast:undo") } });
+    window.dp = ds.datePick(document.getElementById("dp"), { value: ds.datePick.of("month", today), today, opener: document.getElementById("dptitle"), onPick: () => log.push("dp:picked") });
+    ds.periodPick(document.getElementById("period"), [[30, "30 jours"], [90, "90 jours"], [365, "1 an"]], { value: 90, onPick: v => log.push("period:" + v) });
+    window.banks = ds.picker("#banks", [{ value: "BoursoBank", label: "BoursoBank" }, { value: "Crédit Agricole", label: "Crédit Agricole" }, { value: "Crédit Mutuel", label: "Crédit Mutuel" }],
+      { opener: "#add", placeholder: "Chercher une banque…", onPick: x => log.push("bank:" + x.value) });
+    window.cal = ds.calendar("#cal", { today, value: today, items: () => [] });
+    ds.chart.bars("#bars", [{ key: "2026-08", value: 1200 }, { key: "2026-09", value: 300 }, { key: "2026-10", value: 2400 }], { unit: "€", average: 1300 });
+    ds.chart.bars("#pairs", [{ key: "2026-09", income: 3200, spending: 2100 }, { key: "2026-10", income: 3000, spending: 2500 }],
+      { pairs: [{ key: "income", label: "Entrées", color: "--good" }, { key: "spending", label: "Sorties", color: "--bad" }], format: v => ds.money(v, { decimals: 0 }) });
+    ds.chart.heat("#heat", { "2026-11-02": 1, "2026-11-05": 3, "2026-10-20": 2, "2025-01-01": 4 }, { to: today, color: "--c-rouge" });
+    ds.chart.line("#line", [{ x: "2026-10-01", v: 1200 }, { x: "2026-10-15", v: 1500 }, { x: "2026-10-30", v: 1258 }]);
+    ds.chart.spark("#spark", [120, 900, 1400, 600], { tip: v => ds.number(v) + " vues" });
+    ds.chart.donut("#donut", [{ key: "a", label: "Logement", value: 850 }, { key: "b", label: "Courses", value: 412.3 }], { format: v => ds.money(v) });
+    ds.jobs("#jobs", [{ key: "kb-ok", label: "Banques", state: true }, { key: "kb-bad", label: "Notion", state: false }, { key: "kb-run", label: "Relais", state: "run", running: true }, { key: "kb-none", label: "Réseaux", state: null }]);
+    window.ready = true;
+  });
+</script>
+</body></html>
