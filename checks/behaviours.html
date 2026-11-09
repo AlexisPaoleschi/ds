@@ -1,0 +1,47 @@
+<!doctype html><html lang="fr" data-theme="atelier" data-api="X-Test"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><script src="../dist/ds.js" defer></script></head>
+<body>
+<header class="top"><span class="brand">Test</span>
+  <span class="busy" role="status" aria-live="polite"><i class="spin"></i><i class="okc" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></i><span class="pc"></span><span class="bt"></span></span>
+  <div class="tabs is-bar" role="tablist"><button type="button" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg><span class="tl">Comptes</span></button><button type="button"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><span class="tl">Opérations</span><i class="tabn"></i></button></div>
+</header>
+<div class="boot" id="boot" hidden><div><div class="boot-p" aria-hidden="true"><i class="spin"></i><span id="boot-pc"></span></div><p class="boot-t">Chargement…</p></div></div>
+<button class="edgetab" data-drawer-toggle="test-side" type="button"><span class="vt">Filtres</span></button>
+<div class="side-layout" data-drawer="test-side">
+  <div class="scrim"></div>
+  <aside class="side"><div class="sidehead">Filtres<button type="button" data-drawer-close="test-side" aria-label="Fermer les filtres">×</button></div><button class="chip" type="button">Un filtre</button></aside>
+  <main style="height:3000px">La page</main>
+</div>
+<section id="core">
+  <details class="fold" data-fold="test-fold"><summary>Courses <span class="fold-n">12</span></summary><p>Dedans</p></details>
+  <details class="fold"><summary>Autour</summary><div data-anchor="cible">La cible</div></details>
+  <table><tbody>
+    <tr class="is-link" data-href="#ligne-1" id="row1"><td>Ligne qui ouvre</td><td><button type="button" id="rowbtn">Bouton à elle</button></td></tr>
+    <tr class="is-link" id="row2"><td>Ligne sans lien</td></tr>
+  </tbody></table>
+  <form id="del" data-confirm="Supprimer ce client ? Cette action est irréversible." data-confirm-ok="Supprimer" action="#supprime"><button class="btn" type="submit">Supprimer</button></form>
+  <iframe name="sink" hidden></iframe>
+  <form id="send" target="sink" action="/checks/behaviours.html"><button class="btn" type="submit" id="sendbtn">Envoyer</button></form>
+  <span class="visually-hidden" id="vh">Pour les lecteurs d’écran</span>
+  <div class="grid-cards" id="gc"></div>
+  <template data-toast data-type="good" data-text="Sélection terminée"></template>
+</section>
+<footer id="footer"></footer>
+<div id="jobs"></div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    window.changes = [];
+    window.side = ds.drawer("test-side", { onChange: open => changes.push(open) });
+    ds.status(document.getElementById("footer"), { summary: "Échec : BoursoBank · à 10h21", late: true,
+      rows: [{ icon: "coin", name: "BoursoBank", state: "échec aujourd'hui à 10h01", every: "Serveur · toutes les heures", ok: false, detail: "Compte joint : refusé" },
+             { icon: "sun", name: "Classement par Claude", state: "à jour aujourd'hui à 6h12", every: "Chaque matin", ok: true }],
+      link: { href: "/settings", text: "Réglages et synchros →" } });
+    window.runs = [];
+    window.drawJobs = running => ds.jobs(document.getElementById("jobs"), [
+      { key: "banks", label: "Lecture des banques · 4 fois par jour", state: running ? "run" : true, when: "Dernier passage il y a 3 min",
+        summary: "6 comptes, sans erreur", running, run: () => { runs.push("banks"); return Promise.resolve(); } },
+      { key: "claude", label: "Classement par Claude · chaque matin", state: false, when: "Pas encore passé", summary: "Les marchands inconnus", bad: true }
+    ], { logsLink: "https://dashboard.render.com/", reload: () => runs.push("reload") });
+    drawJobs(false);
+  });
+</script></body></html>
