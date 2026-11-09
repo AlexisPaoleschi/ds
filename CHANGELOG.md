@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.19.6 · 9 novembre 2026
+
+- La roue de l’en-tête : le pourcentage monte à vitesse régulière, de façon à arriver à 99 % à la fin prévue, la durée qu’a prise ce chargement la dernière fois. Il ne part plus vite pour ralentir ensuite, et ne compte plus par bonds. La toute première fois, sans durée connue, la part du travail que l’appli donne (`pct`, les lignes lues de Studio) guide la fin prévue, et la vitesse s’y plie en douceur ; ensuite elle ne compte plus pour la vitesse : les lignes de Studio ne prennent pas toutes le même temps à lire, et la faisaient ralentir. Il attend à 99 % un chargement plus long que prévu ; à la fin, il va à 100 % en un quart de seconde, puis la coche.
+
 ## 2.19.5 · 9 novembre 2026
 
 - La roue de l’en-tête : `ds.busy.say(mot)` affiche un mot à la place du pourcentage jusqu’à la fin (le « calcul… » de Studio, une fois tout lu, pendant que la page se dessine). Pour qui demande moins d’animations, la roue ne tourne plus et la coche s’affiche d’un coup, comme Studio le faisait de son côté.

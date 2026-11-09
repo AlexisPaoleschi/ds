@@ -465,12 +465,16 @@
   }
 
   /* ds.busy: the loading's wheel in the header, <span class="busy"> in header.top with its .spin, .okc tick, .pc share
-     and .bt words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top); the share then climbs on its own with the time this kind of
-     loading (key) took last time, or expected ms, never stalling; pct(p) brings it to p at once when a step is done. It
-     counts one by one, never back, 99% at most. done() shows 100%, then a green tick that fades, and remembers how long
-     it took; done(false) just stops. say(word) shows a word in place of the share (Studio's « calcul… » once every read
-     is in, while the page draws), until done(). While a first loading covers the page, its share (#boot-pc) is the same. */
-  var bz = { shown: 0, target: 0, count: null, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
+     and .bt words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top). The share
+     climbs at an even speed, so as to reach 99% when this kind of loading (key) ends: as long as it took last time, or
+     expected ms the first time. pct(p) says how much of the work is done (Studio: the rows read): the first time, with no
+     length known, the end is then foreseen from the work too, and the speed bends towards it gently, never a jump.
+     It never goes back, and waits at 99% for a loading longer than foreseen. done() runs on to 100% in a moment, then
+     shows a green tick that fades, and remembers how long it took; done(false) just stops. say(word) shows a word in
+     place of the share (Studio's « calcul… » once every read is in, while the page draws), until done(). While a first
+     loading covers the page, its share (#boot-pc) is the same. */
+  var STEP = 50;
+  var bz = { shown: 0, speed: 0, work: 0, arrive: 0, known: false, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
   function busyTop() { return bz.top || document.querySelector("header.top"); }
   function busyText(text) {
     var top = busyTop(), pc = top && top.querySelector(".busy .pc"), boot = document.getElementById("boot-pc");
@@ -478,52 +482,71 @@
     if (boot) boot.textContent = text;
   }
   function busyTimes() { try { return JSON.parse(localStorage.getItem("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
+  // one step of the share: the speed that reaches 99% at the end foreseen (arrive), taken gently (a tenth of the change
+  // at each step); between two words of the work the end stays put, so the speed stays even
+  function busyStep() {
+    var want = Math.max(0, (99 - bz.shown) / Math.max(bz.arrive - Date.now(), 300));
+    bz.speed = bz.speed ? bz.speed + (want - bz.speed) * 0.1 : want;
+    bz.shown = Math.min(99, bz.shown + bz.speed * STEP);
+    busyText(Math.floor(bz.shown) + "%");
+  }
   var busy = {
     start: function (text, o) {
       o = o || {};
       bz.top = o.header || null;
       var top = busyTop();
       if (!top) return;
-      clearTimeout(bz.end); clearInterval(bz.count); clearInterval(bz.tick);
-      bz.count = null; bz.shown = 0; bz.target = 0; bz.start = Date.now(); bz.key = o.key || null; bz.word = false;
+      clearTimeout(bz.end); clearInterval(bz.tick);
+      bz.shown = 0; bz.speed = 0; bz.work = 0; bz.start = Date.now(); bz.key = o.key || null; bz.word = false;
+      bz.known = !!(bz.key && busyTimes()[bz.key]);
       bz.expected = (bz.key && busyTimes()[bz.key]) || o.expected || 3000;
+      bz.arrive = bz.start + bz.expected;
       top.classList.remove("loading-done");
       top.classList.add("loading");
       var bt = top.querySelector(".busy .bt");
       if (bt) bt.textContent = text || words().loading;
       busyText("0%");
-      bz.tick = setInterval(function () { busy.pct(95 * (1 - Math.exp(-2.2 * (Date.now() - bz.start) / bz.expected)), true); }, 100);
+      bz.tick = setInterval(busyStep, STEP);
     },
     pct: function (p) {
-      // a word in its place stays until the end
-      if (bz.word) return;
-      bz.target = Math.max(bz.target, Math.min(99, Math.round(p)));
-      if (bz.count) return;
-      bz.count = setInterval(function () {
-        if (bz.shown >= bz.target) { clearInterval(bz.count); bz.count = null; return; }
-        busyText(++bz.shown + "%");
-      }, 28);
+      var w = Math.min(1, (p || 0) / 100);
+      if (w <= bz.work) return;
+      bz.work = w;
+      // a loading whose length is known keeps its even speed: the work read says little of the time left (Studio's rows
+      // are not as long to read as one another); only the first time, with no length known, does it guide the end
+      if (bz.known) return;
+      // the end foreseen again: the work left times a total between last time's and the one the pace so far gives
+      // (elapsed / w), the latter weighing more as the work goes on
+      var now = Date.now(), elapsed = now - bz.start;
+      bz.arrive = now + (1 - w) * (bz.expected * (1 - w) + elapsed);
     },
     done: function (ok) {
       var top = busyTop();
-      clearInterval(bz.count); clearInterval(bz.tick); bz.count = null;
+      clearInterval(bz.tick); bz.tick = null;
       if (!top) return;
       if (ok === false) { top.classList.remove("loading"); busyText(""); return; }
       if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); try { localStorage.setItem("ds-busy-ms", JSON.stringify(t)); } catch (e) {} }
-      busyText("100%");
-      bz.end = setTimeout(function () {
-        top.classList.remove("loading");
-        busyText("");
-        // the tick's animation starts again even when it played a moment ago
-        void top.offsetWidth;
-        top.classList.add("loading-done");
-        bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
-      }, 350);
+      // what is left runs on to 100% in a quarter of a second, evenly, then the tick
+      var from = bz.word ? 100 : bz.shown, steps = 5, n = 0;
+      bz.tick = setInterval(function () {
+        n++;
+        if (!bz.word) busyText(Math.floor(from + (100 - from) * n / steps) + "%");
+        if (n < steps) return;
+        clearInterval(bz.tick); bz.tick = null;
+        bz.end = setTimeout(function () {
+          top.classList.remove("loading");
+          busyText("");
+          // the tick's animation starts again even when it played a moment ago
+          void top.offsetWidth;
+          top.classList.add("loading-done");
+          bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
+        }, 100);
+      }, STEP);
     },
     say: function (word) {
       var top = busyTop();
       if (!top || !top.classList.contains("loading")) return;
-      clearInterval(bz.count); clearInterval(bz.tick); bz.count = null;
+      clearInterval(bz.tick); bz.tick = null;
       bz.word = true;
       busyText(word);
     },

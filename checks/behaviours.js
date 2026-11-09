@@ -79,6 +79,24 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const b4 = await p.evaluate(() => ({ on: ds.busy.active(), done: document.querySelector('header.top').classList.contains('loading-done'), pc: document.querySelector('.busy .pc').textContent }));
   assert(b1.on && b1.seen === 'visible' && b1.bt === 'Lecture des banques…' && b2.pc > 10 && b2.boot === b2.pc + '%' && b3 >= b2.pc && !b4.on && b4.done && b4.pc === '',
     'la roue de l’en-tête : visible, le pourcentage monte seul et ne recule jamais, puis la coche ' + JSON.stringify([b1, b2, b3, b4]));
+  // an even speed: over a loading foreseen to last 2 s, the share climbs by the same steps; work read ahead of time (half
+  // of it at 0.6 s) bends the speed gently, without a jump
+  await p.waitForTimeout(2100);
+  const even = await p.evaluate(async () => {
+    const pc = () => parseInt(document.querySelector('.busy .pc').textContent), wait = ms => new Promise(r => setTimeout(r, ms)), a = [], b = [];
+    ds.busy.start('Lecture', { expected: 2000 });
+    for (let i = 0; i < 8; i++) { await wait(200); a.push(pc()); }
+    ds.busy.done(false);
+    ds.busy.start('Lecture', { expected: 2000 });
+    for (let i = 0; i < 10; i++) { await wait(200); if (i === 2) ds.busy.pct(50); b.push(pc()); }
+    ds.busy.done(false);
+    const steps = x => x.slice(1).map((v, i) => v - x[i]);
+    return { a, b, sa: steps(a), sb: steps(b) };
+  });
+  // while it climbs (below 99%, where it waits for the end), each step differs from the one before by 4 points at most
+  const climbing = even.sb.filter((d, i) => even.b[i + 1] < 99);
+  const flat = even.sa.every(d => d >= 7 && d <= 12), gentle = climbing.length >= 4 && climbing.every(d => d >= 0 && d <= 20) && climbing.slice(1).every((d, i) => Math.abs(d - climbing[i]) <= 4);
+  assert(flat && gentle, 'le pourcentage monte à vitesse régulière, et l’avance des sources lues la corrige en douceur ' + JSON.stringify(even));
   // a word in place of the share (Studio's « calcul… »): it stays while the time passes and a share is given, until the end
   await p.waitForTimeout(2100);
   await p.evaluate(() => { ds.busy.start('Analyse', { expected: 400 }); ds.busy.say('calcul…'); ds.busy.pct(80); });
