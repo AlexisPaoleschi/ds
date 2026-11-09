@@ -1,0 +1,40 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><script src="../dist/ds.js" defer></script></head>
+<body>
+<div class="wrap">
+  <a class="back-link" id="back" href="#"><svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>Galeries</a>
+  <section class="hero is-parallax" id="hero"><img class="hero-img" src="/photo/90.svg?w=1600&amp;h=900" alt="">
+    <a class="back-link on-photo" id="back-photo" href="#"><svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>Événements</a>
+    <div class="hero-in"><h1 class="hero-t">Lyon 2026</h1><p class="hero-sub">Lyon, France</p><p class="hero-meta">8–12 juin 2026</p>
+      <div class="hero-acts"><a class="btn is-save" href="#" id="hero-act">Réserver</a></div></div></section>
+  <section class="hero is-short is-bottom" id="cover"><img class="hero-img" src="/photo/91.svg?w=1600&amp;h=600" alt="">
+    <div class="hero-in"><h1 class="hero-t">Claire &amp; Hugo</h1><p class="hero-meta">12 septembre 2026</p></div></section>
+  <button class="btn" id="open" type="button">Ouvrir la visionneuse</button>
+  <label class="photogrid-zoom"><svg class="ico" aria-hidden="true"><use href="#i-zoom-out"/></svg><input type="range" class="zoom-slider" id="zoom"><svg class="ico" aria-hidden="true"><use href="#i-zoom-in"/></svg></label>
+  <div class="photogrid" id="grid"></div>
+  <div class="photogrid" id="auto" data-viewer="a.ph" data-viewer-label="Sans code">
+    <a class="ph" href="/photo/21.svg?w=900&amp;h=600"><img src="/photo/21.svg?w=300&amp;h=200" width="300" height="200" alt="Vingt et un"></a>
+    <a class="ph" href="/photo/22.svg?w=600&amp;h=900"><img src="/photo/22.svg?w=200&amp;h=300" width="200" height="300" alt="Vingt-deux"></a>
+    <a href="#elsewhere" id="not-a-photo">Ailleurs</a>
+  </div>
+  <div style="height: 1600px"></div>
+</div>
+<script>
+  // the grid: twelve photos of every shape, three of them without their width and height (their shape comes when they load)
+  const SHAPES = [[300, 200], [200, 300], [300, 300], [300, 169], [240, 300], [300, 225], [200, 300], [300, 200], [300, 400], [300, 188], [225, 300], [300, 300]];
+  document.addEventListener("DOMContentLoaded", () => {
+    window.log = [];
+    const grid = document.getElementById("grid");
+    grid.innerHTML = SHAPES.map(([w, h], i) => `<a href="/photo/${i + 1}.svg?w=${w * 4}&h=${h * 4}&ms=400" data-caption="Photo ${i + 1}">` +
+      `<img src="/photo/${i + 1}.svg?w=${w}&h=${h}" ${i % 4 === 3 ? "" : `width="${w}" height="${h}"`} alt="Photo numéro ${i + 1}"></a>`).join("");
+    window.pg = ds.photogrid("#grid", { sizes: [140, 190, 240, 300], size: 190, key: "check-zoom", slider: "#zoom" });
+    window.bound = ds.viewer.bind("#grid", { label: "La grille", onChange: i => log.push("change:" + i), onClose: i => log.push("close:" + i) });
+    // the viewer from code: plain items, one as a function that asks for its address, one caption
+    window.items = [{ src: "/photo/31.svg?w=1200&h=800&ms=400", alt: "Trente et un" }, "/photo/32.svg?w=800&h=1200",
+      () => new Promise(r => setTimeout(() => r({ src: "/photo/33.svg?w=1200&h=800", caption: "Une légende sous la photo" }), 50)),
+      { src: "/photo/34.svg?w=1200&h=900" }, { src: "/photo/35.svg?w=900&h=1200" }];
+    document.getElementById("open").addEventListener("click", e => {
+      window.v = ds.viewer(items, { start: 2, label: "Visionneuse d’essai", onChange: (i, it) => log.push("v:" + i), onClose: i => log.push("vclose:" + i) });
+    });
+  });
+</script></body></html>

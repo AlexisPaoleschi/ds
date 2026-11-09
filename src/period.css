@@ -1,0 +1,28 @@
+/* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
+   and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
+  .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
+  .periodleft { position: relative; display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
+  .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; min-height: var(--s-24); padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
+    font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
+  .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
+  .periodtitle .yr { color: var(--faint); font-weight: 600; }
+  .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
+  /* an arrow that leads nowhere is gone, and the row with it when both are */
+  .periodnav .off { display: none; }
+  .periodnav:not(:has(> :not(.off))) { display: none; }
+  /* the picker under the title: a panel, and buttons that light up in gold when chosen */
+  .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
+  .periodpop button { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: 500 var(--fs-13)/var(--lh-tight) var(--body); padding: var(--s-8) var(--s-10); }
+  .periodpop button:hover { border-color: var(--line-2); color: var(--ink); }
+  .periodpop button.on { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent-text); }
+  /* tabs inside the picker keep their look, not the picker's framed buttons */
+  .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; }
+  .periodpop .tabs button { text-align: center; background: none; border: 0; border-radius: var(--r-s); color: var(--faint); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; padding: var(--s-6) var(--s-10); }
+  .periodpop .tabs button.on { background: var(--accent-soft); color: var(--accent-text); }
+@media (max-width: 768px) {
+    .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
+    .periodtitle { font-size: var(--fs-22); }
+}
