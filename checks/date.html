@@ -1,0 +1,64 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><link rel="stylesheet" href="../dist/ds-tools.css"><script src="../dist/ds.js" defer></script><script src="../dist/ds-icons.js" defer></script><script src="../dist/ds-tools.js" defer></script></head>
+<body>
+<div class="wrap">
+  <section class="card">
+    <div class="periodhead">
+      <div class="periodleft">
+        <button class="periodtitle" type="button" id="title"><span id="label"></span><span class="caret" aria-hidden="true">▾</span></button>
+        <div id="pop"></div>
+      </div>
+      <div class="periodnav"><button class="btn is-small" type="button" id="prev" aria-label="Période précédente">‹</button><button class="btn is-small" type="button" id="next" aria-label="Période suivante">›</button></div>
+    </div>
+    <p id="outside">Ailleurs dans la page.</p>
+  </section>
+  <section class="card">
+    <div class="periodhead is-steady" id="steady">
+      <div class="periodleft"><button class="periodtitle" type="button" id="steady-title">Toutes les dates<span class="caret" aria-hidden="true">▾</span></button><div id="steady-pop"></div></div>
+      <div class="periodnav"><button class="btn is-icon is-off" type="button" id="steady-prev" aria-label="Période précédente">‹</button><button class="btn is-icon is-off" type="button" id="steady-next" aria-label="Période suivante">›</button></div>
+    </div>
+    <p id="steady-after">Sous le titre.</p>
+  </section>
+  <section class="card"><div id="inline"></div></section>
+  <section class="card"><div id="donut"></div><div id="donut-plain"></div><div id="donut-none"></div></section>
+  <section class="card"><div id="pairs"></div></section>
+  <section class="card"><div id="cal"></div></section>
+</div>
+<script>
+  // a fixed today, Monday 9 November 2026, and the periods Bank offers around it
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = "2026-11-09", P = ds.datePick, month = P.of("month", today);
+    window.picks = []; window.inlinePicks = []; window.slices = []; window.months = [];
+    window.quick = [
+      { label: "Toutes les dates" },
+      { label: "Ce mois-ci", from: month.from, to: month.to },
+      { label: "Le mois dernier", from: "2026-10-01", to: "2026-10-31" },
+      { label: "3 derniers mois", from: "2026-09-01", to: "2026-11-30" },
+      { label: "Cette année", from: "2026-01-01", to: "2026-12-31" }
+    ];
+    window.steadyDp = P("#steady-pop", { value: {}, quick, min: "2017-01-01", max: today, today, opener: "#steady-title" });
+    window.dp = P("#pop", { value: month, quick, min: "2017-01-01", max: today, today, opener: "#title", onPick: v => {
+      picks.push(v);
+      document.getElementById("label").textContent = v.label;
+    } });
+    document.getElementById("prev").addEventListener("click", () => dp.step(-1));
+    document.getElementById("next").addEventListener("click", () => dp.step(1));
+    window.inline = P(document.getElementById("inline"), { modes: ["range"], today, value: { from: "2026-08-01", to: "2026-08-16" }, label: "Dates du voyage", onPick: v => inlinePicks.push(v) });
+
+    window.rows = [{ key: "logement", label: "Logement", value: 850, color: "--c-violet" }, { key: "courses", label: "Courses", value: 412.3, color: "--c-vert" },
+      { key: "loisirs", label: "Loisirs", value: 236.8, color: "--c-corail" }, { key: "deplacements", label: "Déplacements", value: 164.3, color: "--c-bleu" },
+      { key: "soins", label: "Soins", value: 25, color: "--c-turquoise" }, { key: "rien", label: "Rien", value: 0, color: "--c-rose" }];
+    window.donut = ds.chart.donut(document.getElementById("donut"), rows, { format: n => ds.money(n), center: "dépensés", onPick: k => slices.push(k),
+      open: (k, holder) => { holder.textContent = "détail " + k; } });
+    window.donutPlain = ds.chart.donut(document.getElementById("donut-plain"), rows.slice(0, 2), { center: { value: "12", label: "catégories" } });
+    window.donutNone = ds.chart.donut(document.getElementById("donut-none"), [{ label: "Rien", value: 0 }]);
+
+    window.flows = ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11"]
+      .map((k, i) => ({ key: k, income: 3000 + i * 100, spending: 2000 + i * 50, live: k === "2026-11" }));
+    window.pairs = ds.chart.bars(document.getElementById("pairs"), flows, { pairs: [{ key: "income", label: "Entrées", color: "--good" }, { key: "spending", label: "Sorties", color: "--bad" }],
+      unit: "€", format: n => ds.money(n, { decimals: 0 }), value: "2026-11", onPick: k => months.push(k) });
+
+    window.cal = ds.calendar(document.getElementById("cal"), { today, items: () => [] });
+    window.ready = true;
+  });
+</script></body></html>
