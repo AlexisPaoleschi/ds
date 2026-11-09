@@ -1,0 +1,31 @@
+/* The top bar, taken from alexispaoleschi.com: a name on the left, then links in capitals underlined in gold on hover,
+   or buttons with an icon (Selecta's bell, settings, sign-out), and room for one action (« Book now »).
+   Its content lines up with the page under it: 1500px for a tool, 1200px on a site's page (.is-site).
+   What a single app needs stays in it: the site's phone menu and its bar that appears on scrolling, Selecta's languages and bell. */
+  .topbar { position: relative; z-index: var(--z-bar); background: var(--topbar-bg); border-bottom: 1px solid var(--line); box-shadow: var(--topbar-shadow);
+    backdrop-filter: var(--topbar-blur); -webkit-backdrop-filter: var(--topbar-blur); }
+  .topbar.is-site { --topbar-max: var(--page-site); }
+  .topbar-in { display: flex; align-items: center; justify-content: space-between; gap: var(--topbar-gap); max-width: var(--topbar-max, var(--page-max)); margin: 0 auto;
+    padding: calc(var(--topbar-py) + var(--safe-top)) max(var(--topbar-px), var(--safe-right)) var(--topbar-py) max(var(--topbar-px), var(--safe-left)); }
+  .topbar-brand { flex: none; color: var(--brand-color); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
+    font: var(--title-weight) var(--brand-size)/var(--lh-tight) var(--title-font); letter-spacing: var(--brand-ls); text-transform: uppercase; }
+  .topbar-nav { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: var(--topbar-gap); min-width: 0; }
+  /* centred while it holds, never pushed over the name when it does not */
+  .topbar-nav.is-center { justify-content: safe center; }
+  /* nothing in the bar shrinks: a choice of language keeps its two letters */
+  .topbar-nav > * { flex: none; }
+  .topbar-link { position: relative; padding: var(--s-8) 0; color: var(--ink); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
+    font: 400 var(--topbar-link-size)/var(--lh-ui) var(--body); letter-spacing: var(--topbar-link-ls); text-transform: uppercase; }
+  .topbar-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--accent); transition: width var(--t-fast) ease; }
+  .topbar-icon { position: relative; display: grid; place-items: center; min-width: var(--touch-target); min-height: var(--touch-target); padding: 0; color: var(--ink); background: none; border: 0; cursor: pointer;
+    transition: color var(--t-fast) ease; }
+  .topbar-icon svg { width: 18px; height: 18px; }
+  .topbar .btn { --btn-h: var(--topbar-btn-h); --btn-px: var(--topbar-btn-px); flex: none; }
+  @media (hover: hover) {
+    .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent-text); }
+    .topbar-link:hover::after { width: 100%; }
+  }
+@media (max-width: 768px) {
+  /* on a phone, what is marked .is-wide leaves the bar: the site puts its links and its action in its own menu */
+  .topbar .is-wide { display: none; }
+}
