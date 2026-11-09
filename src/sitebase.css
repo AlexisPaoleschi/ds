@@ -1,0 +1,57 @@
+/* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
+   needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
+   First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
+   prompt to turn a phone upright, the gold subtitle and divider, the footer held sideways, the gold link chips. */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-loose); overflow-x: hidden;
+    -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  /* a phone held sideways is still a phone here: the sizes by role (--text-md…, a step bigger from 769px) keep its step */
+  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
+    :root { --text-md: var(--fs-15); --text-lg: var(--fs-18); --text-xl: var(--fs-20); --text-2xl: var(--fs-22); }
+  }
+  /* Landscape warning */
+  /* over everything, the bubbles included */
+  .landscape-warning { position: fixed; top: 0; left: 0; z-index: calc(var(--z-toast) + 1); display: none; flex-direction: column;
+    align-items: center; justify-content: center; gap: var(--s-20); width: 100%; height: 100%; padding: var(--s-20); background: var(--ink); }
+  .landscape-warning-icon { width: 80px; height: 80px; color: var(--accent); stroke-width: 1; }
+  .landscape-warning-text { font-size: var(--fs-18); font-weight: 500; letter-spacing: var(--ls-056); text-align: center; color: var(--white); }
+  /* Page Loader: the design system's large spinner (.spinner.is-large) in the middle of a cream page */
+  .page-loader { position: fixed; top: 0; left: 0; z-index: calc(var(--z-toast) + 2); display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%; background: var(--bg); transition: opacity var(--t-slow) ease, visibility var(--t-slow) ease; }
+  .page-loader.hidden { opacity: 0; visibility: hidden; }
+  /* Subtitle */
+  .subtitle { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-188); text-transform: uppercase; color: var(--accent);
+    text-shadow: var(--text-shadow-lg); }
+  /* Golden Divider */
+  .golden-divider-after { position: relative; padding-bottom: var(--s-24); }
+  .golden-divider-after::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 60px; height: 1px; background: var(--accent);
+    transform: translateX(-50%); }
+  /* Footer: the design system's (.site-footer). A phone held sideways keeps its
+     smaller room, and its text stays 16px: the 14px is for a phone held upright only */
+  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
+    .site-footer { --footer-py: var(--s-24); }
+  }
+  @media (max-width: 768px) and (orientation: landscape) {
+    .site-footer { --footer-size: var(--fs-16); }
+  }
+  /* Responsive */
+  @media (max-width: 956px) and (orientation: landscape) {
+    .landscape-warning { display: flex; }
+    /* the prompt turned off (no window.dsLandscapeWarning): the page scrolls held sideways too */
+    .landscape-warning-disabled body { overflow: auto !important; }
+  }
+  /* a phone held sideways, wider than 768px, takes a phone's badge, as the design system draws it from 768px down */
+  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
+    .badge { --badge-size: var(--fs-11); --badge-py: var(--s-4); --badge-px: var(--s-12); }
+  }
+  @media (max-width: 480px) {
+    .subtitle { font-size: var(--fs-12); }
+  }
+  /* The gold link chips (a model's Instagram, the organizer's website) */
+  .pill-link { display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-12) var(--s-24); font-family: var(--body);
+    font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-071); text-decoration: none; text-transform: uppercase; color: var(--accent);
+    background: var(--accent-soft); border: 1px solid var(--line); transition: all var(--t-fast) ease; }
+  .pill-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
+  @media (hover: hover) {
+    .pill-link:hover { color: var(--accent-strong); border-color: var(--accent); }
+  }

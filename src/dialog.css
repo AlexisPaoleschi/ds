@@ -1,0 +1,13 @@
+/* The window that asks before something that cannot be undone, or for a short text: the question over a veil,
+   then « Annuler » and the answer. ds.confirm puts it on the page. */
+  .dialog-veil { position: fixed; inset: 0; z-index: var(--z-dialog); display: grid; place-items: center; padding: var(--s-16); background: var(--veil); }
+  .dialog { width: min(420px, 100%); box-sizing: border-box; display: grid; align-content: start; gap: var(--s-12); padding: var(--sheet-pad); background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); }
+  .dialog-t { margin: 0; font: var(--head-weight) var(--dialog-t-size)/var(--head-lh) var(--title-font); color: var(--ink); }
+  .dialog-x { margin: 0; font: var(--text-weight) var(--dialog-x-size)/var(--text-lh) var(--body); color: var(--dim); }
+  .dialog-in { width: 100%; box-sizing: border-box; }
+  /* the buttons keep their height, and go under one another when the line is too short for both */
+  .dialog-b { --btn-px: var(--dialog-btn-px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s-8); margin-top: var(--s-4); }
+@media (max-width: 480px) {
+  /* a phone gives the words the width, as in a sheet; the two buttons share the line, or each takes it all */
+  .dialog-b > .btn { flex: 1 1 auto; }
+}
