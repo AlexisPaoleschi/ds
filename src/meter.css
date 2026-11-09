@@ -1,0 +1,6 @@
+/* One bar per category, merchant or month (Bank: where the money goes, a category's subcategories): how much each one
+   is against the biggest of the list. <span class="meter"><i style="width: 42%"></i></span>, in the accent, or in the
+   item's own colour (--n). In a list's row (ul.rows) it takes a line of its own, under the row's words. */
+  .meter { display: block; flex: 1 1 100%; height: 6px; overflow: hidden; border-radius: var(--r-s);
+    background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); }
+  .meter > i { display: block; height: 100%; border-radius: inherit; background: var(--n, var(--accent)); }

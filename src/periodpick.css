@@ -1,0 +1,10 @@
+/* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
+   periods would not fit beside a card's title, the design system's menu (.pill, « 1 an ▾ »), the same as a month's or a
+   sort's. In a card's title (.ct) it sits on the right. */
+  .periodpick { display: inline-flex; min-width: 0; }
+  .periodpick .periodpick-list { display: none; }
+  .ct > .periodpick { margin-left: auto; }
+@media (max-width: 768px) {
+  .periodpick .tabs { display: none; }
+  .periodpick .periodpick-list { display: inline-flex; }
+}
