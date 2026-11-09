@@ -1,0 +1,46 @@
+/* The small pages of an app (privacy, terms, signed out): the app's name above a title, one column of text. */
+  body.doc { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: var(--text-weight) var(--text-size)/var(--text-lh) var(--body); -webkit-font-smoothing: antialiased; }
+  body.doc main { max-width: 640px; margin: 0 auto; padding: var(--s-48) var(--s-16); }
+  body.doc .eyebrow { margin: 0 0 var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
+  body.doc h1 { margin: 0 0 var(--s-10); font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  body.doc main p { margin: 0 0 var(--s-16); color: var(--dim); }
+  body.doc main p a { color: var(--accent-text); }
+/* A longer text (terms, a release to sign): its headings, its lists, its bold words; it prints without its colours. */
+  body.doc main h2 { margin: var(--s-32) 0 var(--s-12); padding-bottom: var(--s-6); border-bottom: 1px solid var(--doc-rule); color: var(--ink);
+    font: var(--head-weight) var(--doc-h2-size)/var(--head-lh) var(--title-font); break-after: avoid; }
+  body.doc main h3 { margin: var(--s-20) 0 var(--s-8); color: var(--ink); font: var(--doc-h3-weight) var(--text-size)/var(--head-lh) var(--body); break-after: avoid; }
+  body.doc main :is(ul, ol) { margin: 0 0 var(--s-16); padding-left: var(--s-20); color: var(--dim); }
+  body.doc main li { margin-bottom: var(--s-6); }
+  body.doc main strong { font-weight: var(--doc-strong); color: var(--ink); }
+  @media print {
+    body.doc { background: none; }
+    body.doc main { max-width: none; padding: 0; }
+    /* on paper every word is in full black and a little bolder than on a screen, so that a page to sign reads well */
+    body.doc, body.doc main :is(h1, h2, h3, p, li, strong, a, .eyebrow) { color: var(--black); }
+    body.doc { font-weight: 400; }
+    body.doc main strong { font-weight: 600; }
+  }
+/* A legal page of a site (<body class="doc is-legal">, the site's terms and model releases): its head in the middle, a
+   word to keep in mind (.doc-notice), the two parties' block to sign by hand (.doc-sign), its foot. Its links are in gold
+   without a line, and on paper it keeps room above and below each page. */
+  body.doc .doc-head { margin-bottom: var(--s-40); text-align: center; }
+  body.doc .doc-sub { margin: var(--s-4) 0 0; color: var(--faint); }
+  body.doc .doc-section { margin-bottom: var(--s-32); }
+  body.doc.is-legal main p a { text-decoration: none; }
+  body.doc .doc-notice { margin: var(--s-20) 0; padding: var(--s-12) var(--s-16); font-size: var(--note-size); color: var(--dim); background: var(--accent-soft);
+    border-left: 3px solid var(--accent); }
+  /* the two parties side by side, each with a line to sign and its fields to fill in by hand */
+  body.doc .doc-sign { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-40); margin-top: var(--s-48); break-inside: avoid; }
+  body.doc .doc-sign-party { padding-top: var(--s-16); border-top: 1px solid var(--ink); }
+  body.doc .doc-sign-label { margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--faint); }
+  body.doc .doc-sign-line { height: var(--s-40); margin-bottom: var(--s-8); border-bottom: 1px solid var(--faint); }
+  body.doc .doc-sign-field { display: flex; align-items: baseline; gap: var(--s-6); margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--dim); }
+  body.doc .doc-sign-field-line { flex: 1; border-bottom: 1px solid var(--faint); }
+  body.doc .doc-foot { margin-top: var(--s-48); padding-top: var(--s-20); text-align: center; border-top: 1px solid var(--line); }
+  body.doc .doc-foot p { margin: 0 0 var(--s-4); font-size: var(--note-size); color: var(--faint); }
+  body.doc.is-legal { page: legal; }
+  @page legal { margin-top: 20mm; margin-bottom: 20mm; }
+  @media print {
+    body.doc .doc-notice { background: none; }
+    body.doc :is(.doc-sub, .doc-notice, .doc-sign-label, .doc-sign-field, .doc-foot p) { color: var(--black); }
+  }

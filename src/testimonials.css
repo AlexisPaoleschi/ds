@@ -1,0 +1,35 @@
+/* The site kit: the testimonials' banner (the events list): the photographers' words, each in the design system's card. */
+  /* Outer wrapper mirrors events-main geometry */
+  .testimonials-banner { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-40); }
+  /* Inner section carries the border, constrained by outer padding → 1120px */
+  .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
+  .testimonials-banner-head { max-width: 560px; margin: 0 auto var(--s-48); text-align: center; }
+  .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
+    letter-spacing: var(--ls-3); text-transform: uppercase; color: var(--ink); }
+  .testimonials-banner-subtitle { font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
+  .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--s-32); }
+  .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: calc(var(--s-32) + var(--s-4)) var(--s-32);
+    transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
+  .testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-pop); }
+  .testimonial-quote-mark { font-family: var(--display); font-size: var(--fs-56); line-height: calc(var(--lh-tight) * .6); color: var(--accent); }
+  .testimonial-text { flex: 1; font-family: var(--body); font-weight: 300; font-style: italic; line-height: var(--lh-airy); color: var(--dim); }
+  .testimonial-signature { padding-top: var(--s-20); border-top: 1px solid var(--line); }
+  .testimonial-author { display: block; font-family: var(--display); font-size: var(--fs-18); letter-spacing: var(--ls-1); color: var(--ink); }
+  .testimonial-workshop { display: block; margin-top: var(--s-6); font-family: var(--body); font-size: var(--fs-12); font-weight: 500;
+    letter-spacing: var(--ls-1-5); text-transform: uppercase; color: var(--faint); }
+  /* Responsive - Tablet */
+  @media (max-width: 768px) {
+    .testimonials-banner { padding: 0 var(--s-24); }
+    .testimonials-banner-inner { padding: var(--s-60) 0; }
+    .testimonials-banner-head { margin-bottom: calc(var(--s-32) + var(--s-4)); }
+    .testimonials-grid { gap: var(--s-24); }
+  }
+  /* Responsive - Mobile */
+  @media (max-width: 480px) {
+    .testimonials-banner { padding: 0 var(--s-16); }
+    .testimonials-banner-inner { padding: var(--s-48) 0; }
+    .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-2); }
+    .testimonials-banner-subtitle { font-size: var(--fs-14); }
+    .testimonial-card { padding: calc(var(--s-24) + var(--s-4)) var(--s-24); }
+    .testimonial-text { font-size: var(--fs-14); }
+  }
