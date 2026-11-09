@@ -6,7 +6,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Ce qu’il contient
 
-- `src/tokens.css` : les couleurs, les polices, les trois tailles d’arrondi (`--r-s`, `--r-m`, `--r-l`), la palette de huit couleurs (`--c-bleu`, `--c-ciel`, `--c-turquoise`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-orange`, `--c-ardoise`) et les deux thèmes, **Atelier** (sombre, les outils) et **Vitrine** (clair, les sites publics), tous deux à l’or `#c9a961` du site.
+- `src/tokens.css` : les couleurs, les polices, les trois tailles d’arrondi (`--r-s`, `--r-m`, `--r-l`), la palette des banques, des catégories, des réseaux et des agendas (`--c-rouge`, `--c-corail`, `--c-orange`, `--c-ambre`, `--c-jaune`, `--c-vert`, `--c-emeraude`, `--c-turquoise`, `--c-ciel`, `--c-bleu`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-ardoise`) et les deux thèmes, **Atelier** (sombre, les outils) et **Vitrine** (clair, les sites publics), tous deux à l’or `#c9a961` du site.
 - `src/base.css` : les champs, les cases à cocher et le focus, les mêmes dans toutes les pages.
 - `src/shell.css` : la coque des applis Bank et Studio : page, en-tête et onglets, chargement, cartes, messages, listes, sources en bas de page.
 - `src/buttons.css` : les boutons, `.btn` et ses variantes `is-act`, `is-save`, `is-danger`, `is-icon`.
@@ -29,7 +29,7 @@ Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défau
 
 - Chaque appli a un test, `tests/test_design_system.py`, qui échoue si une page écrit une couleur, une taille, un espace, un arrondi, une superposition, une durée ou une ombre au lieu de nommer un jeton.
 
-- Couleurs : toutes ici. Une appli ne nomme qu’un jeton (`var(--c-bleu)`, `var(--good)`…), jamais un code couleur. Le vert, le rouge et le jaune sont réservés aux entrées, aux sorties et à ce qui demande un coup d’œil.
+- Couleurs : toutes ici. Une appli ne nomme qu’un jeton (`var(--c-bleu)`, `var(--good)`…), jamais un code couleur. `--good`, `--bad` et `--mid` sont réservés aux entrées, aux sorties et à ce qui demande un coup d’œil ; le rouge, le vert et le jaune de la palette nomment une banque, une catégorie ou un agenda. Deux choses montrées ensemble (les banques, les dépenses d’un mois, un voyage, les réseaux et les agendas de Studio) ne prennent jamais la même couleur.
 - Réglages : toutes les tailles de texte, interlignes, espacements de lettres, marges, superpositions, durées et ombres sont des jetons (`--fs-14`, `--s-12`, `--z-sheet`…). Les largeurs d’écran sont les quatre mêmes partout : 420, 640, 980, 1280px.
 - Boutons : gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer.
 - Une appli n’utilise que les rôles (`--accent`, `--panel`…) et ne les redéfinit jamais.

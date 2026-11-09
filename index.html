@@ -55,7 +55,7 @@
   <div class="card rules" style="margin-top: var(--s-24)">
     <h2 class="ct">Règles</h2>
     <ul>
-      <li><b>Couleurs.</b> Toutes ici. Une appli ne nomme qu’un jeton (<code>var(--c-bleu)</code>, <code>var(--good)</code>…), jamais un code couleur. Le vert, le rouge et le jaune sont réservés aux entrées, aux sorties et aux alertes.</li>
+      <li><b>Couleurs.</b> Toutes ici. Une appli ne nomme qu’un jeton (<code>var(--c-bleu)</code>, <code>var(--good)</code>…), jamais un code couleur. <code>--good</code>, <code>--bad</code> et <code>--mid</code> sont réservés aux entrées, aux sorties et aux alertes ; le rouge, le vert et le jaune de la palette nomment une banque, une catégorie ou un agenda.</li>
       <li><b>Réglages.</b> Tailles de texte, interlignes, marges, arrondis, superpositions, durées et ombres sont des jetons. Les largeurs d’écran sont les quatre mêmes partout : 420, 640, 980 et 1280px.</li>
       <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer. Un seul bouton plein par écran.</li>
       <li><b>Angles nets.</b> 4, 6 ou 8px, jamais plus.</li>
@@ -69,7 +69,7 @@
   <section class="theme demo">
     <h2 class="t-name"><span></span><small></small></h2>
     <div class="card"><h3 class="ct">Couleurs</h3>
-      <div class="sw" data-swatches="--bg --panel --panel-2 --line --line-2 --ink --dim --faint --accent --good --bad --mid --c-bleu --c-ciel --c-turquoise --c-violet --c-mauve --c-rose --c-orange --c-ardoise"></div>
+      <div class="sw" data-swatches="--bg --panel --panel-2 --line --line-2 --ink --dim --faint --accent --good --bad --mid --c-rouge --c-corail --c-orange --c-ambre --c-jaune --c-vert --c-emeraude --c-turquoise --c-ciel --c-bleu --c-violet --c-mauve --c-rose --c-ardoise"></div>
     </div>
     <div class="card"><h3 class="ct">Texte et espaces</h3>
       <div class="scale" data-fs="9 10 11 12 13 14 15 17 22 28"></div>
@@ -97,13 +97,13 @@
       <div class="row" style="margin-top: var(--s-10)"><select><option>Loisirs › Restaurant</option></select><input type="date" value="2026-08-15"><label class="row"><input type="checkbox" checked> Seulement cette opération</label></div>
     </div>
     <dl class="tiles is-compact"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile up"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile down"><dt>Sorties</dt><dd>−1 263,08€</dd></div></dl>
-    <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="u">membres</span></dd><span class="d">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-mauve)"><dt><i></i>Katline</dt><dd>860<span class="u">membres</span></dd><span class="d neg">−1,1% sur 30 jours</span></div></dl>
+    <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="u">membres</span></dd><span class="d">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-rose)"><dt><i></i>Katline</dt><dd>860<span class="u">membres</span></dd><span class="d neg">−1,1% sur 30 jours</span></div></dl>
     <div class="side-layout open">
       <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer">×</button></div>
         <div class="filters">
           <div class="fgroup"><span class="fhead">Comptes<button type="button" class="fall">Tout</button></span>
             <span class="frow"><button type="button" class="chip" aria-pressed="true"><i class="sq on" style="--a:var(--c-ciel)"></i>Revolut</button><button type="button" class="only">seul</button></span>
-            <span class="frow"><button type="button" class="chip" aria-pressed="false"><i class="sq on" style="--a:var(--c-mauve)"></i>BoursoBank</button><button type="button" class="only">seul</button></span>
+            <span class="frow"><button type="button" class="chip" aria-pressed="false"><i class="sq on" style="--a:var(--c-rose)"></i>BoursoBank</button><button type="button" class="only">seul</button></span>
           </div>
           <div class="fgroup"><span class="fhead">Sens</span><span class="frow"><button type="button" class="chip" aria-pressed="true">Entrées</button></span><span class="frow"><button type="button" class="chip" aria-pressed="true">Sorties</button></span></div>
         </div>

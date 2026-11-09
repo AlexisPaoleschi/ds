@@ -1,4 +1,4 @@
-/* ds 2.10.3 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.10.4 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -15,9 +15,13 @@
   --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-plex-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
   --font-gilda: "Gilda Display", Georgia, serif;
-  /* the palette: eight colours of one lightness and one intensity, for banks, categories, networks and agendas;
-     green, red and yellow stay for money in, money out and what needs a look */
-  --c-bleu: #64a1ee; --c-ciel: #45bde7; --c-turquoise: #3fc0c0; --c-violet: #a58de6; --c-mauve: #cb7fc5; --c-rose: #df7a9b; --c-orange: #e99355; --c-ardoise: #8e99ab;
+  /* the palette, for banks, categories, networks and agendas: the vivid colours the apps had before the design system,
+     made lighter where they were too dark to read on the night background (4.8:1 or more on a panel), and kept apart
+     wherever they are shown together (a bank's list, a month's spending, a trip, Studio's networks and agendas).
+     Its red, green and yellow name a bank, a category or an agenda; --good, --bad and --mid alone mean money in,
+     money out and what needs a look */
+  --c-rouge: #f1453f; --c-corail: #e8686b; --c-orange: #fb8139; --c-ambre: #da942c; --c-jaune: #e3b341; --c-vert: #4ec98a; --c-emeraude: #21a475;
+  --c-turquoise: #2bc5c8; --c-ciel: #3fb6f2; --c-bleu: #498fee; --c-violet: #9b8cf2; --c-mauve: #cc7fd9; --c-rose: #e05b9e; --c-ardoise: #8e99ab;
   --black: #000000; --white: #ffffff;
   /* text: ten sizes, three line heights, four letter spacings */
   --fs-9: 9px; --fs-10: 10px; --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;

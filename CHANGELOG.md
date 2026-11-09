@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.10.4 · 9 novembre 2026
+
+- Atelier : la palette reprend les couleurs vives qu’avaient les applis avant le design system, à la place des huit couleurs douces. Quatorze jetons : `--c-rouge`, `--c-corail`, `--c-orange`, `--c-ambre`, `--c-jaune`, `--c-vert`, `--c-emeraude`, `--c-turquoise`, `--c-ciel`, `--c-bleu`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-ardoise`. Les plus sombres d’avant sont éclaircies pour se lire sur le fond nuit (MAIF, Boursorama, Instagram, Katline) ; celles qui se confondaient dans un même graphique sont écartées (Déplacements et Administratif, Shopping, Abonnements et « À classer », Courses et Soins). L’or, le vert des entrées, le rouge des sorties et le jaune des alertes ne changent pas.
+
 ## 2.10.3 · 9 novembre 2026
 
 - Correction : sur téléphone, la liste des sources en bas de page prend toute la largeur, même quand ses lignes sont courtes (Studio).
