@@ -1,0 +1,20 @@
+name: Tag
+# Each version gets its tag (v + the VERSION file) as soon as main is pushed, so no one has to push it by hand:
+# scripts/sync.sh downloads a version through its tag. main is a single commit, amended and force-pushed, so a
+# push that keeps the same VERSION (a fix of the showcase page, say) moves its tag onto the new commit.
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tag the version
+        run: |
+          version="v$(cat VERSION)"
+          git tag -f "$version"
+          git push -f origin "refs/tags/$version"
+          echo "$version on $(git rev-parse --short HEAD)"
