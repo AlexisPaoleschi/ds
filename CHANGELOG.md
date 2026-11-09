@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.20.0 · 9 novembre 2026
+
+- Calendrier (`ds.calendar`) : `ready(state)` permet à une appli de dire qu’elle n’a pas encore lu les jours demandés. Tant qu’elle répond non, le calendrier garde à l’écran ce qu’il montrait (redessiné avec ce que l’appli a déjà), puis passe au nouveau mois au `draw()` suivant, une fois les jours lus. C’est ce que faisait l’agenda de Studio : un mois s’affiche une fois, avec tout ce qu’il montre, plutôt que vide puis rempli. Sans `ready`, rien ne change : il bouge tout de suite.
+- Calendrier : un élément qui a un compte (`count`, « 2/4 » : un même titre sur plusieurs réseaux) donne dans sa case son titre d’abord, puis son compte, puis ses codes, que les cases étroites (1024px et moins) laissent tomber. Sinon, dans une case étroite, les codes cachaient le titre. Les autres éléments gardent leurs codes avant le titre.
+
 ## 2.19.6 · 9 novembre 2026
 
 - La roue de l’en-tête : le pourcentage monte à vitesse régulière, de façon à arriver à 99 % à la fin prévue, la durée qu’a prise ce chargement la dernière fois. Il ne part plus vite pour ralentir ensuite, et ne compte plus par bonds. La toute première fois, sans durée connue, la part du travail que l’appli donne (`pct`, les lignes lues de Studio) guide la fin prévue, et la vitesse s’y plie en douceur ; ensuite elle ne compte plus pour la vitesse : les lignes de Studio ne prennent pas toutes le même temps à lire, et la faisaient ralentir. Il attend à 99 % un chargement plus long que prévu ; à la fin, il va à 100 % en un quart de seconde, puis la coche.

@@ -21,6 +21,8 @@
   .cal-line.is-done .cal-lt { color: var(--faint); }
   .cal-line.is-late .cal-lt { color: var(--bad); }
   .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-10)/var(--lh-tight) var(--mono); }
+  /* a group's codes, after its count, are the first thing a narrow cell lets go */
+  @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
   .cal-more { padding-left: var(--s-2); color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
   .cal-more-dots { display: none; }
   /* the marks: a square, filled once done; a dot; a bar, thin or thick (a shooting) */

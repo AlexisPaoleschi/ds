@@ -1,4 +1,4 @@
-/* ds 2.19.6 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -1635,9 +1635,12 @@
    items, in the order they are shown), panel(key, items) (what the day's panel holds under its title: one or more nodes;
    by default one row per item), row(item, key) (a row of a week's column or of the default panel), body (where the view
    goes: holder by default, after the head; a page may put it beside its filters), lines (lines in a cell, 8 by default),
-   years ([first, last] in the picker), today (the day taken as today, for a page's checks), onChange(state).
+   years ([first, last] in the picker), today (the day taken as today, for a page's checks), onChange(state),
+   ready(state) (false while the page has yet to read the days asked for: the calendar keeps showing what it showed,
+   with what the page now holds, and moves once a later draw() finds them ready; without it, it moves at once).
    An item: {title, color ("--c-bleu": its mark), mark ("square", "dot", "bar" or "thick"), open (an empty mark: not done
-   yet), codes ([{text, color, title}] or "IG": small coloured labels), count ("2/4"), time ("10h00": in a cell for a bar
+   yet), codes ([{text, color, title}] or "IG": small coloured labels), count ("2/4": a group, one title on several codes,
+   which gives its title first and its codes last, the ones a narrow cell drops), time ("10h00": in a cell for a bar
    only), place, href, done (greyed), late (in red; lateText adds a red badge to its row), note (said on hover)}.
    On a phone, a cell shows a dot per item, three at most, then « +N ».
    Returns {draw(), set({view, day}), go(step), today(), state()}: state() is {view, day, from, to}, the days shown
@@ -1696,10 +1699,14 @@
     var ln = el("span", "cal-line" + (isBar(it) ? " is-bar" : "") + (it.done ? " is-done" : "") + (it.late ? " is-late" : "") + (i >= DOTS ? " is-extra" : ""));
     ln.title = it.note || it.title || "";
     ln.append(mark(it));
-    codes(it).forEach(function (c) { ln.append(c); });
+    // a group's codes come after its title and its count: in a narrow cell they would otherwise hide the title
+    if (!it.count) codes(it).forEach(function (c) { ln.append(c); });
     // a cell is narrow: only what happens at an hour (a bar) gives it there; the rows say every time
     ln.append(el("span", "cal-lt", (it.time && isBar(it) ? it.time + " " : "") + (it.title || "")));
-    if (it.count) ln.append(el("span", "cal-count", it.count));
+    if (it.count) {
+      ln.append(el("span", "cal-count", it.count));
+      codes(it).forEach(function (c) { ln.append(c); });
+    }
     return ln;
   }
   // a row of a day: its time, its mark and codes, its title (a link when it has one), its place
@@ -1868,7 +1875,17 @@
       for (var i = st.before ? -7 : 0; i < 8; i++) out.push(panel(addDays(st.day, i)));
       return out;
     }
+    // what is on screen; a page still reading the days asked for (ready) keeps it there, drawn again with what it holds
+    var shown = null;
     function draw() {
+      var want = st, hold = shown && opts.ready && !opts.ready(state());
+      if (hold) st = shown;
+      try { paint(); } finally {
+        if (hold) st = want;
+        else shown = { view: st.view, day: st.day, before: st.before };
+      }
+    }
+    function paint() {
       h3.replaceChildren.apply(h3, titleText());
       [].forEach.call(tabs.children, function (b) { b.setAttribute("aria-selected", b.dataset.view === st.view ? "true" : "false"); });
       // the month picker follows the day while it is shut; open, it keeps what one is looking at

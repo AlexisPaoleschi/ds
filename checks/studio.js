@@ -102,6 +102,36 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(list1.length === 8 && list1[0] === '2026-11-09' && list1[7] === '2026-11-16' && list2.days.length === 15 && list2.days[0] === '2026-11-02' && list2.state.from === '2026-11-02'
     && list2.focus && list2.open === 'true' && list2.none === 'Rien ce jour-là.', 'la liste : huit jours depuis le jour choisi, la semaine d’avant dépliée au-dessus');
 
+  // a group (an item with a count): its title, its count, then its codes, which a narrow cell lets go; ready: a page
+  // still reading the days asked for keeps the month on screen, and moves once it has them
+  const held = await p.evaluate(() => {
+    const box = document.createElement('div');
+    box.id = 'cal2';
+    document.querySelector('.wrap').append(box);
+    window.have = false;
+    window.cal2 = ds.calendar(box, { today: '2026-11-09', ready: s => have || s.day < '2026-12-01', items: k => k === '2026-11-10'
+      ? [{ title: 'Halloween', color: '--c-bleu', count: '1/3', codes: ['IG', 'X'] }, { title: 'Série Irina', color: '--c-bleu', codes: ['P'] }] : [] });
+    const lines = [...box.querySelectorAll('.cal-cell[data-day="2026-11-10"] .cal-line')].map(l => [...l.children].map(x => x.className.split(' ')[0]).join(' '));
+    cal2.go(1);
+    const during = [box.querySelector('.periodtitle h3').textContent, cal2.state().day, box.querySelectorAll('.cal-cell[data-day="2026-11-10"]').length];
+    cal2.draw();
+    const still = box.querySelector('.periodtitle h3').textContent;
+    have = true;
+    cal2.draw();
+    const after = [box.querySelector('.periodtitle h3').textContent, box.querySelectorAll('.cal-cell[data-day="2026-12-31"]').length];
+    cal2.go(-1);
+    return { lines, during, still, after };
+  });
+  await p.setViewportSize({ width: 1000, height: 900 });
+  const narrow = await p.evaluate(() => [...document.querySelectorAll('#cal2 .cal-cell[data-day="2026-11-10"] .cal-code')].map(c => getComputedStyle(c).display));
+  await p.setViewportSize({ width: 1280, height: 900 });
+  console.log('      ' + JSON.stringify([held.lines, narrow]));
+  await p.evaluate(() => document.getElementById('cal2').remove());
+  assert(JSON.stringify(held.lines) === '["cal-mark cal-lt cal-count cal-code cal-code","cal-mark cal-code cal-lt"]' && JSON.stringify(narrow) === '["none","none","grid"]',
+    'un groupe : son titre, son compte, puis ses codes, que la case étroite laisse tomber ; un élément seul garde ses codes avant le titre');
+  assert(held.during[0] === 'novembre 2026' && held.during[1] === '2026-12-01' && held.during[2] === 1 && held.still === 'novembre 2026'
+    && held.after[0] === 'décembre 2026' && held.after[1] === 1, 'ready : le mois affiché reste tant que l’appli lit le suivant, puis le calendrier y passe');
+
   // the curve: one point per day, the highest and lowest values, the first and last days
   const ln = await p.evaluate(() => ({ points: document.querySelector('#line polyline').getAttribute('points').split(' ').length, rules: document.querySelectorAll('#line .chart-rule').length,
     y: [...document.querySelectorAll('#line .chart-line-y span')].map(s => s.textContent), x: [...document.querySelectorAll('#line .chart-line-x span')].map(s => s.textContent),
