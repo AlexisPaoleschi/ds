@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.21.0 · 9 novembre 2026
+
+- Année de jours (`ds.chart.heat`) : ce qu’une semaine a gagné, écrit sous elle (`below`), peut dire plus au survol : `below(lundi)` rend un chiffre, ou `{text, title}` (« semaine du 2 nov. · +12 abonnés · 3 posts », comme dans Studio).
+- Choix de période (`ds.periodPick`) : sur téléphone, la liste s’écrit dans la petite taille des onglets qu’elle remplace (13px), comme dans Studio, pour tenir à côté du titre d’une carte.
+
 ## 2.20.1 · 9 novembre 2026
 
 - Calendrier : un mois qui a besoin d’une sixième semaine (novembre 2026, du lundi 26 octobre au lundi 30 novembre) la montre entière, jusqu’au dimanche, avec les premiers jours du mois suivant estompés comme sur les lignes du dessus. Elle s’arrêtait au dernier jour du mois.

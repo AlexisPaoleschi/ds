@@ -15,7 +15,7 @@
    ds.chart.heat(holder, counts, {color, to, from, weeks, steps, title, below, legend, note}): a year of days, one square
      per day, a column per week, Monday on top, pale on a day with nothing, coloured from steps[0] (1), full from
      steps[1] (2); the days before from fade, those after to (today) are left out; below(weekStart) writes a figure
-     under a week (what it gained). counts: {"2026-11-09": 2}. In a card narrower than a year (740px, a phone) it
+     under a week (what it gained), or {text, title} to say more on hover. counts: {"2026-11-09": 2}. In a card narrower than a year (740px, a phone) it
      scrolls sideways, opened on its last weeks.
    ds.chart.spark(holder, values, {color, top, title}): small bars side by side, as tall as their value against top
      (a story's views against the best story shown).
@@ -219,7 +219,12 @@
         // a month is named over the week that holds its first day
         for (var j = 0; j < 7; j++) { var dj = addDays(ws, j); if (dj.slice(8) === "01") lab = monthShort(dj.slice(0, 7)) + (dj.slice(5, 7) === "01" ? " " + dj.slice(2, 4) : ""); }
         mos.append(el("span", "", lab));
-        if (below) { var g = from && addDays(ws, 6) < from ? null : o.below(ws); below.append(el("span", "", g == null ? "" : String(g))); }
+        // what the week brought: a figure, or {text, title} for a word on hover
+        if (below) {
+          var g = from && addDays(ws, 6) < from ? null : o.below(ws), gs = el("span", "", g == null ? "" : String(g && typeof g === "object" ? g.text : g));
+          if (g && typeof g === "object" && g.title) gs.title = g.title;
+          below.append(gs);
+        }
         for (var i = 0; i < 7; i++) {
           var day = addDays(ws, i), c = day > to ? 0 : counts[day] || 0;
           var sq = el("i", "heat-day" + (c >= steps[1] ? " is-2" : c >= steps[0] ? " is-1" : "") + (day > to ? " is-future" : "") + (from && day < from ? " is-out" : ""));

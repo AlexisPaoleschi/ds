@@ -167,6 +167,14 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(ht.n === 371 && ht.first === '2025-11-10' && ht.last === '2026-11-15' && JSON.stringify(ht.one) === '["2025-11-10","2026-11-02","2026-11-08"]' && JSON.stringify(ht.two) === '["2026-06-01","2026-11-09"]'
     && ht.future === 6 && ht.out === 172 && ht.below === 6 && ht.months === 12 && ht.legend === 3 && ht.title === '9 nov. · 2' && ht.color === 'rgb(241, 69, 63)',
     'l’année de jours : 53 semaines de 7 cases, pâles, colorées, pleines ; l’avenir laissé de côté, le chiffre des semaines, la légende');
+  // a week's figure can say more on hover: {text, title}
+  const said = await p.evaluate(() => {
+    const box = document.createElement('div');
+    ds.chart.heat(box, counts, { to: '2026-11-09', below: ws => ws === '2026-11-02' ? { text: '+12', title: 'semaine du 2 nov. · +12' } : null });
+    const s = [...box.querySelectorAll('.chart-heat-below span')].filter(x => x.textContent);
+    return s.map(x => x.textContent + '|' + x.title);
+  });
+  assert(JSON.stringify(said) === '["+12|semaine du 2 nov. · +12"]', 'le chiffre d’une semaine dit plus au survol');
   const sk = await p.evaluate(() => ({ n: spark.children.length, h: [...spark.children].map(i => i.style.height), split: [...split.querySelectorAll('.chart-split-bar i')].map(i => i.style.width),
     legend: [...split.querySelectorAll('.chart-split-legend span')].map(s => s.textContent) }));
   assert(sk.n === 3 && JSON.stringify(sk.h) === '["25%","50%","75%"]' && JSON.stringify(sk.split) === '["75%","25%"]' && sk.legend[0] === 'Abonnements750€75%',
