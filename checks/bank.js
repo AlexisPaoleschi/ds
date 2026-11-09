@@ -117,13 +117,13 @@ function stylesheets() {
   assert(p1.pv === 'Tous les comptes' && !p1.on && p1.over && p1.seen === '0' && p2.pv === 'Revolut' && p2.on && !p3.on,
     'la pilule dit le choix de son menu, posé dessus sans se voir ; un filtre en service s’allume ' + JSON.stringify([p1, p2, p3]));
 
-  // the sheet, on a computer: a panel on the right (measured once it has slid in)
+  // the sheet, on a computer: a window in the middle of the screen (measured once it has come in)
   const slid = () => p.waitForTimeout(450);
   await p.click('#open');
   await slid();
   const sh1 = await p.evaluate(() => { const panel = document.querySelector('#sheet .sheet-panel'), r = panel.getBoundingClientRect();
-    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, right: Math.round(r.right - document.getElementById('sheet').getBoundingClientRect().right), h: Math.round(r.height), left: Math.round(r.left), x: document.querySelector('#sheet .sheet-x').getAttribute('aria-label') }; });
-  assert(sh1.open && sh1.focus && sh1.right === 0 && sh1.h === 900 && sh1.left > 700 && sh1.x === 'Fermer', 'la fiche s’ouvre en panneau à droite, le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
+    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-x').getAttribute('aria-label') }; });
+  assert(sh1.open && sh1.focus && sh1.w === 560 && Math.abs(sh1.gap) <= 1 && sh1.top > 0 && sh1.bottom > 0 && sh1.x === 'Fermer', 'la fiche s’ouvre en fenêtre au milieu, le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
   await p.focus('#last-act');
   await p.keyboard.press('Tab');
   const t1 = await p.evaluate(() => document.activeElement.classList.contains('sheet-x'));
@@ -142,7 +142,7 @@ function stylesheets() {
   const veil = await p.evaluate(() => document.getElementById('sheet').hidden);
   await p.click('#open');
   await slid();
-  await p.mouse.click(1100, 500);
+  await p.mouse.click(640, 450);
   const inside = await p.evaluate(() => !document.getElementById('sheet').hidden);
   await p.click('#sheet .sheet-x');
   assert(veil && inside && await p.evaluate(() => document.getElementById('sheet').hidden), 'un clic sur le voile ferme, un clic dans la fiche non, la croix ferme');

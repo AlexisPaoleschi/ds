@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.19.2 · 9 novembre 2026
+
+- La fiche (`.sheet`) s’ouvre au milieu de l’écran sur ordinateur, comme celle de Bank l’a toujours été : une fenêtre de 560px au plus, qui défile à l’intérieur quand elle est plus longue que l’écran. 2.18.0 l’avait mise en panneau à droite par erreur : aucune appli ne s’en servait encore. Sur téléphone, elle monte toujours du bas.
+
 ## 2.19.1 · 9 novembre 2026
 
 - Atelier : le vert des entrées et le rouge des sorties reprennent les couleurs vives qu’ont Bank et Studio en ligne (`#4ec98a`, `#e8686b`), à la place de celles réglées sur la clarté de l’or en 2.14. Dans Atelier, plus aucune couleur ne suit l’or : l’or reste tel qu’il est, les couleurs qui ont un sens (vert, rouge, jaune) et la palette sont vives et lisibles sur le fond sombre. Le rouge de « Loisirs » (`--c-corail`) redevient le même que celui des sorties.

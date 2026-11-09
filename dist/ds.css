@@ -1,4 +1,4 @@
-/* ds 2.19.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.19.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -917,19 +917,16 @@
   .add-t small { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
   [data-theme="vitrine"] .add-t b { font-size: var(--fs-16); letter-spacing: var(--ls-1); }
 /* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
-   note, its trip). On a computer a panel on the right, so that the list it came from stays in sight on the left; on a
-   phone it rises from the bottom, within the thumb's reach. Not the window of .dialog, which asks one question in the
-   middle, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
+   note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
+   the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
    role="dialog" aria-modal="true">, with its .sheet-x; ds.sheet opens and closes it.
    A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
-  .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; justify-content: flex-end;
+  .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
     background: color-mix(in srgb, var(--black) 55%, transparent); animation: sheet-veil var(--t-mid) ease-out; }
   .sheet-panel { position: relative; box-sizing: border-box; min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--sheet-pad);
     background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); color: var(--ink); outline: none; }
-  /* in its veil: the whole height of the screen, clear of an iPhone's notch and bar */
-  .sheet > .sheet-panel { width: min(480px, 100%); max-height: none; border-width: 0 0 0 1px; border-radius: var(--r-l) 0 0 var(--r-l); box-shadow: var(--shadow-sheet);
-    padding-top: calc(var(--sheet-pad) + env(safe-area-inset-top, 0px)); padding-right: calc(var(--sheet-pad) + env(safe-area-inset-right, 0px));
-    padding-bottom: calc(var(--sheet-pad) + env(safe-area-inset-bottom, 0px)); animation: sheet-side var(--t-mid) ease-out; }
+  /* in its veil: a window in the middle, the room of a page of reading, scrolling inside when it is longer than the screen */
+  .sheet > .sheet-panel { width: min(560px, 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
   /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
      the title wraps beside it */
   .sheet-x { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
@@ -966,12 +963,13 @@
   .kv dd textarea { resize: vertical; line-height: var(--lh-text); }
 
   @keyframes sheet-veil { from { background-color: transparent; } }
-  @keyframes sheet-side { from { transform: translateX(100%); } }
+  @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @keyframes sheet-up { from { transform: translateY(100%); } }
 @media (max-width: 768px) {
-  .sheet { align-items: flex-end; justify-content: stretch; }
+  /* the whole width, rising from the bottom, clear of an iPhone's bar */
+  .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
   .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
-    padding-top: var(--sheet-pad); padding-right: calc(var(--sheet-pad) + env(safe-area-inset-right, 0px)); animation-name: sheet-up; }
+    padding-right: calc(var(--sheet-pad) + env(safe-area-inset-right, 0px)); padding-bottom: calc(var(--sheet-pad) + env(safe-area-inset-bottom, 0px)); animation-name: sheet-up; }
   .sheet-acts > .btn { flex: 1 1 0; padding-inline: var(--s-8); }
   .kv > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
