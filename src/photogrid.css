@@ -1,0 +1,50 @@
+/* The photo grid, taken from Selecta's galleries (ds.photogrid, src/photogrid.js): a wall of photos, any element holding
+   an image a tile (a link that opens the viewer, a figure…). ds.photogrid lays it out in masonry, columns of even height
+   where each photo keeps its shape; without it, or with masonry: false, even rows of tiles cut to the same height.
+   --tile is a column's least width (the zoom's size), --photogrid-gap the room between photos (none in Selecta). */
+  .photogrid { --tile: 190px; --photogrid-gap: var(--s-4); position: relative; display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(var(--tile), 100%), 1fr)); gap: var(--photogrid-gap); }
+  .photogrid.is-flush { --photogrid-gap: 0px; }
+  /* a tile: a faint ground while its photo loads; the tiles slide from their top left corner when the size changes */
+  .photogrid > * { position: relative; display: block; min-width: 0; margin: 0; overflow: hidden; transform-origin: 0 0;
+    background: color-mix(in srgb, var(--ink) 7%, transparent); color: inherit; }
+  .photogrid > * img { display: block; width: 100%; height: var(--tile); object-fit: cover; transition: transform var(--cover-time) ease; }
+  .photogrid.is-masonry { display: block; }
+  .photogrid.is-masonry > * { position: absolute; }
+  .photogrid.is-masonry > * img { height: 100%; }
+  /* a photo one can open grows a little under the pointer, as a card's cover */
+  @media (hover: hover) { .photogrid > a:hover img { transform: scale(var(--cover-zoom)); } }
+  /* the keyboard's ring inside the tile, where the photos around do not cover it */
+  .photogrid > :focus-visible { z-index: var(--z-raise); outline-offset: calc(-1 * var(--s-4)); }
+
+/* The zoom: a slider between a small and a large magnifier, <label class="photogrid-zoom"> around
+   <input type="range" class="zoom-slider">. Selecta's bar: a thin rail with round ends, a faint gold ground and a
+   soft edge, under a gold thumb ringed with the page's colour. */
+  .photogrid-zoom { display: inline-flex; align-items: center; gap: var(--s-8); color: var(--faint); cursor: pointer; }
+  .photogrid-zoom .ico { width: 16px; height: 16px; }
+  /* the rail's edge: Atelier's strong line; vitrine's strong line is the full gold, so it takes the soft one */
+  .zoom-slider { --zoom-track: var(--line-2); }
+  [data-theme="vitrine"] .zoom-slider { --zoom-track: var(--line); }
+  /* written longer than the fields' rule of base.css, so that a range is never drawn as a field */
+  input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { -webkit-appearance: none; appearance: none;
+    box-sizing: border-box; width: 120px; height: 24px; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; }
+  input.zoom-slider[type=range]:disabled { opacity: .5; cursor: default; }
+  /* 6px high, its ends round whatever the theme's corners (half its height); the thumb (18px) is pulled up by half of
+     what it has over the rail's 4px inside, 7px */
+  .zoom-slider::-webkit-slider-runnable-track { box-sizing: border-box; height: 6px; background: var(--accent-soft); border: 1px solid var(--zoom-track); border-radius: calc(var(--s-6) / 2); }
+  .zoom-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; box-sizing: border-box; width: 18px; height: 18px; margin-top: calc(-1 * var(--s-14) / 2);
+    background: var(--accent); border: 2px solid var(--panel); border-radius: 50%; box-shadow: var(--btn-shadow); transition: transform var(--t-fast) ease; }
+  .zoom-slider::-moz-range-track { box-sizing: border-box; height: 6px; background: var(--accent-soft); border: 1px solid var(--zoom-track); border-radius: calc(var(--s-6) / 2); }
+  .zoom-slider::-moz-range-thumb { box-sizing: border-box; width: 18px; height: 18px; background: var(--accent); border: 2px solid var(--panel); border-radius: 50%; box-shadow: var(--btn-shadow); transition: transform var(--t-fast) ease; }
+  @media (hover: hover) {
+    .zoom-slider:not(:disabled):hover::-webkit-slider-thumb { transform: scale(1.15); }
+    .zoom-slider:not(:disabled):hover::-moz-range-thumb { transform: scale(1.15); }
+  }
+@media (max-width: 480px) {
+  /* on a phone the slider takes the room it has, for the thumb */
+  .photogrid-zoom { flex: 1 1 auto; }
+  input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { flex: 1 1 auto; width: auto; min-width: 0; height: 44px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .photogrid > * img { transition: none; }
+}
