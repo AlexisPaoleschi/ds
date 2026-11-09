@@ -1,0 +1,14 @@
+archivo-var-latin-ext.woff2
+archivo-var-latin.woff2
+gilda-display-400-latin-ext.woff2
+gilda-display-400-latin.woff2
+ibm-plex-mono-400-latin-ext.woff2
+ibm-plex-mono-400-latin.woff2
+ibm-plex-mono-500-latin-ext.woff2
+ibm-plex-mono-500-latin.woff2
+ibm-plex-mono-600-latin-ext.woff2
+ibm-plex-mono-600-latin.woff2
+ibm-plex-sans-var-latin-ext.woff2
+ibm-plex-sans-var-latin.woff2
+urbanist-var-latin-ext.woff2
+urbanist-var-latin.woff2
