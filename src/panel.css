@@ -39,9 +39,12 @@
 @media (max-width: 768px) {
    .fhead { min-width: 100%; }
 }
-  /* « seul » keeps one source alone in its group; « Tout », in the group's head, switches the group back on */
+  /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
+     source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
   .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
   .side button.fall, .side button.only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.only { display: grid; place-items: center; padding: var(--s-4); }
+  .side button.only .ico { width: 15px; height: 15px; }
   .side button.fall:hover, .side button.only:hover, .side button.fall:focus-visible, .side button.only:focus-visible { color: var(--accent); }
   /* « Tout » takes no height of its own: a group's head stays the same height whether it shows or not */
   .side .fhead { min-height: var(--s-14); }

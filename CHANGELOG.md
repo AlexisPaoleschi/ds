@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.3 · 9 novembre 2026
+
+- Tiroir de filtres : le mot « seul », qui garde une source seule dans son groupe, devient un œil (`#i-eye`, « ne voir que celle-ci »), nommé « Seulement … » pour les lecteurs d’écran et dans l’infobulle. Toujours caché sur ordinateur jusqu’au survol de la ligne, toujours visible sur téléphone.
+- Tableau en cartes sur téléphone : dans une carte (`.card`), la ligne choisie est dorée d’un bord à l’autre de la carte, par-dessus sa marge intérieure (`--card-pad`), et non plus seulement sous son contenu.
+
 ## 2.19.2 · 9 novembre 2026
 
 - La fiche (`.sheet`) s’ouvre au milieu de l’écran sur ordinateur, comme celle de Bank l’a toujours été : une fenêtre de 560px au plus, qui défile à l’intérieur quand elle est plus longue que l’écran. 2.18.0 l’avait mise en panneau à droite par erreur : aucune appli ne s’en servait encore. Sur téléphone, elle monte toujours du bas.
