@@ -21,7 +21,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 
 ## Dans une appli
 
-Chaque appli garde une copie figée d’une version : `static/ds/ds-2.10.1.css` et `ds-2.10.1.js`, liés avant ses propres styles et scripts. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.10.2.css` et `ds-2.10.2.js`, liés avant ses propres styles et scripts. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`, que GitHub pose tout seul en lisant `VERSION` à chaque poussée sur `main`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`.
 
 Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
 

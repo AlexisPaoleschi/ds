@@ -1,4 +1,4 @@
-/* ds 2.10.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.10.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* Tokens of the design system shared by Alexis's apps.
    Two themes: atelier, dark, for the tools (Bank, Studio); vitrine, light, for the public sites
    (alexispaoleschi.com, Selecta). Both carry the gold of alexispaoleschi.com.
@@ -27,8 +27,8 @@
   --ls-tight: -.015em; --ls-caps: .12em; --ls-wide: .17em; --ls-brand: .22em;
   /* space: one scale for paddings, margins and gaps */
   --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-20: 20px; --s-24: 24px; --s-32: 32px; --s-48: 48px;
-  /* layers, from the page up: raised, edge tab, veil, overlay, tab bar, sheet, passing message */
-  --z-raise: 2; --z-edge: 25; --z-veil: 29; --z-over: 30; --z-bar: 40; --z-sheet: 50; --z-toast: 60;
+  /* layers, from the page up: raised, edge tab, veil, overlay, tab bar, a phone's drawer (above the tab bar), sheet, passing message */
+  --z-raise: 2; --z-edge: 25; --z-veil: 29; --z-over: 30; --z-bar: 40; --z-drawer: 45; --z-sheet: 50; --z-toast: 60;
   /* durations, and the two shadows: menus, then sheets and drawers */
   --t-fast: .15s; --t-mid: .3s;
   --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
@@ -266,8 +266,11 @@
   button.chip[aria-pressed="false"] .sq.on { background: transparent; }
 @media (max-width: 640px) {
     .side-layout.open { grid-template-columns: minmax(0, 1fr); }
-    .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-over); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-16)); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-16)); }
-    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: color-mix(in srgb, var(--black) 55%, transparent); z-index: var(--z-veil); }
+    .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-drawer); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; overscroll-behavior: contain; padding-top: calc(env(safe-area-inset-top, 0px) + var(--s-16)); padding-bottom: calc(env(safe-area-inset-bottom, 0px) + var(--s-16)); }
+    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: color-mix(in srgb, var(--black) 55%, transparent); z-index: calc(var(--z-drawer) - 1); touch-action: none; }
+    /* while the drawer is open, the finger scrolls the filters and the page behind stays still; a drawer left open in a
+       hidden view (an attribute hidden above it) does not hold the page */
+    :root:has(.side-layout.open:not([hidden] *)) { overflow: hidden; }
 }
 @media (max-width: 640px) {
    .fhead { min-width: 100%; }

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.10.2 · 9 novembre 2026
+
+- Correction : sur téléphone, le tiroir de filtres et son voile passent au-dessus de la barre d’onglets du bas, qui cachait ses dernières lignes et prenait le doigt à leur place. Nouvelle couche `--z-drawer`, entre la barre et les fenêtres.
+- Correction : sur téléphone, tant que le tiroir de filtres est ouvert, le doigt fait défiler les filtres et la page derrière ne bouge plus ; une fois le tiroir fermé, la page défile de nouveau.
+
 ## 2.10.1 · 8 novembre 2026
 
 - Correction : sur téléphone, la bulle (`ds.toast`) prend la largeur de la barre d’onglets du bas, centrée comme elle, au lieu de toute la largeur de l’écran. Les deux lisent le nouveau jeton `--tabbar-w` ; Bank l’utilise pour sa barre.
