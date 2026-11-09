@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.22.0 · 9 novembre 2026
+
+- Synchros (`ds.jobs`) : `ds.jobs.open(clé)` ouvre le journal d’une tâche comme son bouton « Journal », pour une adresse qui le demande (`/settings#patreon/journal`, les liens du brief du matin de Studio). Le bloc d’une tâche a l’identifiant `job-<clé>`.
+- Page de réglages : la barre de liens vers les cartes (`.jump`) s’affiche d’elle-même sur téléphone. Bank et Studio l’y montraient chacun avec la même règle.
+
 ## 2.21.1 · 9 novembre 2026
 
 - Classement (`ds.rank`) : un nom donné comme un élément (le lien d’une personne, un nom suivi de son étiquette) garde la couleur des noms, sans soulignement, et passe en or au survol, comme un nom donné en texte avec son adresse.

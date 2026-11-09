@@ -364,7 +364,9 @@
      that starts it and returns a promise; no button without it), running, paused, own (a node: its switch),
      subs ([nodes]: more switches)}. « Journal » opens the job's last lines, read from GET /api/jobs/<key>/logs?after=<n>
      every 2 s while it is open and the page seen; the list follows its end unless one scrolls up. logsLink: where all
-     the lines are; reload: what to call once a job was started. Call it again with the jobs' new state: the open logs stay. */
+     the lines are; reload: what to call once a job was started. Call it again with the jobs' new state: the open logs stay.
+     A job's block has the id « job-<key> »; ds.jobs.open(key) opens its journal as its button does, for a page's address
+     that asks for it (/settings#patreon/journal). */
   var logs = {};
   function logState(key) { return logs[key] || (logs[key] = { open: false, lines: [], last: 0, stick: true, top: 0, list: null, loaded: false, busy: false }); }
   function el(name, cls, kids) {
@@ -400,8 +402,10 @@
     if (document.visibilityState !== "visible") return;
     Object.keys(logs).forEach(function (k) { if (logs[k].open) fetchLogs(k); });
   }, 2000);
+  var shownJobs = null;
   function jobs(holder, list, opts) {
     opts = opts || {};
+    shownJobs = [holder, list, opts];
     var w = words();
     function draw() { jobs(holder, list, opts); }
     holder.replaceChildren.apply(holder, list.map(function (j) {
@@ -779,6 +783,14 @@
   window.ds.number = number;
   window.ds.money = money;
   window.ds.api = api;
+  // a job's journal opened from outside its button: drawn again with the jobs last shown, then read
+  jobs.open = function (key) {
+    var st = logState(key);
+    if (st.open) return;
+    st.open = true;
+    if (shownJobs) jobs.apply(null, shownJobs);
+    fetchLogs(key);
+  };
   window.ds.jobs = jobs;
   window.ds.busy = busy;
   window.ds.trouble = trouble;

@@ -90,6 +90,8 @@
   :where(body.settings) .ll.lbad .lx { color: var(--bad); }
   :where(body.settings) .logs .none { color: var(--faint); padding: 0 var(--s-12); }
 @media (max-width: 768px) {
+  /* the bar of links to the cards, for a phone where the page is long */
+  :where(body.settings) .jump { display: flex; }
   :where(body.settings) .ll { gap: 0; grid-template-columns: 1fr; }
   :where(body.settings) .ll .lt { font-size: var(--fs-11); }
   :where(body.settings) h1 { font-size: var(--fs-22); }

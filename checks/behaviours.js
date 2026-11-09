@@ -179,6 +179,11 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.locator('#job-banks .go').click();
   await p.waitForTimeout(1000);
   assert(await p.evaluate(() => JSON.stringify(runs)) === '["banks","reload"]', '« Lancer » lance la tâche, puis la page relit son état');
+  // the address can ask for a job's journal (/settings#patreon/journal): opened as by its button, and it stays open
+  await p.evaluate(() => ds.jobs.open('claude'));
+  const opened = await p.evaluate(() => [document.querySelector('#job-claude .jl').getAttribute('aria-expanded'), !!document.querySelector('#job-claude .logs')]);
+  await p.evaluate(() => drawJobs(false));
+  assert(opened[0] === 'true' && opened[1] && !!(await p.evaluate(() => document.querySelector('#job-claude .logs'))), 'ds.jobs.open ouvre le journal d’une tâche, qui reste ouvert redessiné');
   // ds 2.19: the server's calls
   await p.setViewportSize({ width: 375, height: 812 });
   const calls = await p.evaluate(async () => {
