@@ -1,0 +1,91 @@
+/* The hero: a photo across the page with its title over it, taken from alexispaoleschi.com's events (the event pages, the
+   events and the newsletter) and Selecta's gallery cover. <section class="hero"> holds <img class="hero-img"> (or a
+   <picture class="hero-img">, or the page's own background-image, or its photo given by the page itself:
+   style="--hero-photo: url(/path/from/the/root.jpg)", a path from the root since the design system's file reads it) and <div class="hero-in"> with .hero-t, .hero-sub (gold
+   capitals), .hero-meta (a date, a place) and .hero-acts (its buttons); a .back-link.on-photo may sit in its corner.
+   A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
+   in both themes, each with its own title font.
+   Without a modifier it is the site's page hero (the events, the newsletter); .is-full fills the screen with an event
+   page's sizes, .is-band is a photo band between two sections, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
+   left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
+   still on a touch screen and for those who ask for less motion). */
+  /* the page's hero (the site's events and newsletter): 420px high, its title in 56px over a gold line, gold capitals under
+     it; .is-full gives an event page's sizes. Each size is a --hero-* token, so that a page can set the one it needs. */
+  .hero { --hero-veil: var(--overlay-black-medium); --hero-h: 420px; --hero-pad: var(--s-80); --hero-pad-end: var(--hero-pad); --hero-side: var(--s-40);
+    --hero-in-max: 720px; --hero-in-pad: 0px;
+    --hero-t-size: var(--fs-56); --hero-t-lh: var(--title-lh); --hero-t-ls: var(--ls-6); --hero-t-gap: var(--s-32); --hero-rule: block; --hero-rule-gap: var(--s-24);
+    --hero-sub-size: var(--fs-16); --hero-sub-weight: 400; --hero-sub-ls: var(--ls-3); --hero-sub-gap: 0px;
+    --hero-meta-size: var(--fs-20); --hero-meta-ls: var(--ls-3); --hero-meta-gap: var(--s-56);
+    position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: var(--hero-h); overflow: hidden; color: var(--white); text-align: center;
+    padding: var(--hero-pad) max(var(--hero-side), env(safe-area-inset-right, 0px)) var(--hero-pad-end) max(var(--hero-side), env(safe-area-inset-left, 0px));
+    background-color: var(--night-800); background-image: var(--hero-photo, none); background-position: center; background-size: cover; background-repeat: no-repeat; }
+  .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero-img img { position: static; }
+  /* the veil, over the photo and under the words */
+  .hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-veil); pointer-events: none; }
+  /* as wide as its words, up to --hero-in-max; a word longer than the screen stays whole, centred over the hero's edges */
+  .hero-in { position: relative; z-index: var(--z-raise); display: flex; flex-direction: column; align-items: center; max-width: var(--hero-in-max);
+    box-sizing: border-box; padding: var(--hero-in-pad); }
+  .hero-in > * { margin: 0; }
+  .hero-t { position: relative; margin-bottom: var(--hero-t-gap); padding-bottom: var(--hero-rule-gap); color: var(--white); overflow-wrap: break-word; text-shadow: var(--text-shadow-lg);
+    font: var(--title-weight) var(--hero-t-size)/var(--hero-t-lh) var(--title-font); letter-spacing: var(--hero-t-ls); text-transform: var(--title-case); }
+  /* the gold line under the page's title, as under a section's */
+  .hero-t::after { content: ""; display: var(--hero-rule); position: absolute; left: 50%; bottom: 0; width: 60px; height: 1px; background: var(--accent); transform: translateX(-50%); }
+  /* gold capitals */
+  .hero-sub { margin-bottom: var(--hero-sub-gap); color: var(--accent); text-shadow: var(--text-shadow-lg);
+    font: var(--hero-sub-weight) var(--hero-sub-size)/var(--lh-loose) var(--body); letter-spacing: var(--hero-sub-ls); text-transform: uppercase; }
+  /* a date, a place */
+  .hero-meta { margin-bottom: var(--hero-meta-gap); color: var(--white); text-shadow: var(--text-shadow-lg);
+    font: var(--text-weight) var(--hero-meta-size)/var(--lh-loose) var(--body); letter-spacing: var(--hero-meta-ls); }
+  .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-12); }
+  /* a hero's buttons are the site's large ones */
+  .hero-acts .btn { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
+  /* the way back, in the hero's top left corner, clear of an iPhone's notch */
+  .hero > .back-link { position: absolute; z-index: var(--z-raise); top: max(var(--s-24), env(safe-area-inset-top, 0px)); left: max(var(--s-24), env(safe-area-inset-left, 0px)); }
+
+  /* an event page: the screen's height, its name in 84px, the place in 28px gold capitals, the date, then its button */
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
+    --hero-t-size: var(--fs-84); --hero-t-ls: var(--ls-8); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-sub-size: var(--fs-28); --hero-sub-weight: var(--text-weight); --hero-sub-ls: var(--ls-6); --hero-sub-gap: var(--s-16); }
+  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title in
+     64px, a line in light italics under it */
+  .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
+    --hero-t-size: var(--fs-64); --hero-t-ls: var(--ls-6); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-meta-size: var(--fs-20); --hero-meta-ls: var(--ls-2); --hero-meta-gap: var(--s-40); }
+  .hero.is-band .hero-meta { font-style: italic; }
+  /* Selecta's gallery cover: low, its words close together */
+  .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
+    --hero-t-size: var(--fs-display-2); --hero-t-lh: var(--lh-ui); --hero-t-ls: var(--ls-4); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
+  .hero.is-short .hero-in { gap: var(--s-12); }
+  .hero.is-bottom { --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent); align-items: stretch; justify-content: flex-end; text-align: left; }
+  .hero.is-bottom .hero-in { align-items: flex-start; width: 100%; gap: var(--s-6); }
+  .hero.is-bottom .hero-meta { font: var(--label-weight) var(--fs-12)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  .hero.is-bottom .hero-acts { justify-content: flex-start; margin-top: var(--s-12); }
+
+  /* parallax: the photo, taller than the hero, drifts down as the page goes up, so it seems further away; a background
+     image stays put instead, as on the site's event pages */
+  @keyframes hero-drift { from { transform: translateY(-10%); } to { transform: translateY(10%); } }
+@media (hover: hover) {
+  .hero.is-parallax { background-attachment: fixed; }
+  @supports (animation-timeline: view()) {
+    .hero.is-parallax .hero-img { top: -15%; bottom: auto; height: 130%; animation: hero-drift linear both; animation-timeline: view(); }
+  }
+}
+@media (max-width: 768px) {
+  .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-t-ls: var(--ls-4); --hero-sub-size: var(--fs-22); --hero-sub-ls: var(--ls-4); --hero-meta-size: var(--fs-16); }
+  .hero.is-band { --hero-h: 50vh; --hero-t-size: var(--fs-36); --hero-meta-size: var(--fs-15); }
+}
+@media (max-width: 480px) {
+  .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16); --hero-t-size: var(--fs-36); --hero-sub-size: var(--fs-12); }
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-sub-size: var(--fs-22); }
+  .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16); --hero-t-size: var(--fs-display-2); }
+  /* a band's title shrinks with the phone, so that its longest word (« PHOTOGRAPHERS ») holds on the screen */
+  .hero.is-band { --hero-t-size: clamp(var(--fs-24), 7.5vw, var(--fs-36)); --hero-t-ls: var(--ls-4); }
+  .hero > .back-link { top: max(var(--s-16), env(safe-area-inset-top, 0px)); left: max(var(--s-16), env(safe-area-inset-left, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-parallax { background-attachment: scroll; }
+  .hero.is-parallax .hero-img { top: 0; height: 100%; animation: none; }
+}

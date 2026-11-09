@@ -1,0 +1,30 @@
+/* The photo viewer, taken from alexispaoleschi.com: a photo over a black veil, a cross to close it, an arrow on each side,
+   all three square buttons in the dark glass of its count, the cross and the arrows those of the icons (Lucide's, as the
+   site's « ← Home »), filled with gold on hover as the site's buttons are. Under the photo, room for an app's own bar
+   (Selecta's name, heart and note); the site lays its position over the photo instead (.viewer-count).
+   It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
+  .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(44px + 2 * var(--viewer-gap));
+    position: fixed; inset: 0; z-index: var(--z-sheet); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: env(safe-area-inset-top, 0px); }
+  .viewer-veil { position: absolute; inset: 0; background: var(--overlay-black-strong); }
+  /* a flex box, so that the photo can be as high as the room it has, and no higher */
+  .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }
+  .viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow-sheet); user-select: none; -webkit-user-select: none; }
+  .viewer-stage .spinner { position: absolute; }
+  .viewer-btn { position: absolute; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; color: var(--viewer-ink);
+    background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); border-radius: var(--r-m); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer;
+    transition: color var(--t-fast) ease, background var(--t-fast) ease, border-color var(--t-fast) ease; }
+  .viewer-btn::before { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
+  @media (hover: hover) { .viewer-btn:hover { color: var(--white); background: var(--accent); border-color: var(--accent); } }
+  .viewer-close { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E"); top: calc(var(--viewer-gap) + env(safe-area-inset-top, 0px)); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
+  .viewer-prev, .viewer-next { top: 50%; transform: translateY(-50%); }
+  .viewer-prev { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19-7-7 7-7M19 12H5'/%3E%3C/svg%3E"); left: calc(var(--viewer-gap) + env(safe-area-inset-left, 0px)); }
+  .viewer-next { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
+  /* the site's position over the photo: « 2 / 9 » in a blurred pill */
+  .viewer-count { position: absolute; z-index: 1; left: 50%; bottom: calc(var(--s-32) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: var(--s-12) calc(var(--s-24) + var(--s-4));
+    color: var(--viewer-ink); background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    font: 300 var(--fs-14)/1.8 var(--body); letter-spacing: var(--ls-2); white-space: nowrap; }
+@media (max-width: 768px) {
+  /* on a phone the photo takes the width, and the arrows sit over it */
+  .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); }
+  .viewer-btn { width: 40px; height: 40px; }
+}
