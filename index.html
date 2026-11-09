@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="fr" data-theme="atelier">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Design system · Alexis Paoleschi</title>
+<link rel="stylesheet" href="dist/ds.css">
+<script src="dist/ds.js" defer></script>
+<script src="demos/bank.js" defer></script>
+<script src="demos/studio.js" defer></script>
+<script src="demos/photo.js" defer></script>
+<script src="demos/date.js" defer></script>
+<style>
+  /* the page itself: every token and component of the design system, in both themes side by side */
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--fs-15)/var(--lh-text) var(--body); }
+  /* the whole screen's width: the two themes side by side each get the room of a real page, not a squeezed column */
+  .page { padding: var(--s-32) var(--s-20) var(--s-48); }
+  @media (min-width: 1280px) { .page { padding-inline: var(--s-32); } }
+  .page > h1 { margin: 0 0 var(--s-6); font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); }
+  .page > p { margin: 0 0 var(--s-24); color: var(--dim); max-width: 780px; }
+  .themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(560px, 100%), 1fr)); gap: var(--s-20); }
+  @media (max-width: 768px) { .themes { grid-template-columns: 1fr; } }
+  .theme { background: var(--bg); color: var(--ink); font-family: var(--body); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-20); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--s-16); min-width: 0;
+    /* each part of one theme in line with the same part of the other: both columns share the page's rows (subgrid), the
+       shorter one keeping some room below it; --rows is the count of parts, set by the script that builds them */
+    grid-row: span var(--rows, 1); grid-template-rows: subgrid; row-gap: var(--s-16); }
+  .icons-g { margin: var(--s-16) 0 var(--s-8); font: 600 var(--fs-12)/var(--lh-tight) var(--body); color: var(--accent-text); }
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s-10) var(--s-8); }
+  .icons div { display: flex; align-items: center; gap: var(--s-8); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--dim); }
+  .icons .ico { width: 18px; height: 18px; color: var(--ink); }
+  .theme > h2 { margin: 0; font: 800 var(--fs-22)/var(--lh-tight) var(--display); }
+  .theme > h2 small { display: block; margin-top: var(--s-4); font: 500 var(--fs-13)/var(--lh-ui) var(--body); color: var(--dim); }
+  .row { display: flex; flex-wrap: wrap; gap: var(--s-8); align-items: center; }
+  .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: var(--s-8); }
+  .sw div { border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; font: 500 var(--fs-11)/var(--lh-ui) var(--mono); color: var(--dim); }
+  .sw i { display: block; height: 30px; }
+  .sw span { display: block; padding: var(--s-4) var(--s-6); }
+  .scale { display: grid; gap: var(--s-6); }
+  .scale div { display: flex; align-items: baseline; gap: var(--s-12); }
+  .scale code { min-width: 64px; font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--faint); }
+  .bar { height: 10px; background: var(--accent); border-radius: var(--r-s); }
+  .boxes { display: flex; gap: var(--s-12); flex-wrap: wrap; }
+  .boxes div { width: 76px; height: 48px; background: var(--panel-2); border: 1px solid var(--line-2); display: grid; place-items: center; font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--dim); }
+  /* the panel and the picker, shown in place instead of over the page */
+  .demo .side-layout.open { grid-template-columns: 230px minmax(0, 1fr); }
+  /* on a phone the panel's demo stacks, as a real drawer would leave the page: side by side it made the column wider
+     than the screen, and every card of the page with it */
+  @media (max-width: 768px) { .demo .side-layout.open { grid-template-columns: minmax(0, 1fr); } }
+  .demo .side-layout.open .side { position: static; width: auto; height: auto; border-radius: var(--r-l); }
+  /* the open drawer shown here sits in the page: on a phone it must not hold the page still, as a real one does */
+  :root:has(.demo .side-layout.open) { overflow: visible; }
+  .demo .scrim { display: none !important; }
+  .demo button.edgetab { position: static; }
+  .demo .periodpop { position: static; margin-top: var(--s-8); width: 100%; }
+  .demo .toasts { position: static; pointer-events: auto; }
+  .demo .toast { animation: none; }
+  .demo .dialog { width: 100%; }
+  /* the main views' bar shown in place on a phone, where a real page puts it at the bottom */
+  .demo header.top .tabs.is-bar, .demo .tabs.is-bar { position: static; transform: none; }
+  .demo .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); margin-top: var(--s-8); }
+  .rules ul { margin: 0; padding-left: var(--s-20); }
+  .rules li { margin: var(--s-4) 0; color: var(--dim); }
+  .rules b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>Design system</h1>
+  <p>Tout ce que Bank, Studio, Selecta et alexispaoleschi.com partagent : couleurs, tailles, espaces, et chaque composant, dans les deux thèmes. Chaque appli en garde une copie figée et ne garde dans ses pages que ce qui lui est propre. Les pièces que seules les pages du site partagent ont leur page : <a href="site.html">le kit du site</a>.</p>
+  <div class="themes" id="themes"></div>
+  <div class="card rules" style="margin-top: var(--s-24)">
+    <h2 class="ct">Règles</h2>
+    <ul>
+      <li><b>Couleurs.</b> Toutes ici. Une appli ne nomme qu’un jeton (<code>var(--c-bleu)</code>, <code>var(--good)</code>…), jamais un code couleur. <code>--good</code>, <code>--bad</code> et <code>--mid</code> sont réservés aux entrées, aux sorties et aux alertes ; le rouge, le vert et le jaune de la palette nomment une banque, une catégorie ou un agenda.</li>
+      <li><b>Réglages.</b> Tailles de texte, interlignes, marges, arrondis, superpositions, durées et ombres sont des jetons. Les largeurs d’écran sont les trois mêmes partout : 480, 768 et 1024px.</li>
+      <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer. Un seul bouton plein par écran.</li>
+      <li><b>Angles nets.</b> 4, 6 ou 8px dans Atelier, jamais plus ; carrés dans Vitrine, comme alexispaoleschi.com.</li>
+      <li><b>Écriture.</b> Pas d’espace entre un chiffre et son unité : 2,3%, 578k, 12,50€.</li>
+      <li><b>Messages.</b> Le retour d’une action passe par la bulle (<code>ds.toast</code>), une question par la fenêtre (<code>ds.confirm</code>), jamais par une boîte du navigateur.</li>
+      <li><b>Nouveau composant.</b> Il naît dans une appli et monte ici dès qu’une deuxième en a besoin.</li>
+    </ul>
+  </div>
+</div>
+<template id="theme">
+  <section class="theme demo">
+    <h2 class="t-name"><span></span><small></small></h2>
+    <div class="card"><h3 class="ct">Couleurs</h3>
+      <div class="sw" data-swatches="--bg --panel --panel-2 --line --line-2 --ink --dim --faint --accent --accent-text --good --bad --mid --c-rouge --c-corail --c-orange --c-ambre --c-jaune --c-vert --c-emeraude --c-turquoise --c-ciel --c-bleu --c-violet --c-mauve --c-rose --c-ardoise"></div>
+    </div>
+    <div class="card"><h3 class="ct">Icônes</h3>
+      <div data-icons></div>
+    </div>
+    <div class="card"><h3 class="ct">Texte et espaces</h3>
+      <div class="scale" data-fs="11 12 13 14 15 17 22 28"></div>
+      <div class="scale" style="margin-top: var(--s-14)" data-sp="2 4 6 8 10 12 14 16 20 24 32 48"></div>
+      <div class="boxes" style="margin-top: var(--s-14)">
+        <div style="border-radius: var(--r-s)">--r-s</div><div style="border-radius: var(--r-m)">--r-m</div><div style="border-radius: var(--r-l)">--r-l</div>
+        <div style="box-shadow: var(--shadow-pop)">pop</div><div style="box-shadow: var(--shadow-sheet)">sheet</div>
+      </div>
+    </div>
+    <header class="top"><span class="brand">Bank</span>
+      <span class="busy" role="status" aria-live="polite"><i class="spin"></i><i class="okc" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></i><span class="pc"></span><span class="bt"></span></span>
+      <div class="tabs is-bar" role="tablist"><button type="button" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg><span class="tl">Comptes</span></button><button type="button" aria-selected="false"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><span class="tl">Opérations</span><i class="tabn"></i></button><button type="button" aria-selected="false"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span class="tl">Voyages</span></button></div></header>
+    <div class="row"><button class="btn" type="button" data-demo="busy">Charger</button><button class="btn" type="button" data-demo="trouble">Source en panne</button></div>
+    <div class="card"><h3 class="ct">Petits outils</h3>
+      <details class="fold" data-fold="demo-fold" open><summary>Règles des courses <span class="fold-n">12</span></summary>
+        <ul class="rows"><li><span class="avatar">S</span><span class="ttl">Super U</span><span class="v">57,9k</span></li>
+          <li><span class="avatar is-round">L</span><span class="ttl">Léa Martin</span><span class="v">1,2M</span></li></ul>
+      </details>
+      <div class="row" style="margin-top: var(--s-12)">
+        <form data-confirm="Supprimer ce client ? Cette action est irréversible." data-confirm-ok="Supprimer" data-demo-form><button class="btn is-danger" type="submit">Supprimer un client</button></form>
+        <button class="btn is-busy" type="button" disabled>Envoi…</button>
+      </div>
+    </div>
+    <div class="periodhead">
+      <div class="periodleft"><button class="periodtitle" type="button"><h3>Novembre <span class="yr">2026</span></h3><span class="caret">▾</span></button></div>
+      <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent">‹</button><button class="btn" type="button">Aujourd’hui</button><button class="btn is-icon" type="button" aria-label="Suivant">›</button></div>
+    </div>
+    <div class="periodpop">
+      <div class="row"><button type="button" class="on">Ce mois-ci</button><button type="button">Le mois dernier</button><button type="button">Cette année</button></div>
+      <div class="tabs pp-tabs" style="margin-top: var(--s-8)"><button type="button">Jour</button><button type="button" class="on">Mois</button><button type="button">Année</button><button type="button">Dates</button></div>
+      <div class="grid4"><button type="button">janv.</button><button type="button">févr.</button><button type="button">mars</button><button type="button" class="on">nov.</button></div>
+    </div>
+    <div class="card"><h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
+      <div class="row"><a class="btn" href="#">Voir les opérations</a><button class="btn is-act" type="button">Modifier</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn is-danger" type="button">Supprimer</button><button class="btn" type="button" disabled>Indisponible</button><a class="btn is-save is-large" href="#">Réserver</a></div>
+    </div>
+    <div class="card is-ruled"><h3 class="ct">Pour un site</h3>
+      <div class="row"><span class="badge">Réservations ouvertes</span><span class="badge is-bad">Complet</span><span class="badge is-soft">Bientôt</span></div>
+      <div class="row" style="margin-top: var(--s-10)"><a class="btn is-small" href="#">← Événements</a><button class="btn is-act is-small" type="button">Instagram</button><button class="btn is-danger is-small" type="button">Retirer</button></div>
+      <header class="section-head" style="margin-top: var(--s-24)"><h2>Tarifs</h2><p class="section-sub">Une expérience tout compris</p></header>
+      <footer class="site-footer"><p>© 2026 Alexis Paoleschi</p><nav><a href="#">alexispaoleschi.com</a></nav></footer>
+    </div>
+    <div class="card is-ruled"><h3 class="card-title">Lyon 2026</h3>
+      <p class="card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>8–12 juin 2026</p>
+      <p>Trois jours de prise de vue dans un hôtel particulier, avec trois modèles.</p>
+    </div>
+    <a class="card has-cover is-link" href="#"><div class="card-cover"><img data-scene="22" width="1600" height="900" alt=""><span class="badge">Réservations ouvertes</span></div>
+      <div class="card-body"><h3 class="card-title">Sénégal 2027</h3><p class="card-meta">16–24 mars 2027</p><p>Neuf photographes, trois modèles, une maison au bord de la lagune.</p></div></a>
+    <header class="topbar is-site"><div class="topbar-in"><a class="topbar-brand" href="#">Lyon 2026</a><nav class="topbar-nav is-center is-wide"><a class="topbar-link" href="#">Modèles</a><a class="topbar-link" href="#">Lieu</a><a class="topbar-link" href="#">Tarifs</a></nav><a class="btn is-save" href="#">Réserver</a></div></header>
+    <div class="card"><h3 class="ct">Champs</h3>
+      <div><input style="width:100%" placeholder="Nom, libellé ou montant" value="Restau"><small class="field-note is-bad">Choisis une catégorie dans la liste.</small></div>
+      <div class="row" style="margin-top: var(--s-10)"><select><option>Loisirs › Restaurant</option></select><input type="date" value="2026-08-15"><label class="row"><input type="checkbox" checked> Seulement cette opération</label></div>
+    </div>
+    <dl class="tiles is-compact" style="align-self: start"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile up"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile down"><dt>Sorties</dt><dd>−1 263,08€</dd></div></dl>
+    <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="u">membres</span></dd><span class="d">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-rose)"><dt><i></i>Katline</dt><dd>860<span class="u">membres</span></dd><span class="d neg">−1,1% sur 30 jours</span></div></dl>
+    <div class="side-layout open">
+      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer">×</button></div>
+        <div class="filters">
+          <div class="fgroup"><span class="fhead">Comptes<button type="button" class="fall">Tout</button></span>
+            <span class="frow"><button type="button" class="chip" aria-pressed="true"><i class="sq on" style="--a:var(--c-ciel)"></i>Revolut</button><button type="button" class="only" aria-label="Seulement Revolut" title="Seulement Revolut"><svg class="ico" aria-hidden="true"><use href="#i-eye"/></svg></button></span>
+            <span class="frow"><button type="button" class="chip" aria-pressed="false"><i class="sq on" style="--a:var(--c-rose)"></i>BoursoBank</button><button type="button" class="only" aria-label="Seulement BoursoBank" title="Seulement BoursoBank"><svg class="ico" aria-hidden="true"><use href="#i-eye"/></svg></button></span>
+          </div>
+          <div class="fgroup"><span class="fhead">Sens</span><span class="frow"><button type="button" class="chip" aria-pressed="true">Entrées</button></span><span class="frow"><button type="button" class="chip" aria-pressed="true">Sorties</button></span></div>
+        </div>
+      </aside>
+      <div class="card"><h3 class="ct">Listes <button class="edgetab on" type="button" style="margin-left:auto"><span class="vt">Filtres</span><i class="fdot"></i></button></h3>
+        <h4 class="sect">15 août 2026</h4>
+        <ul class="rows"><li><span class="t">15/08</span><span class="ttl">Magasins U</span><span class="who" style="--n:var(--c-ciel)">REVOLUT</span><span class="v">−119,89€</span></li><li><span class="t">16/08</span><span class="ttl">Remboursement</span><span class="v" style="color:var(--good)">+25,00€</span></li></ul>
+        <p class="empty">Aucune opération pour ces filtres.</p>
+      </div>
+    </div>
+    <!-- Bank's components: the B demos go here -->
+    <div class="card" data-b="ops"><h3 class="ct">Opérations : trier, choisir, ouvrir <label class="pill is-filter"><span class="pv"></span><select aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option><option value="bourso">BoursoBank</option><option value="fortuneo">Fortuneo</option></select></label></h3>
+      <div class="pills" style="margin-bottom: var(--s-10)"><label class="pill tbl-sortmenu"><span class="pv"></span><select data-b="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option><option value="categorie|1">Par catégorie</option><option value="compte|1">Par compte</option></select></label></div>
+      <div class="selbar" hidden><span class="selbar-n"></span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Changer la catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select><button class="btn is-act" type="button" data-b="bulkname">Renommer</button><button class="btn" type="button" data-sel-clear>Annuler</button></div>
+      <div class="tbl-wrap"><table class="tbl is-cards">
+        <thead><tr><th class="tbl-ck"><input type="checkbox" class="sel-all" aria-label="Tout choisir"></th><th class="tbl-wide"><button class="sort" type="button" data-sort="date">Date</button></th><th><button class="sort" type="button" data-sort="nom">Opération</button></th><th class="tbl-wide"><button class="sort" type="button" data-sort="compte">Compte</button></th><th class="tbl-wide"><button class="sort" type="button" data-sort="categorie">Catégorie</button></th><th class="is-num"><button class="sort" type="button" data-sort="montant">Montant</button></th></tr></thead>
+        <tbody>
+          <tr class="is-link" data-key="op1"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-15"><span class="t">15/08/26</span></td><td class="tbl-main">Magasins U<span class="tbl-phone">15/08 · <span class="tint" style="--n: var(--c-ciel)">Revolut</span> · Courses › Supermarché</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-ciel)">Revolut</span></td><td class="tbl-wide">Courses › Supermarché</td><td class="tbl-end is-num" data-value="-119.89">−119,89€</td></tr>
+          <tr class="is-link" data-key="op2"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-14"><span class="t">14/08/26</span></td><td class="tbl-main">Remboursement CPAM<span class="tbl-phone">14/08 · <span class="tint" style="--n: var(--c-rose)">BoursoBank</span> · Soins › Médecin</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-rose)">BoursoBank</span></td><td class="tbl-wide">Soins › Médecin</td><td class="tbl-end is-num is-good" data-value="25">+25,00€</td></tr>
+          <tr class="is-link" data-key="op3"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-12"><span class="t">12/08/26</span></td><td class="tbl-main">SNCF Connect<span class="tbl-phone">12/08 · <span class="tint" style="--n: var(--c-rose)">BoursoBank</span> · Déplacements › Train</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-rose)">BoursoBank</span></td><td class="tbl-wide">Déplacements › Train</td><td class="tbl-end is-num" data-value="-64.3">−64,30€</td></tr>
+          <tr class="is-link" data-key="op4"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-10"><span class="t">10/08/26</span></td><td class="tbl-main">Tik Tak<span class="tbl-phone">10/08 · <span class="tint" style="--n: var(--c-ciel)">Revolut</span> · <span style="color: var(--mid)">À classer</span></span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-ciel)">Revolut</span></td><td class="tbl-wide" data-value=""><span style="color: var(--mid)">À classer</span></td><td class="tbl-end is-num" data-value="-38.5">−38,50€</td></tr>
+          <tr class="is-link" data-key="op5"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-05"><span class="t">05/08/26</span></td><td class="tbl-main">Loyer d’août<span class="tbl-phone">05/08 · <span class="tint" style="--n: var(--c-vert)">Fortuneo</span> · Logement › Loyer</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-vert)">Fortuneo</span></td><td class="tbl-wide">Logement › Loyer</td><td class="tbl-end is-num" data-value="-850">−850,00€</td></tr>
+          <tr class="is-link" data-key="op6"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-01"><span class="t">01/08/26</span></td><td class="tbl-main">Salaire<span class="tbl-phone">01/08 · <span class="tint" style="--n: var(--c-vert)">Fortuneo</span> · Revenus › Salaire</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-vert)">Fortuneo</span></td><td class="tbl-wide">Revenus › Salaire</td><td class="tbl-end is-num is-good" data-value="3200">+3&nbsp;200,00€</td></tr>
+        </tbody>
+      </table></div>
+      <div class="sheet" data-b="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-x" type="button" aria-label="Fermer">×</button><div data-b="sheetbody"></div></div></div>
+    </div>
+    <div class="card"><h3 class="ct">Fiche d’une opération <button class="btn is-act" type="button" data-b="opensheet" style="margin-left: auto">Ouvrir la fiche</button></h3>
+      <div class="sheet-panel" role="group" aria-label="Exemple de fiche">
+        <button class="sheet-x" type="button" aria-label="Fermer" tabindex="-1">×</button>
+        <p class="sheet-sub">samedi 15 août 2026</p>
+        <h4 class="sheet-t">Magasins U</h4>
+        <p class="sheet-fig">−119,89€<small>−135,10 CHF</small></p>
+        <dl class="kv">
+          <div><dt>Catégorie</dt><dd><select aria-label="Catégorie"><option>Courses › Supermarché</option><option>Courses › Marché</option></select></dd></div>
+          <div><dt>Compte</dt><dd><span class="tint" style="--n: var(--c-ciel)">Revolut</span> · Compte courant</dd></div>
+          <div><dt>Libellé de la banque</dt><dd class="is-mono">CB MAGASINS U 14/08 LES SABLES</dd></div>
+          <div><dt>Note</dt><dd><textarea rows="2" placeholder="Une note sur cette opération" aria-label="Note"></textarea></dd></div>
+        </dl>
+        <div class="sheet-acts"><button class="btn is-act" type="button">Renommer</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn" type="button">Historique</button></div>
+      </div>
+    </div>
+    <div class="card"><h3 class="ct">Choisir <span data-studio="period"></span></h3>
+      <div class="pills"><label class="pill"><span class="pv"></span><select aria-label="Mois"><option>novembre 2026</option><option>octobre 2026</option><option>septembre 2026</option></select></label><label class="pill is-filter"><span class="pv"></span><select aria-label="Sens"><option value="">Entrées et sorties</option><option value="out" selected>Sorties</option><option value="in">Entrées</option></select></label></div>
+      <h4 class="sect" style="margin-top: var(--s-16)">Catégorie de Tik Tak</h4>
+      <div data-b="cats"></div>
+      <h4 class="sect" style="margin-top: var(--s-16)">Connexions</h4>
+      <button class="add-btn" type="button" data-b="addbank"><span class="add-plus" aria-hidden="true"><svg class="ico"><use href="#i-plus"/></svg></span><span class="add-t"><b>Connecter une banque</b><small>Toutes les banques françaises reliées à Enable Banking</small></span></button>
+      <div data-b="banks" hidden></div>
+    </div>
+    <div class="card"><h3 class="ct">Ordre des comptes</h3>
+      <p class="pl" style="margin: 0 0 var(--s-10)">L’ordre de la page d’accueil : attrape une banque ou un compte par sa poignée.</p>
+      <div data-b="order">
+        <div data-key="bourso" style="--n: var(--c-rose); padding: var(--s-4) 0; border-top: 1px solid var(--line)"><h4 class="sect" style="margin: var(--s-6) 0"><button class="grip" type="button" aria-label="Déplacer la banque"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>BoursoBank</h4>
+          <ul class="rows" data-b="accs" style="padding-left: var(--s-20)"><li data-key="b-joint"><button class="grip" type="button" aria-label="Déplacer le compte"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte joint</span><span class="pl">•••• 4821</span></li><li data-key="b-livret"><button class="grip" type="button" aria-label="Déplacer le compte"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Livret A</span><span class="pl">•••• 0937</span></li></ul></div>
+        <div data-key="revolut" style="--n: var(--c-ciel); padding: var(--s-4) 0; border-top: 1px solid var(--line)"><h4 class="sect" style="margin: var(--s-6) 0"><button class="grip" type="button" aria-label="Déplacer la banque"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>Revolut</h4>
+          <ul class="rows" data-b="accs" style="padding-left: var(--s-20)"><li data-key="r-courant"><button class="grip" type="button" aria-label="Déplacer le compte"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte courant</span><span class="pl">•••• 1150</span></li></ul></div>
+        <div data-key="fortuneo" style="--n: var(--c-vert); padding: var(--s-4) 0; border-top: 1px solid var(--line)"><h4 class="sect" style="margin: var(--s-6) 0"><button class="grip" type="button" aria-label="Déplacer la banque"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>Fortuneo</h4>
+          <ul class="rows" data-b="accs" style="padding-left: var(--s-20)"><li data-key="f-courant"><button class="grip" type="button" aria-label="Déplacer le compte"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte courant</span><span class="pl">•••• 7702</span></li><li data-key="f-pea"><button class="grip" type="button" aria-label="Déplacer le compte"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">PEA</span><span class="pl">•••• 3368</span></li></ul></div>
+      </div>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(min(160px, 100%), 1fr)); gap: var(--s-12); min-width: 0">
+      <div class="card is-ruled is-tinted" style="--n: var(--c-rose)"><h3 class="ct">BoursoBank</h3><p style="margin: 0; font: var(--head-weight) var(--fs-22)/var(--lh-tight) var(--title-font)">12&nbsp;480,22€</p><p class="pl" style="margin: var(--s-6) 0 0">Compte joint · Livret A</p></div>
+      <div class="card is-ruled is-tinted" style="--n: var(--c-ciel)"><h3 class="ct">Revolut</h3><p style="margin: 0; font: var(--head-weight) var(--fs-22)/var(--lh-tight) var(--title-font)">1&nbsp;213,57€</p><p class="pl" style="margin: var(--s-6) 0 0">Compte courant</p></div>
+      <div class="card is-ruled is-tinted" style="--n: var(--c-vert)"><h3 class="ct">Fortuneo</h3><p style="margin: 0; font: var(--head-weight) var(--fs-22)/var(--lh-tight) var(--title-font)">18&nbsp;905,40€</p><p class="pl" style="margin: var(--s-6) 0 0">Compte courant · PEA</p></div>
+    </div>
+    <div class="card"><h3 class="ct">Où part l’argent, sur 12 mois</h3>
+      <h4 class="sect">Par catégorie</h4>
+      <ul class="rows">
+        <li><span class="ttl">Logement</span><span class="pl">12 opé.</span><span class="v">10&nbsp;200,00€</span><span class="meter" style="--n: var(--c-violet)"><i style="width: 100%"></i></span></li>
+        <li><span class="ttl">Courses</span><span class="pl">86 opé.</span><span class="v">4&nbsp;318,40€</span><span class="meter" style="--n: var(--c-vert)"><i style="width: 42.3%"></i></span></li>
+        <li><span class="ttl">Loisirs</span><span class="pl">41 opé.</span><span class="v">1&nbsp;902,15€</span><span class="meter" style="--n: var(--c-corail)"><i style="width: 18.6%"></i></span></li>
+      </ul>
+      <h4 class="sect">Par marchand</h4>
+      <ul class="rows">
+        <li><span class="ttl">Magasins U</span><span class="pl">38 opé.</span><span class="v">2&nbsp;941,06€</span><span class="meter"><i style="width: 100%"></i></span></li>
+        <li><span class="ttl">SNCF Connect</span><span class="pl">9 opé.</span><span class="v">612,80€</span><span class="meter"><i style="width: 20.8%"></i></span></li>
+      </ul>
+    </div>
+    <!-- Studio's components: the C demos go here -->
+    <!-- photos: the viewer, the photo grid, the hero, the back link go here -->
+    <section class="hero is-parallax"><img class="hero-img" alt="" data-scene="1" width="1600" height="1000">
+      <a class="back-link on-photo" href="#"><svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>Événements</a>
+      <div class="hero-in"><h3 class="hero-t">Lyon 2026</h3><p class="hero-sub">Lyon, France</p><p class="hero-meta">8–12 juin 2026</p>
+        <div class="hero-acts"><a class="btn is-save" href="#">Réserver ma place</a><a class="btn" href="#">Le programme</a></div></div>
+    </section>
+    <section class="hero is-short is-bottom"><img class="hero-img" alt="" data-scene="3" width="1600" height="600">
+      <div class="hero-in"><h3 class="hero-t">Claire &amp; Hugo</h3><p class="hero-meta">12 septembre 2026 · 248 photos</p></div>
+    </section>
+    <div class="card"><a class="back-link" href="#"><svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>Galeries</a>
+      <h3 class="card-title" style="margin-top: var(--s-12)">Claire &amp; Hugo</h3>
+      <p class="pl" style="margin: 0">Le lien retour, en haut d’une page ou d’une carte : la flèche de la planche, puis le nom de la page d’avant. Sur une photo, il devient le bouton du site (<code>.on-photo</code>).</p>
+    </div>
+    <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act is-small" type="button" data-photo="open" style="margin-left: auto">Ouvrir</button></h3>
+      <p class="pl" style="margin: 0">La croix, le voile ou Échap la ferment ; les flèches, ← → ou le doigt tournent les photos, tirée vers le bas elle se ferme. Les deux voisines se chargent d’avance ; la quatrième se fait attendre, pour voir la roue.</p>
+      <p class="pl" style="margin: var(--s-8) 0 0; color: var(--accent-text)" data-photo="seen">Aucune photo montrée.</p>
+    </div>
+    <div class="card"><h3 class="ct">Grille de photos · ds.photogrid</h3>
+      <div class="row" style="justify-content: space-between; margin-bottom: var(--s-12)"><span class="pl">En colonnes de même hauteur ; un clic ouvre la visionneuse (<code>data-viewer</code>).</span>
+        <label class="photogrid-zoom"><svg class="ico" aria-hidden="true"><use href="#i-zoom-out"/></svg><input type="range" class="zoom-slider" data-photo="zoom" aria-label="Taille des photos"><svg class="ico" aria-hidden="true"><use href="#i-zoom-in"/></svg></label></div>
+      <div class="photogrid" data-photo="grid" data-viewer data-viewer-label="Photos de démonstration"></div>
+    </div>
+    <!-- dates and charts: the date picker, the donut, the paired bars go here -->
+    <div class="card"><h3 class="ct">Période des opérations · ds.datePick</h3>
+      <div class="periodhead">
+        <div class="periodleft">
+          <button class="periodtitle" type="button" data-date="title"><span data-date="label"></span><span class="caret" aria-hidden="true">▾</span></button>
+          <div data-date="pop"></div>
+        </div>
+        <div class="periodnav"><button class="btn is-small" type="button" data-date="prev" aria-label="Période précédente">‹</button><button class="btn is-small" type="button" data-date="next" aria-label="Période suivante">›</button></div>
+      </div>
+      <p class="pl" style="margin: 0">Le titre ouvre le choix : une période rapide, ou un jour, un mois, une année, deux dates ; les flèches avancent d’autant. <span data-date="read"></span></p>
+    </div>
+    <div class="card"><h3 class="ct">Dates du voyage · ds.datePick en place</h3>
+      <p class="pl" style="margin: 0 0 var(--s-10)">Vendée 2026 : <b data-date="trip-read"></b></p>
+      <div data-date="trip"></div>
+    </div>
+    <div class="card"><h3 class="ct">Dépenses par catégorie · ds.chart.donut</h3>
+      <div class="pills" style="margin-bottom: var(--s-14)"><label class="pill"><span class="pv"></span><select data-date="pie-month" aria-label="Mois"></select></label></div>
+      <div data-date="pie"></div>
+      <ul class="rows" data-date="pie-ops" style="margin-top: var(--s-14)"></ul>
+    </div>
+    <div class="card"><h3 class="ct">Entrées et sorties · ds.chart.bars en paires</h3>
+      <div data-date="flows"></div>
+      <p class="pl" data-date="flows-read" style="margin: var(--s-12) 0 0"></p>
+    </div>
+    <div class="card"><h3 class="ct">Agenda · ds.calendar</h3><div data-studio="calendar"></div></div>
+    <div class="card"><h3 class="ct">Abonnés<span data-studio="period"></span></h3>
+      <dl class="tiles" style="margin-top: 0">
+        <div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon Alexis</dt><dd>1 240<span class="u">payants</span><span class="d">+18 en 7j · +52 en 30j</span></dd><div data-studio="line" data-from="1188" data-to="1240"></div><span class="h">2 310 membres en tout</span></div>
+        <div class="tile" style="--n:var(--c-rouge)"><dt><i></i>Instagram</dt><dd>57 900<span class="u">abonnés</span><span class="d neg">−120 en 7j · +340 en 30j</span></dd><div data-studio="line" data-from="57560" data-to="57900"></div><a class="h" href="#">@alexispaoleschi ↗</a></div>
+      </dl>
+    </div>
+    <div class="card"><h3 class="ct">Cours d’une ligne · ds.chart.line haute</h3><div data-studio="price"></div></div>
+    <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
+    <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
+    <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card"><h3 class="ct">Ce qui rapporte · Patreon Alexis</h3><div data-studio="earned"></div></div>
+    <div class="card"><h3 class="ct">Stories · Instagram</h3><div data-studio="stories"></div></div>
+    <div class="card"><h3 class="ct">Nouvelle version et copie sur l’appareil</h3>
+      <div class="row"><button class="btn is-icon" type="button" data-studio="version"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button><button class="btn is-small" type="button" data-studio="version-new">Annoncer une nouvelle version</button></div>
+      <ul class="rows" data-studio="keep" style="margin-top: var(--s-14)"></ul>
+    </div>
+    <div class="msg good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
+    <div class="msg bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
+    <div class="toasts">
+      <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+      <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="x" aria-label="Fermer">×</button></div>
+    </div>
+    <div class="dialog" role="dialog" aria-label="Exemple de fenêtre"><h2 class="dialog-t">Supprimer le voyage « Vendée 2026 » ?</h2><p class="dialog-x">Ses opérations restent, sans voyage.</p><div class="dialog-b"><button type="button" class="btn dialog-no">Annuler</button><button type="button" class="btn dialog-ok is-danger">Supprimer</button></div></div>
+  </section>
+</template>
+<script>
+  // one column per theme, from the same template; the swatches and scales read the tokens themselves
+  const themes = [["atelier", "Atelier", "Les outils : Bank, Studio. Sombre, à l’or du site."], ["vitrine", "Vitrine", "Les sites publics : alexispaoleschi.com, Selecta. Clair, à l’or du site, aux angles carrés."]];
+  for (const [id, name, what] of themes) {
+    const node = document.getElementById("theme").content.cloneNode(true), sec = node.querySelector(".theme");
+    sec.dataset.theme = id;
+    node.querySelector(".t-name span").textContent = name;
+    node.querySelector(".t-name small").textContent = what;
+    for (const t of node.querySelector("[data-swatches]").dataset.swatches.split(" "))
+      node.querySelector("[data-swatches]").insertAdjacentHTML("beforeend", `<div><i style="background:var(${t})"></i><span>${t}</span></div>`);
+    for (const n of node.querySelector("[data-fs]").dataset.fs.split(" "))
+      node.querySelector("[data-fs]").insertAdjacentHTML("beforeend", `<div><code>--fs-${n}</code><span style="font-size:var(--fs-${n})">Toutes les opérations</span></div>`);
+    for (const n of node.querySelector("[data-sp]").dataset.sp.split(" "))
+      node.querySelector("[data-sp]").insertAdjacentHTML("beforeend", `<div><code>--s-${n}</code><span class="bar" style="width:calc(var(--s-${n}) * 4)"></span></div>`);
+    sec.style.setProperty("--rows", sec.children.length);
+    document.getElementById("themes").append(node);
+  }
+  // the demo form that deletes: once confirmed, it says so instead of leaving the page
+  document.addEventListener("submit", e => {
+    if (!e.target.matches("[data-demo-form]") || !e.target.dataset.confirmed) return;
+    e.preventDefault();
+    // ds.js reads the flag after this listener: it goes once this sending is over
+    setTimeout(() => { delete e.target.dataset.confirmed; });
+    ds.toast({ type: "good", text: "Client supprimé (démonstration)" });
+  });
+  // try the header's wheel and a failing source's bubble, in the column of the button
+  document.addEventListener("click", e => {
+    const b = e.target.closest("[data-demo]");
+    if (!b) return;
+    if (b.dataset.demo === "busy") {
+      ds.busy.start("Lecture des banques…", { header: b.closest(".theme").querySelector("header.top"), expected: 2500 });
+      setTimeout(() => ds.busy.pct(60), 1200);
+      setTimeout(() => ds.busy.done(), 3000);
+    } else {
+      let tries = 0;
+      ds.trouble.ok("demo");
+      ds.trouble("demo", { name: "BoursoBank", text: "la banque n’a pas répondu.", retry: () => new Promise(r => setTimeout(r, 1200)),
+        check: () => (++tries < 2 ? "Elle ne répond toujours pas." : null) });
+    }
+  });
+  // the icons: every symbol of the sprite ds.js puts in the page, with its name, by group
+  document.addEventListener("DOMContentLoaded", () => {
+    const groups = new Map();
+    for (const s of document.querySelectorAll("#ds-icons symbol")) {
+      const g = s.dataset.group || "";
+      if (!groups.has(g)) groups.set(g, []);
+      groups.get(g).push(s.id.slice(2));
+    }
+    const html = [...groups].map(([g, names]) => `<h4 class="icons-g">${g} · ${names.length}</h4><div class="icons">` +
+      names.map(n => `<div><svg class="ico" aria-hidden="true"><use href="#i-${n}"/></svg>${n}</div>`).join("") + "</div>").join("");
+    for (const box of document.querySelectorAll("[data-icons]")) box.innerHTML = html;
+  });
+</script>
+</body>
+</html>
