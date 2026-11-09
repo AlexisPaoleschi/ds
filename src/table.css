@@ -1,0 +1,72 @@
+/* The table of a list to read, sort and pick from (Bank's operations, Studio's people): <table class="tbl"> in a
+   .tbl-wrap, which scrolls sideways when the table is wider than the page. Figures are right-aligned (.is-num); the
+   column titles are buttons that sort (th > button.sort, ds.sortable), the one in use showing its way; a box per row
+   picks it (.tbl-ck, ds.selection). A row that opens something (a sheet) is .is-link.
+   On a phone, a table .is-cards turns each row into a small card: its box on the left, its name (.tbl-main) and its
+   figure (.tbl-end) on the first line, then its other cells one under the other, each named by its data-label. What
+   only a wide screen shows (.tbl-wide) goes, what only a phone shows (.tbl-phone, e.g. the date and the bank under the
+   name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
+  .tbl-wrap { overflow-x: auto; }
+  .tbl { --tbl-size: var(--fs-14); --tbl-th-size: var(--fs-10); --tbl-th-ls: var(--ls-caps);
+    width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
+  [data-theme="vitrine"] .tbl { --tbl-size: var(--fs-15); --tbl-th-size: var(--fs-12); --tbl-th-ls: var(--ls-1-5); }
+  .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: bottom; white-space: nowrap; color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* money in and money out, what is fresh and what is late */
+  .tbl .is-good { color: var(--good); }
+  .tbl .is-bad { color: var(--bad); }
+  .tbl .tbl-ck { width: 28px; }
+  .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
+  .tbl .tbl-phone { display: none; }
+  .tbl tbody tr.is-link { cursor: pointer; }
+  @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
+  .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
+  /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */
+  .tbl th .sort { display: inline-flex; align-items: center; gap: var(--s-4); margin: 0; padding: 0; background: none; border: 0; border-radius: var(--r-s); cursor: pointer;
+    color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
+  /* the arrow is not read out: aria-sort says it */
+  .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent); }
+  .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent); }
+  .tbl-sortmenu { display: none; }
+
+/* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
+   name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
+   picked. ds.selection runs it. Its buttons and menus are small ones, the row of a list's actions. */
+  .selbar { --btn-h: var(--btn-s-h); --btn-px: var(--btn-s-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls); --field-py: var(--s-6);
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
+    margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
+  .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  [data-theme="vitrine"] .selbar { --field-size: var(--fs-14); --field-py: var(--s-8); --field-px: var(--s-12); --btn-px: var(--s-14); }
+  [data-theme="vitrine"] .selbar-n { font-weight: 500; }
+
+@media (max-width: 768px) {
+  .tbl .tbl-wide { display: none; }
+  .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tbl-sortmenu { display: inline-flex; }
+  .tbl-wrap:has(> .tbl.is-cards) { overflow-x: visible; }
+  .tbl.is-cards, .tbl.is-cards tbody { display: block; }
+  .tbl.is-cards thead { display: none; }
+  .tbl.is-cards tr { display: grid; grid-template-columns: [ck-start] auto [ck-end main-start] minmax(0, 1fr) [main-end end-start] auto [end-end];
+    gap: var(--s-4) var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
+  .tbl.is-cards tr:not(:has(> .tbl-ck)) { grid-template-columns: [main-start] minmax(0, 1fr) [main-end end-start] auto [end-end]; }
+  .tbl.is-cards td { display: block; min-width: 0; padding: 0; border: 0; grid-column: main-start / end-end; }
+  .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; }
+  .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
+  .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
+  .tbl.is-cards td[colspan] { grid-column: 1 / -1; }
+  /* a cell named by its column: the name on the left, the value on the right */
+  .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
+  .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-ui) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  /* a card is lit whole, not cell by cell; in a .card, out to its edges (over its padding, --card-pad), so that the gold
+     takes the whole width of the screen's line */
+  .tbl.is-cards tbody tr > td, .tbl.is-cards tbody tr.is-selected > td { background: none; }
+  .tbl.is-cards tbody tr.is-selected { background: var(--accent-soft); }
+  .card .tbl.is-cards tbody tr.is-selected { box-shadow: calc(-1 * var(--card-pad)) 0 var(--accent-soft), var(--card-pad) 0 var(--accent-soft); }
+  /* what only a wide screen shows stays hidden in a card too */
+  .tbl.is-cards td.tbl-wide { display: none; }
+}

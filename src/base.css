@@ -1,0 +1,21 @@
+/* Base of every page: the boxes to tick, the fields and the focus, drawn the same in every app. */
+  a:focus-visible:where(:not([data-theme="vitrine"] *)), button:focus-visible:where(:not([data-theme="vitrine"] *)), select:focus-visible:where(:not([data-theme="vitrine"] *)), input:focus-visible:where(:not([data-theme="vitrine"] *)), textarea:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font: var(--field-weight) var(--field-size)/var(--field-lh) var(--body); letter-spacing: var(--field-ls); color: var(--ink); background: var(--field-bg); border: 1px solid var(--field-line); border-radius: var(--r-m); padding: var(--field-py) var(--field-px); min-width: 0; }
+  input::placeholder, textarea::placeholder { color: var(--faint); }
+/* the boxes to tick: in the accent, the same size everywhere */
+  input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
+/* a field in use, on the public sites: the full gold edge and a faint gold halo, as on alexispaoleschi.com */
+  :where([data-theme="vitrine"]) :where(input:not([type=checkbox]):not([type=radio]), select, textarea) { transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
+  :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+/* running text on the public sites: paragraphs at 85%, their links in gold, a little heavier and underlined */
+  :where([data-theme="vitrine"]) p { color: var(--dim); }
+  :where([data-theme="vitrine"]) p a { color: var(--accent); font-weight: 400; text-decoration: underline; transition: color var(--t-fast) ease; }
+  @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
+/* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
+   .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
+  .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);
+    font: var(--field-note-weight) var(--field-note-size)/var(--field-note-lh) var(--body); letter-spacing: var(--field-note-ls); }
+  .field-note.is-good { color: var(--good); }
+  .field-note.is-bad { color: var(--bad); }
+  .field-note.is-reserved { min-height: calc(var(--field-note-size) * var(--field-note-lh)); }
+  :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
