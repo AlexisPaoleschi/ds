@@ -1,0 +1,4 @@
+/* The ruled card in a colour of its own (Bank: a card per bank, each in its bank's colour, as many a row as fit):
+   .card.is-ruled.is-tinted with --n; its label (.ct) takes the colour too. Without --n, the gold of .is-ruled. */
+  .card.is-ruled.is-tinted { border-top-color: var(--n, var(--accent)); }
+  .card.is-tinted > .ct { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
