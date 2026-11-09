@@ -1,0 +1,73 @@
+# ds
+
+Le design system commun à mes applis : Bank, Studio, Selecta et alexispaoleschi.com. Le site de Katline garde sa propre identité.
+
+La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
+
+## Ce qu’il contient
+
+- `src/tokens.css` : les couleurs, les polices, les trois tailles d’arrondi (`--r-s`, `--r-m`, `--r-l`, à 0 dans Vitrine, aux angles carrés comme le site), la palette des banques, des catégories, des réseaux et des agendas (`--c-rouge`, `--c-corail`, `--c-orange`, `--c-ambre`, `--c-jaune`, `--c-vert`, `--c-emeraude`, `--c-turquoise`, `--c-ciel`, `--c-bleu`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-ardoise`) et les deux thèmes, **Atelier** (sombre, les outils) et **Vitrine** (clair, les sites publics), tous deux à l’or `#c9a961` du site.
+- `src/base.css` : les champs, les cases à cocher et le focus, les mêmes dans toutes les pages, et la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`).
+- `src/shell.css` : la coque des applis Bank et Studio : page, en-tête et onglets, chargement, cartes, messages, listes, sources en bas de page.
+- `src/buttons.css` : les boutons, `.btn` et ses variantes `is-act`, `is-save`, `is-danger`, `is-icon`.
+- `src/tiles.css` : les chiffres en tuiles (`.tiles`, `.tile`), et leur forme compacte pour le haut d’un écran (`.tiles.is-compact`).
+- `src/panel.css` : le panneau de filtres, venu de Studio : l’onglet sur le bord, le panneau, ses groupes de boutons à allumer ou éteindre, le tiroir sur téléphone.
+- `src/period.css` : l’en-tête de période, le même pour les opérations de Bank et le calendrier de Studio : le grand titre qui ouvre le sélecteur, les flèches à droite.
+- `src/doc.css` : les petites pages d’une appli (confidentialité, conditions, déconnexion), sous `body.doc`.
+- `src/toast.css` et `src/ds.js` : le message passager, en bas à droite (au-dessus de la barre d’onglets sur téléphone, et de la même largeur qu’elle : `--tabbar-w`, que la barre d’une appli lit aussi). `ds.toast({type, text, action})`, type `good`, `info`, `busy` ou `bad`. `dist/ds.js` est le seul code commun ; une appli le copie comme `dist/ds.css`.
+- `src/dialog.css` : la fenêtre qui demande avant une action sans retour, ou un court texte. `ds.confirm({title, text, ok, danger, value})` répond par une promesse ; elle remplace `confirm()` et `prompt()` du navigateur.
+- `src/icons.js` : les icônes de toutes les applis, une seule planche de traits sur une grille de 24, que `ds.js` met en haut de la page. Une page écrit `<svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>` et n’a plus de copie à elle ; `.ico` donne le trait et sa couleur.
+- `src/fonts.css` et `dist/fonts` : les polices des deux thèmes (Archivo, IBM Plex Sans et Mono, Gilda Display, Urbanist), servies par chaque appli à côté de sa copie, dans `static/ds/fonts`. `scripts/fonts.py` les reprend chez Google Fonts quand une police change.
+- `src/ds.js`, les comportements communs : `ds.drawer(name, {onChange})` pour le tiroir de filtres (balisage `data-drawer`, `data-drawer-toggle`, `data-drawer-close` ; `mark(true)` met le point d’or sur l’onglet quand un filtre cache quelque chose), `ds.status(holder, {summary, late, rows, link})` pour la liste des sources en bas de page, `ds.when`, `ds.ago`, `ds.soon` et `ds.date` pour dire une heure ou une date, à l’heure de Paris, `ds.number` et `ds.money` pour les chiffres, `ds.api` pour appeler le serveur de l’appli (`<html data-api="X-Bank">`), `ds.jobs(holder, jobs, {logsLink, reload})` pour la section Synchros des réglages et son journal en direct, `ds.busy` pour la roue de chargement de l’en-tête (`start(text, {key})`, `pct(p)`, `done()`), `ds.trouble(key, {name, text, retry, check})` pour une source qui n’a pas pu être lue (une bulle par visite, « Réessayer », puis « à jour » ou « toujours impossible »). Et `ds.h` et `ds.ico` pour construire des nœuds, `ds.compact` pour un chiffre court, `ds.avatar` pour un logo à initiale, `ds.fold` pour les sections repliables (`details.fold[data-fold]`), `ds.route` et `ds.seek` pour l’adresse après #. Sans code : les lignes qui s’ouvrent (`tr.is-link` avec un lien `.row-link` ou `data-href`), les formulaires qui demandent avant de supprimer (`data-confirm`), le bouton occupé (`.btn.is-busy`), les messages laissés après une redirection (`<template data-toast>`). `ds.api` réessaie pendant un redémarrage, envoie le jeton CSRF d’une page Spring et ramène la page où elle était après la connexion. `node checks/behaviours.js` les vérifie dans un navigateur.
+- Les vues principales d’une appli dans `<div class="tabs is-bar">` (chaque bouton : `<svg class="ico">` et `<span class="tl">`, le point d’or `<i class="tabn">`) : dans l’en-tête sur ordinateur, en barre en bas sur téléphone.
+- Ce que Bank et Studio avaient chacun et qu’une autre appli peut reprendre, dans ses fichiers à part (`scripts/build.sh`, lignes `css_bank`, `css_studio`, `js_bank`, `js_studio`) :
+  - `src/sheet.css` et `src/sheet.js` : la fiche, venue de Bank (`.sheet`, `.sheet-panel`, `.sheet-x`, `.sheet-sub`, `.sheet-t`, `.sheet-fig`, `.sheet-acts`), en fenêtre au milieu de l’écran sur ordinateur, du bas sur téléphone, et les lignes clé et valeur (`<dl class="kv">`). `ds.sheet(el, {onOpen, onClose})` l’ouvre et la ferme.
+  - `src/table.css` et `src/table.js` : le tableau qui se trie et se choisit (`table.tbl`, `th > .sort`, `.is-num`, `.tbl-ck`, `.tbl-main`, `.tbl-end`, `.tbl-wide`, `.tbl-phone`), en cartes sur téléphone (`.is-cards`, `.tbl-sortmenu`) ; `ds.sortable(table, {by, up, key, menu, onSort})` ; le choix de plusieurs lignes et sa barre (`.sel-box`, `.sel-all`, `.selbar`), `ds.selection(holder, {bar, count, onChange})`.
+  - `src/pick.css` et `src/pick.js` : la pilule (`.pill`, `.pv`, `.pills`, `ds.pills`), le sélecteur avec recherche (`ds.picker(holder, {items, value, first, limit, empty, onPick, opener})`) et le bouton pointillé qui ajoute (`.add-btn`).
+  - `src/reorder.css` et `src/reorder.js` : déplacer à la poignée (`.grip`), `ds.reorder(list, {item, handle, onEnd})`, à la souris, au doigt ou au clavier.
+  - `src/meter.css` : une barre par catégorie (`.meter`) ; `src/ruled.css` : la carte au filet de sa couleur (`.card.is-ruled.is-tinted`, `--n`).
+  - `src/calendar.css` et `src/calendar.js` : le calendrier, venu de l’agenda de Studio. `ds.calendar(holder, {view, day, items, panel, row, onChange})` dessine l’en-tête de période et la vue du mois (cases, panneau du jour choisi), de la semaine ou de la liste ; un élément porte sa couleur (`--c-…`) et sa marque.
+  - `src/chart.css` et `src/chart.js` : les graphiques, `ds.chart.line`, `bars`, `heat`, `spark` et `split` ; la couleur d’une série est un jeton de la palette, posé en `--n`.
+  - `src/figures.css` et `src/figures.js` : les classements (`.ranks`, `ds.rank`), les mini-tuiles (`.minitiles`, `ds.minitiles`), les verdicts (`.verdict`, `ds.verdict`).
+  - `src/periodpick.css` : le choix de période, `ds.periodPick(options, actuel, pick)`, des boutons sur ordinateur, une liste sur téléphone.
+  - `src/live.css` et `src/live.js` : le témoin « nouvelle version » (`.newver`, `ds.version`), le direct du serveur (`ds.stream`), la copie sur l’appareil (`ds.keep.get`, `put`, `del`, `fresh`).
+  - `src/viewer.js` et `src/viewer-behaviour.css` : la visionneuse en marche, `ds.viewer(items, {start, onChange, onClose, label, el})` ; `ds.viewer.bind(grille, {item})` ou `<div data-viewer>` pour une grille de liens.
+  - `src/photogrid.css` et `src/photogrid.js` : la grille de photos (`.photogrid`, `.is-flush`) et son zoom (`.photogrid-zoom`, `input.zoom-slider`), `ds.photogrid(grille, {sizes, size, key, slider, masonry})`.
+  - `src/hero.css` : le bandeau photo, une photo sur toute la largeur avec son titre, son sous-titre et une action (`.hero`, `.is-full`, `.is-short`, `.is-bottom`, `.is-parallax`) ; `src/backlink.css` : le lien retour (`.back-link`, `.on-photo` sur une photo).
+  - `src/datepick.css` et `src/datepick.js` : le choix de date et de période, venu de Bank : `ds.datePick(holder, {value, quick, modes, min, max, onPick, opener})`, des périodes rapides puis un jour, un mois, une année ou deux dates ; `ds.datePick.label`, `step`, `of`, `kind`. Les graphiques ont aussi `ds.chart.donut` et les barres en paires (`bars` avec `pairs`).
+  - `node checks/bank.js`, `checks/studio.js`, `checks/photo.js` et `checks/date.js` les vérifient dans un navigateur.
+- `src/settings.css` : la page de réglages commune, rangée sous `body.settings`.
+- `src/topbar.css` : la barre du haut (`.topbar`, `.topbar-in`, `.topbar-brand`, `.topbar-nav`, `.topbar-link`, `.topbar-icon`), venue du site : le nom à gauche, des liens en capitales soulignés d’or au survol ou des boutons à icône, la place pour une action ; alignée sur la page, 1500px pour un outil, 1200px pour un site (`.is-site`).
+- `src/viewer.css` : la visionneuse de photos (`.viewer`), venue du site : fond noir, croix et flèches dans des cercles fins, place sous la photo pour la barre d’une appli, pastille de position en option (`.viewer-count`).
+- `src/site.css` : les pièces d’un site public, venues d’alexispaoleschi.com : la pastille (`.badge`), le titre et les détails d’une carte (`.card-title`, `.card-meta`), la carte avec photo de couverture (`.card.has-cover`, `.card-cover`, `.card-body`), en grand ou en petit (`.card.is-small`), l’en-tête de section (`.section-head`, son sous-titre `.section-sub`), le pied de page (`.site-footer`).
+- `dist/ds.css` : tout réuni, le seul fichier que les applis copient. Il se refait avec `scripts/build.sh`.
+
+## Dans une appli
+
+Chaque appli garde une copie figée d’une version : `static/ds/ds-2.14.0.css` et `ds-2.14.0.js`, liés avant ses propres styles et scripts. On ne la modifie jamais à la main : on change ce dépôt, on publie une version (une étiquette `v1.0.1`, que GitHub pose tout seul en lisant `VERSION` à chaque poussée sur `main`), puis on la copie avec `scripts/sync.sh 1.0.1 ../bank`, qui emporte aussi les polices (`static/ds/fonts`).
+
+Le thème se choisit sur la balise `<html>` : `data-theme="atelier"` (par défaut) ou `data-theme="vitrine"`.
+
+## Avant / après
+
+Avant qu’une appli prenne une nouvelle version, ou qu’un changement parte en ligne, on compare chaque page, sur ordinateur et sur téléphone :
+
+```bash
+node scripts/compare.js config.json
+```
+
+La configuration (voir `scripts/compare.example.json`) nomme le serveur d’avant, celui d’après et les pages ; avec `"ds": "dist"`, les pages d’après prennent le design system de ce dossier à la place de leur copie, sans toucher à l’appli. L’outil écrit une page qui montre, pour chaque page et chaque taille d’écran, l’avant, l’après et en rouge ce qui a changé. Il demande Node et Playwright.
+
+## Règles
+
+- Chaque appli a un test, `tests/test_design_system.py`, qui échoue si une page écrit une couleur, une taille, un espace, un arrondi, une superposition, une durée ou une ombre au lieu de nommer un jeton.
+
+- Couleurs : toutes ici. Une appli ne nomme qu’un jeton (`var(--c-bleu)`, `var(--good)`…), jamais un code couleur. `--good`, `--bad` et `--mid` sont réservés aux entrées, aux sorties et à ce qui demande un coup d’œil ; le rouge, le vert et le jaune de la palette nomment une banque, une catégorie ou un agenda. Deux choses montrées ensemble (les banques, les dépenses d’un mois, un voyage, les réseaux et les agendas de Studio) ne prennent jamais la même couleur.
+- Largeurs de page : 1500px pour un outil (`--page-max` : Bank, Studio, Selecta), 1200px pour les pages d’un site (`--page-site` : alexispaoleschi.com), 640px pour une page de texte (`body.doc`).
+- Réglages : toutes les tailles de texte, interlignes, espacements de lettres, marges, superpositions, durées et ombres sont des jetons (`--fs-14`, `--s-12`, `--z-sheet`…). Les largeurs d’écran sont les trois mêmes partout, celles d’alexispaoleschi.com : 480, 768 et 1024px ; un site public peut ajouter le téléphone tenu couché (`(max-width: 956px) and (orientation: landscape)`).
+- Boutons : gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer.
+- Un composant ne décide pas de son caractère : il lit les rôles de son thème (`--title-weight`, `--label-font`, `--btn-h`, `--field-px`, `--card-pad`…), déclarés dans `src/tokens.css`. Atelier et Vitrine partagent les composants et leur comportement ; chacun remplit les rôles à sa façon.
+- Une appli n’utilise que les rôles (`--accent`, `--panel`…) et ne les redéfinit jamais.
+- Une appli ne garde dans ses pages que ce qui lui est propre (le calendrier de Studio, les voyages de Bank…). Tout ce qui sert à deux applis vit ici.
+- Un composant naît dans une appli et monte ici quand une deuxième en a besoin.
+- Versions : le dernier chiffre corrige, celui du milieu ajoute un composant, le premier change ou retire un nom de classe.

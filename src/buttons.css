@@ -1,0 +1,38 @@
+/* buttons: one height, one font, one corner; only the colours tell them apart.
+   grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
+.btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-6); min-height: var(--btn-h); padding: 0 var(--btn-px);
+  font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--btn-ls); text-transform: var(--btn-case); white-space: nowrap; text-decoration: none;
+  border: 1px solid var(--line); border-radius: var(--r-m); background: var(--btn-bg); box-shadow: var(--btn-shadow); color: var(--dim); cursor: pointer; }
+.btn:hover { color: var(--accent); border-color: var(--accent-line); }
+.btn.is-act { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-line); }
+.btn.is-act:hover { border-color: var(--accent-strong); }
+.btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+.btn.is-save:hover { filter: brightness(1.08); }
+.btn.is-danger { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+.btn.is-danger:hover { border-color: var(--bad); }
+.btn:disabled { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
+.btn:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
+/* a square button with only an icon (reload, settings) */
+.btn.is-icon { width: var(--btn-h); padding: 0; }
+
+/* a small button: a row's actions, a way back */
+.btn.is-small { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
+/* vitrine: the buttons of alexispaoleschi.com. White with a soft gold edge; gold letters and a gold edge to act,
+   filled gold to save, red to delete. On hover they fill with their colour and rise. */
+[data-theme="vitrine"] .btn { color: var(--ink); transition: all var(--t-fast) ease; }
+[data-theme="vitrine"] .btn.is-act { color: var(--accent); background: var(--btn-bg); border-color: var(--accent); }
+[data-theme="vitrine"] .btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
+[data-theme="vitrine"] .btn.is-danger { color: var(--bad); background: var(--btn-bg); border-color: var(--bad); }
+[data-theme="vitrine"] .btn:disabled { background: var(--btn-bg); border-color: var(--line); opacity: .6; }
+[data-theme="vitrine"] .btn:active { transform: none; }
+@media (hover: hover) {
+  [data-theme="vitrine"] .btn:not(:disabled):hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); transform: translateY(var(--btn-lift)); box-shadow: var(--shadow-pop); filter: none; }
+  [data-theme="vitrine"] .btn.is-save:not(:disabled):hover { background: var(--accent-strong); border-color: var(--accent-strong); }
+  [data-theme="vitrine"] .btn.is-danger:not(:disabled):hover { background: var(--bad); border-color: var(--bad); }
+}
+/* a button whose request is on its way (a form sent, ds.js marks it): it turns, and a second click sends nothing */
+  .btn.is-busy { cursor: progress; opacity: .75; }
+  .btn.is-busy::after { content: ""; flex: none; width: 13px; height: 13px; box-sizing: border-box; border-radius: 50%;
+    border: 2px solid currentColor; border-top-color: transparent; animation: spin .8s linear infinite; }
+@media (prefers-reduced-motion: reduce) { .btn.is-busy::after { animation: none; } }
+
