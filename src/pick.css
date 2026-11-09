@@ -1,0 +1,64 @@
+/* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
+   unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
+   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pv.
+   A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
+   (.ct) it sits on the right. */
+  .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
+    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; padding: var(--pill-py) var(--pill-px);
+    border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
+    font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
+  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-0-5); background: var(--field-bg); }
+  .pill .pv { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill .pv::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
+  /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
+  .pill select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font-size: var(--fs-16); }
+  @media (hover: hover) { .pill:hover { color: var(--ink); border-color: var(--line-2); } }
+  .pill.is-on { color: var(--accent-text); border-color: var(--accent-line); background: var(--accent-soft); }
+  /* the menu is unseen: the pill shows where the keyboard is */
+  .pill:has(select:focus-visible):where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
+  [data-theme="vitrine"] .pill:has(select:focus-visible) { border-color: var(--accent); box-shadow: var(--field-halo); }
+  .pills { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6); }
+  .ct .pill { margin-left: auto; }
+
+/* The search picker: a field to type in, then the choices that match it, one tap away (Bank: a bank to connect, a
+   category for an operation). A choice may carry its colour's initial or icon (.picker-av, coloured by --n), a word in
+   small after its name, and what a tap does (.picker-cta, « Connecter → »); choices may stand under headings (a
+   category, then its subcategories). ds.picker draws it in its holder and follows the keys. */
+  .picker { display: grid; gap: var(--s-6); margin-top: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); }
+  .picker-q { width: 100%; box-sizing: border-box; }
+  .picker .picker-q { background: var(--panel); }
+  .picker-list { display: grid; max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+  .picker-g { margin: var(--s-12) var(--s-6) var(--s-4); color: var(--faint);
+    font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+  .picker-g:first-child { margin-top: var(--s-6); }
+  .picker-opt { position: relative; display: flex; align-items: center; gap: var(--s-12); width: 100%; box-sizing: border-box; margin: 0; padding: var(--s-8) var(--s-6);
+    background: none; border: 0; border-radius: var(--r-m); color: var(--ink); cursor: pointer; font: inherit; text-align: left; text-decoration: none; }
+  /* a straight line between two choices, clear of the rounded corners a lit choice has */
+  .picker-opt + .picker-opt::before { content: ""; position: absolute; top: 0; left: var(--s-6); right: var(--s-6); border-top: 1px solid var(--line); }
+  .picker-opt:hover::before, .picker-opt.is-active::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-active + .picker-opt::before { border-top-color: transparent; }
+  .picker-opt:hover, .picker-opt.is-active { background: var(--accent-soft); }
+  .picker-opt[aria-selected="true"] .picker-name { color: var(--accent-text); }
+  .picker-av { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: var(--r-m);
+    color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--accent)) 16%, transparent);
+    font: var(--head-weight) var(--fs-14)/var(--lh-tight) var(--title-font); }
+  .picker-av .ico { width: 16px; height: 16px; }
+  /* a colour alone: the small square of the filters */
+  .picker-av.is-dot { width: 10px; height: 10px; margin-inline: var(--s-4); border-radius: var(--r-s); background: var(--n, var(--accent)); }
+  .picker-name { flex: 1; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .picker-name small { margin-left: var(--s-6); color: var(--faint); font-weight: 500; }
+  .picker-cta { color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); white-space: nowrap; }
+  .picker-none { margin: var(--s-8) var(--s-6); color: var(--dim); font-size: var(--fs-13); }
+  [data-theme="vitrine"] .picker-name { font-weight: 500; }
+
+/* The dashed button that adds one more (Bank: « Connecter une banque »): the page's width, a gold + in its ring, what
+   it adds in bold and a line under it. Lit while what it opened is open (aria-expanded="true"). */
+  .add-btn { display: flex; align-items: center; gap: var(--s-12); width: 100%; box-sizing: border-box; margin: 0; padding: var(--s-12) var(--s-14);
+    background: none; border: 1px dashed var(--line-2); border-radius: var(--r-l); color: var(--ink); cursor: pointer; font: inherit; text-align: left; }
+  .add-btn:hover, .add-btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent-line); }
+  .add-plus { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%;
+    color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent-line); font: 600 var(--fs-22)/var(--lh-tight) var(--body); }
+  .add-plus .ico { width: 16px; height: 16px; }
+  .add-t { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+  .add-t b { font: var(--head-weight) var(--fs-14)/var(--head-lh) var(--title-font); }
+  .add-t small { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
+  [data-theme="vitrine"] .add-t b { font-size: var(--fs-16); letter-spacing: var(--ls-1); }
