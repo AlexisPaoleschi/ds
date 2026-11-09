@@ -1,0 +1,62 @@
+/* The site kit: the newsletter's page (/events/newsletter/): its hero, then one card (the design system's ruled card) that
+   says where the visitor stands, with one field, one button and the line under them for every state. */
+  /* Hero — the events hero, value for value. Any divergence is a bug.
+     The design system's page hero (.hero), on the site's photo under a light veil. */
+  .newsletter-hero { --hero-veil: var(--overlay-white-lighter); }
+  /* Card: the design system's card with its gold rule (.card.is-ruled); the page keeps its layout and its room */
+  .newsletter-main { max-width: 720px; margin: 0 auto; padding: 0 var(--s-40); }
+  .newsletter-card { display: flex; flex-direction: column; align-items: center; gap: var(--s-24); margin: calc(var(--s-32) * 2) 0 var(--s-80);
+    padding: var(--s-48) var(--s-40); text-align: center; }
+  /* Same thin gold envelope everywhere: the one icon the page ever shows,
+     whether the visitor is anonymous, identified, or has just signed up. */
+  .newsletter-envelope { width: 48px; height: 48px; color: var(--accent); stroke-width: 1; }
+  .newsletter-message { max-width: 52ch; font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-airy);
+    color: var(--dim); }
+  /* One field, one button, every state — the field row itself never changes
+     shape depending on how the visitor arrived. */
+  .newsletter-form { width: 100%; max-width: 560px; }
+  /* Wide enough for the longest label a button can take ("Unsubscribing…"), so
+     saying what it is doing never resizes it or shifts the field beside it. */
+  /* as high as the field beside it: 8px lower than the site's large buttons */
+  .newsletter-form .btn { min-width: 270px; --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
+  .newsletter-field { display: flex; gap: var(--s-12); }
+  /* written as long as the design system's field rule, so that the site's field keeps its own size; its text is the
+     design system's, 16px, the least that keeps an iPhone from zooming in on it */
+  .newsletter-field input.newsletter-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
+    background: var(--white); border: 1px solid var(--line); transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
+  .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-1); }
+  .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+  /* An address the visitor did not type — proven by their link, or just entered
+     a moment ago — reads as settled rather than editable. */
+  .newsletter-field input.newsletter-input:read-only { color: var(--faint); background: var(--band); cursor: default; }
+  .newsletter-field input.newsletter-input:read-only:focus { border-color: var(--line); box-shadow: none; }
+  /* Off-screen rather than display:none, because some bots skip fields that are
+     explicitly hidden and would give themselves away less. */
+  .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  /* Outcome line: the design system's line under a field (.field-note.is-reserved), as in the events banner, so a
+     signup reads the same whichever page it happens on: left-aligned like the banner's (a form child, not the card's own
+     centered text), as wide as the message above it. */
+  .newsletter-feedback { max-width: 52ch; text-align: left; }
+  /* Actions — just the escape hatch to the events page now that the field row
+     above carries the one button every state needs. */
+  .newsletter-actions { display: flex; justify-content: center; width: 100%; margin-top: var(--s-8); padding-top: var(--s-32);
+    border-top: 1px solid var(--line); }
+  /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
+  @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
+    .newsletter-main { padding: 0 var(--s-24); }
+    .newsletter-card { margin: var(--s-48) 0 var(--s-60); padding: var(--s-40) calc(var(--s-24) + var(--s-4)); }
+  }
+  /* ─── Landscape phone wider than 768px: a phone's hero, as the design system draws it from 768px down ─── */
+  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
+    .newsletter-hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
+  }
+  /* ─── Small portrait (≤480px) ─── */
+  @media (max-width: 480px) {
+    .newsletter-main { padding: 0 var(--s-16); }
+    .newsletter-card { gap: var(--s-20); margin: calc(var(--s-32) + var(--s-4)) 0 var(--s-48); padding: var(--s-32) var(--s-20); }
+    .newsletter-envelope { width: 40px; height: 40px; }
+    .newsletter-message { font-size: var(--fs-15); }
+    .newsletter-field { flex-direction: column; }
+    /* Full width already, and a phone is narrower than the widest label. */
+    .newsletter-form .btn, .newsletter-actions .btn { width: 100%; min-width: 0; }
+  }
