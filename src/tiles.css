@@ -1,0 +1,60 @@
+/* Figures in tiles: a label, a big figure, a note; in a grid. The compact form is for the top of a screen. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin-top: var(--s-16); background: var(--line); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+  .tile { background: var(--panel); padding: var(--s-14) var(--s-14) var(--s-12); min-width: 0; border-top: 3px solid var(--n, var(--line)); }
+  .tile dt { display: flex; align-items: center; gap: var(--s-6); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; color: color-mix(in oklab, var(--n, var(--ink)) var(--tint-ink), var(--ink)); margin-bottom: var(--s-10); text-transform: none; }
+  .tile dd { margin: 0; font: var(--head-weight) var(--fs-28)/var(--title-lh) var(--title-font); font-variant-numeric: tabular-nums; }
+  .tile .tile-unit { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
+  /* the change under a figure, in a tone (is-good, is-bad, is-mid) or plain */
+  .tile .tile-delta { display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-6); color: var(--dim); letter-spacing: 0; }
+  .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: 600; }
+  .tile .tile-delta.is-good { color: var(--good); }
+  .tile .tile-note { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
+  .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
+  .tile .tile-delta.is-bad { color: var(--bad); }
+  .tile .tile-delta.is-mid { color: var(--mid); }
+  /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
+  .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
+  .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
+  .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tiles .tile.is-good dd { color: var(--good); } .tiles .tile.is-bad dd { color: var(--bad); } .tiles .tile.is-mid dd { color: var(--mid); }
+  /* a set number of columns (Bank's four sums, two by two on a phone): .tiles.is-cols, --tile-cols (4), and on a phone
+     --tile-cols-phone (2) */
+  .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols, 4), minmax(0, 1fr)); }
+  /* a tile that opens something (Bank's Placements): .tile.is-link holding its link, a.row-link, in its label so that
+     Tab reaches it; a click anywhere on the tile opens it (ds.js, as a row's) and its label turns gold on hover.
+     Figures that must show whole get smaller in .tiles.is-shrink (ds.fitFigures, ds.js). */
+  .tile.is-link { cursor: pointer; }
+  .tile.is-link a.row-link { color: inherit; text-decoration: none; }
+  .tile.is-link a.row-link:focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
+  @media (hover: hover) { .tile.is-link:hover dt { color: var(--accent-text); } }
+  /* fitted (ds.minitiles: a median, an average at the top of a card): the tiles side by side, each as wide as the widest,
+     no wider than the words; the figure's unit just after it, what it is taken over under it */
+  .tiles.is-fit { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; width: fit-content; max-width: 100%; margin: 0 0 var(--s-16); }
+  .tiles.is-fit .tile { display: flex; flex-direction: column; gap: var(--s-6); }
+  .tiles.is-fit .tile dt { margin: 0; white-space: nowrap; }
+  .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
+  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
+  .tiles.is-fit .tile .tile-unit .ico { width: var(--ico-s); height: var(--ico-s); }
+  .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: 500 var(--fs-11)/var(--lh-ui) var(--body); opacity: .8; }
+  /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
+     the figure in gold above its label */
+  /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
+  [data-theme="vitrine"] .tiles.is-compact { gap: var(--s-20); }
+  [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
+    background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
+  [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
+  /* its figure in the big title's size, a step smaller on a phone (--text-2xl) */
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--text-2xl); font-weight: 400; }
+  [data-theme="vitrine"] .tiles.is-compact .tile:not(.is-good):not(.is-bad):not(.is-mid) dd { color: var(--accent-strong); }
+@media (max-width: 768px) {
+  /* four fitted tiles make two rows of two on a phone, where a long label goes on two lines; fewer keep theirs on one, so
+     that their figures stay side by side */
+  .tiles.is-fit:has(> .tile:nth-child(4)) { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .tiles.is-fit:has(> .tile:nth-child(4)) .tile dt { white-space: normal; }
+  [data-theme="vitrine"] .tiles.is-compact { gap: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols-phone, 2), minmax(0, 1fr)); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
+}

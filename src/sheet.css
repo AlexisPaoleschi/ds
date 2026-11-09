@@ -1,0 +1,63 @@
+/* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
+   note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
+   the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
+   role="dialog" aria-modal="true">, with its .sheet-close (<button class="sheet-close" aria-label="Fermer"> holding the sprite's
+   cross, <svg class="ico"><use href="#i-close"/></svg>, never the letter ×, which sits off the middle); ds.sheet opens and
+   closes it.
+   A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
+  .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
+    background: var(--veil); animation: sheet-veil var(--t-mid) ease-out; }
+  .sheet-panel { position: relative; box-sizing: border-box; min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--sheet-pad);
+    background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); color: var(--ink); outline: none; }
+  /* in its veil: a window in the middle, the room of a page of reading, scrolling inside when it is longer than the screen */
+  .sheet > .sheet-panel { width: min(var(--read-s), 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
+  /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
+     the title wraps beside it */
+  .sheet-close { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
+    display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); box-sizing: border-box; padding: 0;
+    margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
+    background: var(--panel-2); color: var(--dim); cursor: pointer; }
+  .sheet-close:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
+  .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
+  .sheet-sub::first-letter { text-transform: uppercase; }
+  .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
+    font: var(--title-weight) var(--fs-22)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
+  .sheet-fig.is-good { color: var(--good); }
+  .sheet-fig.is-bad { color: var(--bad); }
+  /* what it was in another currency, under its euros */
+  .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  /* its actions, on one line while they hold on it, then on two: a word is never cut; on a phone they share the width */
+  .sheet-acts { --btn-px: var(--sheet-acts-btn-px); --btn-ls: var(--sheet-acts-btn-ls); --btn-size: var(--sheet-acts-btn-size); display: flex; flex-wrap: wrap; gap: var(--s-8); margin-top: var(--s-14); }
+  .sheet-acts > .btn { max-width: 100%; }
+  /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
+
+/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
+   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
+  .facts { margin: 0; }
+  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  /* words as the bank wrote them */
+  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
+
+  @keyframes sheet-veil { from { background-color: transparent; } }
+  @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @keyframes sheet-up { from { transform: translateY(100%); } }
+@media (max-width: 768px) {
+  /* the whole width, rising from the bottom, clear of an iPhone's bar */
+  .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
+  .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
+    padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
+  .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
+  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
+     does not hold the page */
+  :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet > .sheet-panel { animation: none; }
+}
