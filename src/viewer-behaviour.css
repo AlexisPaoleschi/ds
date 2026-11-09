@@ -1,0 +1,28 @@
+/* What ds.viewer (src/viewer.js) adds to the viewer's look (src/viewer.css, unchanged): it fades in, the page behind
+   stays still while it is open, the photo hides behind the spinner while it loads (or shows its thumbnail, blurred),
+   follows the finger that swipes it, and a caption can sit under it. */
+  .viewer.is-open { animation: viewer-in var(--t-fast) ease-out; }
+  /* the focus goes to the viewer itself, which needs no ring: its buttons have theirs */
+  .viewer:focus { outline: none; }
+  /* the finger is the viewer's: no page scrolls and no page reloads under it; two fingers still zoom */
+  .viewer { touch-action: pinch-zoom; }
+  :root:has(.viewer.is-open) { overflow: hidden; overscroll-behavior: none; }
+  .viewer-veil { transition: opacity var(--t-fast) ease; }
+  .viewer-stage img { transition: opacity var(--t-fast) ease, filter var(--t-mid) ease, transform var(--t-fast) ease; -webkit-user-drag: none; }
+  .viewer-stage img:not([src]) { visibility: hidden; }
+  .viewer-stage img.is-loading { opacity: 0; }
+  .viewer-stage img.is-placeholder { filter: blur(12px); }
+  /* while a finger holds it, the photo follows it at once */
+  .viewer.is-dragging .viewer-stage img, .viewer.is-dragging .viewer-veil { transition: none; }
+  /* under the photo, in the row viewer.css keeps for an app's bar: a caption, when an item has one */
+  .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + env(safe-area-inset-bottom, 0px)); text-align: center; }
+  .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
+    font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-0-5); }
+  @keyframes viewer-in { from { opacity: 0; } }
+@media (max-width: 768px) {
+  .viewer-bar { padding-inline: var(--s-16); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .viewer.is-open { animation: none; }
+  .viewer-stage img, .viewer-veil { transition: none; }
+}

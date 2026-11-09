@@ -1,0 +1,68 @@
+/* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
+   note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
+   the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
+   role="dialog" aria-modal="true">, with its .sheet-x; ds.sheet opens and closes it.
+   A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
+  .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
+    background: color-mix(in srgb, var(--black) 55%, transparent); animation: sheet-veil var(--t-mid) ease-out; }
+  .sheet-panel { position: relative; box-sizing: border-box; min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--sheet-pad);
+    background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); color: var(--ink); outline: none; }
+  /* in its veil: a window in the middle, the room of a page of reading, scrolling inside when it is longer than the screen */
+  .sheet > .sheet-panel { width: min(560px, 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
+  /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
+     the title wraps beside it */
+  .sheet-x { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
+    display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+    margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
+    background: var(--panel-2); color: var(--dim); font: 400 var(--fs-22)/var(--lh-tight) var(--body); cursor: pointer; }
+  .sheet-x:hover { color: var(--accent); border-color: var(--accent-line); }
+  /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
+  .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
+  .sheet-sub::first-letter { text-transform: uppercase; }
+  .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
+    font: var(--title-weight) var(--fs-22)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
+  .sheet-fig.is-good { color: var(--good); }
+  .sheet-fig.is-bad { color: var(--bad); }
+  /* what it was in another currency, under its euros */
+  .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  /* its actions, on one line whatever the screen: on a phone they share the width */
+  .sheet-acts { display: flex; flex-wrap: nowrap; gap: var(--s-8); margin-top: var(--s-14); }
+  .sheet-acts > .btn { min-width: 0; overflow: hidden; }
+  /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
+  [data-theme="vitrine"] .sheet-acts { --btn-px: var(--s-20); --btn-ls: var(--ls-1-5); }
+
+/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
+   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
+  .kv { --kv-k-size: var(--fs-10); --kv-v-size: var(--fs-14); margin: 0; }
+  [data-theme="vitrine"] .kv { --kv-k-size: var(--fs-12); --kv-v-size: var(--fs-15); }
+  .kv > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
+  .kv dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  /* words as the bank wrote them */
+  .kv dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .kv dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .kv dd textarea { resize: vertical; line-height: var(--lh-text); }
+
+  @keyframes sheet-veil { from { background-color: transparent; } }
+  @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @keyframes sheet-up { from { transform: translateY(100%); } }
+@media (max-width: 768px) {
+  /* the whole width, rising from the bottom, clear of an iPhone's bar */
+  .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
+  .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
+    padding-right: calc(var(--sheet-pad) + env(safe-area-inset-right, 0px)); padding-bottom: calc(var(--sheet-pad) + env(safe-area-inset-bottom, 0px)); animation-name: sheet-up; }
+  .sheet-acts > .btn { flex: 1 1 0; padding-inline: var(--s-8); }
+  .kv > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
+     does not hold the page */
+  :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }
+}
+@media (max-width: 480px) {
+  /* vitrine's room inside a window is a computer's: a phone gives the sheet's words the width */
+  [data-theme="vitrine"] .sheet-panel { --sheet-pad: var(--s-20); }
+  [data-theme="vitrine"] .sheet-acts { --btn-ls: var(--ls-1); --btn-size: var(--fs-12); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet > .sheet-panel { animation: none; }
+}
