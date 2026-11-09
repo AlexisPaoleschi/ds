@@ -1,0 +1,59 @@
+/* The filter panel, taken from Studio: a tab on the left edge, the panel beside the content on a computer,
+   a drawer over the page on a phone; inside, groups of buttons that switch a source on or off,
+   each with its colour square. */
+  /* each source's square is the design system's .swatch (marks.css), hollow (.is-open) when off */
+  .filter-pip { position: absolute; top: var(--s-4); right: var(--s-4); }
+  button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
+  button.edgetab:hover, button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
+  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  button.edgetab .filter-pip { position: static; }
+  .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
+  .side-layout.is-open { grid-template-columns: 230px minmax(0, 1fr); }
+  .side-layout .side { order: 0; }
+  .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
+  .side-layout.is-open .side { display: block; }
+  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
+     icon button, its edges let into the head's room so that the head keeps its height */
+  .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
+    background: none; border: none; color: var(--faint); cursor: pointer; padding: 0; }
+  .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
+  .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
+  .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed] { text-align: left; border-radius: var(--r-m); background: none; border-color: transparent; padding: var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed]:hover { background: var(--panel-2); }
+  .scrim { display: none; }
+  .fgroup { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: center; }
+  .fhead { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); min-width: 92px; }
+  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
+  button.chip[aria-pressed]:hover { border-color: var(--line-2); }
+  button.chip[aria-pressed] .ico { color: var(--accent); width: 12px; height: 12px; margin-left: calc(-1 * var(--s-2)); }
+  button.chip[aria-pressed="false"] { opacity: var(--o-off); }
+  button.chip[aria-pressed="false"] .swatch { background: transparent; }
+@media (max-width: 768px) {
+    .side-layout.is-open { grid-template-columns: minmax(0, 1fr); }
+    .side-layout.is-open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-drawer); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; overscroll-behavior: contain; padding-top: calc(var(--safe-top) + var(--s-16)); padding-bottom: calc(var(--safe-bottom) + var(--s-16)); }
+    .side-layout.is-open .scrim { display: block; position: fixed; inset: 0; background: var(--veil); z-index: var(--z-scrim); touch-action: none; }
+    /* while the drawer is open, the finger scrolls the filters and the page behind stays still; a drawer left open in a
+       hidden view (an attribute hidden above it) does not hold the page */
+    :root:has(.side-layout.is-open:not([hidden] *)) { overflow: hidden; }
+}
+@media (max-width: 768px) {
+   .fhead { min-width: 100%; }
+}
+  /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
+     source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
+  .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
+  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.filter-only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
+  .side button.filter-only .ico { width: 15px; height: 15px; }
+  .side button.filter-all:hover, .side button.filter-only:hover, .side button.filter-all:focus-visible, .side button.filter-only:focus-visible { color: var(--accent-text); }
+  /* « Tout » takes no height of its own: a group's head stays the same height whether it shows or not */
+  .side .fhead { min-height: var(--s-14); }
+  .side button.filter-all { position: relative; padding-block: 0; }
+  .side button.filter-all::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
+  .side .frow { display: flex; align-items: center; }
+  .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
+  .side .frow button.filter-only { opacity: 0; }
+  .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
+  @media (hover: none) { .side .frow button.filter-only { opacity: .8; } }
