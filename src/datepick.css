@@ -1,0 +1,41 @@
+/* The date and period picker, taken from Bank's operations (ds.datePick): the quick periods two by two, the units as tabs,
+   then a head that steps (‹ novembre 2026 ›) over a grid of days, months or years. It wears the period head's popover
+   (.periodpop: a panel, framed buttons lit in gold once chosen), floating under a title or laid in the page (.is-inline). */
+  .datepick { display: grid; gap: var(--s-8); }
+  .datepick[hidden] { display: none; }
+  /* in the page: the popover's panel without its float and its shadow, as wide as it would float */
+  .datepick.is-inline { position: static; z-index: auto; width: auto; max-width: 340px; box-shadow: none; }
+  /* under a period's title it floats, even where a page lays its popovers out in place */
+  .periodleft > .datepick:not(.is-inline) { position: absolute; top: calc(100% + var(--s-8)); left: 0; width: min(340px, calc(100vw - 32px)); margin: 0; }
+  .dp-quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6); }
+  /* the tabs share the width, one part per unit offered (four by default, aligned on the four columns of months) */
+  .datepick .tabs { grid-template-columns: repeat(var(--dp-tabs, 4), minmax(0, 1fr)); }
+  .dp-quick + .dp-tabs { margin-top: var(--s-2); }
+  /* the head: the arrows in the small buttons' size, the month or the years between them, or the months' year as a pill */
+  .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
+  .datepick .dp-step { flex: none; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; font-size: var(--fs-15); }
+  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .dp-title::first-letter { text-transform: uppercase; }
+  .dp-head .pill { margin: 0 auto; }
+  /* the grid: four columns of months or years, seven of days under their initials */
+  .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
+  .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
+  .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
+  .datepick .dp-grid button.is-today:not(.on) { border-color: var(--accent-line); color: var(--ink); }
+  .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
+  .datepick button:disabled { opacity: .35; cursor: default; }
+  .datepick button:disabled:hover { border-color: var(--line); color: var(--dim); }
+  .dp-hint { margin: 0; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-ui); }
+  /* the public sites show the keys' place as their fields do: the gold edge and its halo */
+  [data-theme="vitrine"] .datepick button:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+@media (max-width: 768px) {
+  /* the period head stacks its title over its arrows: the picker is as wide as the card, up to its own width */
+  .periodleft > .datepick:not(.is-inline) { width: min(340px, 100%); }
+}
+@media (max-width: 480px) {
+  /* four units side by side in a phone's width: the tabs' capitals closer, as the calendar's views are */
+  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-0-5); }
+  .dp-quick button { padding-inline: var(--s-6); }
+}
