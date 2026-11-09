@@ -1,0 +1,17 @@
+{
+  "title": "alexispaoleschi.com, avant et après le design system",
+  "before": "http://127.0.0.1:8090",
+  "after": "http://127.0.0.1:8091",
+  "out": "compare-site",
+  "prepare": "document.querySelectorAll('.page-loader').forEach(e => e.remove())",
+  "pages": [
+    { "name": "Accueil", "path": "/", "full": false },
+    { "name": "Événements", "path": "/events/" },
+    { "name": "Lyon 2026", "path": "/events/lyon-2026/" },
+    { "name": "Lyon 2026, visionneuse", "path": "/events/lyon-2026/", "click": ".portfolio-item >> nth=1", "full": false, "wait": 1200 },
+    { "name": "Sénégal 2027", "path": "/events/senegal-2027/" },
+    { "name": "Newsletter", "path": "/events/newsletter/" },
+    { "name": "Conditions, Lyon", "path": "/events/lyon-2026/terms-and-conditions.html" },
+    { "name": "Contrat modèle, Lyon", "path": "/events/lyon-2026/model-release.html" }
+  ]
+}
