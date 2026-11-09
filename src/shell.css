@@ -47,6 +47,8 @@
   details.status .sn, details.status .sw { display: inline-flex; align-items: center; gap: var(--s-6); }
   details.status .ico { flex: none; height: 13px; opacity: .75; width: 13px; color: currentColor; }
   details.status .sw .ico { color: var(--good); opacity: 1; }
+  /* a late row is still a row: the .late badge (a task, a failed read) shares its class name */
+  details.status li.late { font: inherit; color: inherit; background: none; border: 0; padding: 0; border-radius: 0; }
   details.status li.late .sw { color: var(--accent); }
   details.status li.late .sw .ico { color: var(--accent); }
   details.status .sd { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
@@ -93,6 +95,10 @@
 @media (max-width: 640px) {
    details.status li { grid-template-columns: 1fr auto; }
    details.status .sf { display: none; }
+   /* on a phone the list takes the page's width, however short its lines */
+   footer details.status { flex: 1 1 auto; }
+   /* what went wrong goes under the whole row, lined up with the name, so that it does not squeeze the name */
+   details.status .sd { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
 }
 @media (max-width: 420px) {
    header.top { gap: var(--s-6); }

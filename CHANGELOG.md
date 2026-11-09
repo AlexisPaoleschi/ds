@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.10.3 · 9 novembre 2026
+
+- Correction : sur téléphone, la liste des sources en bas de page prend toute la largeur, même quand ses lignes sont courtes (Studio).
+- Correction : sur téléphone, ce qui n’a pas marché pour une source passe sous toute sa ligne, aligné sur son nom, au lieu d’élargir la colonne de droite et de couper le nom en deux.
+- Correction : une source en retard dans cette liste garde l’allure d’une ligne, en or, au lieu de prendre celle de la pastille rouge `.late`, qui porte le même nom de classe.
+
 ## 2.10.2 · 9 novembre 2026
 
 - Correction : sur téléphone, le tiroir de filtres et son voile passent au-dessus de la barre d’onglets du bas, qui cachait ses dernières lignes et prenait le doigt à leur place. Nouvelle couche `--z-drawer`, entre la barre et les fenêtres.
