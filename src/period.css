@@ -3,7 +3,7 @@
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
   .periodleft { position: relative; display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
   .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
-    font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); }
+    font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent); }
   .periodtitle .yr { color: var(--faint); font-weight: 600; }
@@ -20,9 +20,9 @@
   .periodpop button.on { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent); }
   /* tabs inside the picker keep their look, not the picker's framed buttons */
   .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; }
-  .periodpop .tabs button { text-align: center; background: none; border: 0; border-radius: var(--r-s); color: var(--faint); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-caps); text-transform: uppercase; padding: var(--s-6) var(--s-10); }
+  .periodpop .tabs button { text-align: center; background: none; border: 0; border-radius: var(--r-s); color: var(--faint); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; padding: var(--s-6) var(--s-10); }
   .periodpop .tabs button.on { background: var(--accent-soft); color: var(--accent); }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle { font-size: var(--fs-22); }
 }

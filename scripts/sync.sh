@@ -10,4 +10,10 @@ for kind in css js; do
   curl -fsSL "https://cdn.jsdelivr.net/gh/AlexisPaoleschi/ds@v$version/dist/ds.$kind" -o "$app/static/ds/ds-$version.$kind"
   echo "$app/static/ds/ds-$version.$kind"
 done
-echo "now link /static/ds/ds-$version.css and .js in the app's pages, in place of the previous version"
+# the fonts, next to the copy: ds.css asks for fonts/<name>.woff2 (the list is dist/fonts/index.txt)
+rm -rf "$app/static/ds/fonts" && mkdir -p "$app/static/ds/fonts"
+curl -fsSL "https://cdn.jsdelivr.net/gh/AlexisPaoleschi/ds@v$version/dist/fonts/index.txt" | while read -r font; do
+  [ -n "$font" ] && curl -fsSL "https://cdn.jsdelivr.net/gh/AlexisPaoleschi/ds@v$version/dist/fonts/$font" -o "$app/static/ds/fonts/$font"
+done
+echo "$app/static/ds/fonts/ ($(ls "$app/static/ds/fonts" | wc -l) files)"
+echo "now link /static/ds/ds-$version.css and .js in the app's pages, in place of the previous version, and remove their Google Fonts links"

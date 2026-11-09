@@ -1,20 +1,20 @@
 /* The settings page, shared by the apps: everything on it lives under body.settings,
    with no added weight (:where), so that a page can still change one of its rules. */
-  body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--fs-15); line-height: var(--lh-text); margin: 0; }
+  body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); margin: 0; }
   :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
   :where(body.settings) a { color: inherit; }
-  :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: 2px; outline: 2px solid var(--accent); }
+  :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: var(--focus-offset); outline: var(--focus); }
   :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
-  :where(body.settings) .eyebrow { color: var(--accent); font: 700 var(--fs-11)/var(--lh-tight) var(--display); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
-  :where(body.settings) h1 { font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); margin: 0; }
-  :where(body.settings) .back, :where(body.settings) .reload, :where(body.settings) .jump a, :where(body.settings) button.jl, :where(body.settings) .go, :where(body.settings) button.save { align-items: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); box-sizing: border-box; color: var(--dim); cursor: pointer; display: inline-flex; font: 600 var(--fs-13)/var(--lh-tight) var(--body); gap: var(--s-6); justify-content: center; letter-spacing: 0; min-height: 34px; padding: 0 var(--s-12); text-decoration: none; text-transform: none; white-space: nowrap; }
+  :where(body.settings) .eyebrow { color: var(--accent); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
+  :where(body.settings) h1 { font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); margin: 0; }
+  :where(body.settings) .back, :where(body.settings) .reload, :where(body.settings) .jump a, :where(body.settings) button.jl, :where(body.settings) .go, :where(body.settings) button.save { align-items: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); box-sizing: border-box; color: var(--dim); cursor: pointer; display: inline-flex; font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); gap: var(--s-6); justify-content: center; letter-spacing: var(--btn-ls); min-height: var(--btn-h); padding: 0 var(--btn-px); text-decoration: none; text-transform: var(--btn-case); white-space: nowrap; }
   :where(body.settings) .back:hover, :where(body.settings) .jump a:hover, :where(body.settings) button.jl:hover, :where(body.settings) button.jl[aria-expanded="true"] { border-color: var(--accent-line); color: var(--accent); }
   :where(body.settings) button.jl[aria-expanded="true"] { background: var(--accent-soft); }
   :where(body.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
   :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
   :where(body.settings) .outrow .lede { margin: 0; }
   :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); color: var(--bad); margin-left: auto; }
-  :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: 34px; }
+  :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: var(--btn-h); }
   :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent); }
   :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
   :where(body.settings) .job, :where(body.settings) section.card { scroll-margin-top: 14px; }
@@ -24,12 +24,12 @@
   :where(body.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
   :where(body.settings) .jump::-webkit-scrollbar { display: none; }
   :where(body.settings) .jump a { flex: none; }
-  :where(body.settings) .card { background: var(--panel); border-radius: var(--r-l); border: 1px solid var(--line); min-width: 0; padding: var(--s-16); }
-  :where(body.settings) .ct { color: var(--faint); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-4); text-transform: uppercase; }
+  :where(body.settings) .card { background: var(--card-bg); border-radius: var(--r-l); border: 1px solid var(--card-line); box-shadow: var(--card-shadow); min-width: 0; padding: var(--card-pad); }
+  :where(body.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-4); text-transform: uppercase; }
   :where(body.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
   :where(body.settings) .job { border-top: 1px solid var(--line); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); padding: var(--s-12) 0; }
   :where(body.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
-  :where(body.settings) .job .name { align-items: center; display: flex; font: 700 var(--fs-15)/var(--lh-ui) var(--display); gap: var(--s-8); }
+  :where(body.settings) .job .name { align-items: center; display: flex; font: var(--head-weight) var(--fs-15)/var(--head-lh) var(--title-font); gap: var(--s-8); }
   :where(body.settings) .dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
   :where(body.settings) .dot.ok { background: var(--good); }
   :where(body.settings) .dot.bad { background: var(--bad); }
@@ -50,7 +50,7 @@
   :where(body.settings) label.sw input:checked::after { left: 17px; }
   :where(body.settings) .group { margin-top: var(--s-16); }
   :where(body.settings) .group:first-of-type { margin-top: var(--s-4); }
-  :where(body.settings) .group h3 { color: var(--accent); font: 700 var(--fs-13)/var(--lh-tight) var(--display); letter-spacing: 0; margin: 0 0 var(--s-6); }
+  :where(body.settings) .group h3 { color: var(--accent); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; margin: 0 0 var(--s-6); }
   :where(body.settings) .field { align-items: center; border-top: 1px solid var(--line); display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; padding: var(--s-8) 0; }
   :where(body.settings) .field .lab { font-size: var(--fs-14); }
   :where(body.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
@@ -89,7 +89,7 @@
   :where(body.settings) .ll.lwarn .lx { color: var(--mid); }
   :where(body.settings) .ll.lbad .lx { color: var(--bad); }
   :where(body.settings) .logs .none { color: var(--faint); padding: 0 var(--s-12); }
-@media (max-width: 640px) {
+@media (max-width: 768px) {
   :where(body.settings) .ll { gap: 0; grid-template-columns: 1fr; }
   :where(body.settings) .ll .lt { font-size: var(--fs-11); }
   :where(body.settings) h1 { font-size: var(--fs-22); }
@@ -104,6 +104,6 @@
   :where(body.settings) .conn .det { grid-column: 1 / -1; }
   :where(body.settings) .conn a { grid-row: 1; }
 }
-@media (max-width: 420px) {
+@media (max-width: 480px) {
   :where(body.settings) .go .mx { display: none; }
 }

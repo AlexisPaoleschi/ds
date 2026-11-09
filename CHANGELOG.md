@@ -1,5 +1,109 @@
 # Changelog
 
+## 2.19.0 · 9 novembre 2026
+
+Ce qu’au moins deux des quatre projets (Bank, Studio, Selecta, le site) écrivaient chacun de leur côté, d’après l’étude des quatre.
+
+- `ds.api` : un appel qui tombe sur le serveur en train de redémarrer (502, 503, 504, ou pas de réponse) réessaie toutes les 3 s pendant une minute, comme dure une mise en ligne (`{retry: false}` pour s’en passer) ; une page Spring envoie son jeton CSRF (`<meta name="_csrf">`, `<meta name="_csrf_header">`) avec tout ce qui n’est pas une lecture ; une erreur porte `err.status` et `err.code` (le code du serveur) ; une session finie (401, ou une requête renvoyée vers la page de connexion, comme le fait Spring) mène à la connexion, et la page rouvre ensuite à l’adresse où on l’avait laissée.
+- `ds.confirm` : un champ pour un code reçu par SMS (`inputmode`, `autocomplete`, `maxlength`) : le clavier de chiffres, et le téléphone qui propose le code.
+- Nouveau : `ds.h(tag, attrs, kids)` et `ds.ico(name)` pour construire une page sans gabarit de texte, comme le fait Studio ; `ds.compact(n)` pour un chiffre court (« 57,9k », « 1,2M ») ; `ds.avatar(nom, image)`, un logo avec son initiale dessous (`.avatar`).
+- Nouveau : les sections repliables qui restent comme on les a laissées (`<details class="fold" data-fold="clé">`, `ds.fold(holder)`), dans une carte aussi (`details.card.fold`).
+- Nouveau : les lignes qui s’ouvrent d’un clic (`tr.is-link` ou `[data-row-link]` avec un lien `.row-link` ou un `data-href`), sauf sur leurs boutons, à la fin d’une sélection de texte, et dans un nouvel onglet avec Ctrl ou ⌘ ; sur iPhone aussi.
+- Nouveau : l’adresse après # comme état de la page (`ds.route(onRoute)`, `ds.route.go(parts, query)`) et `ds.seek(ancre)`, qui amène à `[data-anchor]`, ouvre les sections autour et l’éclaire un moment (`.is-lit`).
+- Nouveau : un formulaire qui supprime demande d’abord, dans la fenêtre de ds (`data-confirm`, `data-confirm-ok`) ; tout formulaire envoyé montre son bouton occupé (`.btn.is-busy`) ; les messages qu’un serveur laisse après une redirection (`<template data-toast>`) passent dans la bulle à l’arrivée.
+- Nouveau : `.visually-hidden`, et la grille de cartes qui s’adapte à la largeur (`.grid-cards`, `--grid-min`).
+- Nouveau : la visionneuse prend vie, `ds.viewer(items, {start, onChange, onClose, label})` : la croix, le voile, Échap ou le doigt tiré vers le bas la ferment ; les flèches, ← → et le doigt tournent les photos ; « 3 / 24 » ; les deux voisines chargées d’avance ; la roue sur la photo tant qu’elle charge ; le curseur y entre et revient à ce qui l’a ouverte ; la page derrière ne défile plus. Une photo peut être donnée par une fonction, appelée quand on en a besoin (les liens signés de Selecta).
+- Nouveau : `ds.viewer.bind(grille, {item})` et, sans une ligne de code, `<div data-viewer>` : une grille de liens ouvre ses photos dans la visionneuse, même sous `script-src 'self'` (le site).
+- Nouveau : la grille de photos en colonnes de même hauteur (`.photogrid`, `ds.photogrid(grille, {sizes, size, key, slider})`), venue de Selecta, et son zoom (`.photogrid-zoom`, `.zoom-slider`) : il n’offre que les tailles qui changent la grille, l’appareil s’en souvient, les photos glissent à leur place.
+- Nouveau : le bandeau photo (`.hero`, `.hero-img`, `.hero-t`, `.hero-sub`, `.hero-meta`, `.hero-acts`), venu des événements du site et de la couverture de Selecta : `.is-full`, `.is-short`, `.is-bottom`, `.is-parallax`.
+- Nouveau : le lien retour (`.back-link`) ; sur une photo, le bouton du site (`.on-photo`).
+- Nouveau : le choix de date et de période, venu des opérations de Bank (`ds.datePick`, `.datepick`) : des périodes rapides (« Ce mois-ci », « Le mois dernier », « Cette année »…), puis un jour, un mois, une année ou deux dates en onglets ; les jours depuis le lundi, aujourd’hui cerclé d’or, rien au-delà de `min` et `max` ; deux dates en deux touches ; ‹ › font défiler les mois ou les années, et `step(±1)` avance la période de sa propre longueur ; tout au clavier aussi ; les jours sont ceux de Paris. Le choix du mois du calendrier passe par lui.
+- Nouveau : le donut des dépenses (`ds.chart.donut`), une part par ligne aux couleurs de la palette, le total au centre, la légende à côté ; une part choisie sort, et le centre dit son montant.
+- Nouveau : les barres en paires (`ds.chart.bars(…, {pairs})`), les entrées et sorties côte à côte chaque mois, avec la légende qui additionne chaque série. Les barres simples ne changent pas.
+- `node checks/behaviours.js` (33 vérifications), `node checks/photo.js` (43) et `node checks/date.js` (23) les vérifient dans un vrai navigateur.
+
+## 2.18.0 · 9 novembre 2026
+
+Ce que Bank et Studio avaient chacun et qu’une autre appli peut reprendre ; ce qui est leur métier (les voyages et les règles de Bank, la fiche d’une personne et les chiffres des posts de Studio) reste chez eux.
+
+- Nouveau : la fiche (`.sheet`, `.sheet-panel`, `.sheet-x`, `.sheet-sub`, `.sheet-t`, `.sheet-fig`, `.sheet-acts`), venue de Bank : un panneau à droite sur ordinateur, qui monte du bas sur téléphone. `ds.sheet(el, {onOpen, onClose})` l’ouvre et la ferme : le curseur y entre et y reste, revient à ce qui l’a ouverte ; Échap, le voile ou la croix la ferment, une fenêtre de `ds.confirm` posée dessus d’abord ; sur téléphone la page derrière ne défile plus. Et les lignes clé et valeur (`<dl class="kv">`).
+- Nouveau : le tableau (`table.tbl`, `.tbl-wrap`), venu de Bank pour ses opérations et prêt pour les personnes de Studio : les titres de colonne trient (`ds.sortable(table, {by, up, key, menu, onSort})`), la colonne en service montre son sens ; sur téléphone (`.is-cards`) chaque ligne devient une petite carte, et un menu (`.tbl-sortmenu`) remplace les titres.
+- Nouveau : le choix de plusieurs lignes et sa barre (`.sel-box`, `.sel-all`, `.selbar`), `ds.selection(holder, {bar, count, onChange})` : Maj-clic pour une suite de lignes, le choix gardé quand la liste se redessine.
+- Nouveau : la pilule (`.pill`, `.pv`, `.pills`) : un menu court qui dit son choix, le vrai menu posé dessus pour que le téléphone ouvre le sien ; `ds.pills`.
+- Nouveau : le sélecteur avec recherche (`ds.picker(holder, {items, value, first, onPick, opener})`) : sans accents, au clavier, par groupes (une catégorie, puis ses sous-catégories) ; et le bouton pointillé qui ajoute (`.add-btn`).
+- Nouveau : déplacer à la poignée (`.grip`, `ds.reorder(list, {item, handle, onEnd})`), à la souris, au doigt ou au clavier ; il remplacera Sortable.js dans les réglages de Bank.
+- Nouveau : la carte au filet de sa couleur (`.card.is-ruled.is-tinted`, `--n`) et une barre par catégorie (`.meter`).
+- Nouveau : le calendrier, venu de l’agenda de Studio (`ds.calendar`) : le mois en cases, chaque élément une ligne à sa marque de couleur (carré plein ou vide, point, barre fine ou épaisse), « +N » au-delà de huit, aujourd’hui en or et le jour choisi ouvert dessous ; la semaine en sept colonnes ; la liste des jours, la semaine d’avant dépliable ; le titre ouvre le choix du mois. Sur téléphone, une case ne garde que trois points de couleur, puis « +N ».
+- Nouveau : les graphiques de Studio (`ds.chart`) : la courbe et son échelle (`line`), les barres sur une échelle ronde avec la moyenne et le mois en cours hachuré (`bars`), l’année de publications en cases (`heat`), les petites barres des stories (`spark`), la barre partagée et sa légende (`split`). La couleur d’une série vient d’un jeton de la palette.
+- Nouveau : les classements (`.ranks`, `ds.rank`), la place, les trois premiers en or, une barre de part en option ; les mini-tuiles des chiffres de référence (`.minitiles`, `ds.minitiles`) ; le verdict d’un chiffre (`.verdict`, `ds.verdict`), avec « fort », « moyen » ou « faible ».
+- Nouveau : le choix de période (`ds.periodPick`) : des boutons sur ordinateur, une liste sur téléphone.
+- Nouveau : le témoin « nouvelle version » sur le bouton de rechargement (`.newver`, `ds.version`), le direct du serveur avec sa reconnexion (`ds.stream`), et la copie sur l’appareil qui ouvre la page tout de suite (`ds.keep`), sans rien casser là où l’appareil ne garde rien.
+- La page vitrine tient dans un téléphone : la démo du panneau de filtres, forcée côte à côte, élargissait toute la colonne ; elle s’empile sur téléphone. Les cartes de la colonne Atelier n’ont plus d’espace vide en bas.
+- `node checks/bank.js` (38 vérifications) et `node checks/studio.js` (31) vérifient ces composants dans un vrai navigateur.
+
+## 2.17.0 · 9 novembre 2026
+
+Ce que Bank et Studio écrivaient encore chacun de leur côté, autour de l’en-tête :
+
+- La barre des vues sur téléphone : `<div class="tabs is-bar">`, dans l’en-tête sur ordinateur, en bas de l’écran sur téléphone, à portée du pouce, l’icône au-dessus du nom ; le point d’or `<i class="tabn">` sur le coin de l’icône quand quelque chose attend dans une vue. Bank (`#views`) et Studio (`#tabs`) avaient les mêmes règles sous deux noms.
+- `ds.busy` : la roue de chargement de l’en-tête. `start(text, {key})` l’affiche à 0 % ; le pourcentage monte seul, au rythme qu’a pris la dernière fois ce chargement (`key`), sans jamais reculer ; `pct(p)` le pousse quand une étape est finie ; `done()` montre 100 % puis la coche verte qui s’efface. Le pourcentage du premier chargement, au milieu de la page, suit le même. La classe de l’en-tête est `loading` partout (Studio disait `loading-on`).
+- `ds.trouble(key, {name, text, retry, check})` : une source qui n’a pas pu être lue le dit une fois par visite, dans la bulle d’erreur, avec « Réessayer » ; la même bulle dit ensuite « nouvel essai… », puis « à jour » ou « toujours impossible ». `ds.trouble.ok(key)` quand elle remarche : sa prochaine panne sera redite.
+- `ds.drawer(…).mark(on)` : le point d’or sur l’onglet du tiroir quand un filtre cache quelque chose.
+- `.boot` : la place du premier chargement, au milieu de la page, que les deux applis écrivaient pareil.
+- Les outils gardent la place de la barre de défilement (`scrollbar-gutter: stable`), pour que la page ne bouge pas de côté quand une liste s’allonge ; les sites publics (Vitrine), qui ne l’ont pas, non.
+- La page vitrine montre l’en-tête avec sa roue et ses vues, et deux boutons pour essayer la roue et une source en panne. `checks/behaviours.js` vérifie ces quatre comportements (24 vérifications).
+
+## 2.16.0 · 9 novembre 2026
+
+Ce que Bank et Studio écrivaient chacun de leur côté, dans `ds.js` :
+
+- `ds.drawer(name, {onChange})` : le tiroir de filtres. L’onglet du bord, le voile et la croix l’ouvrent et le ferment, l’appareil se souvient s’il était ouvert ; nouveau : sur téléphone, Échap le ferme, le curseur y entre quand il s’ouvre et revient à l’onglet quand il se ferme, et l’onglet dit s’il ouvre ou ferme (`aria-expanded`). Le balisage porte `data-drawer`, `data-drawer-toggle` et `data-drawer-close` ; une page qui se redessine (Studio) lit `.open` dans `onChange`.
+- `ds.status(holder, {summary, late, rows, link})` : la liste des sources en bas de page, le même balisage partout ; chaque appli ne donne que ses lignes. Ouverte, elle le reste d’une visite à l’autre.
+- `ds.when(t)`, `ds.ago(t)`, `ds.soon(t)` : « aujourd’hui à 6h00 », « hier à 21h04 », « le 1er nov. à 9h00 », « il y a 3 min », « dans 12 min », à l’heure de Paris quel que soit l’appareil, en français ou en anglais selon la page. `ds.date(t, style)` écrit une date : « 9 novembre 2026 », « dimanche 1er novembre », « novembre 2026 », « 09/11/26 », « 9 nov. ».
+- `ds.number(n, décimales)` et `ds.money(n, {currency, signed, decimals})` : « 1 061 499,82 », « −1 234,50€ », « +12€ », avec une espace que les polices dessinent (le français en met une fine qu’Archivo et IBM Plex Mono ne dessinent pas).
+- `ds.api(method, url, body)` : l’appel au serveur de l’appli, avec l’en-tête que nomme sa balise `<html data-api="X-Bank">` ; une session finie renvoie vers `/login`, une erreur dit les mots du serveur (ceux de Bank comme ceux de Studio).
+- `ds.jobs(holder, jobs, {logsLink, reload})` : la section Synchros des réglages. Une tâche par bloc (son état, son dernier et son prochain passage, ce qu’elle a trouvé, ses interrupteurs), « Lancer maintenant », et le journal en direct, relu toutes les 2 s, qui suit la fin tant qu’on ne remonte pas.
+- `checks/behaviours.js` les vérifie dans un vrai navigateur : `node checks/behaviours.js`.
+
+Et la palette vive de 2.10.4 remplace celle, plus douce, de 2.14.0 : les couleurs d’avant le design system, accordées.
+
+## 2.15.0 · 9 novembre 2026
+
+- Nouveau : les polices des deux thèmes viennent avec le design system (`dist/fonts`, `src/fonts.css`, faits par `scripts/fonts.py` depuis Google Fonts) : plus aucune page ne demande rien à Google. Ce sont les mêmes fichiers qu’avant, en alphabets latin et latin étendu ; Archivo, IBM Plex Sans et Urbanist sont des polices variables, un fichier pour toutes leurs graisses. Une appli copie `dist/fonts` dans `static/ds/fonts`, à côté de sa copie (`scripts/sync.sh` le fait), et retire ses liens vers Google Fonts.
+- Nouveau : une seule planche d’icônes pour toutes les applis (`src/icons.js`), que `ds.js` met en haut de la page : 212 icônes. Les 39 de Bank et de Studio, dont les 10 qu’elles avaient en double, à l’identique (« retry » prend le dessin de « reload ») ; 156 de Lucide (licence ISC, quelques-unes de Feather, MIT), au même trait, pour l’interface, les états, les personnes, la photo et la galerie, l’agenda et les ateliers, l’argent, les catégories de dépenses et les réglages ; 17 logos de Simple Icons (CC0) : Patreon, YouTube, Facebook, TikTok, Threads, WhatsApp, Pinterest, Vimeo, Behance, Flickr, PayPal, Notion, Google, Gmail, Spotify, Mastodon, Telegram. Une page garde `<use href="#i-nom">` et peut retirer sa propre copie ; la page vitrine les montre toutes, par groupe.
+
+## 2.14.0 · 9 novembre 2026
+
+- Atelier : quatre teintes de plus dans la palette, à la même force que l’or : `--c-rouge`, `--c-vert`, `--c-jaune`, `--c-vert-eau`. Elles rendent aux catégories et aux voyages de Bank la famille de couleur qu’ils avaient avant la palette ; une banque n’en prend jamais une rouge, verte ou jaune, couleurs des entrées, des sorties et des alertes.
+
+## 2.13.0 · 9 novembre 2026
+
+Les largeurs du site partout, un message sous les champs, l’avant / après, et les couleurs à la force de l’or.
+
+- Les largeurs d’écran deviennent celles du site, trois au lieu de quatre : 480, 768 et 1024px (au lieu de 420, 640, 980 et 1280). Dans les composants, 640 devient 768 et 420 devient 480. Une appli les reprend avec son avant/après.
+- Nouveau : la ligne sous un champ (`.field-note`), la même pour le site et Selecta : or foncé pour un succès, rouge pour un refus (le champ prend alors un bord rouge), et sa place gardée même vide (`is-reserved`).
+- Nouveau : `scripts/compare.js`, l’avant / après d’une appli, page par page, sur ordinateur et sur téléphone, avec ce qui a changé en rouge ; il peut montrer une appli avec une version candidate du design system.
+- Atelier : les huit couleurs de la palette prennent la clarté et la vivacité de l’or (elles étaient un tiers plus vives, et quatre un peu plus sombres) ; le vert des entrées et le rouge des sorties prennent la clarté de l’or en restant un peu plus vifs que la palette ; le jaune des alertes ne change pas, pour qu’on le distingue toujours de l’or.
+
+## 2.12.0 · 9 novembre 2026
+
+Le thème Vitrine pris sur alexispaoleschi.com, et les pièces que le site et Selecta partagent.
+
+- Les composants ne décident plus eux-mêmes de leur caractère : ils lisent des rôles que chaque thème remplit, pour les titres (`--title-*`, `--head-*`), les étiquettes en capitales (`--label-*`), le texte courant (`--text-*`), les boutons (`--btn-*`), les champs (`--field-*`), les cartes (`--card-*`) et le contour du clavier (`--focus`). Atelier y garde ses valeurs : rien ne change à l’écran.
+- Vitrine prend les valeurs d’alexispaoleschi.com : page crème, cartes et champs blancs, traits or à 20%, deux gris (85% et 60%), titres en Gilda Display jamais grasse, en capitales espacées, interligne 1,8 ; texte de 16px léger à interligne 2 ; boutons de 14px en capitales espacées de 2,5px, 63px de haut, qui se remplissent d’or et montent au survol ; champs de 16px (le moins qui évite le zoom de l’iPhone) avec un halo or ; paragraphes à 85% et liens or soulignés ; un message pris sur les notes du site (texte de 16px léger, icône or de 24px) ; une bulle plus aérée ; une fenêtre dont la question est en Gilda de 24px ; ombres douces ; mouvements de 0,3 et 0,4s. Un succès s’écrit en or foncé. Le contour du clavier reste celui du navigateur.
+- Nouveau : la barre du haut (`.topbar`), prise sur le site, et une deuxième largeur de page, 1200px pour un site (`--page-site`), à côté des 1500px d’un outil.
+- Nouveau : la visionneuse de photos (`.viewer`), prise sur le site, avec la place sous la photo pour la barre de Selecta.
+- Nouveau : les voiles et les ombres de texte sur photo (`--overlay-*`, `--text-shadow-*`), une seule roue de chargement (`.spinner`, `is-medium`, `is-large`, `on-photo`), la page document complète (titres, listes, impression), et les mots de `ds.js` en anglais pour une page en anglais.
+- Nouveau : la pastille (`.badge`, `is-bad`, `is-soft`), le petit bouton (`.btn.is-small`), la carte au filet or (`.card.is-ruled`), son titre (`.card-title`) et ses lignes de détails (`.card-meta`), la carte avec photo de couverture (`.card.has-cover`, `.card-cover`, `.card-body`), en grand ou en petit (`.card.is-small`) et la carte qui se clique (`.card.is-link`), l’en-tête de section (`.section-head`, son sous-titre `.section-sub`) et le pied de page d’un site (`.site-footer`), dans `src/site.css`.
+
+## 2.11.0 · 8 novembre 2026
+
+Le thème Vitrine retrouve l’or et les angles d’alexispaoleschi.com.
+
+- Vitrine : l’or est celui du site, `#c9a961`, la référence sur laquelle toutes les couleurs sont accordées ; l’or foncé `#b39654` reste pour ce qui demande plus de poids (`--accent-strong`).
+- Vitrine : angles carrés, `--r-s`, `--r-m` et `--r-l` à 0, comme sur le site. Atelier garde 4, 6 et 8px.
+- Le contour du focus prend l’arrondi `--r-s` au lieu de 3px : carré dans Vitrine, 4px dans Atelier.
+
 ## 2.10.4 · 9 novembre 2026
 
 - Atelier : la palette reprend les couleurs vives qu’avaient les applis avant le design system, à la place des huit couleurs douces. Quatorze jetons : `--c-rouge`, `--c-corail`, `--c-orange`, `--c-ambre`, `--c-jaune`, `--c-vert`, `--c-emeraude`, `--c-turquoise`, `--c-ciel`, `--c-bleu`, `--c-violet`, `--c-mauve`, `--c-rose`, `--c-ardoise`. Les plus sombres d’avant sont éclaircies pour se lire sur le fond nuit (MAIF, Boursorama, Instagram, Katline) ; celles qui se confondaient dans un même graphique sont écartées (Déplacements et Administratif, Shopping, Abonnements et « À classer », Courses et Soins). L’or, le vert des entrées, le rouge des sorties et le jaune des alertes ne changent pas.
