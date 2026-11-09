@@ -1,0 +1,81 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><script src="../dist/ds.js" defer></script></head>
+<body>
+<div class="wrap">
+<section class="card" id="ops-card"><h2 class="ct">Opérations <label class="pill is-filter" id="pill"><span class="pv"></span><select id="pill-sel" aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option></select></label></h2>
+  <div class="pills"><label class="pill tbl-sortmenu" id="sortpill"><span class="pv"></span><select id="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option></select></label></div>
+  <div class="selbar" id="bar" hidden><span class="selbar-n"></span><button class="btn is-act" type="button">Renommer</button><button class="btn" type="button" data-sel-clear>Annuler</button></div>
+  <div class="tbl-wrap"><table class="tbl is-cards" id="ops">
+    <thead><tr><th class="tbl-ck"><input type="checkbox" class="sel-all" aria-label="Tout choisir"></th><th class="tbl-wide"><button class="sort" type="button" data-sort="date">Date</button></th><th><button class="sort" type="button" data-sort="nom">Opération</button></th><th data-label="Note"><button class="sort" type="button" data-sort="note">Note</button></th><th class="is-num"><button class="sort" type="button" data-sort="montant">Montant</button></th></tr></thead>
+    <tbody>
+      <tr class="is-link" data-key="a"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-15">15/08/26</td><td class="tbl-main">Magasins U<span class="tbl-phone">15/08 · Revolut</span></td><td data-label="Note">courses</td><td class="tbl-end is-num">−119,89€</td></tr>
+      <tr class="is-link" data-key="b"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-14">14/08/26</td><td class="tbl-main">Écoles<span class="tbl-phone">14/08 · BoursoBank</span></td><td data-label="Note"></td><td class="tbl-end is-num is-good">+25,00€</td></tr>
+      <tr class="is-link" data-key="c"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-12">12/08/26</td><td class="tbl-main">SNCF Connect<span class="tbl-phone">12/08 · BoursoBank</span></td><td data-label="Note">train</td><td class="tbl-end is-num">−64,30€</td></tr>
+      <tr class="is-link" data-key="d"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-01">01/08/26</td><td class="tbl-main">Salaire<span class="tbl-phone">01/08 · Fortuneo</span></td><td data-label="Note">août</td><td class="tbl-end is-num is-good">+3&nbsp;200,00€</td></tr>
+      <tr class="is-link" data-key="e"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-07-30">30/07/26</td><td class="tbl-main">Amazon<span class="tbl-phone">30/07 · Revolut</span></td><td data-label="Note"></td><td class="tbl-end is-num">−1&nbsp;234,50€</td></tr>
+    </tbody>
+  </table></div>
+  <div id="people"></div>
+</section>
+<section class="card">
+  <button class="btn" type="button" id="open">Ouvrir la fiche</button>
+  <div class="meter" id="meter" style="--n: var(--c-vert)"><i style="width: 40%"></i></div>
+  <dl class="tiles is-compact" id="ctiles"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile up"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile down"><dt>Sorties</dt><dd>−2 140,00€</dd></div></dl>
+  <div class="card is-ruled is-tinted" id="tinted" style="--n: var(--c-rose)"><h3 class="ct">BoursoBank</h3></div>
+  <div class="card is-ruled" id="ruled"><h3 class="ct">Or</h3></div>
+  <button class="add-btn" type="button" id="add"><span class="add-plus" aria-hidden="true">+</span><span class="add-t"><b>Connecter une banque</b><small>Toutes les banques</small></span></button>
+  <div id="banks" hidden></div>
+  <div id="cats"></div>
+</section>
+<section class="card">
+  <div id="order">
+    <div data-key="bourso"><h4 class="sect"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>BoursoBank</h4>
+      <ul class="rows inner"><li data-key="b1"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte joint</span></li><li data-key="b2"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Livret A</span></li><li data-key="b3"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">LDD</span></li></ul></div>
+    <div data-key="revolut"><h4 class="sect"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>Revolut</h4>
+      <ul class="rows inner"><li data-key="r1"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte courant</span></li></ul></div>
+    <div data-key="fortuneo"><h4 class="sect"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button>Fortuneo</h4>
+      <ul class="rows inner"><li data-key="f1"><button class="grip" type="button"><svg class="ico" aria-hidden="true"><use href="#i-grip"/></svg></button><span class="ttl">Compte courant</span></li></ul></div>
+  </div>
+</section>
+<div style="height: 1200px"></div>
+</div>
+<div class="sheet" id="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true" aria-labelledby="sheet-t">
+  <button class="sheet-x" type="button">×</button>
+  <p class="sheet-sub">samedi 15 août 2026</p><h2 class="sheet-t" id="sheet-t">Magasins U</h2><p class="sheet-fig">−119,89€</p>
+  <dl class="kv"><div><dt>Catégorie</dt><dd><div id="sheet-pick"></div></dd></div><div><dt>Note</dt><dd><textarea id="note" rows="2"></textarea></dd></div>
+    <div><dt>Long</dt><dd style="height: 1400px">Une fiche longue, pour la faire défiler.</dd></div></dl>
+  <div class="sheet-acts"><button class="btn is-act" type="button" id="first-act">Renommer</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn" type="button" id="last-act">Historique</button></div>
+</div></div>
+<button class="edgetab" data-drawer-toggle="check-side" type="button"><span class="vt">Filtres</span></button>
+<div class="side-layout" data-drawer="check-side"><div class="scrim"></div><aside class="side"><div class="sidehead">Filtres<button type="button" data-drawer-close="check-side">×</button></div></aside><div></div></div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    window.log = [];
+    window.side = ds.drawer("check-side");
+    window.sort = ds.sortable("#ops", { by: "date", up: false, menu: "#sortmenu" });
+    window.sel = ds.selection("#ops-card", { count: n => n + (n > 1 ? " opérations choisies" : " opération choisie"), onChange: k => log.push("sel:" + k.join(",")) });
+    window.sheet = ds.sheet("#sheet", { onClose: () => log.push("closed") });
+    document.getElementById("open").onclick = e => sheet.open();
+    document.querySelector("#ops tbody").addEventListener("click", e => { if (!e.target.closest("input")) sheet.open(document.getElementById("open")); });
+    // a page that draws its table anew at each sort, as Studio's people: its choice kept under a key
+    window.people = [["Élisa", 12, "2026-11-01"], ["Zoé", 3, "2026-10-02"], ["Anna", null, "2026-09-03"], ["Marc", 40, ""]];
+    window.drawPeople = () => {
+      const holder = document.getElementById("people");
+      holder.innerHTML = `<table class="tbl" id="ppl"><thead><tr><th><button class="sort" type="button" data-sort="0">Nom</button></th><th class="is-num"><button class="sort" type="button" data-sort="1">Score</button></th><th><button class="sort" type="button" data-sort="2" data-first="down">Vu le</button></th></tr></thead><tbody>` +
+        people.map(p => `<tr><td>${p[0]}</td><td class="is-num">${p[1] == null ? "" : p[1]}</td><td>${p[2]}</td></tr>`).join("") + `</tbody></table>`;
+      ds.sortable(holder.firstChild, { key: "check-people", onSort: (by, up) => { log.push("sort:" + by + ":" + up);
+        people.sort((a, b) => { const x = a[by], y = b[by]; if (x == null || x === "" || y == null || y === "") return (x == null || x === "") - (y == null || y === ""); return (x < y ? -1 : x > y ? 1 : 0) * (up ? 1 : -1); }); drawPeople(); } });
+    };
+    drawPeople();
+    const BANKS = ["BoursoBank", "Crédit Agricole", "Crédit Mutuel", "BNP Paribas", "LCL", "Société Générale", "Revolut", "N26", "Qonto", "Shine", "Fortuneo", "Monabanq", "La Banque Postale", "Hello bank!"];
+    window.banks = ds.picker("#banks", { items: null, opener: "#add", first: ["BoursoBank", "LCL", "Revolut"], limit: 12, placeholder: "Chercher une banque…", empty: "Aucune banque ne correspond.",
+      onPick: x => log.push("bank:" + x.value) });
+    window.setBanks = () => banks.set(BANKS.map(b => ({ value: b, label: b, initial: b.charAt(0), color: "var(--c-bleu)", cta: "Connecter →", sub: b === "BoursoBank" ? "déjà reliée" : "" })));
+    const CATS = { Courses: ["Supermarché", "Boucherie"], Loisirs: ["Restaurant", "Bar", "Cinéma"], Déplacements: ["Train", "Péage"] };
+    const items = Object.keys(CATS).flatMap(c => CATS[c].map(s => ({ value: c + "|" + s, label: s, group: c, keywords: c, color: "var(--c-vert)", icon: "food" })));
+    window.cats = ds.picker("#cats", { items, value: "Loisirs|Bar", onPick: x => log.push("cat:" + x.value) });
+    window.inSheet = ds.picker("#sheet-pick", { items, onPick: x => log.push("sheetcat:" + x.value) });
+    window.order = ds.reorder("#order", { onEnd: (list, it) => log.push("groups:" + list.map(x => x.dataset.key).join(",") + ":" + it.dataset.key) });
+    document.querySelectorAll("#order .inner").forEach(ul => ds.reorder(ul, { item: "li", onEnd: list => log.push("accs:" + list.map(x => x.dataset.key).join(",")) }));
+  });
+</script></body></html>

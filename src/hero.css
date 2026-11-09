@@ -1,0 +1,64 @@
+/* The hero: a photo across the page with its title over it, taken from alexispaoleschi.com's events (the event pages, the
+   events and the newsletter) and Selecta's gallery cover. <section class="hero"> holds <img class="hero-img"> (or a
+   <picture class="hero-img">, or the page's own background-image) and <div class="hero-in"> with .hero-t, .hero-sub (gold
+   capitals), .hero-meta (a date, a place) and .hero-acts (its buttons); a .back-link.on-photo may sit in its corner.
+   A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
+   in both themes, each with its own title font.
+   .is-full fills the screen (an event page), .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
+   left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
+   still on a touch screen and for those who ask for less motion). */
+  .hero { --hero-veil: var(--overlay-black-medium); --hero-t-size: clamp(var(--fs-36), 6vw, var(--fs-56)); --hero-t-lh: var(--title-lh); --hero-t-ls: var(--section-ls);
+    --hero-pad: var(--s-48); --hero-side: var(--s-24);
+    position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    min-height: clamp(300px, 60vh, 620px); overflow: hidden; color: var(--white); text-align: center;
+    padding: var(--hero-pad) max(var(--hero-side), env(safe-area-inset-right, 0px)) var(--hero-pad) max(var(--hero-side), env(safe-area-inset-left, 0px));
+    background-color: var(--night-800); background-position: center; background-size: cover; background-repeat: no-repeat; }
+  /* vitrine's titles have room between their lines for running text; a hero's one or two big lines need less */
+  [data-theme="vitrine"] .hero { --hero-t-lh: var(--lh-ui); --hero-sub-weight: var(--text-weight); }
+  .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
+  .hero-img img { position: static; }
+  /* the veil, over the photo and under the words */
+  .hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-veil); pointer-events: none; }
+  .hero-in { position: relative; z-index: var(--z-raise); display: flex; flex-direction: column; align-items: center; gap: var(--s-12); width: min(100%, 900px); min-width: 0; }
+  .hero-in > * { margin: 0; }
+  .hero-t { color: var(--white); overflow-wrap: anywhere; text-wrap: balance; text-shadow: var(--text-shadow-lg);
+    font: var(--title-weight) var(--hero-t-size)/var(--hero-t-lh) var(--title-font); letter-spacing: var(--hero-t-ls); text-transform: var(--title-case); }
+  /* gold capitals: bold in atelier, light as the site's in vitrine */
+  .hero-sub { color: var(--accent); text-shadow: var(--text-shadow-lg);
+    font: var(--hero-sub-weight, var(--label-weight)) clamp(var(--fs-15), 2.2vw, var(--fs-24))/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-3); text-transform: uppercase; }
+  .hero-meta { color: var(--white); text-shadow: var(--text-shadow-md);
+    font: var(--text-weight) clamp(var(--fs-14), 1.6vw, var(--fs-20))/var(--lh-ui) var(--body); letter-spacing: var(--ls-1-5); }
+  .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-12); margin-top: var(--s-24); }
+  /* a hero's buttons are the site's large ones */
+  .hero-acts .btn { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
+  /* the way back, in the hero's top left corner, clear of an iPhone's notch */
+  .hero > .back-link { position: absolute; z-index: var(--z-raise); top: max(var(--s-24), env(safe-area-inset-top, 0px)); left: max(var(--s-24), env(safe-area-inset-left, 0px)); }
+
+  .hero.is-full { min-height: 100vh; min-height: 100svh; }
+  .hero.is-short { --hero-t-size: var(--fs-display-2); --hero-pad: var(--s-32); --hero-side: var(--s-32); min-height: clamp(220px, 34vh, 320px); }
+  .hero.is-bottom { --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent); align-items: stretch; justify-content: flex-end; text-align: left; }
+  .hero.is-bottom .hero-in { align-items: flex-start; width: 100%; gap: var(--s-6); }
+  .hero.is-bottom .hero-meta { font: var(--label-weight) var(--fs-12)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  .hero.is-bottom .hero-acts { justify-content: flex-start; margin-top: var(--s-12); }
+
+  /* parallax: the photo, taller than the hero, drifts down as the page goes up, so it seems further away; a background
+     image stays put instead, as on the site's event pages */
+  @keyframes hero-drift { from { transform: translateY(-10%); } to { transform: translateY(10%); } }
+@media (hover: hover) {
+  .hero.is-parallax { background-attachment: fixed; }
+  @supports (animation-timeline: view()) {
+    .hero.is-parallax .hero-img { top: -15%; bottom: auto; height: 130%; animation: hero-drift linear both; animation-timeline: view(); }
+  }
+}
+@media (max-width: 768px) {
+  .hero { --hero-pad: var(--s-32); }
+}
+@media (max-width: 480px) {
+  .hero { --hero-pad: var(--s-48); --hero-side: var(--s-16); min-height: clamp(300px, 56vh, 520px); }
+  .hero.is-short { --hero-pad: var(--s-20); --hero-side: var(--s-16); min-height: 220px; }
+  .hero > .back-link { top: max(var(--s-16), env(safe-area-inset-top, 0px)); left: max(var(--s-16), env(safe-area-inset-left, 0px)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-parallax { background-attachment: scroll; }
+  .hero.is-parallax .hero-img { top: 0; height: 100%; animation: none; }
+}
