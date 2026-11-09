@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en" data-theme="vitrine">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kit du site · Design system</title>
+<link rel="stylesheet" href="dist/ds.css">
+<link rel="stylesheet" href="dist/ds-site.css">
+<style>
+  /* the page itself: the site kit's pieces as an event page of alexispaoleschi.com draws them */
+  .kit-intro { max-width: 760px; margin: 0 auto; padding: var(--s-48) var(--s-20) var(--s-24); }
+  .kit-intro h1 { margin: 0 0 var(--s-12); font: 400 var(--fs-32)/var(--lh-tight) var(--display); letter-spacing: var(--ls-063); text-transform: uppercase; }
+  .kit-intro p { margin: 0 0 var(--s-12); color: var(--dim); }
+  .kit-intro code { font: 500 var(--fs-13)/1 var(--mono); }
+  .kit-hero { background: var(--band); }
+</style>
+</head>
+<body>
+<div class="kit-intro">
+  <h1>Le kit du site</h1>
+  <p>Ce que les pages d’alexispaoleschi.com partagent et qu’aucune appli n’utilise : <code>dist/ds-site.css</code> et <code>dist/ds-site.js</code>, chargés après <code>ds.css</code>. Les applis ne les chargent pas.</p>
+  <p>Cette page reprend les pages du site : la barre et son menu de téléphone (descendre sous l’en-tête pour la voir), les sections d’une page d’événement, son programme, ses tarifs, la réservation, la FAQ, puis une carte de la liste des événements, deux prix côte à côte, les témoignages, la carte de la newsletter et les bandeaux du pied de page. Les icônes viennent du fichier <code>dist/icons.svg</code>. L’accueil, qui défile écran par écran, se voit sur le site lui-même.</p>
+  <p><a href="index.html">← Le design system</a></p>
+</div>
+<div data-href="index.html" data-label="Design system" id="back-button"></div>
+<div data-cta-href="#booking" data-cta-label="Book Now" data-links='[{"href": "#schedule", "label": "Schedule"}, {"href": "#pricing", "label": "Pricing"}, {"href": "#faq", "label": "FAQ"}]'
+     data-title="Lyon 2026" id="nav"></div>
+<section class="hero is-full kit-hero"><div class="hero-in"><h1 class="hero-t">Lyon 2026</h1><p class="hero-sub">Lyon, France</p><p class="hero-meta">June 8–12, 2026</p>
+  <div class="hero-acts"><a class="btn is-large is-save" href="#booking">Book Your Spot</a></div></div></section>
+<section class="content-section">
+        <div class="elegant-box">
+            <div class="section-head">
+                <h2>Shooting in a Lyon mansion</h2>
+            </div>
+            <p class="section-text">
+                Join us for a 3-day nude art photography workshop in one of Lyon's most prestigious mansions with
+                neo-Renaissance Italian architecture. Limited to a select group of photographers, this event offers
+                access to three exceptional models in this luxurious historic estate. </p>
+            <p class="section-text">
+                Over three intensive days, you'll work in small groups (2 photographers per model) to create beautiful
+                artistic nude photography in an environment designed to inspire. From the grand Louis XV salon to the
+                heated pool, every corner of this historic estate offers unique possibilities for your art. </p>
+            <div class="highlight-box">
+                <p class="highlight-text">
+                    <span class="highlight-line">3 days of shooting</span> <span class="highlight-separator"> • </span>
+                    <span class="highlight-line">3 exclusive models</span> <span class="highlight-separator"> • </span>
+                    <span class="highlight-line">Historic mansion</span> <span class="highlight-separator"> • </span>
+                    <span class="highlight-line">All-inclusive luxury</span>
+                </p>
+                <ul class="highlight-list">
+                    <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><span>3 days of shooting</span></li>
+                    <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><span>3 exclusive models</span></li>
+                    <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><span>Historic mansion</span></li>
+                    <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><span>All-inclusive luxury</span></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+<section class="content-section dark-section" id="schedule">
+        <div class="elegant-box">
+            <div class="section-head">
+                <h2>Schedule & Practical Information</h2>
+            </div>
+
+            <div class="schedule-container">
+                <div class="schedule-day">
+                    <h3 class="day-title">Day 1 – June 8, 2026</h3>
+                    <p class="day-description">Arrival day. Check-in, welcome dinner, and orientation. Discover the
+                        venue and meet your fellow photographers.</p>
+                </div>
+
+                <div class="schedule-day highlight-day">
+                    <h3 class="day-title">Days 2-4 – June 9-11, 2026</h3>
+                    <p class="day-description">Intensive shooting days with three 2-hour sessions each day:</p>
+                    <ul class="schedule-list">
+                        <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><strong>Morning Session</strong> — 9h30 - 11h30</li>
+                        <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><strong>Early Afternoon</strong> — 14h - 16h</li>
+                        <li><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg><strong>Golden Hour</strong> — 16h30 - 18h30</li>
+                    </ul>
+                    <p class="day-note">Working in pairs (2 photographers per model), rotating throughout the workshop
+                        to work with all three models. Schedule times may be slightly adjusted.</p>
+                </div>
+
+                <div class="schedule-day">
+                    <h3 class="day-title">Day 5 – June 12, 2026</h3>
+                    <p class="day-description">Departure day. Breakfast and checkout.</p>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h4 class="info-title">What's included</h4>
+                <ul class="info-list">
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>3 full days of shooting in small groups (2 photographers per model)</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Transportation from train station or airport to venue</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Private luxury bedroom at l'Hôtel Napoléon</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>All meals: breakfast, lunch, and dinner</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Unlimited hot and cold beverages</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Full access to mansion interiors and 1650m² park</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Heated saltwater pool and spa</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="info-box info-box-last">
+                <h4 class="info-title">What to bring</h4>
+                <ul class="info-list">
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Your camera and essential equipment</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Recommended: 50mm lens or similar portrait lens</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Memory cards and batteries</span>
+                    </li>
+                    <li>
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Your creativity and passion for art</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+<section class="content-section pricing-section" id="pricing">
+        <div class="elegant-box pricing-box">
+            <div class="pricing-header">
+                <div class="section-head">
+                    <h2>Pricing</h2>
+                    <p class="section-sub">An all-inclusive luxury experience</p>
+                </div>
+            </div>
+
+            <div class="price-display">
+                <span class="price-amount">€2,900</span> <span class="price-period">per photographer</span>
+            </div>
+
+            <div class="pricing-includes">
+                <h4 class="includes-title">Your complete package</h4>
+                <div class="includes-grid">
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>3-day workshop</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Small group format</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Transportation included</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Private luxury bedroom</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>All meals & beverages</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Pool & spa access</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-note">
+                <p>Limited to 6 photographers only. This format ensures personalized attention and maximum shooting time
+                    with each model.</p>
+            </div>
+
+            <div class="companion-info">
+                <h4 class="companion-title">Bring a Companion</h4>
+                <p class="companion-text">
+                    You may bring one non-photographer companion for an additional €300. This includes luxury
+                    accommodation, all meals, and full access to l'Hôtel Napoléon's amenities throughout your stay. </p>
+            </div>
+
+            <a class="btn is-large is-save" href="#booking">Book Your Spot Now</a>
+        </div>
+    </section>
+<section class="content-section" id="booking">
+        <div class="elegant-box booking-box">
+            <div class="sold-out-banner">
+                <span class="sold-out-label">Sold Out</span>
+            </div>
+            <div class="section-head">
+                <h2>Book Your Spot</h2>
+                <p class="section-sub">Limited Availability</p>
+            </div>
+
+            <p class="section-text">
+                Don't miss this opportunity to work with three exceptional models in one of Lyon's most prestigious
+                historic venues. Spaces are limited to ensure a productive workshop experience. </p>
+
+            <div class="info-box info-booking-terms-box">
+                <p class="section-text">
+                    By booking this workshop, you agree to our <a href="#" target="_blank">Terms
+                    and Conditions</a>. Please review them carefully before your reservation. A <a
+                        href="#" target="_blank">model release agreement</a> will also be signed
+                    on-site with each model before the event begins. </p>
+            </div>
+
+            <div class="contact-methods">
+                <a class="contact-card" href="mailto:alexis.paoleschi@gmail.com">
+                    <svg aria-hidden="true" class="ico contact-icon"><use href="dist/icons.svg#i-mail"></use></svg>
+                    <h4 class="contact-title">Email</h4>
+                    <span class="contact-link">alexis.paoleschi@gmail.com</span> </a>
+
+                <a class="contact-card" href="https://wa.me/33665591122" rel="noopener noreferrer" target="_blank">
+                    <svg aria-hidden="true" class="ico contact-icon"><use href="dist/icons.svg#i-phone"></use></svg>
+                    <h4 class="contact-title">WhatsApp</h4>
+                    <span class="contact-link">+33 6 65 59 11 22</span> </a>
+            </div>
+
+            <div class="payment-info">
+                <h4 class="payment-title">Payment terms</h4>
+                <p class="payment-text">
+                    To secure your reservation, a 50% non-refundable deposit (€1,450) is required. You may choose to pay
+                    the full amount upfront or complete the remaining balance by May 8, 2026. </p>
+            </div>
+        </div>
+    </section>
+<section class="content-section dark-section faq-section" id="faq">
+        <div class="elegant-box">
+            <div class="section-head">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <h4 class="faq-question">What level of photography experience do I need?</h4>
+                    <p class="faq-answer">
+                        Basic photography skills are required. You should be comfortable operating your camera in manual
+                        mode and understand fundamental concepts like exposure, aperture, and shutter speed. This
+                        workshop is designed for photographers who want to refine their artistic nude photography
+                        skills. </p>
+                </div>
+
+                <div class="faq-item">
+                    <h4 class="faq-question">What equipment should I bring?</h4>
+                    <p class="faq-answer">
+                        You'll need your own camera and at least one lens suitable for portrait photography. A 50mm lens
+                        is recommended as a minimum. Don't forget extra memory cards, batteries, and any other equipment
+                        you typically use for portrait work. </p>
+                </div>
+
+                            </div>
+        </div>
+    </section>
+<div class="kit-intro"><h1>La liste des événements</h1><p>Une carte d’événement (la carte à couverture du design system, sans sa photo ici), ses points forts, ses modèles et son prix.</p></div>
+<main class="events-main"><section class="events-grid-section"><div class="events-grid"><article class="card has-cover is-link event-card" data-event-slug="senegal-2027">
+                <a class="card-cover" href="#">  <span
+                        class="badge event-card-badge">Booking Open</span> </a>
+                <div class="card-body">
+                    <h3 class="card-title">Senegal 2027</h3>
+                    <p class="card-meta">
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-map-pin"></use></svg>
+                        Somone, Senegal
+                    </p>
+                    <p class="card-meta">
+                        <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-cal"></use></svg>
+                        March 16–24, 2027
+                    </p>
+                    <div class="event-card-highlights">
+                        <span class="event-card-highlight">
+                            <svg aria-hidden="true" class="ico event-card-highlight-icon"><use href="dist/icons.svg#i-users"></use></svg>
+                            9 photographers
+                        </span> <span class="event-card-highlight">
+                            <svg aria-hidden="true" class="ico event-card-highlight-icon"><use href="dist/icons.svg#i-star"></use></svg>
+                            3 models
+                        </span> <span class="event-card-highlight">
+                            <svg aria-hidden="true" class="ico event-card-highlight-icon"><use href="dist/icons.svg#i-clock"></use></svg>
+                            3 days of shooting
+                        </span> <span class="event-card-highlight">
+                            <svg aria-hidden="true" class="ico event-card-highlight-icon"><use href="dist/icons.svg#i-cam"></use></svg>
+                            2:1 event
+                        </span> <span class="event-card-highlight">
+                            <svg aria-hidden="true" class="ico event-card-highlight-icon"><use href="dist/icons.svg#i-cam"></use></svg>
+                            1:1 event
+                        </span>
+                    </div>
+                    <div class="event-card-models">
+                        <div class="event-card-model">
+                            <span aria-hidden="true" class="avatar is-round event-card-model-avatar">D</span> <span
+                                class="event-card-model-name">Deneb</span>
+                        </div>
+                        <div class="event-card-model">
+                            <span aria-hidden="true" class="avatar is-round event-card-model-avatar">K</span> <span
+                                class="event-card-model-name">Katline</span>
+                        </div>
+                        <div class="event-card-model">
+                            <span aria-hidden="true" class="avatar is-round event-card-model-avatar">N</span> <span
+                                class="event-card-model-name">Noémie</span>
+                        </div>
+                    </div>
+                    <p class="event-card-description">
+                        A fine art photography workshop in Senegal with exceptional models. Choose shared 2:1 or
+                        exclusive 1:1 sessions. Exceptional estate with gardens, pool, and lagoon views. </p>
+                    <div class="event-card-footer">
+                        <span class="event-card-price">€3200 · €4300</span> <a class="btn is-large is-save"
+                                                                               href="#">Booking</a>
+                    </div>
+                </div>
+            </article></div></section></main>
+<div class="kit-intro"><h1>Deux prix côte à côte</h1><p><code>.price-display.is-pair</code>, comme sur la page du Sénégal.</p></div>
+<section class="content-section pricing-section" id="pricing-pair">
+        <div class="elegant-box pricing-box">
+            <div class="pricing-header">
+                <div class="section-head">
+                    <h2>Pricing</h2>
+                    <p class="section-sub">An all-inclusive luxury experience</p>
+                </div>
+            </div>
+
+            <div class="price-display is-pair">
+                <div class="price-option">
+                    <span class="price-amount">€3,200</span> <span class="price-period">2:1 session</span> <span
+                        class="price-label">2 photographers per model</span>
+                </div>
+                <div class="price-divider"></div>
+                <div class="price-option">
+                    <span class="price-amount">€4,300</span> <span class="price-period">1:1 session</span> <span
+                        class="price-label">1 photographer per model</span>
+                </div>
+            </div>
+
+            <div class="pricing-includes">
+                <h4 class="includes-title">Your complete package</h4>
+                <div class="includes-grid">
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>3-day shooting workshop</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>2:1 or 1:1 format</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Transportation included</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Private luxury bedroom</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>All meals & beverages</span>
+                    </div>
+                    <div class="include-item">
+                        <svg aria-hidden="true" class="ico include-icon"><use href="dist/icons.svg#i-check"></use></svg>
+                        <span>Full venue access</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-note">
+                <p>The 2:1 session is limited to 6 photographers and offers a shared creative experience. The 1:1
+                    session is limited to 3 photographers and gives you exclusive private time with each model.</p>
+            </div>
+
+            <div class="companion-info">
+                <h4 class="companion-title">Bring a Companion</h4>
+                <p class="companion-text">
+                    You may bring one non-photographer companion for an additional €400. This includes luxury
+                    accommodation, all meals, and full access to Sama Nopalu Kaï's amenities throughout your stay.</p>
+            </div>
+
+            <a class="btn is-large is-save" href="#booking">Book Your Spot Now</a>
+        </div>
+    </section>
+<section class="testimonials-banner"><div class="testimonials-banner-inner"><div class="testimonials-banner-head">
+  <h2 class="testimonials-banner-title">What Photographers Say</h2><p class="testimonials-banner-subtitle">A few words from those who joined previous workshops.</p></div>
+  <div class="testimonials-grid"><figure class="card testimonial-card"><span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+  <blockquote class="testimonial-text">Crossing the Atlantic to attend this workshop with Alexis was one of the best decisions I&#x27;ve ever made. The location was beautifully chosen, allowing for an exceptional variety of images. And what can I say about the selected models? Wow! Without a doubt, an experience I would repeat with Alex and Kat. 100% satisfaction and trust.</blockquote><figcaption class="testimonial-signature">
+  <span class="testimonial-author">Michel L.</span><span class="testimonial-workshop">Lyon Workshop 2026</span></figcaption></figure><figure class="card testimonial-card"><span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+  <blockquote class="testimonial-text">Alexis created a workshop that was both inspiring and exceptionally well organised. With outstanding models, a unique location and beautiful natural light, I came away with some of my favourite images to date.</blockquote><figcaption class="testimonial-signature">
+  <span class="testimonial-author">Ken T.</span><span class="testimonial-workshop">Lyon Workshop 2026</span></figcaption></figure><figure class="card testimonial-card"><span class="testimonial-quote-mark" aria-hidden="true">&ldquo;</span>
+  <blockquote class="testimonial-text">Really well-organized event: luxury location, beautiful models and, of course, kind and friendly hosts, Alexis and Katline! Best of luck!</blockquote><figcaption class="testimonial-signature">
+  <span class="testimonial-author">Andrei S.</span><span class="testimonial-workshop">Lyon Workshop 2026</span></figcaption></figure></div></div></section>
+<div class="kit-intro"><h1>La page newsletter</h1><p>La carte à filet du design system, un champ, un bouton et la ligne dessous.</p></div>
+<main class="newsletter-main"><section class="card is-ruled newsletter-card">
+  <svg aria-hidden="true" class="ico newsletter-envelope"><use href="dist/icons.svg#i-mail"></use></svg>
+  <p class="newsletter-message">New events, locations and booking openings, straight to your inbox.</p>
+  <form class="newsletter-form" novalidate><div class="newsletter-field"><input aria-label="Email address" class="newsletter-input" placeholder="Your email address" type="email">
+  <button class="btn is-save" type="button">Subscribe</button></div><p class="field-note is-reserved newsletter-feedback"></p></form>
+  <div class="newsletter-actions"><a class="btn is-large is-act" href="#">See the Events</a></div></section></main>
+<section class="social-banner"><div class="social-banner-inner"><div class="social-banner-box">
+  <h3 class="social-banner-title">Don't Miss the Next Event</h3>
+  <p class="social-banner-text">Follow me on social media to be the first to know about upcoming photography events and secure your spot before they sell out.</p>
+  <div class="social-banner-links"><a class="pill-link" href="#"><svg aria-hidden="true" class="ico social-banner-icon"><use href="dist/icons.svg#i-ig"></use></svg><span>Instagram</span></a>
+    <a class="pill-link" href="#"><svg aria-hidden="true" class="ico social-banner-icon"><use href="dist/icons.svg#i-xlogo"></use></svg><span>Twitter</span></a></div></div></div></section>
+<section class="signup-banner"><div class="signup-banner-inner"><div class="signup-banner-text"><svg aria-hidden="true" class="ico signup-banner-icon"><use href="dist/icons.svg#i-bell"></use></svg>
+  <div class="signup-banner-copy"><h2 class="signup-banner-title">Join the Newsletter</h2>
+  <p class="signup-banner-subtitle">Stay informed about new events, locations and booking openings, straight to your inbox!</p></div></div>
+  <form class="signup-banner-form" novalidate><div class="signup-banner-field"><input aria-label="Email address" class="signup-banner-input" placeholder="Your email address" type="email">
+  <button class="btn is-save signup-banner-button" type="button">Subscribe</button></div>
+  <p class="field-note is-reserved is-good">Thank you! Check your inbox to confirm your subscription.</p></form></div></section>
+<footer class="site-footer"><p>© 2026 Alexis Paoleschi – Nude Art Photographer</p><nav><a href="#">alexispaoleschi.com</a></nav></footer>
+<script src="dist/ds-site.js"></script>
+</body>
+</html>
