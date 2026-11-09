@@ -1,0 +1,44 @@
+/* Figures in tiles: a label, a big figure, a note; in a grid. The compact form is for the top of a screen. */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin-top: var(--s-16); background: var(--line); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
+  .tile { background: var(--panel); padding: var(--s-14) var(--s-14) var(--s-12); min-width: 0; border-top: 3px solid var(--n, var(--line)); }
+  .tile dt { display: flex; align-items: center; gap: var(--s-6); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; color: color-mix(in oklab, var(--n, var(--ink)) var(--tint-ink), var(--ink)); margin-bottom: var(--s-10); text-transform: none; }
+  .tile dd { margin: 0; font: var(--head-weight) var(--fs-28)/var(--title-lh) var(--title-font); font-variant-numeric: tabular-nums; }
+  .tile .u { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
+  .tile .d { display: block; font: 600 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-6); color: var(--good); letter-spacing: 0; }
+  .tile .h { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
+  .tile a.h:hover, .tile a.h:focus-visible { color: var(--ink); text-decoration: underline; }
+  .tile .d.neg { color: var(--bad); }
+  .tile .d.n { color: var(--dim); font-weight: 500; }
+  /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
+  .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
+  .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
+  .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
+  /* fitted (ds.minitiles: a median, an average at the top of a card): the tiles side by side, each as wide as the widest,
+     no wider than the words; the figure's unit just after it, what it is taken over under it */
+  .tiles.is-fit { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; width: fit-content; max-width: 100%; margin: 0 0 var(--s-16); }
+  .tiles.is-fit .tile { display: flex; flex-direction: column; gap: var(--s-6); }
+  .tiles.is-fit .tile dt { margin: 0; white-space: nowrap; }
+  .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
+  .tiles.is-fit .tile .u { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
+  .tiles.is-fit .tile .u .ico { width: var(--ico-s); height: var(--ico-s); }
+  .tiles.is-fit .tile .h { display: block; margin: 0; color: var(--dim); font: 500 var(--fs-11)/var(--lh-ui) var(--body); opacity: .8; }
+  /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
+     the figure in gold above its label */
+  /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
+  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-20); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
+    background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
+  [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
+  /* its figure in the big title's size, a step smaller on a phone (--text-2xl) */
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--text-2xl); font-weight: 400; }
+  [data-theme="vitrine"] .tiles.is-compact .tile:not(.up):not(.down) dd { color: var(--accent-strong); }
+@media (max-width: 768px) {
+  /* four fitted tiles make two rows of two on a phone, where a long label goes on two lines; fewer keep theirs on one, so
+     that their figures stay side by side */
+  .tiles.is-fit:has(> .tile:nth-child(4)) { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+  .tiles.is-fit:has(> .tile:nth-child(4)) .tile dt { white-space: normal; }
+  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
+}

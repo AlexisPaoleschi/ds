@@ -1,0 +1,19 @@
+<!doctype html><html lang="fr" data-theme="atelier"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="../dist/ds.css"><link rel="stylesheet" href="../dist/ds-tools.css"><script src="../dist/ds.js" defer></script><script src="../dist/ds-icons.js" defer></script><script src="../dist/ds-tools.js" defer></script></head>
+<body>
+<div class="wrap">
+  <p><svg class="ico" id="wallet" aria-hidden="true"><use href="#i-wallet"/></svg> une icône de la planche, mise dans la page par ds-icons.js</p>
+  <p><svg class="ico" id="site" aria-hidden="true"><use href="../dist/icons.svg#i-mail"/></svg> une icône du fichier icons.svg, sans script, comme sur le site</p>
+  <div id="cal"></div>
+  <div id="dp" style="max-width: 340px"></div>
+</div>
+<script>
+  // a fixed today, Monday 9 November 2026: the calendar and an inline date picker, for their arrows
+  document.addEventListener("DOMContentLoaded", () => {
+    const today = "2026-11-09";
+    ds.calendar(document.getElementById("cal"), { today, items: () => [] });
+    ds.datePick(document.getElementById("dp"), { modes: ["range"], today, value: { from: "2026-08-01", to: "2026-08-16" }, label: "Dates du voyage" });
+    window.ready = true;
+  });
+</script>
+</body></html>
