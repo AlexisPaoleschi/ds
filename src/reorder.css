@@ -1,0 +1,16 @@
+/* Drag to reorder (Bank: the order of the accounts on its first page, the banks and the accounts of each bank): each
+   item is moved by its grip, <button class="grip" type="button"><svg class="ico"><use href="#i-grip"/></svg></button>,
+   with the mouse, a finger, or ↑ and ↓ on the grip. ds.reorder runs it. */
+  .grip { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 26px; height: 26px; margin: 0; padding: 0;
+    background: none; border: 0; border-radius: var(--r-s); color: var(--faint); cursor: grab;
+    /* the finger on a grip drags its item: it does not scroll the page */
+    touch-action: none; user-select: none; -webkit-user-select: none; }
+  .grip:hover { color: var(--ink); }
+  .grip .ico { width: 18px; height: 18px; }
+  /* the item being moved follows the pointer, above the others, which make room for it */
+  [data-reorder] > .is-dragging { position: relative; z-index: var(--z-raise); background: var(--panel-2); box-shadow: var(--shadow-pop); cursor: grabbing; }
+  [data-reorder] > .is-dragging .grip { color: var(--accent); cursor: grabbing; }
+  [data-reorder] > .is-shifting { transition: transform var(--t-fast) ease; }
+  /* while an item is moved, no text gets selected along the way */
+  :root.is-reordering, :root.is-reordering * { user-select: none; -webkit-user-select: none; cursor: grabbing; }
+  @media (prefers-reduced-motion: reduce) { [data-reorder] > .is-shifting { transition: none; } }
