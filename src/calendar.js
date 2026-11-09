@@ -210,8 +210,9 @@
       for (var i = 0; i < 7; i++) dow.append(el("span", "", fmt(addDays(start, i), { weekday: "short" }).replace(".", "")));
       for (var j = 0; j < 42; j++) {
         var key = addDays(start, j);
-        // five weeks are enough for most months: the sixth row only when the month reaches it
-        if (j >= 35 && key.slice(0, 7) !== mo) break;
+        // five weeks are enough for most months: a sixth row only when the month reaches it, and then a whole week,
+        // its last days those of the next month, as on the rows above
+        if (j === 35 && key.slice(0, 7) !== mo) break;
         grid.append(cell(key, key.slice(0, 7) === mo));
       }
       return [dow, grid, panel(st.day)];

@@ -46,8 +46,8 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
       color: getComputedStyle(nine.querySelector('.cal-mark')).backgroundColor, label: nine.getAttribute('aria-label') };
   });
   console.log('      ' + JSON.stringify(month));
-  assert(month.title === 'novembre 2026' && month.cells === 36 && month.first === '2026-10-26' && month.off === 6 && month.today === '2026-11-09' && month.sel === '2026-11-09'
-    && month.current === 'date' && month.dow === 'lunmarmerjeuvensamdim', 'le mois : 36 cases depuis le lundi, les jours d’octobre estompés, aujourd’hui choisi');
+  assert(month.title === 'novembre 2026' && month.cells === 42 && month.first === '2026-10-26' && month.off === 12 && month.today === '2026-11-09' && month.sel === '2026-11-09'
+    && month.current === 'date' && month.dow === 'lunmarmerjeuvensamdim', 'le mois : six semaines entières depuis le lundi, les jours d’octobre et de décembre estompés, aujourd’hui choisi');
   assert(month.lines === 8 && month.more === '+2' && month.dots === '+7', 'une case pleine : huit lignes puis « +2 » ; sur téléphone trois points puis « +7 »');
   assert(JSON.stringify(month.marks) === JSON.stringify(['cal-mark', 'cal-mark is-open', 'cal-mark is-thick', 'cal-mark is-bar', 'cal-mark is-dot'])
     && JSON.stringify(month.codes) === '["P","IG"]' && month.count === '2/4' && month.late === 'Preview Léa' && month.color === 'rgb(73, 143, 238)',

@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.20.1 · 9 novembre 2026
+
+- Calendrier : un mois qui a besoin d’une sixième semaine (novembre 2026, du lundi 26 octobre au lundi 30 novembre) la montre entière, jusqu’au dimanche, avec les premiers jours du mois suivant estompés comme sur les lignes du dessus. Elle s’arrêtait au dernier jour du mois.
+
 ## 2.20.0 · 9 novembre 2026
 
 - Calendrier (`ds.calendar`) : `ready(state)` permet à une appli de dire qu’elle n’a pas encore lu les jours demandés. Tant qu’elle répond non, le calendrier garde à l’écran ce qu’il montrait (redessiné avec ce que l’appli a déjà), puis passe au nouveau mois au `draw()` suivant, une fois les jours lus. C’est ce que faisait l’agenda de Studio : un mois s’affiche une fois, avec tout ce qu’il montre, plutôt que vide puis rempli. Sans `ready`, rien ne change : il bouge tout de suite.

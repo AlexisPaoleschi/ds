@@ -1,4 +1,4 @@
-/* ds 2.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.20.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -1840,8 +1840,9 @@
       for (var i = 0; i < 7; i++) dow.append(el("span", "", fmt(addDays(start, i), { weekday: "short" }).replace(".", "")));
       for (var j = 0; j < 42; j++) {
         var key = addDays(start, j);
-        // five weeks are enough for most months: the sixth row only when the month reaches it
-        if (j >= 35 && key.slice(0, 7) !== mo) break;
+        // five weeks are enough for most months: a sixth row only when the month reaches it, and then a whole week,
+        // its last days those of the next month, as on the rows above
+        if (j === 35 && key.slice(0, 7) !== mo) break;
         grid.append(cell(key, key.slice(0, 7) === mo));
       }
       return [dow, grid, panel(st.day)];
