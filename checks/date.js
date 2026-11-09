@@ -280,9 +280,9 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   await p.locator('#pairs .chart-bar').nth(4).click();
   const pk = await p.evaluate(() => [JSON.stringify(months), document.querySelector('#pairs .chart-bar.is-on .chart-bar-l').textContent, getComputedStyle(document.querySelector('#pairs .chart-bar.is-on .chart-bar-vs')).visibility]);
   const plain = await p.evaluate(() => { const x = ds.chart.bars(null, [{ key: 'a', value: 3 }, { key: 'b', value: 5 }]); return [x.classList.contains('is-pairs'), x.querySelectorAll('.chart-bars-legend, .chart-bar-vs').length, x.querySelectorAll('.chart-bar-fill').length]; });
-  assert(pb.pairs && pb.n === 12 && pb.fills === '222222222222' && same(pb.h, ['50%', '33.33%']) && pb.in === 'rgb(91, 198, 141)' && pb.out === 'rgb(245, 138, 137)'
+  assert(pb.pairs && pb.n === 12 && pb.fills === '222222222222' && same(pb.h, ['50%', '33.33%']) && pb.in === 'rgb(78, 201, 138)' && pb.out === 'rgb(232, 104, 107)'
     && same(pb.ticks, ['0', '2k€', '4k€', '6k€']) && same(pb.legend, ['Entrées42 600€', 'Sorties27 300€']) && pb.title === 'nov · Entrées 4 100€ · Sorties 2 550€ (en cours)'
-    && same(pb.figs, ['4,1k', '2,6k']) && pb.shown === 'visible' && pb.hidden === 'hidden' && pb.live && pb.figColor === 'rgb(91, 198, 141)'
+    && same(pb.figs, ['4,1k', '2,6k']) && pb.shown === 'visible' && pb.hidden === 'hidden' && pb.live && pb.figColor === 'rgb(78, 201, 138)'
     && same(pk, ['["2026-04"]', 'avr', 'visible']) && same(plain, [false, 0, 2]),
     'les barres en paires : deux par mois aux couleurs des entrées et des sorties, la légende qui les additionne, les chiffres du mois choisi ; les barres simples ne changent pas ' + JSON.stringify(pk));
 

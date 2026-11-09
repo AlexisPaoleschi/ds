@@ -13,12 +13,17 @@
 <style>
   /* the page itself: every token and component of the design system, in both themes side by side */
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--fs-15)/var(--lh-text) var(--body); }
-  .page { max-width: 1320px; margin: 0 auto; padding: var(--s-32) var(--s-20) var(--s-48); }
+  /* the whole screen's width: the two themes side by side each get the room of a real page, not a squeezed column */
+  .page { padding: var(--s-32) var(--s-20) var(--s-48); }
+  @media (min-width: 1280px) { .page { padding-inline: var(--s-32); } }
   .page > h1 { margin: 0 0 var(--s-6); font: 800 var(--fs-28)/var(--lh-tight) var(--display); letter-spacing: var(--ls-tight); }
   .page > p { margin: 0 0 var(--s-24); color: var(--dim); max-width: 780px; }
   .themes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(560px, 100%), 1fr)); gap: var(--s-20); }
   @media (max-width: 768px) { .themes { grid-template-columns: 1fr; } }
-  .theme { background: var(--bg); color: var(--ink); font-family: var(--body); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-20); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--s-16); min-width: 0; }
+  .theme { background: var(--bg); color: var(--ink); font-family: var(--body); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-20); display: grid; grid-template-columns: minmax(0, 1fr); align-content: start; gap: var(--s-16); min-width: 0;
+    /* each part of one theme in line with the same part of the other: both columns share the page's rows (subgrid), the
+       shorter one keeping some room below it; --rows is the count of parts, set by the script that builds them */
+    grid-row: span var(--rows, 1); grid-template-rows: subgrid; row-gap: var(--s-16); }
   .icons-g { margin: var(--s-16) 0 var(--s-8); font: 600 var(--fs-12)/var(--lh-tight) var(--body); color: var(--accent); }
   .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s-10) var(--s-8); }
   .icons div { display: flex; align-items: center; gap: var(--s-8); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--dim); }
@@ -310,6 +315,7 @@
       node.querySelector("[data-fs]").insertAdjacentHTML("beforeend", `<div><code>--fs-${n}</code><span style="font-size:var(--fs-${n})">Toutes les opérations</span></div>`);
     for (const n of node.querySelector("[data-sp]").dataset.sp.split(" "))
       node.querySelector("[data-sp]").insertAdjacentHTML("beforeend", `<div><code>--s-${n}</code><span class="bar" style="width:calc(var(--s-${n}) * 4)"></span></div>`);
+    sec.style.setProperty("--rows", sec.children.length);
     document.getElementById("themes").append(node);
   }
   // the demo form that deletes: once confirmed, it says so instead of leaving the page

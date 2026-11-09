@@ -8,9 +8,9 @@
   --gold-500: #c9a961; --gold-600: #b39654;
   --night-900: #0e0f12; --night-800: #16181d; --night-700: #1c1f26; --night-600: #262a33; --night-500: #333845;
   --mist-100: #eceef3; --mist-300: #9ba3b2; --mist-500: #7e8795;
-  /* money in, money out, what needs a look: the gold's lightness, a little more vivid than the palette; the yellow
-     keeps its own strength, since it has the gold's very hue and must still be told from it */
-  --green-400: #5bc68d; --red-400: #f58a89; --yellow-400: #e3b341;
+  /* money in, money out, what needs a look: vivid, as the palette is; Atelier's colours no longer follow the gold's
+     lightness (that made them pale), the gold alone stays as it is */
+  --green-400: #4ec98a; --red-400: #e8686b; --yellow-400: #e3b341;
   --cream-50: #fdfcfa; --beige-100: #f7f4ef; --coal-900: #1a1a1a; --wine-600: #a3403e;
   --font-archivo: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -71,7 +71,7 @@
   --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
   --accent: var(--gold-500); --accent-soft: rgba(201,169,97,.12); --accent-line: rgba(201,169,97,.35); --accent-strong: rgba(201,169,97,.5);
   --on-accent: var(--night-800);
-  --good: var(--green-400); --bad: var(--red-400); --bad-soft: rgba(245,138,137,.12); --bad-line: rgba(245,138,137,.35);
+  --good: var(--green-400); --bad: var(--red-400); --bad-soft: rgba(232,104,107,.12); --bad-line: rgba(232,104,107,.35);
   --mid: var(--yellow-400);
   --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
 }

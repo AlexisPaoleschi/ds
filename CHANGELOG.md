@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.19.1 · 9 novembre 2026
+
+- Atelier : le vert des entrées et le rouge des sorties reprennent les couleurs vives qu’ont Bank et Studio en ligne (`#4ec98a`, `#e8686b`), à la place de celles réglées sur la clarté de l’or en 2.14. Dans Atelier, plus aucune couleur ne suit l’or : l’or reste tel qu’il est, les couleurs qui ont un sens (vert, rouge, jaune) et la palette sont vives et lisibles sur le fond sombre. Le rouge de « Loisirs » (`--c-corail`) redevient le même que celui des sorties.
+- Page vitrine : chaque partie d’Atelier est à la hauteur de la même partie de Vitrine. Les deux colonnes partagent les mêmes lignes ; la plus courte garde de la place en dessous.
+
 ## 2.19.0 · 9 novembre 2026
 
 Ce qu’au moins deux des quatre projets (Bank, Studio, Selecta, le site) écrivaient chacun de leur côté, d’après l’étude des quatre.
