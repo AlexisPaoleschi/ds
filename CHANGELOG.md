@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.27.0 · 10 novembre 2026
+
+Ce que le site a demandé pour n’écrire plus aucune valeur à la main.
+
+- Bandeau photo entre deux sections (`.hero.is-band`) : 60 % de la hauteur de l’écran (50 % sur téléphone), titre de 64px espacé de 6px (36px sur tablette), une ligne en italique fin dessous ; les bandeaux intermédiaires des pages d’événements du site le prennent. Sur un téléphone, son titre se réduit avec l’écran (de 24 à 36px, lettres espacées de 4px) : son mot le plus long (« PHOTOGRAPHERS ») y tient, alors qu’il débordait de l’écran.
+- Tailles de texte du site : `--fs-26`, `--fs-32`, `--fs-40`, `--fs-42`, `--fs-48`, `--fs-52`, `--fs-64`, `--fs-80`, `--fs-104` (ses titres de galerie et d’encadré, son nom sur l’accueil, ses prix).
+- Interlignes : `--lh-relaxed` (1,6, les notes du site) et `--lh-airy` (2, son texte courant ; `--text-lh` de Vitrine le prend).
+- Espacement de lettres `--ls-5`.
+- Durées : `--t-slow` (0,4 s en Atelier, 0,5 s en Vitrine) et `--t-loop` (2 s, un tour d’une animation qui boucle : une pastille qui rebondit, une flèche qui invite à défiler).
+
 ## 2.26.0 · 10 novembre 2026
 
 Ce que la migration d’alexispaoleschi.com a demandé.

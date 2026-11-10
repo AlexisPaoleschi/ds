@@ -1,4 +1,4 @@
-/* ds 2.26.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.27.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -55,25 +55,29 @@
   --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
   /* the sizes of alexispaoleschi.com: its text, its subtitles, its section titles */
   --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px; --fs-36: 36px; --fs-56: 56px;
-  /* the title over the photo of an event page */
-  --fs-84: 84px;
+  /* the site's bigger words: its gallery and box titles, its home name, its prices, the title over an event page's photo */
+  --fs-26: 26px; --fs-32: 32px; --fs-40: 40px; --fs-42: 42px; --fs-48: 48px; --fs-52: 52px; --fs-64: 64px; --fs-80: 80px; --fs-84: 84px; --fs-104: 104px;
   /* the big sums at the top of a screen grow with it */
   --fs-display: clamp(34px, 9vw, 50px); --fs-display-2: clamp(var(--fs-22), 6.5vw, 30px);
   --lh-tight: 1; --lh-ui: 1.3; --lh-text: 1.5;
   /* the airy line of the public sites: their titles, Selecta's text */
   --lh-loose: 1.8;
+  /* the site's notes (1.6) and its running text (2) */
+  --lh-relaxed: 1.6; --lh-airy: 2;
   --ls-tight: -.015em; --ls-caps: .12em; --ls-wide: .17em; --ls-brand: .22em;
   /* a little air between the letters: Selecta's titles and its footer */
   --ls-loose: .07em;
   /* the letter spacings of alexispaoleschi.com, in pixels as the site writes them */
-  --ls-0-5: .5px; --ls-1: 1px; --ls-1-5: 1.5px; --ls-2: 2px; --ls-2-5: 2.5px; --ls-3: 3px; --ls-4: 4px; --ls-6: 6px; --ls-8: 8px;
+  --ls-0-5: .5px; --ls-1: 1px; --ls-1-5: 1.5px; --ls-2: 2px; --ls-2-5: 2.5px; --ls-3: 3px; --ls-4: 4px; --ls-5: 5px; --ls-6: 6px; --ls-8: 8px;
   /* space: one scale for paddings, margins and gaps */
   --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-20: 20px; --s-24: 24px; --s-32: 32px; --s-40: 40px; --s-48: 48px;
   --s-56: 56px; --s-60: 60px; --s-80: 80px;
   /* layers, from the page up: raised, edge tab, veil, overlay, tab bar, a phone's drawer (above the tab bar), sheet, passing message */
   --z-raise: 2; --z-edge: 25; --z-veil: 29; --z-over: 30; --z-bar: 40; --z-drawer: 45; --z-sheet: 50; --z-toast: 60;
   /* durations, and the two shadows: menus, then sheets and drawers */
-  --t-fast: .15s; --t-mid: .3s;
+  --t-fast: .15s; --t-mid: .3s; --t-slow: .4s;
+  /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
+  --t-loop: 2s;
   --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
   --shadow-sheet: 0 12px 32px color-mix(in srgb, var(--black) 45%, transparent);
   /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
@@ -200,13 +204,13 @@
      message, a window) */
   --shadow-soft: 0 2px 8px rgba(0,0,0,.1); --shadow-card: 0 4px 16px rgba(0,0,0,.1); --shadow-pop: 0 8px 24px rgba(0,0,0,.1); --shadow-sheet: var(--shadow-pop);
   /* the site moves more slowly */
-  --t-fast: .3s; --t-mid: .4s;
+  --t-fast: .3s; --t-mid: .4s; --t-slow: .5s;
   /* titles in Gilda Display, never bold, in spaced capitals, with a line height of their own */
   --title-weight: 400; --head-weight: 400; --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --title-ls: .1em; --title-case: uppercase;
   /* small capitals in Urbanist */
   --label-font: var(--body); --label-weight: 500;
   /* text: 16px, light, with room between the lines */
-  --text-size: var(--fs-16); --text-weight: 300; --text-lh: 2; --note-size: var(--fs-14);
+  --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
@@ -1583,7 +1587,7 @@
    A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
    in both themes, each with its own title font.
    Without a modifier it is the site's page hero (the events, the newsletter); .is-full fills the screen with an event
-   page's sizes, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
+   page's sizes, .is-band is a photo band between two sections, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
    left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
    still on a touch screen and for those who ask for less motion). */
   /* the page's hero (the site's events and newsletter): 420px high, its title in 56px over a gold line, gold capitals under
@@ -1625,6 +1629,12 @@
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
     --hero-t-size: var(--fs-84); --hero-t-ls: var(--ls-8); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-sub-size: var(--fs-28); --hero-sub-weight: var(--text-weight); --hero-sub-ls: var(--ls-6); --hero-sub-gap: var(--s-16); }
+  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title in
+     64px, a line in light italics under it */
+  .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
+    --hero-t-size: var(--fs-64); --hero-t-ls: var(--ls-6); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-meta-size: var(--fs-20); --hero-meta-ls: var(--ls-2); --hero-meta-gap: var(--s-40); }
+  .hero.is-band .hero-meta { font-style: italic; }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-size: var(--fs-display-2); --hero-t-lh: var(--lh-ui); --hero-t-ls: var(--ls-4); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
@@ -1646,11 +1656,14 @@
 @media (max-width: 768px) {
   .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-t-ls: var(--ls-4); --hero-sub-size: var(--fs-22); --hero-sub-ls: var(--ls-4); --hero-meta-size: var(--fs-16); }
+  .hero.is-band { --hero-h: 50vh; --hero-t-size: var(--fs-36); --hero-meta-size: var(--fs-15); }
 }
 @media (max-width: 480px) {
   .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16); --hero-t-size: var(--fs-36); --hero-sub-size: var(--fs-12); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-sub-size: var(--fs-22); }
   .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16); --hero-t-size: var(--fs-display-2); }
+  /* a band's title shrinks with the phone, so that its longest word (« PHOTOGRAPHERS ») holds on the screen */
+  .hero.is-band { --hero-t-size: clamp(var(--fs-24), 7.5vw, var(--fs-36)); --hero-t-ls: var(--ls-4); }
   .hero > .back-link { top: max(var(--s-16), env(safe-area-inset-top, 0px)); left: max(var(--s-16), env(safe-area-inset-left, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {

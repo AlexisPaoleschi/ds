@@ -5,7 +5,7 @@
    A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
    in both themes, each with its own title font.
    Without a modifier it is the site's page hero (the events, the newsletter); .is-full fills the screen with an event
-   page's sizes, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
+   page's sizes, .is-band is a photo band between two sections, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
    left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
    still on a touch screen and for those who ask for less motion). */
   /* the page's hero (the site's events and newsletter): 420px high, its title in 56px over a gold line, gold capitals under
@@ -47,6 +47,12 @@
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
     --hero-t-size: var(--fs-84); --hero-t-ls: var(--ls-8); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-sub-size: var(--fs-28); --hero-sub-weight: var(--text-weight); --hero-sub-ls: var(--ls-6); --hero-sub-gap: var(--s-16); }
+  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title in
+     64px, a line in light italics under it */
+  .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
+    --hero-t-size: var(--fs-64); --hero-t-ls: var(--ls-6); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-meta-size: var(--fs-20); --hero-meta-ls: var(--ls-2); --hero-meta-gap: var(--s-40); }
+  .hero.is-band .hero-meta { font-style: italic; }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-size: var(--fs-display-2); --hero-t-lh: var(--lh-ui); --hero-t-ls: var(--ls-4); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
@@ -68,11 +74,14 @@
 @media (max-width: 768px) {
   .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-t-ls: var(--ls-4); --hero-sub-size: var(--fs-22); --hero-sub-ls: var(--ls-4); --hero-meta-size: var(--fs-16); }
+  .hero.is-band { --hero-h: 50vh; --hero-t-size: var(--fs-36); --hero-meta-size: var(--fs-15); }
 }
 @media (max-width: 480px) {
   .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16); --hero-t-size: var(--fs-36); --hero-sub-size: var(--fs-12); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-sub-size: var(--fs-22); }
   .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16); --hero-t-size: var(--fs-display-2); }
+  /* a band's title shrinks with the phone, so that its longest word (« PHOTOGRAPHERS ») holds on the screen */
+  .hero.is-band { --hero-t-size: clamp(var(--fs-24), 7.5vw, var(--fs-36)); --hero-t-ls: var(--ls-4); }
   .hero > .back-link { top: max(var(--s-16), env(safe-area-inset-top, 0px)); left: max(var(--s-16), env(safe-area-inset-left, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
