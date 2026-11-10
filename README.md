@@ -33,7 +33,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
   - `src/live.css` et `src/live.js` : le témoin « nouvelle version » (`.newver`, `ds.version`), le direct du serveur (`ds.stream`), la copie sur l’appareil (`ds.keep.get`, `put`, `del`, `fresh`).
   - `src/viewer.js` et `src/viewer-behaviour.css` : la visionneuse en marche, `ds.viewer(items, {start, onChange, onClose, label, el})` ; `ds.viewer.bind(grille, {item})` ou `<div data-viewer>` pour une grille de liens.
   - `src/photogrid.css` et `src/photogrid.js` : la grille de photos (`.photogrid`, `.is-flush`) et son zoom (`.photogrid-zoom`, `input.zoom-slider`), `ds.photogrid(grille, {sizes, size, key, slider, masonry})`.
-  - `src/hero.css` : le bandeau photo, une photo sur toute la largeur avec son titre, son sous-titre et une action (`.hero`, `.is-full`, `.is-short`, `.is-bottom`, `.is-parallax`) ; `src/backlink.css` : le lien retour (`.back-link`, `.on-photo` sur une photo).
+  - `src/hero.css` : le bandeau photo, une photo sur toute la largeur avec son titre, son sous-titre et une action : `.hero` est celui des pages du site (Events, newsletter), `.is-full` celui d’une page d’événement, `.is-short` et `.is-bottom` la couverture de Selecta, `.is-parallax` la photo qui glisse ; chaque taille et chaque écart est un jeton `--hero-*` ; `src/backlink.css` : le lien retour (`.back-link`, `.on-photo` sur une photo).
   - `src/datepick.css` et `src/datepick.js` : le choix de date et de période, venu de Bank : `ds.datePick(holder, {value, quick, modes, min, max, onPick, opener})`, des périodes rapides puis un jour, un mois, une année ou deux dates ; `ds.datePick.label`, `step`, `of`, `kind`. Les graphiques ont aussi `ds.chart.donut` et les barres en paires (`bars` avec `pairs`).
   - `node checks/bank.js`, `checks/studio.js`, `checks/photo.js` et `checks/date.js` les vérifient dans un navigateur ; `node checks/showcase.js` vérifie la vitrine elle-même (lisibilité, 11px au moins, une seule hauteur de contrôle, barre du site, boutons entiers).
 - `src/settings.css` : la page de réglages commune, rangée sous `body.settings`.
@@ -41,6 +41,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 - `src/viewer.css` : la visionneuse de photos (`.viewer`), venue du site : fond noir, croix et flèches dans des cercles fins, place sous la photo pour la barre d’une appli, pastille de position en option (`.viewer-count`).
 - `src/site.css` : les pièces d’un site public, venues d’alexispaoleschi.com : la pastille (`.badge`), le titre et les détails d’une carte (`.card-title`, `.card-meta`), la carte avec photo de couverture (`.card.has-cover`, `.card-cover`, `.card-body`), en grand ou en petit (`.card.is-small`), l’en-tête de section (`.section-head`, son sous-titre `.section-sub`), le pied de page (`.site-footer`).
 - `dist/ds.css` : tout réuni, le seul fichier que les applis copient. Il se refait avec `scripts/build.sh`.
+- `dist/ds-photo.js` : la visionneuse et la grille de photos seules (`ds.viewer`, `ds.photogrid`), 25 Ko au lieu des 245 Ko de `ds.js`, pour une page publique qui n’a besoin de rien d’autre (les pages d’événements du site). Sans `ds.js`, la visionneuse n’a pas de bulle pour dire qu’une photo n’a pas pu s’ouvrir.
 
 ## Dans une appli
 

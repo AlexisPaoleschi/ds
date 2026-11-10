@@ -120,7 +120,8 @@
    header.top .gear { width: 32px; height: 32px; }
 }
 @media (max-width: 768px) {
-    body:not(.settings) { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+    /* the room the bar of tabs takes at the foot of a phone page, only on a page that has one (not the site's, nor Selecta's) */
+    body:not(.settings):has(.tabs.is-bar) { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }

@@ -28,7 +28,8 @@
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
   .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
-  .card-cover { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
+  /* the photo keeps its 16:9 and the line goes under it, on a page that counts borders in sizes (box-sizing) too */
+  .card-cover { position: relative; display: block; box-sizing: content-box; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
   .card-cover img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--cover-time) ease; }
   .card-cover .badge { position: absolute; top: var(--cover-badge); right: var(--cover-badge); }
   @media (hover: hover) { .card.is-link:hover .card-cover img { transform: scale(var(--cover-zoom)); } }

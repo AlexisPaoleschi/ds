@@ -15,4 +15,8 @@
   @media print {
     body.doc { background: none; }
     body.doc main { max-width: none; padding: 0; }
+    /* on paper every word is in full black and a little bolder than on a screen, so that a page to sign reads well */
+    body.doc, body.doc main :is(h1, h2, h3, p, li, strong, a, .eyebrow) { color: var(--black); }
+    body.doc { font-weight: 400; }
+    body.doc main strong { font-weight: 600; }
   }

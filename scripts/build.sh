@@ -17,4 +17,6 @@ js_date="src/datepick.js"
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css $css_bank $css_studio $css_photo $css_date; } > dist/ds.css
 # the script: the icons' sprite, then the bubble and the dialog
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/icons.js src/ds.js $js_bank $js_studio $js_photo $js_date; } > dist/ds.js
-echo "dist/ds.css dist/ds.js $version"
+# the photo viewer and the grid of photos alone, for a public page that needs nothing else of ds.js (the site's events)
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $js_photo; } > dist/ds-photo.js
+echo "dist/ds.css dist/ds.js dist/ds-photo.js $version"

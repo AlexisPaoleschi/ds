@@ -247,7 +247,7 @@ function stylesheets() {
       drift: getComputedStyle(img).animationName, fixed: getComputedStyle(hero).backgroundAttachment,
       track: (() => { const i = document.createElement('i'); i.style.color = getComputedStyle(document.getElementById('zoom')).getPropertyValue('--zoom-track'); document.body.append(i); const c = getComputedStyle(i).color; i.remove(); return c === probe('--line') ? 'line' : c === probe('--line-2') ? 'line-2' : c; })(),
       back: { icon: use === '#i-arrow-left' && !!document.getElementById('i-arrow-left'), color: getComputedStyle(back).color === probe('--faint'), caps: getComputedStyle(back).textTransform, ls: getComputedStyle(back).letterSpacing, display: getComputedStyle(back).display },
-      over: { corner: orr.top - hr.top < 40 && orr.left - hr.left < 40, edge: getComputedStyle(over).borderTopColor === probe('--accent'), radius: getComputedStyle(over).borderTopLeftRadius } };
+      over: { corner: orr.top - hr.top < 40 && orr.left - hr.left < 40, edge: (() => { const i = document.createElement('i'); i.style.color = 'color-mix(in srgb, var(--gold-500) 20%, transparent)'; document.body.append(i); const c = getComputedStyle(i).color; i.remove(); return getComputedStyle(over).borderTopColor === c; })(), radius: getComputedStyle(over).borderTopLeftRadius } };
   });
   await p.evaluate(() => scrollTo(0, 0));
   const at = await looks();

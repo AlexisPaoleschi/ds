@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.26.0 · 10 novembre 2026
+
+Ce que la migration d’alexispaoleschi.com a demandé.
+
+- `dist/ds-photo.js` : la visionneuse et la grille de photos seules (25 Ko), pour une page publique qui n’a pas besoin du reste de `ds.js` (245 Ko). Les pages d’événements du site ouvrent leurs galeries avec.
+- Barre d’onglets sur téléphone : la place qu’elle garde au pied de la page (90px) n’est plus réservée que sur une page qui en a une (`.tabs.is-bar`). Le site et Selecta n’ont plus à la rendre.
+- Lien retour sur une photo (`.back-link.on-photo`) : le bouton flottant du site tel qu’il est, un filet d’or doux (20 %) au lieu de l’or plein, son ombre légère qui grandit quand il monte (`--photo-shadow`, `--photo-shadow-up`), sa flèche un peu plus épaisse ; il ne bouge plus quand on appuie.
+- Vitrine : le gris discret (`--faint`) revient à 60 % d’encre, celui du site, comme décidé ; la 2.24.0 l’avait passé à 62 %. Il fait 4,3 à 4,5:1 sur le beige, un choix que la vérification de la vitrine laisse de côté, comme l’or du site.
+- Bandeau photo (`.hero`) : il prend les valeurs exactes des deux bandeaux du site. Sans variante, c’est celui des pages Events et newsletter : 420px de haut (360px sur tablette, 300px sur téléphone), titre de 56px espacé de 6px (36px sur téléphone) au-dessus d’un trait d’or, capitales d’or de 16px. `.is-full` est celui d’une page d’événement : la hauteur de l’écran, nom en 84px espacé de 8px (56px sur tablette et téléphone), lieu en capitales d’or de 28px, date de 20px, puis le bouton. Les titres gardent l’interligne de 1,8 des titres du site, et un mot trop long reste entier. Chaque taille et chaque écart est un jeton `--hero-*` qu’une page peut changer (le site le fait pour un téléphone tenu en largeur). `.is-short` et `.is-bottom` (la couverture de Selecta) ne changent pas.
+- Page document (`body.doc`) : sur papier, chaque mot s’imprime en noir plein et un peu plus gras (400, le gras en 600), pour qu’une page à signer se lise bien. Les pages légales du site (conditions, autorisation de modèle) passent sur ce modèle.
+- Jetons : `--fs-84`, `--ls-6`, `--ls-8`, et dans l’échelle des espaces `--s-40`, `--s-56`, `--s-60`, `--s-80`, des valeurs du site.
+- Carte à couverture (`.card-cover`) : la photo garde son 16:9 et le trait d’or passe dessous, même sur une page qui compte les bordures dans les tailles (`box-sizing: border-box`, le site) ; elle y perdait 3px.
+
 ## 2.25.0 · 10 novembre 2026
 
 - Courbe (`ds.chart.line`) : une forme haute, pour le cours d’une ligne de bourse (Bank, le PEA). `tall` la grandit (180px, 150px sur téléphone) et écrit aussi son jour du milieu sous elle ; `area` remplit son fond de la couleur de la série ; `ref: {v, label}` trace un niveau en pointillé avec son nom (un prix de revient), compris dans l’échelle ; `marks: [{x, label}]` pose un point sur chaque jour donné (des achats), son nom au survol ; `hover` montre, sous le pointeur ou le doigt, un curseur, un point et une bulle avec le jour et la valeur, qui reste dans la courbe. Sans ces options, la courbe ne change pas.

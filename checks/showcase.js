@@ -1,5 +1,5 @@
 // The showcase itself (index.html), both themes, on a computer and on a phone: what the study of 2.24.0 found stays fixed.
-// Every word reads on what is under it (4.5:1, 3:1 from 24px), none is under 11px, a field and a button side by side are
+// Every word reads on what is under it (4.5:1, 3:1 from 24px; the site's gold and its quiet grey are kept by choice), none is under 11px, a field and a button side by side are
 // as high as each other, the site's bar keeps its name clear of its action, and no button of a sheet or a window is cut.
 // usage: node checks/showcase.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
@@ -31,6 +31,9 @@ function look() {
     // a word in the site's gold, or on it in white, keeps it: a choice made knowing it reads less on white (2.2:1), left out
     const gold = px(getComputedStyle(col).getPropertyValue('--accent').trim()), onGold = bg => bg && [0, 1, 2].every(i => Math.abs(bg[i] - gold[i]) <= 2);
     const golds = ['--accent', '--accent-strong'].map(t => px(getComputedStyle(col).getPropertyValue(t).trim())), inGold = fg => golds.some(g => [0, 1, 2].every(i => Math.abs(fg[i] - g[i]) <= 2));
+    // the site's quiet grey (60% of ink) keeps it too, though it reads 4.3 to 4.5:1 on the beige: a choice, left out
+    const quiet = col.dataset.theme === 'vitrine' ? px(getComputedStyle(col).getPropertyValue('--faint').trim()) : null,
+      inQuiet = fg => quiet && [0, 1, 2].every(i => Math.abs(fg[i] - quiet[i]) <= 2) && Math.abs(fg[3] - quiet[3]) <= .02;
     for (const el of col.querySelectorAll('*')) {
       const c = getComputedStyle(el); if (c.display === 'none' || c.visibility === 'hidden' || +c.opacity === 0) continue;
       const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
@@ -39,7 +42,7 @@ function look() {
         const size = parseFloat(c.fontSize);
         if (size < 11) R.small.push([own.slice(0, 24), size]);
         const bg = ground(el), fg = px(c.color);
-        if (bg && fg[3] > 0 && !onGold(bg) && !inGold(bg) && !inGold(fg)) { const a = lum(over(fg, bg)), b = lum(bg), ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+        if (bg && fg[3] > 0 && !onGold(bg) && !inGold(bg) && !inGold(fg) && !inQuiet(fg)) { const a = lum(over(fg, bg)), b = lum(bg), ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
           const large = size >= 24 || (size >= 18.66 && +c.fontWeight >= 700);
           if (ratio < (large ? 3 : 4.5)) R.faint.push([own.slice(0, 24), Math.round(ratio * 100) / 100]); }
       }

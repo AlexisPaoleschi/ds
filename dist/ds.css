@@ -1,4 +1,4 @@
-/* ds 2.25.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.26.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -47,12 +47,16 @@
   --overlay-white-strong: rgba(255,255,255,.8); --overlay-white-medium: rgba(255,255,255,.5); --overlay-white-light: rgba(255,255,255,.25); --overlay-white-lighter: rgba(255,255,255,.1);
   --overlay-black-strong: rgba(0,0,0,.9); --overlay-black-medium: rgba(0,0,0,.5); --overlay-black-soft: rgba(0,0,0,.35); --overlay-black-light: rgba(0,0,0,.25); --overlay-black-lighter: rgba(0,0,0,.1);
   --text-shadow-sm: 0 2px 4px rgba(0,0,0,.6); --text-shadow-md: 0 2px 6px rgba(0,0,0,.6); --text-shadow-lg: 0 2px 8px rgba(0,0,0,.6);
+  /* a white button over a photo (the way back on a hero): its soft shadow, and the one it takes when it rises */
+  --photo-shadow: 0 2px 8px rgba(0,0,0,.1); --photo-shadow-up: 0 4px 16px rgba(0,0,0,.1);
   /* the photo viewer's controls, over its black veil: their signs, their thin ring, and the pale gold they fill with on hover */
   --viewer-ink: rgba(255,255,255,.7); --viewer-line: rgba(255,255,255,.3); --viewer-hover: rgba(201,169,97,.2);
   /* text: eight sizes, three line heights, four letter spacings; 11px is the least, for a short label in capitals or an axis */
   --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
   /* the sizes of alexispaoleschi.com: its text, its subtitles, its section titles */
   --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px; --fs-36: 36px; --fs-56: 56px;
+  /* the title over the photo of an event page */
+  --fs-84: 84px;
   /* the big sums at the top of a screen grow with it */
   --fs-display: clamp(34px, 9vw, 50px); --fs-display-2: clamp(var(--fs-22), 6.5vw, 30px);
   --lh-tight: 1; --lh-ui: 1.3; --lh-text: 1.5;
@@ -62,9 +66,10 @@
   /* a little air between the letters: Selecta's titles and its footer */
   --ls-loose: .07em;
   /* the letter spacings of alexispaoleschi.com, in pixels as the site writes them */
-  --ls-0-5: .5px; --ls-1: 1px; --ls-1-5: 1.5px; --ls-2: 2px; --ls-2-5: 2.5px; --ls-3: 3px; --ls-4: 4px;
+  --ls-0-5: .5px; --ls-1: 1px; --ls-1-5: 1.5px; --ls-2: 2px; --ls-2-5: 2.5px; --ls-3: 3px; --ls-4: 4px; --ls-6: 6px; --ls-8: 8px;
   /* space: one scale for paddings, margins and gaps */
-  --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-20: 20px; --s-24: 24px; --s-32: 32px; --s-48: 48px;
+  --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-20: 20px; --s-24: 24px; --s-32: 32px; --s-40: 40px; --s-48: 48px;
+  --s-56: 56px; --s-60: 60px; --s-80: 80px;
   /* layers, from the page up: raised, edge tab, veil, overlay, tab bar, a phone's drawer (above the tab bar), sheet, passing message */
   --z-raise: 2; --z-edge: 25; --z-veil: 29; --z-over: 30; --z-bar: 40; --z-drawer: 45; --z-sheet: 50; --z-toast: 60;
   /* durations, and the two shadows: menus, then sheets and drawers */
@@ -179,7 +184,7 @@
   /* every line in the site's soft gold; the full gold to underline */
   --line: rgba(201,169,97,.2); --line-2: var(--gold-500); --pop-line: var(--line);
   /* the site's two greys: 85% for what is read, 60% for what stays quiet */
-  --ink: var(--coal-900); --dim: rgba(26,26,26,.85); --faint: rgba(26,26,26,.62);
+  --ink: var(--coal-900); --dim: rgba(26,26,26,.85); --faint: rgba(26,26,26,.6);
   /* the gold of alexispaoleschi.com, the reference every colour is matched to; its darker gold on hover, and for a success */
   --accent: var(--gold-500); --accent-soft: rgba(201,169,97,.05); --accent-line: var(--gold-500); --accent-strong: var(--gold-600);
   /* a word in gold keeps the site's gold, and a word on gold its white, a choice made knowing they read less on white (2.2:1) */
@@ -417,7 +422,8 @@
    header.top .gear { width: 32px; height: 32px; }
 }
 @media (max-width: 768px) {
-    body:not(.settings) { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
+    /* the room the bar of tabs takes at the foot of a phone page, only on a page that has one (not the site's, nor Selecta's) */
+    body:not(.settings):has(.tabs.is-bar) { padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
@@ -673,6 +679,10 @@
   @media print {
     body.doc { background: none; }
     body.doc main { max-width: none; padding: 0; }
+    /* on paper every word is in full black and a little bolder than on a screen, so that a page to sign reads well */
+    body.doc, body.doc main :is(h1, h2, h3, p, li, strong, a, .eyebrow) { color: var(--black); }
+    body.doc { font-weight: 400; }
+    body.doc main strong { font-weight: 600; }
   }
 /* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
    ds.js puts it on the page (ds.toast). */
@@ -858,7 +868,8 @@
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
   .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
-  .card-cover { position: relative; display: block; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
+  /* the photo keeps its 16:9 and the line goes under it, on a page that counts borders in sizes (box-sizing) too */
+  .card-cover { position: relative; display: block; box-sizing: content-box; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
   .card-cover img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--cover-time) ease; }
   .card-cover .badge { position: absolute; top: var(--cover-badge); right: var(--cover-badge); }
   @media (hover: hover) { .card.is-link:hover .card-cover img { transform: scale(var(--cover-zoom)); } }
@@ -1571,38 +1582,53 @@
    capitals), .hero-meta (a date, a place) and .hero-acts (its buttons); a .back-link.on-photo may sit in its corner.
    A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
    in both themes, each with its own title font.
-   .is-full fills the screen (an event page), .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
+   Without a modifier it is the site's page hero (the events, the newsletter); .is-full fills the screen with an event
+   page's sizes, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
    left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
    still on a touch screen and for those who ask for less motion). */
-  .hero { --hero-veil: var(--overlay-black-medium); --hero-t-size: clamp(var(--fs-36), 6vw, var(--fs-56)); --hero-t-lh: var(--title-lh); --hero-t-ls: var(--section-ls);
-    --hero-pad: var(--s-48); --hero-side: var(--s-24);
+  /* the page's hero (the site's events and newsletter): 420px high, its title in 56px over a gold line, gold capitals under
+     it; .is-full gives an event page's sizes. Each size is a --hero-* token, so that a page can set the one it needs. */
+  .hero { --hero-veil: var(--overlay-black-medium); --hero-h: 420px; --hero-pad: var(--s-80); --hero-pad-end: var(--hero-pad); --hero-side: var(--s-40);
+    --hero-in-max: 720px; --hero-in-pad: 0px;
+    --hero-t-size: var(--fs-56); --hero-t-lh: var(--title-lh); --hero-t-ls: var(--ls-6); --hero-t-gap: var(--s-32); --hero-rule: block; --hero-rule-gap: var(--s-24);
+    --hero-sub-size: var(--fs-16); --hero-sub-weight: 400; --hero-sub-ls: var(--ls-3); --hero-sub-gap: 0px;
+    --hero-meta-size: var(--fs-20); --hero-meta-ls: var(--ls-3); --hero-meta-gap: var(--s-56);
     position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    min-height: clamp(300px, 60vh, 620px); overflow: hidden; color: var(--white); text-align: center;
-    padding: var(--hero-pad) max(var(--hero-side), env(safe-area-inset-right, 0px)) var(--hero-pad) max(var(--hero-side), env(safe-area-inset-left, 0px));
+    min-height: var(--hero-h); overflow: hidden; color: var(--white); text-align: center;
+    padding: var(--hero-pad) max(var(--hero-side), env(safe-area-inset-right, 0px)) var(--hero-pad-end) max(var(--hero-side), env(safe-area-inset-left, 0px));
     background-color: var(--night-800); background-position: center; background-size: cover; background-repeat: no-repeat; }
-  /* vitrine's titles have room between their lines for running text; a hero's one or two big lines need less */
-  [data-theme="vitrine"] .hero { --hero-t-lh: var(--lh-ui); --hero-sub-weight: var(--text-weight); }
   .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero-img img { position: static; }
   /* the veil, over the photo and under the words */
   .hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-veil); pointer-events: none; }
-  .hero-in { position: relative; z-index: var(--z-raise); display: flex; flex-direction: column; align-items: center; gap: var(--s-12); width: min(100%, 900px); min-width: 0; }
+  /* as wide as its words, up to --hero-in-max; a word longer than the screen stays whole, centred over the hero's edges */
+  .hero-in { position: relative; z-index: var(--z-raise); display: flex; flex-direction: column; align-items: center; max-width: var(--hero-in-max);
+    box-sizing: border-box; padding: var(--hero-in-pad); }
   .hero-in > * { margin: 0; }
-  .hero-t { color: var(--white); overflow-wrap: anywhere; text-wrap: balance; text-shadow: var(--text-shadow-lg);
+  .hero-t { position: relative; margin-bottom: var(--hero-t-gap); padding-bottom: var(--hero-rule-gap); color: var(--white); overflow-wrap: break-word; text-shadow: var(--text-shadow-lg);
     font: var(--title-weight) var(--hero-t-size)/var(--hero-t-lh) var(--title-font); letter-spacing: var(--hero-t-ls); text-transform: var(--title-case); }
-  /* gold capitals: bold in atelier, light as the site's in vitrine */
-  .hero-sub { color: var(--accent); text-shadow: var(--text-shadow-lg);
-    font: var(--hero-sub-weight, var(--label-weight)) clamp(var(--fs-15), 2.2vw, var(--fs-24))/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-3); text-transform: uppercase; }
-  .hero-meta { color: var(--white); text-shadow: var(--text-shadow-md);
-    font: var(--text-weight) clamp(var(--fs-14), 1.6vw, var(--fs-20))/var(--lh-ui) var(--body); letter-spacing: var(--ls-1-5); }
-  .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-12); margin-top: var(--s-24); }
+  /* the gold line under the page's title, as under a section's */
+  .hero-t::after { content: ""; display: var(--hero-rule); position: absolute; left: 50%; bottom: 0; width: 60px; height: 1px; background: var(--accent); transform: translateX(-50%); }
+  /* gold capitals */
+  .hero-sub { margin-bottom: var(--hero-sub-gap); color: var(--accent); text-shadow: var(--text-shadow-lg);
+    font: var(--hero-sub-weight) var(--hero-sub-size)/var(--lh-loose) var(--body); letter-spacing: var(--hero-sub-ls); text-transform: uppercase; }
+  /* a date, a place */
+  .hero-meta { margin-bottom: var(--hero-meta-gap); color: var(--white); text-shadow: var(--text-shadow-lg);
+    font: var(--text-weight) var(--hero-meta-size)/var(--lh-loose) var(--body); letter-spacing: var(--hero-meta-ls); }
+  .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-12); }
   /* a hero's buttons are the site's large ones */
   .hero-acts .btn { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
   /* the way back, in the hero's top left corner, clear of an iPhone's notch */
   .hero > .back-link { position: absolute; z-index: var(--z-raise); top: max(var(--s-24), env(safe-area-inset-top, 0px)); left: max(var(--s-24), env(safe-area-inset-left, 0px)); }
 
-  .hero.is-full { min-height: 100vh; min-height: 100svh; }
-  .hero.is-short { --hero-t-size: var(--fs-display-2); --hero-pad: var(--s-32); --hero-side: var(--s-32); min-height: clamp(220px, 34vh, 320px); }
+  /* an event page: the screen's height, its name in 84px, the place in 28px gold capitals, the date, then its button */
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: 900px; --hero-in-pad: var(--s-20);
+    --hero-t-size: var(--fs-84); --hero-t-ls: var(--ls-8); --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-sub-size: var(--fs-28); --hero-sub-weight: var(--text-weight); --hero-sub-ls: var(--ls-6); --hero-sub-gap: var(--s-16); }
+  /* Selecta's gallery cover: low, its words close together */
+  .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
+    --hero-t-size: var(--fs-display-2); --hero-t-lh: var(--lh-ui); --hero-t-ls: var(--ls-4); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
+  .hero.is-short .hero-in { gap: var(--s-12); }
   .hero.is-bottom { --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent); align-items: stretch; justify-content: flex-end; text-align: left; }
   .hero.is-bottom .hero-in { align-items: flex-start; width: 100%; gap: var(--s-6); }
   .hero.is-bottom .hero-meta { font: var(--label-weight) var(--fs-12)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
@@ -1618,11 +1644,13 @@
   }
 }
 @media (max-width: 768px) {
-  .hero { --hero-pad: var(--s-32); }
+  .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-t-ls: var(--ls-4); --hero-sub-size: var(--fs-22); --hero-sub-ls: var(--ls-4); --hero-meta-size: var(--fs-16); }
 }
 @media (max-width: 480px) {
-  .hero { --hero-pad: var(--s-48); --hero-side: var(--s-16); min-height: clamp(300px, 56vh, 520px); }
-  .hero.is-short { --hero-pad: var(--s-20); --hero-side: var(--s-16); min-height: 220px; }
+  .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16); --hero-t-size: var(--fs-36); --hero-sub-size: var(--fs-12); }
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-t-size: var(--fs-56); --hero-sub-size: var(--fs-22); }
+  .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16); --hero-t-size: var(--fs-display-2); }
   .hero > .back-link { top: max(var(--s-16), env(safe-area-inset-top, 0px)); left: max(var(--s-16), env(safe-area-inset-left, 0px)); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1632,7 +1660,7 @@
 /* The way back, « ← Galeries », anywhere in a page: <a class="back-link"> with the sprite's arrow,
    <svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>, then a few capitals. Quiet until the pointer
    comes: it turns gold and its arrow steps back (Selecta's). Over a photo (.on-photo: a hero's corner) it is the site's
-   floating button instead, white with a gold edge, over a blur. The settings' .back stays the settings' own. */
+   floating button instead, white with a soft gold edge, over a blur. The settings' .back stays the settings' own. */
   .back-link { --back-ls: var(--ls-caps); display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-6) 0; color: var(--faint); text-decoration: none;
     font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--back-ls); text-transform: uppercase; white-space: nowrap;
     transition: color var(--t-fast) ease, background-color var(--t-fast) ease, border-color var(--t-fast) ease, transform var(--t-fast) ease, box-shadow var(--t-fast) ease; }
@@ -1643,11 +1671,14 @@
     .back-link:hover .ico { transform: translateX(calc(-1 * var(--s-4))); }
   }
   /* over a photo: dark words on a white pill whatever the theme, as the photo is the same in both */
-  .back-link.on-photo { padding: var(--s-10) var(--s-20); color: var(--coal-900); background: var(--overlay-white-strong); border: 1px solid var(--accent);
-    border-radius: var(--r-m); box-shadow: var(--shadow-pop); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
-  .back-link.on-photo .ico { width: 14px; height: 14px; }
+  .back-link.on-photo { padding: var(--s-10) var(--s-20); color: var(--coal-900); background: var(--overlay-white-strong);
+    border: 1px solid color-mix(in srgb, var(--gold-500) 20%, transparent);
+    border-radius: var(--r-m); box-shadow: var(--photo-shadow); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  .back-link.on-photo:active { transform: none; }
+  /* the site's arrow, a little bolder than the sprite's on its white pill */
+  .back-link.on-photo .ico { width: 14px; height: 14px; stroke-width: 2; }
   @media (hover: hover) {
-    .back-link.on-photo:hover { color: var(--white); background: var(--accent); border-color: var(--accent); transform: translateY(calc(-1 * var(--s-2))); }
+    .back-link.on-photo:hover { color: var(--white); background: var(--accent); border-color: var(--accent); transform: translateY(calc(-1 * var(--s-2))); box-shadow: var(--photo-shadow-up); }
     .back-link.on-photo:hover .ico { transform: none; }
   }
 @media (max-width: 480px) {
