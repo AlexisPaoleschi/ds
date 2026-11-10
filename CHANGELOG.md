@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.24.1 · 10 novembre 2026
+
+- Barre d’onglets sur téléphone : à cinq vues ou plus (Bank et ses Placements), elle prend la largeur de l’écran moins 8px de chaque côté, et les bulles au-dessus d’elle aussi (`--tabbar-w`), ses boutons se serrent un peu : chaque nom tient en entier. Sur les plus petits téléphones, un nom trop long finit par « … » au lieu de sortir de la barre.
+
 ## 2.24.0 · 10 novembre 2026
 
 Ce que l’étude de la page vitrine a trouvé, dans les deux thèmes, sur ordinateur et sur téléphone.
