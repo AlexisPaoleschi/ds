@@ -262,10 +262,57 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const busy = await p.evaluate(() => [document.getElementById('sendbtn').classList.contains('is-busy'), document.getElementById('sendbtn').disabled]);
   assert(JSON.stringify(askedDel) === JSON.stringify(['Supprimer ce client ?', 'Cette action est irréversible.', 'Supprimer']) && after1 === 0 && after2[0] === 1 && !after2[1]
     && busy[0] && busy[1], 'un formulaire qui supprime demande d’abord ; un autre montre son bouton occupé ' + JSON.stringify([askedDel, after1, after2, busy]));
+  // a busy button keeps its colours, in both themes: a save button stays filled, its words readable
+  const busyLook = await p.evaluate(() => {
+    const probe = name => { const i = document.createElement('i'); i.style.color = 'var(' + name + ')'; document.body.append(i); const c = getComputedStyle(i).color; i.remove(); return c; };
+    const bg = name => { const i = document.createElement('i'); i.style.backgroundColor = 'var(' + name + ')'; document.body.append(i); const c = getComputedStyle(i).backgroundColor; i.remove(); return c; };
+    const b = document.getElementById('sendbtn'); b.classList.add('is-save'); b.style.transition = 'none';
+    const look = () => { const c = getComputedStyle(b); return { filled: c.backgroundColor === bg('--accent'), words: c.color === probe('--on-accent'), turns: getComputedStyle(b, '::after').animationName }; };
+    const atelier = look(); document.documentElement.dataset.theme = 'vitrine'; const vitrine = look();
+    document.documentElement.dataset.theme = 'atelier'; b.classList.remove('is-save'); b.style.transition = '';
+    return { atelier, vitrine };
+  });
+  assert(busyLook.atelier.filled && busyLook.atelier.words && busyLook.vitrine.filled && busyLook.vitrine.words && busyLook.vitrine.turns === 'spin',
+    'un bouton occupé garde ses couleurs : « enregistrer » reste plein, ses mots lisibles, et sa roue tourne ' + JSON.stringify(busyLook));
   // the message left after a redirect, the screen readers' words, the cards' grid
   const left = await p.evaluate(() => ({ toast: [...document.querySelectorAll('.toast .txt')].some(t => t.textContent === 'Sélection terminée'),
     vh: getComputedStyle(document.getElementById('vh')).width, gc: getComputedStyle(document.getElementById('gc')).display }));
   assert(left.toast && left.vh === '1px' && left.gc === 'grid', 'le message laissé après une redirection, le texte des lecteurs d’écran, la grille de cartes ' + JSON.stringify(left));
+  // every wheel shows its quarter turning, in both themes: its ring is never the colour of its moving quarter
+  const wheels = await p.evaluate(() => {
+    const box = document.createElement('div');
+    box.innerHTML = '<div class="toast is-busy"><i class="mark"></i></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
+      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-p"><i class="spin"></i></div></div><i class="spinner"></i>';
+    document.body.append(box);
+    const still = [];
+    for (const theme of ['atelier', 'vitrine']) {
+      document.documentElement.dataset.theme = theme;
+      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner']) {
+        const c = getComputedStyle(box.querySelector(sel));
+        if (c.borderTopColor === c.borderRightColor || c.animationName !== 'spin') still.push(theme + ' ' + sel);
+      }
+    }
+    document.documentElement.dataset.theme = 'atelier'; box.remove();
+    return still;
+  });
+  assert(wheels.length === 0, 'chaque roue montre son quart qui tourne, dans les deux thèmes ' + JSON.stringify(wheels));
+  // a settings page's bar: its message is a line of text, not a box; empty it shows nothing, filled the bar keeps its height
+  const settingsBar = await p.evaluate(() => {
+    document.body.classList.add('settings');
+    const box = document.createElement('div'); box.className = 'bar';
+    box.innerHTML = '<span class="msg" role="status"></span><button type="submit" class="save" disabled>Enregistrer</button>';
+    document.body.append(box);
+    const m = box.querySelector('.msg'), empty = { w: m.getBoundingClientRect().width, h: box.getBoundingClientRect().height };
+    m.textContent = '1 réglage modifié, pas encore enregistré.';
+    const c = getComputedStyle(m), filled = { h: box.getBoundingClientRect().height, bg: c.backgroundColor, border: c.borderTopWidth, pad: c.paddingTop };
+    box.remove(); document.body.classList.remove('settings');
+    return { empty, filled };
+  });
+  assert(settingsBar.empty.w === 0 && settingsBar.filled.h === settingsBar.empty.h && settingsBar.filled.bg === 'rgba(0, 0, 0, 0)' && settingsBar.filled.border === '0px' && settingsBar.filled.pad === '0px',
+    'la barre d’une page de réglages : son message est une ligne de texte, invisible vide, sans changer la hauteur une fois écrit ' + JSON.stringify(settingsBar));
+  // the form sent above loads this page again in its hidden frame, which reads what a page left for after sign in:
+  // let it finish first, so that it cannot take what the next check leaves
+  await p.waitForFunction(() => { const f = document.querySelector('iframe[name="sink"]'); try { return f.contentWindow.ds && f.contentDocument.readyState === 'complete'; } catch (e) { return false; } });
   // an ended session goes to sign in, and back the page opens where it was
   await p.evaluate(() => { location.hash = 'analyse/x'; });
   await p.evaluate(() => ds.api('GET', '/api/ended').catch(() => {}));

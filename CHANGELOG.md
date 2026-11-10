@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.23.2 · 10 novembre 2026
+
+- Bouton occupé (`.btn.is-busy`, le bouton d’un formulaire envoyé) : il garde ses couleurs et sa roue tourne. Le style d’un bouton indisponible ne s’applique plus à lui. En Vitrine, le texte d’un bouton « enregistrer » occupé disparaissait : blanc sur le fond blanc d’un bouton désactivé (« Se connecter » de Selecta).
+- Roues : celle de l’en-tête (le chargement et son pourcentage), celle de l’écran de chargement et celle d’une bulle « occupé » montrent toutes leur quart doré qui tourne, sur un anneau plus clair (`--spin-ring`). Celle de l’en-tête restait un anneau uni dans les deux thèmes : sa couleur de quart était écrasée. En Vitrine, l’anneau des deux autres prenait l’or plein du trait fort : on ne la voyait pas tourner.
+- Page de réglages : le message de la barre du bas (« 1 réglage modifié, pas encore enregistré. ») est une simple ligne de texte. Il prenait aussi le cadre d’un message durable (`.msg`) : vide, un petit carré restait visible ; écrit, la barre grandissait.
+- Les contrôles du comportement attendent que le cadre caché qui reçoit un formulaire de démonstration ait fini de charger : il effaçait parfois l’adresse que le contrôle suivant attend après une reconnexion.
+
 ## 2.23.1 · 10 novembre 2026
 
 - Deux jetons : `--lh-loose` (1,8), l’interligne aéré des sites publics, celui des titres de Vitrine et du texte de Selecta ; `--ls-loose` (0,07em), le peu d’air entre les lettres des titres et du pied de page de Selecta. Les titres de Vitrine prennent `--lh-loose`, à la même valeur qu’avant.

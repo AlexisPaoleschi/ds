@@ -61,7 +61,8 @@
   :where(body.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
   :where(body.settings) .field .def { white-space: nowrap; }
   :where(body.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
-  :where(body.settings) .bar .msg { color: var(--dim); font-size: var(--fs-13); margin-right: auto; }
+  /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
+  :where(body.settings) .bar .msg { display: block; margin: 0 auto 0 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
   :where(body.settings) .bar .msg.bad { color: var(--bad); }
   :where(body.settings) .bar .msg.ok { color: var(--good); }
   :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }

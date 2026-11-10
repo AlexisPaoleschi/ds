@@ -1,4 +1,4 @@
-/* ds 2.23.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.23.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -355,7 +355,7 @@
   @keyframes okdraw { to { stroke-dashoffset: 0; } }
   @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
   
-  header.top .busy .spin { animation: spin .8s linear infinite; border-radius: 50%; border-top-color: var(--accent); border: 2px solid var(--accent-line); height: 14px; width: 14px; box-sizing: border-box; display: block; flex: 0 0 14px; }
+  header.top .busy .spin { animation: spin .8s linear infinite; border-radius: 50%; border: 2px solid var(--spin-ring); border-top-color: var(--accent); height: 14px; width: 14px; box-sizing: border-box; display: block; flex: 0 0 14px; }
 /* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
   .boot { display: grid; place-items: center; text-align: center; min-height: 52vh; padding: var(--s-24); transition: opacity var(--t-mid) ease; }
   .boot[hidden] { display: none; }
@@ -367,7 +367,7 @@
   .boot { position: fixed; inset: calc(72px + env(safe-area-inset-top, 0px)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
 /* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
   .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
-  .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--accent-line); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--spin-ring); border-top-color: var(--accent); animation: spin .8s linear infinite; }
   .boot .boot-p span { min-width: 3.2ch; text-align: left; }
   .boot .boot-p span:empty { display: none; }
   .boot.failed .boot-p { display: none; }
@@ -472,7 +472,7 @@
 .btn.is-save:hover { filter: brightness(1.08); }
 .btn.is-danger { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
 .btn.is-danger:hover { border-color: var(--bad); }
-.btn:disabled { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
+.btn:disabled:not(.is-busy) { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
 .btn:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
 /* a square button with only an icon (reload, settings) */
 .btn.is-icon { width: var(--btn-h); padding: 0; }
@@ -485,14 +485,15 @@
 [data-theme="vitrine"] .btn.is-act { color: var(--accent); background: var(--btn-bg); border-color: var(--accent); }
 [data-theme="vitrine"] .btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
 [data-theme="vitrine"] .btn.is-danger { color: var(--bad); background: var(--btn-bg); border-color: var(--bad); }
-[data-theme="vitrine"] .btn:disabled { background: var(--btn-bg); border-color: var(--line); opacity: .6; }
+[data-theme="vitrine"] .btn:disabled:not(.is-busy) { background: var(--btn-bg); border-color: var(--line); opacity: .6; }
 [data-theme="vitrine"] .btn:active { transform: none; }
 @media (hover: hover) {
   [data-theme="vitrine"] .btn:not(:disabled):hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); transform: translateY(var(--btn-lift)); box-shadow: var(--shadow-pop); filter: none; }
   [data-theme="vitrine"] .btn.is-save:not(:disabled):hover { background: var(--accent-strong); border-color: var(--accent-strong); }
   [data-theme="vitrine"] .btn.is-danger:not(:disabled):hover { background: var(--bad); border-color: var(--bad); }
 }
-/* a button whose request is on its way (a form sent, ds.js marks it): it turns, and a second click sends nothing */
+/* a button whose request is on its way (a form sent, ds.js marks it): it keeps its colours, it turns, and a second
+   click sends nothing; only a button that cannot be used takes the faded look above */
   .btn.is-busy { cursor: progress; opacity: .75; }
   .btn.is-busy::after { content: ""; flex: none; width: 13px; height: 13px; box-sizing: border-box; border-radius: 50%;
     border: 2px solid currentColor; border-top-color: transparent; animation: spin .8s linear infinite; }
@@ -649,6 +650,8 @@
   .toast.is-good .mark { background: var(--good); }
   .toast.is-bad .mark { background: var(--bad); }
   .toast.is-busy .mark { width: 12px; height: 12px; box-sizing: border-box; background: none; border: 2px solid var(--line-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  /* vitrine's strong line is the full gold: the ring takes the wheels' soft one, so that the gold quarter shows turning */
+  [data-theme="vitrine"] .toast.is-busy .mark { border-color: var(--spin-ring); border-top-color: var(--accent); }
   .toast .txt { flex: 1 1 auto; min-width: 0; }
   .toast .act, .toast .x { flex: none; background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
   .toast .act { color: var(--accent); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls, normal); text-transform: var(--act-case, none); }
@@ -734,7 +737,8 @@
   :where(body.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
   :where(body.settings) .field .def { white-space: nowrap; }
   :where(body.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
-  :where(body.settings) .bar .msg { color: var(--dim); font-size: var(--fs-13); margin-right: auto; }
+  /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
+  :where(body.settings) .bar .msg { display: block; margin: 0 auto 0 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
   :where(body.settings) .bar .msg.bad { color: var(--bad); }
   :where(body.settings) .bar .msg.ok { color: var(--good); }
   :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }

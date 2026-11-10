@@ -83,7 +83,7 @@
   @keyframes okdraw { to { stroke-dashoffset: 0; } }
   @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
   
-  header.top .busy .spin { animation: spin .8s linear infinite; border-radius: 50%; border-top-color: var(--accent); border: 2px solid var(--accent-line); height: 14px; width: 14px; box-sizing: border-box; display: block; flex: 0 0 14px; }
+  header.top .busy .spin { animation: spin .8s linear infinite; border-radius: 50%; border: 2px solid var(--spin-ring); border-top-color: var(--accent); height: 14px; width: 14px; box-sizing: border-box; display: block; flex: 0 0 14px; }
 /* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
   .boot { display: grid; place-items: center; text-align: center; min-height: 52vh; padding: var(--s-24); transition: opacity var(--t-mid) ease; }
   .boot[hidden] { display: none; }
@@ -95,7 +95,7 @@
   .boot { position: fixed; inset: calc(72px + env(safe-area-inset-top, 0px)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
 /* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
   .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
-  .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--accent-line); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--spin-ring); border-top-color: var(--accent); animation: spin .8s linear infinite; }
   .boot .boot-p span { min-width: 3.2ch; text-align: left; }
   .boot .boot-p span:empty { display: none; }
   .boot.failed .boot-p { display: none; }
