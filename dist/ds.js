@@ -1,4 +1,4 @@
-/* ds 2.22.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.23.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -2953,8 +2953,6 @@
       if (+slider.value !== j) slider.value = String(j);
       slider.disabled = top === 0;
       slider.setAttribute("aria-valuetext", words().columns(n));
-      // the gold part of the track, up to the thumb
-      slider.style.setProperty("--zoom-at", (top ? j / top * 100 : 0) + "%");
     }
     function layout() {
       var w = grid.clientWidth, s = gap();

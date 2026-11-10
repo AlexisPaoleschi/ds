@@ -30,7 +30,7 @@ function stylesheets() {
       const [, prop, value] = m;
       if (!props.test(prop)) continue;
       // a share in a mix of colours, and a ring's 50%, are no sizes
-      const raw = value.replace(/env\([^)]*\)/g, '').replace(/(color-mix\([^%]*?)\d+%/g, '$1').replace(/^50%$/, '').match(/(^|[\s(,/])-?\d*\.?\d+(px|em|rem|ms|s|%)?(?=$|[\s),/])/g);
+      const raw = value.replace(/env\([^)]*\)/g, '').replace(/\)\s*\/\s*2\b/g, ')').replace(/(color-mix\([^%]*?)\d+%/g, '$1').replace(/^50%$/, '').match(/(^|[\s(,/])-?\d*\.?\d+(px|em|rem|ms|s|%)?(?=$|[\s),/])/g);
       const bad = (raw || []).map(x => x.trim().replace(/^[(,/]/, '')).filter(x => x !== '0' && x !== '0px' && x !== '-1' && !(prop.startsWith('font') && /^\d00$/.test(x)) && !(prop === 'transition' && x === '0'));
       if (prop === 'z-index' && !/var\(/.test(value)) bad.push(value);
       if (bad.length) wrong.push(f + ': ' + prop + ': ' + value.trim() + ' (' + bad.join(' ') + ')');
@@ -222,6 +222,17 @@ function stylesheets() {
   await drag('#order li[data-key="b2"] .grip', -itemH * 3);
   assert(await keys(p, '#order div[data-key="bourso"] li') === 'b2,b3,b1', 'tiré plus haut que sa liste, un compte y reste, et rien n’est dit');
 
+  // the compact tiles: small frames apart, the label above its figure; in vitrine, the site's small cards
+  const tilesLook = pg => pg.evaluate(() => {
+    const color = name => { const i = document.createElement('i'); i.style.color = 'var(' + name + ')'; document.body.append(i); const c = getComputedStyle(i).color; i.remove(); return c; };
+    const list = document.getElementById('ctiles'), [one, up] = list.querySelectorAll('.tile'), dt = one.querySelector('dt'), dd = one.querySelector('dd');
+    return { gap: getComputedStyle(list).columnGap, shadow: getComputedStyle(one).boxShadow !== 'none', figureFirst: dd.getBoundingClientRect().top < dt.getBoundingClientRect().top,
+      size: getComputedStyle(dd).fontSize, gold: getComputedStyle(dd).color === color('--accent-strong'), up: getComputedStyle(up.querySelector('dd')).color === color('--good'),
+      radius: getComputedStyle(one).borderTopLeftRadius };
+  });
+  const ta = await tilesLook(p);
+  assert(ta.gap === '8px' && !ta.shadow && !ta.figureFirst && ta.size === '17px' && ta.up && ta.radius === '6px',
+    'les tuiles compactes : de petits cadres à 8px les uns des autres, le libellé au-dessus du chiffre, sans ombre ' + JSON.stringify(ta));
   // the bars and the coloured cards
   const look = await p.evaluate(() => { const probe = document.createElement('i'); probe.style.color = 'var(--c-rose)'; document.body.append(probe); const rose = getComputedStyle(probe).color; probe.style.color = 'var(--accent)'; const gold = getComputedStyle(probe).color; probe.remove();
     const m = document.getElementById('meter'), fill = m.firstElementChild;
@@ -288,6 +299,12 @@ function stylesheets() {
   const vr = await v.evaluate(() => ({ panel: getComputedStyle(document.querySelector('#sheet .sheet-panel')).borderTopLeftRadius, pill: getComputedStyle(document.getElementById('pill')).borderTopLeftRadius,
     pad: getComputedStyle(document.querySelector('#sheet .sheet-panel')).paddingLeft, th: getComputedStyle(document.querySelector('#ops th')).fontSize }));
   assert(vr.panel === '0px' && vr.pill === '0px' && vr.pad === '32px' && vr.th === '12px', 'Vitrine : angles carrés, la place d’une fenêtre du site, des titres de colonne plus grands ' + JSON.stringify(vr));
+  const tv = await tilesLook(v);
+  assert(tv.gap === '20px' && tv.shadow && tv.figureFirst && tv.size === '28px' && tv.gold && tv.up && tv.radius === '0px',
+    'Vitrine : les tuiles compactes sont les petites cartes du site, à part, avec une ombre douce, le chiffre or au-dessus de son libellé ' + JSON.stringify(tv));
+  await v.setViewportSize({ width: 375, height: 812 });
+  const tp = await tilesLook(v);
+  assert(tp.gap === '16px' && tp.size === '22px' && tp.figureFirst, 'Vitrine, sur téléphone : les cartes plus serrées, le chiffre de 22px ' + JSON.stringify(tp));
   await vit.close();
 
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));

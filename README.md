@@ -10,7 +10,7 @@ La page vitrine, `index.html`, montre chaque composant dans les deux thèmes.
 - `src/base.css` : les champs, les cases à cocher et le focus, les mêmes dans toutes les pages, et la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`).
 - `src/shell.css` : la coque des applis Bank et Studio : page, en-tête et onglets, chargement, cartes, messages, listes, sources en bas de page.
 - `src/buttons.css` : les boutons, `.btn` et ses variantes `is-act`, `is-save`, `is-danger`, `is-icon`.
-- `src/tiles.css` : les chiffres en tuiles (`.tiles`, `.tile`), et leur forme compacte pour le haut d’un écran (`.tiles.is-compact`).
+- `src/tiles.css` : les chiffres en tuiles (`.tiles`, `.tile`), et leur forme compacte pour le haut d’un écran (`.tiles.is-compact`), que Vitrine dessine en petites cartes séparées et ombrées, le chiffre au-dessus de son libellé.
 - `src/panel.css` : le panneau de filtres, venu de Studio : l’onglet sur le bord, le panneau, ses groupes de boutons à allumer ou éteindre, le tiroir sur téléphone.
 - `src/period.css` : l’en-tête de période, le même pour les opérations de Bank et le calendrier de Studio : le grand titre qui ouvre le sélecteur, les flèches à droite.
 - `src/doc.css` : les petites pages d’une appli (confidentialité, conditions, déconnexion), sous `body.doc`.

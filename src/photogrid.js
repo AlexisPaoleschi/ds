@@ -65,8 +65,6 @@
       if (+slider.value !== j) slider.value = String(j);
       slider.disabled = top === 0;
       slider.setAttribute("aria-valuetext", words().columns(n));
-      // the gold part of the track, up to the thumb
-      slider.style.setProperty("--zoom-at", (top ? j / top * 100 : 0) + "%");
     }
     function layout() {
       var w = grid.clientWidth, s = gap();

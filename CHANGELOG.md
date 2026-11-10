@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.23.0 · 10 novembre 2026
+
+- Zoom (`.zoom-slider`) : il reprend la barre de Selecta en ligne. Un rail de 6px aux bouts ronds, sur un fond d’or très pâle, presque blanc, avec un bord doux (le trait doux en Vitrine, le trait fort en Atelier), sous un curseur or de 18px cerclé de la couleur de la page. L’or ne remplit plus le rail jusqu’au curseur : `ds.photogrid` ne pose plus `--zoom-at`.
+- Tuiles compactes (`.tiles.is-compact`) en Vitrine : ce sont les petites cartes du tableau de bord de Selecta. Séparées (20px, 16px sur téléphone), d’au moins 200px de large pour qu’un montant tienne (150px sur téléphone, où deux se tiennent côte à côte s’il y a la place), blanches, avec le bord et l’ombre douce des cartes du site, le chiffre or en Gilda (28px, 22px sur téléphone) au-dessus de son libellé en petites capitales. Une tuile qui monte ou qui descend garde son vert ou son rouge. En Atelier, rien ne change : les tuiles de Bank restent les mêmes.
+- Les contrôles des feuilles de style acceptent la moitié d’un jeton (`calc(var(--s-6) / 2)`), comme le font déjà les graphiques.
+
 ## 2.22.0 · 9 novembre 2026
 
 - Synchros (`ds.jobs`) : `ds.jobs.open(clé)` ouvre le journal d’une tâche comme son bouton « Journal », pour une adresse qui le demande (`/settings#patreon/journal`, les liens du brief du matin de Studio). Le bloc d’une tâche a l’identifiant `job-<clé>`.

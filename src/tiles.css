@@ -20,3 +20,17 @@
   .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); }
   .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
+  /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
+     the figure in gold above its label */
+  /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
+  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-20); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
+    background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
+  [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--fs-28); font-weight: 400; }
+  [data-theme="vitrine"] .tiles.is-compact .tile:not(.up):not(.down) dd { color: var(--accent-strong); }
+@media (max-width: 768px) {
+  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--fs-22); }
+}

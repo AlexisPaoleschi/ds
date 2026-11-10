@@ -44,7 +44,7 @@ function stylesheets() {
     for (const m of css.matchAll(/([a-z-]+)\s*:\s*([^;{}]+)/g)) {
       const [, prop, value] = m;
       if (!props.test(prop)) continue;
-      const raw = value.replace(/env\([^)]*\)/g, '').replace(/(color-mix\([^%]*?)\d+%/g, '$1').replace(/^50%$/, '').match(/(^|[\s(,/])-?\d*\.?\d+(px|em|rem|ms|s|%)?(?=$|[\s),/])/g);
+      const raw = value.replace(/env\([^)]*\)/g, '').replace(/\)\s*\/\s*2\b/g, ')').replace(/(color-mix\([^%]*?)\d+%/g, '$1').replace(/^50%$/, '').match(/(^|[\s(,/])-?\d*\.?\d+(px|em|rem|ms|s|%)?(?=$|[\s),/])/g);
       const bad = (raw || []).map(x => x.trim().replace(/^[(,/]/, '')).filter(x => x !== '0' && x !== '0px' && x !== '-1' && !(prop.startsWith('font') && /^\d00$/.test(x)));
       if (prop === 'z-index' && !/var\(/.test(value)) bad.push(value);
       if (bad.length) wrong.push(f + ': ' + prop + ': ' + value.trim() + ' (' + bad.join(' ') + ')');
@@ -265,7 +265,16 @@ function stylesheets() {
   await p.mouse.move(1, 1);
   await p.waitForTimeout(500);
   const vi = await looks();
-  assert(at.track === 'line-2' && vi.track === 'line', 'le rail du zoom : le trait fort d’Atelier, le trait doux de Vitrine (son trait fort est l’or plein) ' + at.track + ' / ' + vi.track);
+  assert(at.track === 'line-2' && vi.track === 'line', 'le bord du rail du zoom : le trait fort d’Atelier, le trait doux de Vitrine (son trait fort est l’or plein) ' + at.track + ' / ' + vi.track);
+  // the browser does not give the styles of a slider's parts: read their rules
+  const rail = await p.evaluate(() => {
+    const rules = [...document.styleSheets].flatMap(s => { try { return [...s.cssRules]; } catch (e) { return []; } }).flatMap(r => r.cssRules ? [r, ...r.cssRules] : [r]);
+    const of = sel => (rules.find(r => r.selectorText === sel) || { style: { cssText: '' } }).style.cssText;
+    return { track: of('.zoom-slider::-webkit-slider-runnable-track'), thumb: of('.zoom-slider::-webkit-slider-thumb'), fill: document.getElementById('zoom').style.cssText };
+  });
+  assert(/height: 6px/.test(rail.track) && /border-radius: calc\(var\(--s-6\) \/ 2\)/.test(rail.track) && /var\(--accent-soft\)/.test(rail.track) && /var\(--zoom-track\)/.test(rail.track) && !/gradient/.test(rail.track)
+    && /width: 18px/.test(rail.thumb) && rail.fill === '',
+    'le zoom, la barre de Selecta : un rail de 6px aux bouts ronds, un fond d’or très pâle, un bord doux, sans or qui le remplit ; un curseur de 18px ' + JSON.stringify(rail));
   assert(vi.font === 'Gilda Display' && vi.caps === 'uppercase' && vi.white && vi.veil && vi.covers && vi.sub && vi.back.icon && vi.back.color && vi.back.ls === '2px' && vi.over.edge && vi.over.radius === '0px',
     'Vitrine : le titre en Gilda Display, en capitales ; le lien retour espacé comme le site, le bouton sur la photo aux angles carrés ' + JSON.stringify(vi));
   await p.emulateMedia({ reducedMotion: 'reduce' });
