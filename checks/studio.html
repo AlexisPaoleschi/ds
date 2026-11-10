@@ -5,6 +5,7 @@
 <div class="wrap">
   <div id="cal"></div>
   <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240</dd><div id="line"></div></div></dl>
+  <div id="price" style="max-width: 600px"></div>
   <div id="line-none"></div>
   <div id="bars"></div>
   <div id="bars-long"></div>
@@ -38,6 +39,9 @@
     const pts = Array.from({ length: 30 }, (_, i) => ({ x: "2026-10-" + String(i + 1).padStart(2, "0"), v: 1200 + i * 2 + (i === 10 ? 30 : 0) }));
     window.line = ds.chart.line(document.getElementById("line"), pts, { color: "--c-bleu" });
     window.lineNone = ds.chart.line(document.getElementById("line-none"), [{ x: "2026-10-01", v: 3 }]);
+    // tall, a share's price: its cost price, two purchases, the day and value under the pointer
+    window.price = ds.chart.line(document.getElementById("price"), pts.map(p => ({ x: p.x, v: p.v / 200 })), { tall: true, area: true, hover: true,
+      ref: { v: 6.05, label: "prix de revient 6,05€" }, marks: [{ x: "2026-10-05", label: "achat" }, { x: "2026-10-20", label: "achat" }], value: v => ds.number(v, 2) + "€" });
 
     window.picked = [];
     window.months = ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11"].map((k, i) => ({

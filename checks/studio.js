@@ -138,6 +138,20 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     stroke: getComputedStyle(document.querySelector('#line polyline')).stroke, label: line.getAttribute('aria-label'), none: lineNone === null && !document.getElementById('line-none').children.length }));
   assert(ln.points === 30 && ln.rules === 2 && JSON.stringify(ln.y) === '["1 258","1 200"]' && JSON.stringify(ln.x) === '["1er oct.","30 oct."]' && ln.stroke === 'rgb(73, 143, 238)'
     && ln.label === '1 200 (1er oct.) → 1 258 (30 oct.)' && ln.none, 'la courbe : un point par jour, le plus haut et le plus bas, le premier et le dernier jour, la couleur de la série ' + JSON.stringify(ln.y));
+  // tall: its ground filled, the dashed level and its name, a dot on each day given, its middle day; the bubble follows the pointer
+  const pr = await p.evaluate(() => ({ tall: price.classList.contains('is-tall'), area: !!document.querySelector('#price .chart-area'), ref: document.querySelector('#price .chart-ref-l').textContent,
+    marks: document.querySelectorAll('#price .chart-mark').length, x: [...document.querySelectorAll('#price .chart-line-x span')].map(s => s.textContent),
+    height: Math.round(document.querySelector('#price .chart-line-svg').getBoundingClientRect().height), hidden: document.querySelector('#price .chart-tip').hidden }));
+  await p.locator('#price').scrollIntoViewIfNeeded();
+  const plot = await p.locator('#price .chart-line-plot').boundingBox();
+  await p.mouse.move(plot.x + plot.width - 1, plot.y + plot.height / 2);
+  const tip = await p.evaluate(() => { const t = document.querySelector('#price .chart-tip'), r = t.getBoundingClientRect(), b = document.querySelector('#price .chart-line-plot').getBoundingClientRect();
+    return { text: t.textContent, shown: !t.hidden, inside: r.right <= b.right + 1 }; });
+  await p.mouse.move(0, 0);
+  const gone = await p.evaluate(() => document.querySelector('#price .chart-tip').hidden);
+  assert(pr.tall && pr.area && pr.ref === 'prix de revient 6,05€' && pr.marks === 2 && JSON.stringify(pr.x) === '["1er oct.","15 oct.","30 oct."]' && pr.height === 180 && pr.hidden
+    && tip.shown && tip.text === '30 oct. · 6,29€' && tip.inside && gone,
+    'la courbe haute : son fond, son niveau en pointillé et son nom, un point par achat, son jour du milieu ; la bulle suit le pointeur, dans la courbe ' + JSON.stringify([pr, tip]));
   // the bars: one per month, a round scale, the average, the figures, the parts, the month running, a click
   const br = await p.evaluate(() => {
     const cols = [...document.querySelectorAll('#bars .chart-bar')], avg = document.querySelector('#bars .chart-bars-avg i');

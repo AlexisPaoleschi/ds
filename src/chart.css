@@ -10,6 +10,23 @@
   .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
   .chart-line-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
   .chart-line-x { display: flex; justify-content: space-between; }
+  /* tall, a chart of its own: room above it for the bubble; the dashed level and its name, the dots of the days given,
+     the cursor and its bubble over the curve */
+  .chart-line-plot { position: relative; min-width: 0; }
+  .chart-line.is-tall { padding-top: var(--s-24); }
+  .chart-line.is-tall .chart-line-svg { height: 180px; }
+  .chart-line.is-hover .chart-line-plot { cursor: crosshair; touch-action: pan-y; }
+  .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) 12%, transparent); stroke: none; }
+  .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
+  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
+  .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;
+    background: var(--panel); border: 2px solid var(--n, var(--accent)); }
+  .chart-dot { background: var(--n, var(--accent)); pointer-events: none; }
+  .chart-cursor { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line-2); pointer-events: none; }
+  .chart-tip { position: absolute; top: 0; z-index: var(--z-raise); transform: translate(-50%, calc(-100% - var(--s-4))); padding: var(--s-4) var(--s-8);
+    background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-s); box-shadow: var(--shadow-pop); color: var(--ink);
+    font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; pointer-events: none; }
+  .chart-line-plot [hidden] { display: none; }
 /* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
    --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
    of its own figures (1ch in its font) */
@@ -135,4 +152,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .chart-bar-stack, .chart-donut-slice { transition: none; }
+}
+@media (max-width: 480px) {
+  .chart-line.is-tall .chart-line-svg { height: 150px; }
 }

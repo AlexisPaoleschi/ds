@@ -1,4 +1,4 @@
-/* ds 2.24.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.25.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -1925,9 +1925,12 @@
 /* Charts, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns its element; with
    holder null it only returns it, for a page that builds its own tree. The colour of a series is a token, given as its
    name (color: "--c-bleu") and set as --n on the chart; the lines, labels and grounds come from the theme.
-   ds.chart.line(holder, points, {color, label, value}): a curve, its highest and lowest values on its right, its first
-     and last days under it. points: [{x: "2026-11-09", v: 1240}]; label(x) and value(v) write them (a short date and a
-     figure by default).
+   ds.chart.line(holder, points, {color, label, value, tall, area, ref, marks, hover}): a curve, its highest and lowest
+     values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; label(x) and value(v)
+     write them (a short date and a figure by default). Tall, a chart of its own (a share's price): taller, its middle
+     day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); marks:
+     [{x, label}] a dot on each day given (purchases), its label on hover; hover: the day and value under the pointer or
+     the finger, with a cursor.
    ds.chart.bars(holder, rows, {color, average, unit, short, selected, pick}): bars on a round scale (0, 500, 1 000…),
      the figure on each bar, a dashed line at the average. rows: [{key, label, value, parts: [{value, color}], live,
      title}]: parts stack their colours in the bar; live hatches a period still running; a "2026-11" key is named by its
@@ -1985,27 +1988,77 @@
   function monthShort(m) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
   function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
 
-  /* the curve: drawn in a 100 × 30 box stretched to the chart's width, its lines kept thin whatever the stretch */
+  /* the curve: drawn in a 100 × 30 box stretched to the chart's width (100 × 60 when tall), its lines kept thin whatever
+     the stretch. Tall, it is a chart of its own: its middle day under it as well, its ground filled with area; ref draws
+     a dashed level with its name (a cost price), marks a dot on the days given (purchases), hover the day and value under
+     the pointer or the finger, with a cursor */
   function line(holder, points, o) {
     o = o || {};
     var pts = (points || []).filter(function (p) { return p && typeof p.v === "number"; });
     if (pts.length < 2) return put(holder, null);
     var label = o.label || function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x) ? window.ds.date(x, "day") : String(x); };
     var value = o.value || num;
-    var vals = pts.map(function (p) { return p.v; }), lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals), span = hi - lo || 1;
-    var s = svg("svg", { viewBox: "0 0 100 30", preserveAspectRatio: "none", "aria-hidden": "true", "class": "chart-line-svg" });
-    [2, 28].forEach(function (y) { s.append(svg("line", { x1: "0", x2: "100", y1: String(y), y2: String(y), "class": "chart-rule", "vector-effect": "non-scaling-stroke" })); });
-    s.append(svg("polyline", { "class": "chart-path", "vector-effect": "non-scaling-stroke",
-      points: vals.map(function (v, i) { return (i / (vals.length - 1) * 100).toFixed(2) + "," + (28 - (v - lo) / span * 26).toFixed(2); }).join(" ") }));
+    var ref = o.ref && typeof o.ref.v === "number" ? o.ref : null;
+    var vals = pts.map(function (p) { return p.v; }), all = ref ? vals.concat([ref.v]) : vals;
+    var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), span = hi - lo || 1;
+    var H = o.tall ? 60 : 30, top = 2, bot = H - 2;
+    function X(i) { return i / (pts.length - 1) * 100; }
+    function Y(v) { return bot - (v - lo) / span * (bot - top); }
+    var s = svg("svg", { viewBox: "0 0 100 " + H, preserveAspectRatio: "none", "aria-hidden": "true", "class": "chart-line-svg" });
+    [top, bot].forEach(function (y) { s.append(svg("line", { x1: "0", x2: "100", y1: String(y), y2: String(y), "class": "chart-rule", "vector-effect": "non-scaling-stroke" })); });
+    var coords = vals.map(function (v, i) { return X(i).toFixed(2) + "," + Y(v).toFixed(2); });
+    if (o.area) s.append(svg("polygon", { "class": "chart-area", points: "0," + bot + " " + coords.join(" ") + " 100," + bot }));
+    if (ref) s.append(svg("line", { x1: "0", x2: "100", y1: Y(ref.v).toFixed(2), y2: Y(ref.v).toFixed(2), "class": "chart-ref", "vector-effect": "non-scaling-stroke" }));
+    s.append(svg("polyline", { "class": "chart-path", "vector-effect": "non-scaling-stroke", points: coords.join(" ") }));
     var first = pts[0], last = pts[pts.length - 1];
-    var box = paint(el("div", "chart-line"), o.color), ys = el("div", "chart-line-y"), xs = el("div", "chart-line-x");
+    var box = paint(el("div", "chart-line" + (o.tall ? " is-tall" : "") + (o.hover ? " is-hover" : "")), o.color), plot = el("div", "chart-line-plot");
+    var ys = el("div", "chart-line-y"), xs = el("div", "chart-line-x");
     box.setAttribute("role", "img");
     box.setAttribute("aria-label", value(first.v) + " (" + label(first.x) + ") → " + value(last.v) + " (" + label(last.x) + ")");
-    box.title = box.getAttribute("aria-label");
+    box.title = o.hover ? "" : box.getAttribute("aria-label");
+    plot.append(s);
+    // what lies over the curve, placed in shares of its box: the level's name, the dots, the cursor and its bubble
+    function at(e, i, v) { e.style.left = X(i) + "%"; e.style.top = (Y(v) / H * 100) + "%"; return e; }
+    if (ref && ref.label) {
+      var name = el("span", "chart-ref-l", ref.label);
+      name.style.top = (Y(ref.v) / H * 100) + "%";
+      plot.append(name);
+    }
+    (o.marks || []).forEach(function (m) {
+      var i = -1;
+      for (var k = 0; k < pts.length; k++) { if (String(pts[k].x) >= String(m.x)) { i = k; break; } }
+      if (i < 0) return;
+      var dot = at(el("i", "chart-mark"), i, pts[i].v);
+      if (m.label) dot.title = m.label;
+      plot.append(dot);
+    });
+    if (o.hover) {
+      var cur = el("i", "chart-cursor"), dot = el("i", "chart-dot"), tip = el("span", "chart-tip");
+      cur.hidden = dot.hidden = tip.hidden = true;
+      plot.append(cur, dot, tip);
+      var show = function (e) {
+        var r = plot.getBoundingClientRect();
+        if (!r.width) return;
+        var i = Math.round(Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)) * (pts.length - 1));
+        cur.style.left = X(i) + "%";
+        at(dot, i, pts[i].v);
+        tip.textContent = label(pts[i].x) + " · " + value(pts[i].v);
+        cur.hidden = dot.hidden = tip.hidden = false;
+        // the bubble stays within the chart
+        var w = tip.offsetWidth, x = X(i) / 100 * r.width;
+        tip.style.left = Math.min(Math.max(x, w / 2), r.width - w / 2) + "px";
+      };
+      var hide = function () { cur.hidden = dot.hidden = tip.hidden = true; };
+      plot.addEventListener("pointermove", show);
+      plot.addEventListener("pointerdown", show);
+      plot.addEventListener("pointerleave", hide);
+    }
     ys.append(el("span", "", value(hi)));
     if (hi !== lo) ys.append(el("span", "", value(lo)));
-    xs.append(el("span", "", label(first.x)), el("span", "", label(last.x)));
-    box.append(s, ys, xs);
+    xs.append(el("span", "", label(first.x)));
+    if (o.tall && pts.length > 2) xs.append(el("span", "", label(pts[Math.floor((pts.length - 1) / 2)].x)));
+    xs.append(el("span", "", label(last.x)));
+    box.append(plot, ys, xs);
     return put(holder, box);
   }
 

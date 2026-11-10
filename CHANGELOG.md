@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.25.0 · 10 novembre 2026
+
+- Courbe (`ds.chart.line`) : une forme haute, pour le cours d’une ligne de bourse (Bank, le PEA). `tall` la grandit (180px, 150px sur téléphone) et écrit aussi son jour du milieu sous elle ; `area` remplit son fond de la couleur de la série ; `ref: {v, label}` trace un niveau en pointillé avec son nom (un prix de revient), compris dans l’échelle ; `marks: [{x, label}]` pose un point sur chaque jour donné (des achats), son nom au survol ; `hover` montre, sous le pointeur ou le doigt, un curseur, un point et une bulle avec le jour et la valeur, qui reste dans la courbe. Sans ces options, la courbe ne change pas.
+- La vitrine montre le cours d’une ligne sur un an, son prix de revient et ses achats.
+
 ## 2.24.1 · 10 novembre 2026
 
 - Barre d’onglets sur téléphone : à cinq vues ou plus (Bank et ses Placements), elle prend la largeur de l’écran moins 8px de chaque côté, et les bulles au-dessus d’elle aussi (`--tabbar-w`), ses boutons se serrent un peu : chaque nom tient en entier. Sur les plus petits téléphones, un nom trop long finit par « … » au lieu de sortir de la barre.

@@ -64,6 +64,17 @@
     pts[89].v = to;
     ds.chart.line(holder, pts);
   });
+  /* a share's price over a year, tall: its cost price, the months it was bought, the day and price under the finger */
+  each("price", function (holder) {
+    var pts = [], v = 5.1, marks = [];
+    for (var i = 0; i < 250; i++) {
+      v = Math.max(4, v * (1 + (rnd(i + 7) - 0.47) * 0.02));
+      pts.push({ x: addDays(today, Math.round((i - 249) * 1.45)), v: Math.round(v * 1000) / 1000 });
+      if (i % 21 === 5) marks.push({ x: pts[i].x, label: "achat de 80 parts" });
+    }
+    ds.chart.line(holder, pts, { tall: true, area: true, hover: true, marks: marks, ref: { v: 5.56, label: "prix de revient 5,56€" },
+      value: function (x) { return ds.number(x, 3) + "€"; } });
+  });
   var SPANS = [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]];
   each("period", function (holder) {
     holder.append(ds.periodPick(SPANS, 90, function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); }));
