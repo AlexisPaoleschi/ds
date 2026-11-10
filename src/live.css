@@ -3,5 +3,5 @@
    The dot's ring is the ground behind it, so that it reads apart from the button's edge. */
   .newver { position: relative; }
   .newver-pip { display: none; position: absolute; top: var(--s-4); right: var(--s-4); width: 7px; height: 7px; background: var(--accent); border-radius: 50%; outline: 2px solid var(--panel); }
-  .newver.is-on { color: var(--accent); border-color: var(--accent-strong); }
+  .newver.is-on { color: var(--accent-text); border-color: var(--accent-strong); }
   .newver.is-on .newver-pip { display: block; }

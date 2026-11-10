@@ -7,11 +7,13 @@
 :root {
   --gold-500: #c9a961; --gold-600: #b39654;
   --night-900: #0e0f12; --night-800: #16181d; --night-700: #1c1f26; --night-600: #262a33; --night-500: #333845;
-  --mist-100: #eceef3; --mist-300: #9ba3b2; --mist-500: #7e8795;
+  --mist-100: #eceef3; --mist-300: #9ba3b2; --mist-500: #8892a0;
   /* money in, money out, what needs a look: vivid, as the palette is; Atelier's colours no longer follow the gold's
      lightness (that made them pale), the gold alone stays as it is */
   --green-400: #4ec98a; --red-400: #e8686b; --yellow-400: #e3b341;
   --cream-50: #fdfcfa; --beige-100: #f7f4ef; --coal-900: #1a1a1a; --wine-600: #a3403e;
+  /* vitrine's « needs a look », a rust that reads on white and on the beige (5.6:1 and 5.1:1) and stays apart from its gold */
+  --rust-600: #995632;
   --font-archivo: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --font-plex: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-plex-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -30,8 +32,8 @@
   --text-shadow-sm: 0 2px 4px rgba(0,0,0,.6); --text-shadow-md: 0 2px 6px rgba(0,0,0,.6); --text-shadow-lg: 0 2px 8px rgba(0,0,0,.6);
   /* the photo viewer's controls, over its black veil: their signs, their thin ring, and the pale gold they fill with on hover */
   --viewer-ink: rgba(255,255,255,.7); --viewer-line: rgba(255,255,255,.3); --viewer-hover: rgba(201,169,97,.2);
-  /* text: ten sizes, three line heights, four letter spacings */
-  --fs-9: 9px; --fs-10: 10px; --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
+  /* text: eight sizes, three line heights, four letter spacings; 11px is the least, for a short label in capitals or an axis */
+  --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
   /* the sizes of alexispaoleschi.com: its text, its subtitles, its section titles */
   --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px; --fs-36: 36px; --fs-56: 56px;
   /* the big sums at the top of a screen grow with it */
@@ -74,9 +76,13 @@
   --line: var(--night-600); --line-2: var(--night-500);
   --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
   --accent: var(--gold-500); --accent-soft: rgba(201,169,97,.12); --accent-line: rgba(201,169,97,.35); --accent-strong: rgba(201,169,97,.5);
+  /* the gold of a word: the gold itself, in both themes; a theme could darken it alone */
+  --accent-text: var(--accent);
   --on-accent: var(--night-800);
   --good: var(--green-400); --bad: var(--red-400); --bad-soft: rgba(232,104,107,.12); --bad-line: rgba(232,104,107,.35);
   --mid: var(--yellow-400);
+  /* how much of a palette colour a word keeps, the rest being ink: all of it on the night background */
+  --tint-ink: 100%;
   --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
 }
 
@@ -95,11 +101,15 @@
   --note-size: var(--fs-13);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
+  /* the height of a control: a field, a menu and a button side by side line up */
+  --control-h: 34px;
   /* buttons: one height and one font for all of them */
-  --btn-size: var(--fs-13); --btn-weight: 600; --btn-ls: 0; --btn-case: none; --btn-h: 34px; --btn-px: var(--s-12);
+  --btn-size: var(--fs-13); --btn-weight: 600; --btn-ls: 0; --btn-case: none; --btn-h: var(--control-h); --btn-px: var(--s-12);
   --btn-bg: var(--panel-2); --btn-shadow: none; --btn-lift: 0px;
   /* the small button: a row's actions, a way back */
   --btn-s-h: 28px; --btn-s-px: var(--s-10); --btn-s-size: var(--fs-12); --btn-s-ls: 0;
+  /* the large one (.is-large): a public site's call to act, on its hero or a section; a tool's is its usual button */
+  --btn-l-h: var(--btn-h); --btn-l-px: var(--btn-px); --btn-l-ls: var(--btn-ls);
   /* fields */
   --field-size: var(--fs-14); --field-weight: 500; --field-lh: var(--lh-ui); --field-ls: normal; --field-py: var(--s-8); --field-px: var(--s-10);
   --field-bg: var(--panel-2); --field-line: var(--line); --field-halo: none;
@@ -132,12 +142,14 @@
   /* a small card, for narrow columns: a smaller title, less room inside */
   --card-s-title-size: var(--fs-15); --card-s-title-ls: var(--title-ls); --card-s-pad: var(--s-12); --card-s-gap: var(--s-6); --card-s-meta-size: var(--fs-11); --card-s-badge: var(--s-8);
   /* a badge: a few capitals on a filled ground */
-  --badge-weight: var(--label-weight); --badge-size: var(--fs-10); --badge-lh: var(--lh-tight); --badge-ls: var(--ls-caps);
+  --badge-weight: var(--label-weight); --badge-size: var(--fs-11); --badge-lh: var(--lh-tight); --badge-ls: var(--ls-caps);
   --badge-py: var(--s-2); --badge-px: var(--s-6);
   /* a section's head: its title over a short gold line, then a line in gold capitals */
   --section-size: var(--fs-28); --section-ls: var(--title-ls); --section-sub-size: var(--fs-13); --section-sub-ls: var(--ls-caps);
   /* a site's footer */
   --footer-size: var(--fs-13); --footer-ls: 0; --footer-py: var(--s-24);
+  /* a word on a tint of its own colour (a network's code, a bank's name in a chip) keeps less of it */
+  --tint-ink-on-tint: calc(var(--tint-ink) * .75);
   /* the outline that shows where the keyboard is */
   --focus: 2px solid var(--accent); --focus-offset: 2px;
 }
@@ -150,12 +162,15 @@
   /* every line in the site's soft gold; the full gold to underline */
   --line: rgba(201,169,97,.2); --line-2: var(--gold-500); --pop-line: var(--line);
   /* the site's two greys: 85% for what is read, 60% for what stays quiet */
-  --ink: var(--coal-900); --dim: rgba(26,26,26,.85); --faint: rgba(26,26,26,.6);
+  --ink: var(--coal-900); --dim: rgba(26,26,26,.85); --faint: rgba(26,26,26,.62);
   /* the gold of alexispaoleschi.com, the reference every colour is matched to; its darker gold on hover, and for a success */
   --accent: var(--gold-500); --accent-soft: rgba(201,169,97,.05); --accent-line: var(--gold-500); --accent-strong: var(--gold-600);
-  --on-accent: var(--white);
+  /* a word in gold keeps the site's gold, and a word on gold its white, a choice made knowing they read less on white (2.2:1) */
+  --accent-text: var(--accent); --on-accent: var(--white);
   --good: var(--gold-600); --bad: var(--wine-600); --bad-soft: rgba(163,64,62,.08); --bad-line: rgba(163,64,62,.35);
-  --mid: #b8860b;
+  --mid: var(--rust-600);
+  /* a word in a palette colour keeps 55% of it and takes 45% of ink, so that every colour reads on white and on the beige */
+  --tint-ink: 55%;
   --display: var(--font-gilda); --body: var(--font-urbanist); --mono: var(--font-plex-mono);
   /* square corners */
   --r-s: 0; --r-m: 0; --r-l: 0;
@@ -171,16 +186,20 @@
   /* text: 16px, light, with room between the lines */
   --text-size: var(--fs-16); --text-weight: 300; --text-lh: 2; --note-size: var(--fs-14);
   --box-bg: var(--accent-soft);
-  /* buttons: 14px spaced capitals, 63px high, white with a soft gold edge and a soft shadow; they rise on hover */
-  --btn-size: var(--fs-14); --btn-weight: 500; --btn-ls: var(--ls-2-5); --btn-case: uppercase; --btn-h: 63px; --btn-px: var(--s-48);
+  /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
+  --control-h: 45px;
+  /* buttons: 14px spaced capitals, white with a soft gold edge and a soft shadow; they rise on hover */
+  --btn-size: var(--fs-14); --btn-weight: 500; --btn-ls: var(--ls-caps); --btn-case: uppercase; --btn-px: calc(var(--s-24) + var(--s-4));
+  /* the large one, the site's: 63px high, more spaced, 48px on each side */
+  --btn-l-h: 63px; --btn-l-px: var(--s-48); --btn-l-ls: var(--ls-2-5);
   --btn-bg: var(--overlay-white-strong); --btn-shadow: var(--shadow-card); --btn-lift: calc(-1 * var(--s-2));
   /* the small one is the site's way back (« ← Events ») */
   --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-2);
   /* the action of a passing message, in the buttons' capitals */
-  --act-ls: var(--ls-2); --act-case: uppercase;
+  --act-ls: var(--ls-caps); --act-case: uppercase;
   /* fields: 16px, the least that keeps an iPhone from zooming in on them; roomy, a soft gold edge;
      in use, the full gold edge and a faint gold halo */
-  --field-size: var(--fs-16); --field-weight: 400; --field-lh: normal; --field-ls: var(--ls-0-5); --field-py: var(--s-14); --field-px: var(--s-20);
+  --field-size: var(--fs-16); --field-weight: 400; --field-lh: normal; --field-ls: var(--ls-0-5); --field-py: var(--s-12); --field-px: var(--s-20);
   --field-bg: var(--white); --field-line: var(--line); --field-halo: 0 0 0 3px var(--accent-soft);
   /* the line under a field, as under the site's newsletter field: 13px, medium, a little spaced */
   --field-note-size: var(--fs-13); --field-note-weight: 500; --field-note-lh: 1.4; --field-note-ls: var(--ls-0-5);
@@ -228,7 +247,7 @@
     --footer-size: var(--fs-14); --footer-py: var(--s-24); --card-pad: var(--s-24); --card-title-size: var(--fs-24); }
 }
 @media (max-width: 480px) {
-  [data-theme="vitrine"] { --btn-h: 59px; --btn-px: var(--s-24); --btn-s-h: 29px; --btn-s-px: var(--s-14); --btn-s-size: var(--fs-11); --btn-s-ls: var(--ls-1-5);
+  [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --btn-s-h: 29px; --btn-s-px: var(--s-14); --btn-s-size: var(--fs-11); --btn-s-ls: var(--ls-1-5);
     --topbar-px: var(--s-16); --topbar-gap: var(--s-8); --brand-size: var(--fs-17);
-    --card-pad: var(--s-20); --badge-size: var(--fs-10); --card-title-size: var(--fs-22); --card-gap: var(--s-12); --card-meta-size: var(--fs-12); --cover-badge: var(--s-12); }
+    --card-pad: var(--s-20); --badge-size: var(--fs-11); --card-title-size: var(--fs-22); --card-gap: var(--s-12); --card-meta-size: var(--fs-12); --cover-badge: var(--s-12); }
 }

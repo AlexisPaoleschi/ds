@@ -20,10 +20,12 @@
   .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
   .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
   .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
-  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
   /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
   .datepick .dp-grid button.is-today:not(.on) { border-color: var(--accent-line); color: var(--ink); }
   .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
+  /* vitrine's faint gold (5%) would not show the days between: a deeper one */
+  [data-theme="vitrine"] .datepick .dp-grid button.is-in { background: color-mix(in srgb, var(--accent) 20%, transparent); }
   .datepick button:disabled { opacity: .35; cursor: default; }
   .datepick button:disabled:hover { border-color: var(--line); color: var(--dim); }
   .dp-hint { margin: 0; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-ui); }

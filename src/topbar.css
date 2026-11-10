@@ -10,7 +10,8 @@
   .topbar-brand { flex: none; color: var(--brand-color); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
     font: var(--title-weight) var(--brand-size)/var(--lh-tight) var(--title-font); letter-spacing: var(--brand-ls); text-transform: uppercase; }
   .topbar-nav { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: var(--topbar-gap); min-width: 0; }
-  .topbar-nav.is-center { justify-content: center; }
+  /* centred while it holds, never pushed over the name when it does not */
+  .topbar-nav.is-center { justify-content: safe center; }
   /* nothing in the bar shrinks: a choice of language keeps its two letters */
   .topbar-nav > * { flex: none; }
   .topbar-link { position: relative; padding: var(--s-8) 0; color: var(--ink); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
@@ -21,7 +22,7 @@
   .topbar-icon svg { width: 18px; height: 18px; }
   .topbar .btn { --btn-h: var(--topbar-btn-h); --btn-px: var(--topbar-btn-px); flex: none; }
   @media (hover: hover) {
-    .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent); }
+    .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent-text); }
     .topbar-link:hover::after { width: 100%; }
   }
 @media (max-width: 768px) {

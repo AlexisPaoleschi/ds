@@ -13,14 +13,14 @@
   .cal-cell.is-today { border-color: var(--accent); }
   .cal-cell.is-sel { background: var(--accent-soft); border-color: var(--accent); }
   .cal-n { margin-bottom: var(--s-2); color: var(--dim); font: 700 var(--fs-15)/var(--lh-tight) var(--mono); }
-  .cal-cell.is-today .cal-n { color: var(--accent); }
+  .cal-cell.is-today .cal-n { color: var(--accent-text); }
   .cal-line { display: flex; align-items: center; gap: var(--s-4); min-width: 0; }
   .cal-lt { min-width: 0; overflow: hidden; color: var(--ink); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
   /* what has a time (a bar) reads a little quieter than what is to publish; what is done fades, what is late is red */
   .cal-line.is-bar .cal-lt { color: var(--dim); }
   .cal-line.is-done .cal-lt { color: var(--faint); }
   .cal-line.is-late .cal-lt { color: var(--bad); }
-  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-10)/var(--lh-tight) var(--mono); }
+  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
   /* a group's codes, after its count, are the first thing a narrow cell lets go */
   @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
   .cal-more { padding-left: var(--s-2); color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
@@ -33,7 +33,7 @@
   .cal-mark.is-thick { width: 3px; }
   /* a short coloured code (a network: « IG », « P »), its full name on hover */
   .cal-code { display: inline-grid; flex: none; place-items: center; min-width: 18px; height: 15px; padding: 0 var(--s-2); border-radius: var(--r-s);
-    color: var(--n, var(--dim)); background: color-mix(in srgb, var(--n, var(--dim)) 18%, transparent); font: 700 var(--fs-9)/var(--lh-tight) var(--label-font); letter-spacing: 0; }
+    color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--dim)) 12%, transparent); font: 700 var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; }
   /* the day's panel, under the month or one per day in the list */
   .cal-day { margin-top: var(--s-14); padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); box-shadow: var(--card-shadow); }
   .cal-day.is-today { border-color: var(--accent-line); }
@@ -41,21 +41,21 @@
   .cal-day-t::first-letter { text-transform: uppercase; }
   .cal-day .rows .cal-mark, .cal-wcol .rows .cal-mark { align-self: center; }
   .cal-day li.is-done .ttl, .cal-wcol li.is-done .ttl { color: var(--faint); }
-  .cal-day a.ttl:hover, .cal-wcol a.ttl:hover { color: var(--accent); }
+  .cal-day a.ttl:hover, .cal-wcol a.ttl:hover { color: var(--accent-text); }
   /* the week: seven columns, today's in gold */
   .cal-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); align-items: start; }
   .cal-wcol { min-width: 0; min-height: 160px; padding: var(--s-12) var(--s-10); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); }
   .cal-wcol.is-today { border-color: var(--accent); }
   .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
-  .cal-wcol.is-today h3 { color: var(--accent); }
+  .cal-wcol.is-today h3 { color: var(--accent-text); }
   .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* a narrow column cuts its titles between syllables, never in the middle of one */
   .cal-wcol .ttl { overflow-wrap: break-word; hyphens: auto; }
-  .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-10)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
+  .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-11)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
     color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
-  .cal-prev:hover { color: var(--accent); border-color: var(--accent-line); }
+  .cal-prev:hover { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
   /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
   .cal-head .periodnav { align-items: stretch; }
@@ -79,7 +79,7 @@
   .cal-cell .cal-line.is-extra, .cal-cell .cal-lt, .cal-cell .cal-code, .cal-cell .cal-count, .cal-cell .cal-more { display: none; }
   .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
   .cal-cell .cal-mark.is-open { background: transparent; }
-  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-10)/var(--lh-tight) var(--mono); }
+  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
   .cal-week { grid-template-columns: minmax(0, 1fr); }
   .cal-wcol { min-height: 0; }
   .cal-wcol h3 { font-size: var(--fs-12); }

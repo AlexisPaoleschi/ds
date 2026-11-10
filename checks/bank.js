@@ -236,7 +236,10 @@ function stylesheets() {
   // the bars and the coloured cards
   const look = await p.evaluate(() => { const probe = document.createElement('i'); probe.style.color = 'var(--c-rose)'; document.body.append(probe); const rose = getComputedStyle(probe).color; probe.style.color = 'var(--accent)'; const gold = getComputedStyle(probe).color; probe.remove();
     const m = document.getElementById('meter'), fill = m.firstElementChild;
-    return { tinted: getComputedStyle(document.getElementById('tinted')).borderTopColor === rose, label: getComputedStyle(document.querySelector('#tinted .ct')).color === rose,
+    // a colour as the screen draws it (a mix in oklab is written in oklab): within one step of each channel
+    const px = c => { const x = document.createElement('canvas').getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1, 1); return [...x.getImageData(0, 0, 1, 1).data].slice(0, 3); };
+    const near = (a, b) => px(a).every((v, i) => Math.abs(v - px(b)[i]) <= 1);
+    return { tinted: getComputedStyle(document.getElementById('tinted')).borderTopColor === rose, label: near(getComputedStyle(document.querySelector('#tinted .ct')).color, rose),
       ruled: getComputedStyle(document.getElementById('ruled')).borderTopColor === gold, fill: Math.round(fill.offsetWidth / m.offsetWidth * 100), bar: getComputedStyle(fill).backgroundColor };
   });
   assert(look.tinted && look.label && look.ruled && look.fill === 40, 'la carte au filet de sa couleur (--n), l’or sans elle ; la barre remplie à sa part ' + JSON.stringify(look));

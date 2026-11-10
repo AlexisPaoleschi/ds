@@ -29,6 +29,8 @@
   .hero-meta { color: var(--white); text-shadow: var(--text-shadow-md);
     font: var(--text-weight) clamp(var(--fs-14), 1.6vw, var(--fs-20))/var(--lh-ui) var(--body); letter-spacing: var(--ls-1-5); }
   .hero-acts { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-12); margin-top: var(--s-24); }
+  /* a hero's buttons are the site's large ones */
+  .hero-acts .btn { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
   /* the way back, in the hero's top left corner, clear of an iPhone's notch */
   .hero > .back-link { position: absolute; z-index: var(--z-raise); top: max(var(--s-24), env(safe-area-inset-top, 0px)); left: max(var(--s-24), env(safe-area-inset-left, 0px)); }
 

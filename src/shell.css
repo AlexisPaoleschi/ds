@@ -6,8 +6,8 @@
   a { color: inherit; }
   .ico { width: 16px; height: 16px; flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-12); position: relative; }
-  .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent); }
-  header.top .busy { align-items: center; color: var(--accent); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
+  .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
+  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
   @keyframes spin { to { transform: rotate(360deg); } }
   .card { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); padding: var(--card-pad); box-shadow: var(--card-shadow); min-width: 0; }
   /* the gold line on top of a card, as on the site's event and newsletter cards */
@@ -15,15 +15,18 @@
   /* a card you click rises a little */
   .card.is-link { color: inherit; text-decoration: none; transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
   @media (hover: hover) { .card.is-link:hover { transform: translateY(var(--card-lift)); box-shadow: var(--card-hover-shadow); } }
-  .ct { align-items: center; color: var(--faint); display: flex; font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); gap: var(--s-10); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-12); text-transform: uppercase; }
-  h4.sect { align-items: center; color: var(--n, var(--faint)); display: flex; font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--ls-wide); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
+  /* a card's label, and what acts on the card beside it; when both do not hold on the line, the action goes under it */
+  .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-12); text-transform: uppercase; }
+  h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--ls-wide); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
   ul.rows { list-style: none; margin: 0; padding: 0; }
   ul.rows li { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); padding: var(--s-8) 0; }
   ul.rows li:first-child { border-top: none; padding-top: 0; }
   .ttl { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
   .pl { font-size: var(--fs-13); color: var(--faint); }
-  .who { background: color-mix(in srgb, var(--n, var(--accent)) 15%, transparent); border-radius: var(--r-s); color: var(--n, var(--accent)); flex: 0 0 auto; font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
+  /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
+  .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
+  .who { background: color-mix(in srgb, var(--n, var(--accent)) 15%, transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
   
   .errs { display: grid; gap: var(--s-8); margin-bottom: var(--s-4); }
   .msg { align-items: var(--msg-align); background: var(--box-bg); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--msg-size); gap: var(--msg-gap); margin-top: var(--s-10); padding: var(--msg-py) var(--msg-px); }
@@ -54,25 +57,25 @@
   details.status .sw .ico { color: var(--good); opacity: 1; }
   /* a late row is still a row: the .late badge (a task, a failed read) shares its class name */
   details.status li.late { font: inherit; color: inherit; background: none; border: 0; padding: 0; border-radius: 0; }
-  details.status li.late .sw { color: var(--accent); }
+  details.status li.late .sw { color: var(--accent-text); }
   details.status li.late .sw .ico { color: var(--accent); }
   details.status .sd { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
   details.status li:not(.late) .sd { display: none; }
   details.status .sf { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
   details.status li.sl { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
-  details.status li.sl a { color: var(--accent); text-decoration: none; font-weight: 600; }
-  .late { font: 600 var(--fs-10)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
+  details.status li.sl a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+  .late { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
   .empty { color: var(--dim); margin: 0; }
   footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: wrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
-  .tabs button { font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--s-8) var(--s-14); cursor: pointer; }
+  .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--s-8) var(--s-14); cursor: pointer; }
   /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
-  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--accent-soft); color: var(--accent); }
+  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--accent-soft); color: var(--accent-text); }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   /* ds.busy puts the class loading on header.top while something loads; .bt says what, for screen readers only */
   header.top.loading .busy { visibility: visible; }
   header.top .busy .bt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  header.top .busy .pc { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  header.top .busy .pc { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
   header.top .busy .okc { display: none; width: 16px; height: 16px; border-radius: 50%; background: color-mix(in srgb, var(--good) 16%, transparent); place-items: center; }
   header.top .busy .okc svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
   header.top.loading-done .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
@@ -94,7 +97,7 @@
 /* over the page below the header, so that nothing moves when it goes: the page is drawn under it, then it fades */
   .boot { position: fixed; inset: calc(72px + env(safe-area-inset-top, 0px)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
 /* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
-  .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent); font-variant-numeric: tabular-nums; }
+  .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; }
   .boot .boot-p .spin { display: block; flex: 0 0 18px; width: 18px; height: 18px; box-sizing: border-box; border-radius: 50%; border: 2px solid var(--spin-ring); border-top-color: var(--accent); animation: spin .8s linear infinite; }
   .boot .boot-p span { min-width: 3.2ch; text-align: left; }
   .boot .boot-p span:empty { display: none; }
@@ -158,7 +161,7 @@
     background: color-mix(in srgb, var(--panel) 84%, transparent); -webkit-backdrop-filter: blur(18px); backdrop-filter: blur(18px); box-shadow: var(--shadow-sheet); }
   header.top .tabs.is-bar button, .tabs.is-bar button { flex: 1; flex-direction: column; justify-content: center; gap: var(--s-2); height: 40px; padding: 0; border-radius: var(--r-m); }
   .tabs.is-bar button .ico { display: block; width: 19px; height: 19px; }
-  .tabs.is-bar button .tl { display: block; font-size: var(--fs-10); letter-spacing: 0; line-height: var(--lh-tight); }
+  .tabs.is-bar button .tl { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
   .tabs.is-bar .tabn { position: absolute; top: var(--s-4); left: calc(50% + var(--s-8)); margin: 0; }
 }
 /* words for screen readers only, kept out of sight */
@@ -166,7 +169,7 @@
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
    Its chevron turns; a closed card's title takes no room below it */
-  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); }
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); min-height: var(--s-24); }
   details.fold > summary::-webkit-details-marker { display: none; }
   details.fold > summary::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
     border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease; }
@@ -178,7 +181,7 @@
   @keyframes lit { from { background-color: var(--accent-soft); box-shadow: 0 0 0 var(--s-4) var(--accent-soft); } to { background-color: transparent; box-shadow: none; } }
 /* a merchant's or a person's logo, its initial underneath (ds.avatar) */
   .avatar { position: relative; display: inline-grid; place-items: center; flex: none; width: var(--avatar-size, 28px); height: var(--avatar-size, 28px);
-    overflow: hidden; border-radius: var(--r-s); background: var(--accent-soft); color: var(--accent); font: 700 var(--fs-11)/var(--lh-tight) var(--display); }
+    overflow: hidden; border-radius: var(--r-s); background: var(--accent-soft); color: var(--accent-text); font: 700 var(--fs-11)/var(--lh-tight) var(--display); }
   .avatar img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: var(--panel); }
   .avatar.is-round { border-radius: 50%; }
 /* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */

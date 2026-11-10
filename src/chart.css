@@ -7,14 +7,14 @@
   .chart-line-svg { display: block; width: 100%; height: 40px; overflow: visible; }
   .chart-rule { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
   .chart-path { fill: none; stroke: var(--n, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-10)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+  .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
   .chart-line-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
   .chart-line-x { display: flex; justify-content: space-between; }
 /* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
    --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
    of its own figures (1ch in its font) */
   .chart-bars { --bars-h: 120px; --bars-room: 18px; position: relative; min-width: 0; padding: var(--bars-room) 0 0 calc(var(--axc, 4) * 1ch + var(--s-6));
-    font: 500 var(--fs-10)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
   /* the scale's box stops on the bars' base line, so that its 0 sits on it */
   .chart-bars-axis, .chart-bars-grid, .chart-bars-avg { position: absolute; top: var(--bars-room); height: calc(var(--bars-h) - 1px); pointer-events: none; }
   .chart-bars-axis { left: 0; width: calc(var(--axc, 4) * 1ch); }
@@ -40,8 +40,8 @@
   .chart-bar-v { position: absolute; bottom: calc(100% + var(--s-4)); left: 50%; color: var(--dim); white-space: nowrap; transform: translateX(-50%); }
   .chart-bars.is-dense .chart-bar-v { visibility: hidden; }
   .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: 600; }
-  .chart-bar-l { color: var(--faint); font: var(--label-weight) var(--fs-10)/var(--lh-tight) var(--label-font); letter-spacing: 0; text-transform: uppercase; white-space: nowrap; }
-  .chart-bar.is-on .chart-bar-l { color: var(--accent); }
+  .chart-bar-l { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; text-transform: uppercase; white-space: nowrap; }
+  .chart-bar.is-on .chart-bar-l { color: var(--accent-text); }
 /* paired bars (Bank's money in and out): a bar per series side by side in each column, each in its colour; their figures
    stacked over the tallest, in the same colours, on hover, under the keys or when chosen. The room above the scale holds
    two lines of figures */
@@ -51,7 +51,7 @@
   .chart-bars.is-pairs .chart-bar-stack i { flex: 1; }
   .chart-bar-vs { position: absolute; left: 50%; display: flex; flex-direction: column; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4);
     transform: translateX(-50%); visibility: hidden; pointer-events: none; }
-  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: var(--n, var(--dim)); font-weight: 600; transform: none; }
+  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: 600; transform: none; }
   .chart-bar:hover .chart-bar-vs, .chart-bar.is-on .chart-bar-vs, .chart-bar:focus-visible .chart-bar-vs, .chart-bars.is-pairs .chart-bar:focus-visible .chart-bar-v { visibility: visible; }
   .chart-bars-legend { margin-top: var(--s-12); font-family: var(--body); line-height: var(--lh-ui); }
 /* a year of days: one square per day, a column per week, Monday on top; pale, coloured, full */
@@ -61,11 +61,11 @@
   .chart-heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--s-4); contain: inline-size; }
   .chart-heat-year { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); min-width: 740px; }
   .chart-heat-year + .chart-heat-year { margin-top: var(--s-14); }
-  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: 400 var(--fs-10)/var(--lh-tight) var(--mono); }
+  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); }
   .chart-heat-year.has-below .chart-heat-dow { grid-template-rows: 16px repeat(7, minmax(0, 1fr)) 34px; }
   .chart-heat-dow span { display: flex; align-items: center; }
   .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
-  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-10)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
   .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
   .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) 13%, transparent); border-radius: var(--r-s); }
   .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
@@ -74,16 +74,16 @@
   .heat-day.is-future { visibility: hidden; }
   /* a week's figure under its column, upright: what it gained */
   .chart-heat-below { height: 34px; margin-top: var(--heat-gap); padding-top: var(--s-4); }
-  .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-10)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
   .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--fs-12); }
   .chart-heat-legend span { display: inline-flex; align-items: center; gap: var(--s-4); }
   .chart-heat-legend .heat-day { width: 11px; height: 11px; }
   .chart-heat-note { color: var(--good); }
 @media (max-width: 768px) {
   /* the bars: smaller figures, and one month name in two where twelve would touch */
-  .chart-bars { font-size: var(--fs-9); }
+  .chart-bars { font-size: var(--fs-11); }
   .chart-bar-v { letter-spacing: var(--ls-tight); }
-  .chart-bar-l { font-size: var(--fs-9); }
+  .chart-bar-l { font-size: var(--fs-11); }
   .chart-bar-yr { display: none; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt .chart-bar-l { visibility: hidden; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt:not(.is-on):not(:hover) .chart-bar-v { visibility: hidden; }
@@ -117,7 +117,7 @@
   .chart-donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); padding: 0 22%;
     pointer-events: none; text-align: center; }
   .chart-donut-c b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-10)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps);
+  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps);
     text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
   .chart-donut-legend { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
   .chart-donut-legend li + li .chart-donut-row { border-top: 1px solid var(--line); }
@@ -127,8 +127,8 @@
   .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
   .chart-donut-row em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
   .chart-donut-row b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
-  button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent); }
-  .chart-donut-row.is-on b { color: var(--accent); }
+  button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent-text); }
+  .chart-donut-row.is-on b { color: var(--accent-text); }
 @media (max-width: 768px) {
   .chart-donut { grid-template-columns: minmax(0, 1fr); }
   .chart-donut-ring { width: min(220px, 100%); margin: 0 auto; }

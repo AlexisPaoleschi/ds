@@ -274,7 +274,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       in: getComputedStyle(first[0].querySelector('i')).backgroundColor, out: getComputedStyle(first[1].querySelector('i')).backgroundColor,
       ticks: [...document.querySelectorAll('#pairs .chart-bars-axis span')].map(s => s.textContent), legend: [...document.querySelectorAll('#pairs .chart-bars-legend span')].map(s => s.textContent),
       title: cols[11].title, figs: [...cols[11].querySelectorAll('.chart-bar-v')].map(s => s.textContent), shown: getComputedStyle(cols[11].querySelector('.chart-bar-vs')).visibility,
-      hidden: getComputedStyle(cols[0].querySelector('.chart-bar-vs')).visibility, live: cols[11].classList.contains('is-live'), figColor: getComputedStyle(cols[11].querySelector('.chart-bar-v')).color };
+      hidden: getComputedStyle(cols[0].querySelector('.chart-bar-vs')).visibility, live: cols[11].classList.contains('is-live'), figColor: (c => { const x = document.createElement('canvas').getContext('2d'); x.fillStyle = c; x.fillRect(0, 0, 1, 1); const d = x.getImageData(0, 0, 1, 1).data; return 'rgb(' + d[0] + ', ' + d[1] + ', ' + d[2] + ')'; })(getComputedStyle(cols[11].querySelector('.chart-bar-v')).color) };
   });
   console.log('      ' + JSON.stringify(pb));
   await p.locator('#pairs .chart-bar').nth(4).click();

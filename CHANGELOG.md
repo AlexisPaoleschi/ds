@@ -1,5 +1,26 @@
 # Changelog
 
+## 2.24.0 · 10 novembre 2026
+
+Ce que l’étude de la page vitrine a trouvé, dans les deux thèmes, sur ordinateur et sur téléphone.
+
+- Barre du site (`.topbar.is-site`) : centrée tant qu’elle tient, elle ne pousse plus jamais ses liens sur le nom (`justify-content: safe center`). Sur téléphone, les liens marqués `.is-wide` la quittent, comme prévu ; la vitrine les marque.
+- Boutons en Vitrine : 45px de haut (`--control-h`, la hauteur de Selecta), 28px de côté (20px sur téléphone), capitales espacées de 0,12em. Les 63px du site deviennent le gros bouton, `.btn.is-large` (`--btn-l-h`, `--btn-l-px`, `--btn-l-ls`), que prennent d’eux-mêmes les boutons d’un bandeau photo (`.hero-acts`). En Atelier, `.is-large` est le bouton habituel.
+- Champs et menus : aussi hauts qu’un bouton à côté d’eux (`--control-h` : 34px en Atelier, 45px en Vitrine), leur texte centré dans cette hauteur ; seule une zone de texte garde de la place au-dessus et au-dessous de ses lignes (`--field-py`). Dans la barre d’une sélection (`.selbar`), les menus prennent la hauteur des petits boutons.
+- Fenêtre (`.dialog`) : ses deux boutons gardent leur hauteur (ils s’étiraient à 62px quand la fenêtre était plus haute que son contenu) et passent l’un sous l’autre quand la ligne ne suffit pas ; sur téléphone ils se partagent la ligne, et Vitrine y laisse 20px de marge comme dans une fiche.
+- Fiche (`.sheet-acts`) : ses boutons passent sur deux lignes quand ils ne tiennent pas sur une, au lieu d’être coupés (« ENOMMEI », « NREGISTRE »).
+- Titre de carte (`.ct`) : 13px au lieu de 12px ; l’action à côté de lui passe dessous quand les deux ne tiennent pas sur la ligne, au lieu d’un titre écrasé sur quatre lignes.
+- Plus aucun texte sous 11px : les libellés, les en-têtes de filtres et de tableaux, les onglets du bas sur téléphone, les codes de l’agenda, les axes des graphiques et les pastilles passent de 9 ou 10px à 11px. Les jetons `--fs-9` et `--fs-10` disparaissent.
+- Mots en couleur de la palette (le nom d’une banque, un code de réseau) : `--tint-ink` dit ce qu’ils gardent de leur couleur, le reste étant l’encre : tout en Atelier, 55 % en Vitrine, pour se lire sur blanc et sur le beige. `.tint` écrit un mot ainsi (`<span class="tint" style="--n: var(--c-ciel)">`) ; les codes et les noms posés sur une teinte de leur couleur en gardent un peu moins (`--tint-ink-on-tint`), et cette teinte passe de 18 à 12 %.
+- `--accent-text`, l’or d’un mot : le même or que les traits dans les deux thèmes, pour qu’un thème puisse un jour l’assombrir seul. Le blanc reste sur l’or.
+- Vitrine : « ce qui demande un coup d’œil » (`--mid`, « À classer ») est une rouille lisible (`--rust-600`) ; le gris discret (`--faint`) passe de 60 à 62 % d’encre, et en Atelier `--mist-500` s’éclaircit un peu (#8892a0), pour se lire sur une ligne choisie.
+- Pastille « bientôt » (`.badge.is-soft`) : un mot gris sur un or pâle, dans un filet d’or ; elle était illisible dans les deux thèmes. Sur le rouge, une pastille écrit dans la couleur du panneau.
+- Plage de dates (`ds.datePick`) en Vitrine : les jours entre les deux bornes prennent un or à 20 %, celui à 5 % ne se voyait pas.
+- Zones de clic d’au moins 24px : la croix et l’œil des filtres, le titre d’une période, les onglets, l’action et la croix d’une bulle, le titre d’un pli, les titres de colonne qui trient (leur zone dépasse la ligne de capitales). Sous un doigt, les cases à cocher font 20px.
+- Les petits carrés de couleur (filtres, tuiles) suivent les angles du thème : carrés en Vitrine.
+- La vitrine : la photo de la carte à couverture, un logo d’exemple qui ne se casse plus, « Annoncer une nouvelle version », un exemple de gros bouton, les mots en couleur écrits avec `.tint`.
+- Un contrôle de plus, `node checks/showcase.js` : sur la vitrine, dans les deux thèmes, sur ordinateur et sur téléphone, chaque mot se lit sur ce qui est dessous (sauf l’or du site, et le blanc sur lui, gardés exprès), aucun texte n’a moins de 11px, champs, menus et boutons ont la même hauteur, la barre du site garde son nom à part, aucun bouton de fiche ou de fenêtre n’est coupé.
+
 ## 2.23.2 · 10 novembre 2026
 
 - Bouton occupé (`.btn.is-busy`, le bouton d’un formulaire envoyé) : il garde ses couleurs et sa roue tourne. Le style d’un bouton indisponible ne s’applique plus à lui. En Vitrine, le texte d’un bouton « enregistrer » occupé disparaissait : blanc sur le fond blanc d’un bouton désactivé (« Se connecter » de Selecta).

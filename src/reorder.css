@@ -9,7 +9,7 @@
   .grip .ico { width: 18px; height: 18px; }
   /* the item being moved follows the pointer, above the others, which make room for it */
   [data-reorder] > .is-dragging { position: relative; z-index: var(--z-raise); background: var(--panel-2); box-shadow: var(--shadow-pop); cursor: grabbing; }
-  [data-reorder] > .is-dragging .grip { color: var(--accent); cursor: grabbing; }
+  [data-reorder] > .is-dragging .grip { color: var(--accent-text); cursor: grabbing; }
   [data-reorder] > .is-shifting { transition: transform var(--t-fast) ease; }
   /* while an item is moved, no text gets selected along the way */
   :root.is-reordering, :root.is-reordering * { user-select: none; -webkit-user-select: none; cursor: grabbing; }

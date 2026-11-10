@@ -13,8 +13,8 @@
   /* vitrine's strong line is the full gold: the ring takes the wheels' soft one, so that the gold quarter shows turning */
   [data-theme="vitrine"] .toast.is-busy .mark { border-color: var(--spin-ring); border-top-color: var(--accent); }
   .toast .txt { flex: 1 1 auto; min-width: 0; }
-  .toast .act, .toast .x { flex: none; background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
-  .toast .act { color: var(--accent); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls, normal); text-transform: var(--act-case, none); }
+  .toast .act, .toast .x { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
+  .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls, normal); text-transform: var(--act-case, none); }
   .toast .x { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
   .toast .act:hover, .toast .x:hover { color: var(--ink); }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }

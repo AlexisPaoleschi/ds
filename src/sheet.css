@@ -15,7 +15,7 @@
     display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); font: 400 var(--fs-22)/var(--lh-tight) var(--body); cursor: pointer; }
-  .sheet-x:hover { color: var(--accent); border-color: var(--accent-line); }
+  .sheet-x:hover { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }
@@ -26,15 +26,15 @@
   .sheet-fig.is-bad { color: var(--bad); }
   /* what it was in another currency, under its euros */
   .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
-  /* its actions, on one line whatever the screen: on a phone they share the width */
-  .sheet-acts { display: flex; flex-wrap: nowrap; gap: var(--s-8); margin-top: var(--s-14); }
-  .sheet-acts > .btn { min-width: 0; overflow: hidden; }
+  /* its actions, on one line while they hold on it, then on two: a word is never cut; on a phone they share the width */
+  .sheet-acts { display: flex; flex-wrap: wrap; gap: var(--s-8); margin-top: var(--s-14); }
+  .sheet-acts > .btn { max-width: 100%; }
   /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
   [data-theme="vitrine"] .sheet-acts { --btn-px: var(--s-20); --btn-ls: var(--ls-1-5); }
 
 /* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
    each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
-  .kv { --kv-k-size: var(--fs-10); --kv-v-size: var(--fs-14); margin: 0; }
+  .kv { --kv-k-size: var(--fs-11); --kv-v-size: var(--fs-14); margin: 0; }
   [data-theme="vitrine"] .kv { --kv-k-size: var(--fs-12); --kv-v-size: var(--fs-15); }
   .kv > div { display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
   .kv dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
@@ -52,7 +52,7 @@
   .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
   .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
     padding-right: calc(var(--sheet-pad) + env(safe-area-inset-right, 0px)); padding-bottom: calc(var(--sheet-pad) + env(safe-area-inset-bottom, 0px)); animation-name: sheet-up; }
-  .sheet-acts > .btn { flex: 1 1 0; padding-inline: var(--s-8); }
+  .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
   .kv > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
      does not hold the page */
