@@ -299,6 +299,11 @@ function stylesheets() {
   const vr = await v.evaluate(() => ({ panel: getComputedStyle(document.querySelector('#sheet .sheet-panel')).borderTopLeftRadius, pill: getComputedStyle(document.getElementById('pill')).borderTopLeftRadius,
     pad: getComputedStyle(document.querySelector('#sheet .sheet-panel')).paddingLeft, th: getComputedStyle(document.querySelector('#ops th')).fontSize }));
   assert(vr.panel === '0px' && vr.pill === '0px' && vr.pad === '32px' && vr.th === '12px', 'Vitrine : angles carrés, la place d’une fenêtre du site, des titres de colonne plus grands ' + JSON.stringify(vr));
+  const shadows = await v.evaluate(() => { const card = document.createElement('div'); card.className = 'card'; document.body.append(card);
+    const of = value => { card.style.setProperty('--card-shadow', value); return getComputedStyle(card).boxShadow; };
+    const out = { card: of(''), soft: of('var(--shadow-soft)'), none: of('none') }; card.remove(); return out; });
+  assert(/0px 4px 16px/.test(shadows.card) && /0px 2px 8px/.test(shadows.soft) && shadows.none === 'none',
+    'Vitrine : une carte a l’ombre du site ; --card-shadow lui donne l’ombre légère d’une barre, ou aucune pour une ligne de liste ' + JSON.stringify(shadows));
   const tv = await tilesLook(v);
   assert(tv.gap === '20px' && tv.shadow && tv.figureFirst && tv.size === '28px' && tv.gold && tv.up && tv.radius === '0px',
     'Vitrine : les tuiles compactes sont les petites cartes du site, à part, avec une ombre douce, le chiffre or au-dessus de son libellé ' + JSON.stringify(tv));

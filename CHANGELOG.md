@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.23.1 · 10 novembre 2026
+
+- Deux jetons : `--lh-loose` (1,8), l’interligne aéré des sites publics, celui des titres de Vitrine et du texte de Selecta ; `--ls-loose` (0,07em), le peu d’air entre les lettres des titres et du pied de page de Selecta. Les titres de Vitrine prennent `--lh-loose`, à la même valeur qu’avant.
+- Vitrine : `--shadow-soft`, l’ombre la plus légère du site (2px sous l’objet, 8px de flou), pour une barre ou un tableau, sous `--shadow-card`. Une carte la prend avec `--card-shadow: var(--shadow-soft)` ; une ligne de liste se passe d’ombre avec `--card-shadow: none`.
+
 ## 2.23.0 · 10 novembre 2026
 
 - Zoom (`.zoom-slider`) : il reprend la barre de Selecta en ligne. Un rail de 6px aux bouts ronds, sur un fond d’or très pâle, presque blanc, avec un bord doux (le trait doux en Vitrine, le trait fort en Atelier), sous un curseur or de 18px cerclé de la couleur de la page. L’or ne remplit plus le rail jusqu’au curseur : `ds.photogrid` ne pose plus `--zoom-at`.
