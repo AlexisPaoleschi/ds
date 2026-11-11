@@ -1,4 +1,4 @@
-/* ds 2.34.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.35.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -68,6 +68,8 @@
   .sticky-nav { position: fixed; top: 0; left: 0; z-index: var(--z-bar); width: 100%; transform: translateY(-100%);
     transition: transform var(--t-fast) ease; }
   .sticky-nav.visible { transform: translateY(0); }
+  /* its action spaced as the site's other buttons (the large ones' 2.5px), not as an app's button (.12em) */
+  .sticky-nav .btn { letter-spacing: var(--btn-l-ls); }
   /* Mobile Menu */
   .mobile-menu-toggle { z-index: var(--z-raise); display: none; flex-direction: column; gap: var(--s-6); padding: var(--s-8); background: transparent;
     border: none; cursor: pointer; order: -1; }

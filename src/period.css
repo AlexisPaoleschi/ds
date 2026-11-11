@@ -12,6 +12,10 @@
   /* an arrow that leads nowhere is gone, and the row with it when both are */
   .periodnav .off { display: none; }
   .periodnav:not(:has(> :not(.off))) { display: none; }
+  /* steady (Bank's operations): the arrows keep their room when they lead nowhere, so that choosing a period that has
+     some moves nothing under the title; on a phone they stay on the title's line */
+  .periodhead.is-steady .periodnav:not(:has(> :not(.off))) { display: flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav .off { display: inline-flex; visibility: hidden; }
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
@@ -25,4 +29,5 @@
 @media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle { font-size: var(--fs-22); }
+    .periodhead.is-steady { flex-direction: row; align-items: center; }
 }

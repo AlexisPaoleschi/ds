@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.35.0 · 11 novembre 2026
+
+- L’en-tête de période peut rester stable (`.periodhead.is-steady`) : ses flèches gardent leur place quand elles ne mènent nulle part, si bien que choisir une période qui en a ne fait plus descendre le titre ni ce qui suit ; sur téléphone, elles restent sur la ligne du titre. Dans les opérations de Bank, choisir un mois faisait sauter la page de quelques pixels.
+- Kit du site : le « Book Now » de la barre du haut s’espace comme les autres boutons du site (2,5 px entre les lettres), et non comme un bouton d’appli (1,68 px).
+
 ## 2.34.0 · 11 novembre 2026
 
 - `ds.chart.line` sait dire ce qui est prévu : avec `now` (le jour d’aujourd’hui), la courbe reste pleine jusqu’à lui puis passe en pointillé, sur un fond plus pâle, et un trait fin le marque, son nom au-dessus (`nowLabel`, « aujourd’hui »). Bank y dessine le solde de son compte facture au fil du mois : tel qu’il a été, puis tel qu’il devrait aller, chaque dépense à venir un point à son jour, la marge en pointillé. La vitrine le montre.

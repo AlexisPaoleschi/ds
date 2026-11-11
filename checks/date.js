@@ -304,6 +304,14 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   await p.evaluate(() => { document.documentElement.dataset.theme = 'atelier'; });
   assert(same(vt, ['0px', '0px', 'rgb(155, 140, 242)', 'rgb(179, 150, 84)']), 'Vitrine : les angles carrés, les couleurs de ses jetons (l’or foncé des entrées) ' + JSON.stringify(vt));
 
+  const steady = () => p.evaluate(() => { const r = id => Math.round(document.getElementById(id).getBoundingClientRect().top);
+    const off = document.getElementById('steady-prev').classList.contains('off');
+    return { off, title: r('steady-title'), after: r('steady-after'), arrows: getComputedStyle(document.querySelector('#steady .periodnav')).visibility }; });
+  const flip = () => p.evaluate(() => ['steady-prev', 'steady-next'].forEach(id => document.getElementById(id).classList.toggle('off')));
+  // steady: the arrows hidden keep their room; shown, nothing under the title moves
+  const sd0 = await steady(); await flip(); const sd1 = await steady(); await flip();
+  assert(sd0.off && sd0.arrows === 'hidden' && !sd1.off && sd1.arrows === 'visible' && sd0.title === sd1.title && sd0.after === sd1.after,
+    'stable : les flèches cachées gardent leur place ; montrées, rien ne bouge sous le titre ' + JSON.stringify([sd0, sd1]));
   // on a phone: the picker within the screen, the tabs whole, the donut over its legend, nothing wider than the screen
   await p.setViewportSize({ width: 375, height: 812 });
   await p.locator('#title').click();
@@ -313,6 +321,11 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       ring: document.querySelector('#donut .chart-donut-ring').getBoundingClientRect().width, wide: document.documentElement.scrollWidth }; });
   console.log('      ' + JSON.stringify(ph));
   assert(ph.left >= 0 && ph.right <= 375 && ph.tabs && ph.donut === 1 && ph.ring <= 220 && ph.wide <= 375, 'sur téléphone : le choix tient dans l’écran, ses onglets entiers ; le donut au-dessus de sa légende ; rien ne dépasse');
+  await p.keyboard.press('Escape');
+  const sp0 = await steady(); await flip(); const sp1 = await steady(); await flip();
+  const line = await p.evaluate(() => { const t = document.getElementById('steady-title').getBoundingClientRect(), n = document.querySelector('#steady .periodnav').getBoundingClientRect();
+    return n.top < t.bottom && n.left > t.right; });
+  assert(sp0.title === sp1.title && sp0.after === sp1.after && line, 'stable, sur téléphone : les flèches sur la ligne du titre, et rien ne bouge quand elles paraissent ' + JSON.stringify([sp0, sp1, line]));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();
