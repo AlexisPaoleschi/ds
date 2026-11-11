@@ -53,6 +53,17 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     && JSON.stringify(month.codes) === '["P","IG"]' && month.count === '2/4' && month.late === 'Preview Léa' && month.color === 'rgb(73, 143, 238)',
     'les marques : carré plein ou vide, barre fine ou épaisse, point ; les codes, le compte, le retard en rouge, la couleur du jeton');
   assert(month.timed.includes('10h00 Shooting Zoé') && month.timed.includes('Série Irina') && month.label === 'lundi 9 novembre, 5 éléments', 'dans une case, l’heure des seules barres ; la case dit son jour et combien');
+  // what runs over several days: one bar across its days, at the same height in each, its title where it starts and on the
+  // Monday it goes on to, reaching over the gap between two cells
+  const run = await p.evaluate(() => {
+    const bar = k => document.querySelector(`.cal-cell[data-day="${k}"] .cal-line.is-run`), box = k => bar(k).getBoundingClientRect();
+    return { kinds: ['2026-11-13', '2026-11-14', '2026-11-15'].map(k => bar(k).className.replace('cal-line is-run', '').trim()),
+      titles: ['2026-11-13', '2026-11-14', '2026-11-20', '2026-11-23', '2026-11-24'].map(k => (bar(k).querySelector('.cal-lt') || {}).textContent || ''),
+      level: Math.abs(box('2026-11-13').top - box('2026-11-14').top) < 1 && Math.abs(box('2026-11-14').top - box('2026-11-15').top) < 1,
+      joined: Math.round(box('2026-11-14').left - box('2026-11-13').right), lines: document.querySelectorAll('.cal-cell[data-day="2026-11-14"] .cal-line').length };
+  });
+  assert(JSON.stringify(run.kinds) === '["is-first","","is-last"]' && JSON.stringify(run.titles) === '["Paris avec Jules","","Berlin","Berlin",""]'
+    && run.level && run.joined === 0 && run.lines === 1, 'ce qui dure plusieurs jours : une barre d’un jour à l’autre, à la même hauteur, son titre au début et au lundi ' + JSON.stringify(run));
   const panel1 = await p.evaluate(() => { const d = document.querySelector('#cal .cal-day'); return { t: d.querySelector('.cal-day-t').textContent, today: d.classList.contains('is-today'), rows: d.querySelectorAll('ul.rows > li').length,
     late: d.querySelector('.late').textContent, place: d.querySelector('.pl').textContent, time: d.querySelector('.t').textContent }; });
   assert(panel1.t === 'lundi 9 novembre' && panel1.today && panel1.rows === 5 && panel1.late === 'pas publié' && panel1.place === 'Annecy' && panel1.time === '16h00', 'le panneau du jour choisi, sous le mois : son titre, une ligne par élément');
@@ -92,7 +103,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     rows: document.querySelectorAll('.cal-wcol.is-today ul.rows > li').length, empty: document.querySelectorAll('.cal-wcol .empty').length, tab: document.querySelector('#cal .tabs [aria-selected="true"]').textContent, state: cal.state() }));
   await p.locator('#cal button[aria-label="Suivant"]').click();
   const week2 = await p.evaluate(() => cal.state());
-  assert(week.title === '9 nov. – 15 nov.' && week.cols === 7 && week.today === '2026-11-09' && week.rows === 5 && week.empty === 5 && week.tab === 'Semaine'
+  assert(week.title === '9 nov. – 15 nov.' && week.cols === 7 && week.today === '2026-11-09' && week.rows === 5 && week.empty === 2 && week.tab === 'Semaine'
     && week.state.from === '2026-11-09' && week.state.to === '2026-11-16' && week2.day === '2026-11-16', 'la semaine : sept colonnes, celle d’aujourd’hui en or ; la flèche avance d’une semaine');
   await p.evaluate(() => cal.set({ view: 'list', day: '2026-11-09' }));
   const list1 = await p.evaluate(() => [...document.querySelectorAll('#cal .cal-day')].map(d => d.dataset.day));

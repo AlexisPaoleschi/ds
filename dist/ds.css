@@ -1,4 +1,4 @@
-/* ds 2.31.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.32.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -325,6 +325,11 @@
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--ls-wide); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
+  /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
+  .ct.ct-fit-1 { letter-spacing: var(--ls-caps); }
+  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-caps); }
+  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-0-5); }
+  .ct.ct-fit-3 .pill { --pill-px: var(--s-8); }
   ul.rows { list-style: none; margin: 0; padding: 0; }
   ul.rows li { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); padding: var(--s-8) 0; }
   ul.rows li:first-child { border-top: none; padding-top: 0; }
@@ -909,7 +914,8 @@
   .card.is-small { --card-title-size: var(--card-s-title-size); --card-title-ls: var(--card-s-title-ls); --card-pad: var(--card-s-pad);
     --card-gap: var(--card-s-gap); --card-meta-size: var(--card-s-meta-size); --cover-badge: var(--card-s-badge); }
 /* The photo viewer, taken from alexispaoleschi.com: a photo over a black veil, a cross to close it, an arrow on each side,
-   all three in thin round buttons that fill with pale gold on hover. Under the photo, room for an app's own bar
+   all three square buttons in the dark glass of its count, the cross and the arrows those of the icons (Lucide's, as the
+   site's « ← Home »), filled with gold on hover as the site's buttons are. Under the photo, room for an app's own bar
    (Selecta's name, heart and note); the site lays its position over the photo instead (.viewer-count).
    It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
   .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(44px + 2 * var(--viewer-gap));
@@ -919,15 +925,15 @@
   .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }
   .viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow-sheet); user-select: none; -webkit-user-select: none; }
   .viewer-stage .spinner { position: absolute; }
-  .viewer-btn { position: absolute; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; color: var(--viewer-ink); background: transparent;
-    border: 1px solid var(--viewer-line); border-radius: 50%; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer;
+  .viewer-btn { position: absolute; z-index: 1; display: grid; place-items: center; width: 44px; height: 44px; padding: 0; color: var(--viewer-ink);
+    background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); border-radius: var(--r-m); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); cursor: pointer;
     transition: color var(--t-fast) ease, background var(--t-fast) ease, border-color var(--t-fast) ease; }
   .viewer-btn::before { content: ""; width: 20px; height: 20px; background: currentColor; -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
-  @media (hover: hover) { .viewer-btn:hover { color: var(--white); background: var(--viewer-hover); border-color: var(--viewer-hover); } }
-  .viewer-close { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M6 6l12 12M18 6L6 18'/%3E%3C/svg%3E"); top: calc(var(--viewer-gap) + env(safe-area-inset-top, 0px)); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
+  @media (hover: hover) { .viewer-btn:hover { color: var(--white); background: var(--accent); border-color: var(--accent); } }
+  .viewer-close { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round'%3E%3Cpath d='M18 6 6 18M6 6l12 12'/%3E%3C/svg%3E"); top: calc(var(--viewer-gap) + env(safe-area-inset-top, 0px)); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
   .viewer-prev, .viewer-next { top: 50%; transform: translateY(-50%); }
-  .viewer-prev { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 5l-7 7 7 7'/%3E%3C/svg%3E"); left: calc(var(--viewer-gap) + env(safe-area-inset-left, 0px)); }
-  .viewer-next { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M9 5l7 7-7 7'/%3E%3C/svg%3E"); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
+  .viewer-prev { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m12 19-7-7 7-7M19 12H5'/%3E%3C/svg%3E"); left: calc(var(--viewer-gap) + env(safe-area-inset-left, 0px)); }
+  .viewer-next { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12h14M12 5l7 7-7 7'/%3E%3C/svg%3E"); right: calc(var(--viewer-gap) + env(safe-area-inset-right, 0px)); }
   /* the site's position over the photo: « 2 / 9 » in a blurred pill */
   .viewer-count { position: absolute; z-index: 1; left: 50%; bottom: calc(var(--s-32) + env(safe-area-inset-bottom, 0px)); transform: translateX(-50%); padding: var(--s-12) calc(var(--s-24) + var(--s-4));
     color: var(--viewer-ink); background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
@@ -1208,7 +1214,8 @@
   .cal-dow span { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-align: center; text-transform: uppercase; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); }
   /* a cell is as tall as eight lines, the most it shows before « +N » */
-  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8); overflow: hidden;
+  .cal-grid { container-type: inline-size; }
+  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8);
     background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); color: inherit; font: inherit; text-align: left; cursor: pointer; }
   .cal-cell:hover { border-color: var(--line-2); }
   .cal-cell.is-off { opacity: .38; }
@@ -1222,6 +1229,17 @@
   .cal-line.is-bar .cal-lt { color: var(--dim); }
   .cal-line.is-done .cal-lt { color: var(--faint); }
   .cal-line.is-late .cal-lt { color: var(--bad); }
+  /* what runs over several days: one bar in its colour across them, reaching over the cells' edges and the gap between
+     them, the same height in every cell it crosses (an empty line keeps a free lane); its title, where it starts and on
+     each Monday, runs over the days it goes on to */
+  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--fs-12) * var(--lh-text)); }
+  .cal-line.is-run { --reach: calc(var(--s-8) + 1px + var(--s-6) / 2); position: relative; margin: 0 calc(-1 * var(--reach)); padding: 0 var(--s-6);
+    background: color-mix(in srgb, var(--n, var(--dim)) 30%, var(--panel)); }
+  .cal-line.is-run.is-first { margin-left: 0; border-top-left-radius: var(--r-s); border-bottom-left-radius: var(--r-s); }
+  .cal-line.is-run.is-last { margin-right: 0; border-top-right-radius: var(--r-s); border-bottom-right-radius: var(--r-s); }
+  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: 600;
+    max-width: calc(var(--run, 1) * (100cqw - 6 * var(--s-6)) / 7 + (var(--run, 1) - 1) * var(--s-6) - 2 * var(--s-8) - 2 * var(--s-6)); }
+  .cal-line.is-run.is-done { opacity: .55; }
   .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
   /* a group's codes, after its count, are the first thing a narrow cell lets go */
   @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
@@ -1279,6 +1297,13 @@
   .cal-n { flex: 0 0 100%; margin: 0; }
   .cal-cell .cal-line { gap: 0; }
   .cal-cell .cal-line.is-extra, .cal-cell .cal-lt, .cal-cell .cal-code, .cal-cell .cal-count, .cal-cell .cal-more { display: none; }
+  /* a run stays a bar across its days, thin, without its title (the panel says it), right under the day's number in
+     every cell it crosses, the day's dots under it */
+  .cal-cell:has(> .is-run, > .is-gap) { align-content: flex-start; }
+  .cal-cell .cal-line.is-run, .cal-cell .cal-line.is-gap { flex: 0 0 100%; height: var(--s-4); padding: 0; }
+  .cal-cell .cal-line.is-run { --reach: calc(var(--s-4) + 1px + var(--s-4) / 2); flex-basis: calc(100% + 2 * var(--reach)); background: var(--n, var(--dim)); }
+  .cal-cell .cal-line.is-run.is-first, .cal-cell .cal-line.is-run.is-last { flex-basis: calc(100% + var(--reach)); }
+  .cal-cell .cal-line.is-run.is-first.is-last { flex-basis: 100%; }
   .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
   .cal-cell .cal-mark.is-open { background: transparent; }
   .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
@@ -1430,6 +1455,9 @@
     padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); text-align: left; }
   button.chart-donut-row { cursor: pointer; }
   .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+  /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
+  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  .chart-donut-n.is-bad { color: var(--bad); } .chart-donut-n.is-good { color: var(--good); }
   .chart-donut-row em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
   .chart-donut-row b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
   button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent-text); }

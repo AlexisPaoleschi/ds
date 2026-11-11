@@ -11,7 +11,10 @@
    An item: {title, color ("--c-bleu": its mark), mark ("square", "dot", "bar" or "thick"), open (an empty mark: not done
    yet), codes ([{text, color, title}] or "IG": small coloured labels), count ("2/4": a group, one title on several codes,
    which gives its title first and its codes last, the ones a narrow cell drops), time ("10h00": in a cell for a bar
-   only), place, href, done (greyed), late (in red; lateText adds a red badge to its row), note (said on hover)}.
+   only), place, href, done (greyed), late (in red; lateText adds a red badge to its row), note (said on hover),
+   span ({from, to}, its first and last days: what runs over several days, given on each of them)}.
+   In the month, what runs over several days is one bar in its colour across them, at the same height in every cell it
+   crosses, its title on its first day and on each Monday it goes on to, as Google's agenda draws a stay or a trip.
    On a phone, a cell shows a dot per item, three at most, then « +N ».
    Returns {draw(), set({view, day}), go(step), today(), state()}: state() is {view, day, from, to}, the days shown
    (to excluded), what a page reads to load them; onChange receives it after each move, then the page calls draw()
@@ -90,6 +93,43 @@
     if (it.place) li.append(el("span", "pl", it.place));
     if (it.late && it.lateText) li.append(el("span", "late", it.lateText));
     return li;
+  }
+
+  // the runs of a week: what runs over several days and crosses it, each in a lane, the same in every cell it crosses
+  function runsOf(keys, itemsOf) {
+    var runs = {}, order = [];
+    keys.forEach(function (key, i) {
+      itemsOf(key).forEach(function (it) {
+        var s = it.span;
+        if (!s || !s.from || !s.to || s.to <= s.from) return;
+        var id = s.id || (it.title || "") + "|" + s.from + "|" + s.to;
+        if (!runs[id]) { runs[id] = { id: id, it: it, a: i, b: i }; order.push(runs[id]); } else runs[id].b = i;
+      });
+    });
+    // the longest first among those starting the same day; each takes the first lane free over its days
+    order.sort(function (x, y) { return x.a - y.a || (y.b - y.a) - (x.b - x.a); });
+    var lanes = [];
+    order.forEach(function (r) {
+      var l = 0;
+      while (lanes[l] && lanes[l].some(function (o) { return o.a <= r.b && o.b >= r.a; })) l++;
+      (lanes[l] = lanes[l] || []).push(r);
+      r.lane = l;
+    });
+    return { keys: keys, order: order };
+  }
+  function runId(it) { return it.span ? it.span.id || (it.title || "") + "|" + it.span.from + "|" + it.span.to : null; }
+  // a run's piece in a cell: its title where it starts, and on the first day of each week it goes on to
+  function runLine(r, key, i) {
+    var it = r.it, first = key === it.span.from || i === 0, last = key === it.span.to || i === 6;
+    var ln = el("span", "cal-line is-run" + (first ? " is-first" : "") + (last ? " is-last" : "") + (it.done ? " is-done" : ""));
+    ln.title = it.note || it.title || "";
+    if (it.color) ln.style.setProperty("--n", tone(it.color));
+    if (first) {
+      // how many of this week's days it still crosses, for its title to run over them
+      ln.style.setProperty("--run", String(r.b - i + 1));
+      ln.append(el("span", "cal-lt", it.title || ""));
+    }
+    return ln;
   }
 
   function calendar(holder, opts) {
@@ -185,7 +225,7 @@
       [].concat(inside).forEach(function (n) { if (n) sec.append(n); });
       return sec;
     }
-    function cell(key, inMonth) {
+    function cell(key, inMonth, week) {
       var items = itemsOf(key), t = today(), b = el("button", "cal-cell" + (inMonth ? "" : " is-off") + (key === t ? " is-today" : "") + (key === st.day ? " is-sel" : ""));
       b.type = "button";
       b.dataset.day = key;
@@ -194,9 +234,19 @@
       b.setAttribute("aria-label", longDay(key) + (items.length ? ", " + words().count(items.length) : ""));
       if (key === t) b.setAttribute("aria-current", "date");
       b.append(el("span", "cal-n", String(+key.slice(8))));
-      items.slice(0, lines).forEach(function (it, i) { b.append(line(it, i)); });
-      if (items.length > lines) b.append(el("span", "cal-more", "+" + (items.length - lines)));
-      if (items.length > DOTS) b.append(el("span", "cal-more-dots", "+" + (items.length - DOTS)));
+      // the runs first, each in its lane (an empty line where a lane is free that day), then the day's own items
+      var i = week ? week.keys.indexOf(key) : -1, here = week ? week.order.filter(function (r) { return r.a <= i && r.b >= i; }) : [];
+      var deepest = here.reduce(function (m, r) { return Math.max(m, r.lane); }, -1);
+      for (var l = 0; l <= deepest; l++) {
+        var r = here.filter(function (x) { return x.lane === l; })[0];
+        b.append(r ? runLine(r, key, i) : el("span", "cal-line is-gap"));
+      }
+      var ids = here.map(function (r) { return r.id; });
+      var own = items.filter(function (it) { return ids.indexOf(runId(it)) < 0; });
+      var room = Math.max(0, lines - (deepest + 1));
+      own.slice(0, room).forEach(function (it, n) { b.append(line(it, n)); });
+      if (own.length > room) b.append(el("span", "cal-more", "+" + (own.length - room)));
+      if (own.length > DOTS) b.append(el("span", "cal-more-dots", "+" + (own.length - DOTS)));
       b.addEventListener("click", function () {
         st.day = key;
         changed();
@@ -208,12 +258,14 @@
     function month() {
       var dow = el("div", "cal-dow"), grid = el("div", "cal-grid"), start = weekStart(st.day.slice(0, 8) + "01"), mo = st.day.slice(0, 7);
       for (var i = 0; i < 7; i++) dow.append(el("span", "", fmt(addDays(start, i), { weekday: "short" }).replace(".", "")));
+      var week = null;
       for (var j = 0; j < 42; j++) {
         var key = addDays(start, j);
         // five weeks are enough for most months: a sixth row only when the month reaches it, and then a whole week,
         // its last days those of the next month, as on the rows above
         if (j === 35 && key.slice(0, 7) !== mo) break;
-        grid.append(cell(key, key.slice(0, 7) === mo));
+        if (j % 7 === 0) week = runsOf([0, 1, 2, 3, 4, 5, 6].map(function (n) { return addDays(key, n); }), itemsOf);
+        grid.append(cell(key, key.slice(0, 7) === mo, week));
       }
       return [dow, grid, panel(st.day)];
     }

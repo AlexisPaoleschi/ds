@@ -320,6 +320,22 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.goto(base + '/checks/behaviours.html');
   await p.waitForFunction(() => window.side);
   assert(await p.evaluate(() => location.hash) === '#analyse/x', 'une session finie mène à la connexion, puis la page rouvre où elle était');
+  // a card's title too long for its menu: its letters closer, then smaller, only as much as needed; one that fits never,
+  // nor one that would not fit even at the least
+  const fits = await p.evaluate(async () => {
+    const make = (w, t) => { const d = document.createElement('div'); d.className = 'card'; d.style.width = w + 'px';
+      d.innerHTML = '<h2 class="ct">' + t + '<label class="pill"><span class="pv">novembre 2026</span><select><option>novembre 2026</option></select></label></h2>';
+      document.body.append(d); return d.firstChild; };
+    const roomy = make(600, 'Dépenses par catégorie'), tight = make(392, 'Dépenses par catégorie'), never = make(200, 'Dépenses par catégorie');
+    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const pv = tight.querySelector('.pill').getBoundingClientRect(), words = document.createRange();
+    words.selectNodeContents(tight.firstChild);
+    const res = [roomy.className, tight.className, never.className, pv.top < words.getBoundingClientRect().bottom];
+    [roomy, tight, never].forEach(h => h.parentNode.remove());
+    return res;
+  });
+  assert(fits[0] === 'ct' && /ct-fit-/.test(fits[1]) && fits[3] && fits[2] === 'ct',
+    'un titre trop long pour son menu se resserre puis rapetisse, seulement s’il le faut ' + JSON.stringify(fits));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

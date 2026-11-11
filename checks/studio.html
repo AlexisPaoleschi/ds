@@ -34,6 +34,11 @@
       "2026-11-12": Array.from({ length: 10 }, (_, i) => ({ title: "Post " + (i + 1), color: "--c-ciel", open: i % 2 === 0, done: i % 2 === 1 })),
       "2026-11-02": [{ title: "Rendez-vous imprimeur", mark: "bar", color: "--c-bleu", time: "14h00" }]
     };
+    // a stay of three days and a trip across two weeks, given on each of their days
+    [["Paris avec Jules", "2026-11-13", "2026-11-15", "--c-bleu"], ["Berlin", "2026-11-20", "2026-11-24", "--c-rose"]].forEach(([title, from, to, color]) => {
+      for (let d = from; d <= to; d = new Date(Date.parse(d + "T12:00:00Z") + 864e5).toISOString().slice(0, 10))
+        (agenda[d] = agenda[d] || []).unshift({ title, color, mark: "bar", span: { from, to } });
+    });
     window.cal = ds.calendar(document.getElementById("cal"), { today, items: k => agenda[k] || [], onChange: s => changes.push(s) });
 
     const pts = Array.from({ length: 30 }, (_, i) => ({ x: "2026-10-" + String(i + 1).padStart(2, "0"), v: 1200 + i * 2 + (i === 10 ? 30 : 0) }));

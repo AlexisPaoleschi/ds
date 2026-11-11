@@ -25,7 +25,8 @@
    ds.chart.split(holder, parts, {format}): one bar split by share, then its legend. parts: [{label, value, color}].
    ds.chart.donut(holder, rows, {format, selected, pick, center}): a ring split by share, the total in its hole, and its
      legend beside it (under it on a phone), a row per slice: its colour, its name, its share, its amount. rows: [{key,
-     label, value, color}] (nothing at or under 0 is drawn); center: the word under the total (« dépensés »), or
+     label, value, color, note, tone}] (nothing at or under 0 is drawn; note: a word under the name, in red with tone
+     "bad", in green with "good"); center: the word under the total (« dépensés »), or
      {value, label}; pick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
      another tap lets it go (pick(null)); the slices are one stop of the keyboard, the arrows go round them. */
 (function () {
@@ -366,7 +367,10 @@
       s.append(path);
       slices.push(path);
       var li = el("li"), row = el(o.pick ? "button" : "div", "chart-donut-row");
-      row.append(paint(el("i", "chart-key"), x.color), el("span", "chart-donut-l", x.label), el("em", "", pct + "%"), el("b", "", format(x.value)));
+      // a row may say a word under its name (note), in a colour (tone: bad, good): what rose against the usual
+      var name = el("span", "chart-donut-l", x.label);
+      if (x.note) name.append(el("small", "chart-donut-n" + (x.tone ? " is-" + x.tone : ""), x.note));
+      row.append(paint(el("i", "chart-key"), x.color), name, el("em", "", pct + "%"), el("b", "", format(x.value)));
       li.append(row);
       legend.append(li);
       items.push(row);

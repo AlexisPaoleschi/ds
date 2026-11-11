@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.32.0 · 11 novembre 2026
+
+- Un titre de carte qui porte quelque chose sur sa ligne (un menu, une période, un bouton, l’heure de lecture) le garde sur cette ligne quand il le peut : ses lettres se resserrent, puis rapetissent (12 px, puis 11 px au plus petit), seulement autant qu’il le faut ; au-delà, ce qu’il porte passe en dessous, comme avant. `ds.js` le refait au chargement, quand la fenêtre change de taille et quand une page redessine ses cartes (`ds.fitTitles()` le demande aussi).
+- `ds.calendar` : ce qui dure plusieurs jours (un séjour, un voyage ; `span: {from, to}` sur l’élément de chacun de ses jours) devient dans le mois une seule barre à sa couleur, d’un jour à l’autre, à la même hauteur dans chaque case qu’elle traverse, son titre à son début et au lundi où elle continue, comme dans l’agenda de Google. Sur téléphone, un trait fin sous le numéro du jour.
+- `ds.chart.donut` : une ligne de la légende peut porter un mot sous son nom (`note`), en rouge (`tone: "bad"`) ou en vert (`"good"`). Bank y dit ce qui a augmenté par rapport à d’habitude, à la place de sa carte « Ce qui augmente ».
+- Les 38 premières icônes, dessinées à la main pour Bank et Studio, prennent le dessin de Lucide sous le même nom (35 ; `list` garde ses coches avec `list-checks`, `sliders` ses deux curseurs avec `settings-2`), comme toutes les autres. Seuls les trois logos de marque (Instagram, Bluesky, X) restent dessinés à la main : Lucide ne dessine plus de marques. Bank et Studio retirent leur propre copie de ces icônes : celles du design system suffisent.
+- La visionneuse : ses trois boutons deviennent carrés, dans le verre sombre de son compteur, avec la croix et les flèches des icônes (celles de « ← Home » sur le site), et se remplissent d’or au survol comme les autres boutons du site ; ils restaient ronds, transparents et à peine teintés.
+- L’icône de l’avion (`i-plane`, l’onglet Voyages de Bank, la destination des pages d’événement du site) était dessinée de travers : sa queue sortait de l’axe de l’avion. Elle prend le dessin de Lucide, symétrique.
+
 ## 2.31.0 · 11 novembre 2026
 
 Bank et Studio choisissaient leurs périodes avec deux composants différents du design system : la pilule venue de Bank (« 12 mois ▾ ») et le choix de période venu de Studio (des onglets, et sur téléphone une liste dorée à sa propre flèche). Il n’en reste qu’un.

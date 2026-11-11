@@ -8,6 +8,8 @@
   function addDays(k, n) { return key(num(k) + n); }
   // the same made-up figures on every visit: a seeded draw
   function rnd(n) { var x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+  // the day n days from today
+  function day(n) { return new Date((num(today) + n) * 864e5 + 432e5).toISOString().slice(0, 10); }
   function pick(list, n) { return list[Math.floor(rnd(n) * list.length)]; }
   function each(name, fn) { document.querySelectorAll('[data-studio="' + name + '"]').forEach(fn); }
   function node(name, cls, text) { var e = document.createElement(name); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -35,7 +37,10 @@
     if (rnd(n * 23) > 0.86) out.push({ title: "Shooting Katline · " + pick(MODELS, n * 29), mark: "thick", color: "--c-rose", time: "09h30", place: pick(PLACES, n + 1) });
     // the publications first, then the agenda in the order of its hours
     var bars = out.filter(function (it) { return it.mark; }).sort(function (a, b) { return a.time < b.time ? -1 : 1; });
-    return (cache[k] = out.filter(function (it) { return !it.mark; }).concat(bars));
+    // what runs over several days (a stay, a trip): one bar across them in the month
+    var runs = [["Paris avec Jules", 2, 4, "--c-bleu"], ["Berlin", 9, 13, "--c-rose"]].filter(function (r) { return d >= r[1] && d <= r[2]; })
+      .map(function (r) { return { title: r[0], mark: "bar", color: r[3], span: { from: day(r[1]), to: day(r[2]) } }; });
+    return (cache[k] = runs.concat(out.filter(function (it) { return !it.mark; }), bars));
   }
   // the day's panel as Studio draws it: what went out, what is still to publish, then the agenda
   function panel(k, items) {

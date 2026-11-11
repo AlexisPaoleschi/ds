@@ -19,6 +19,11 @@
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--ls-wide); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
+  /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
+  .ct.ct-fit-1 { letter-spacing: var(--ls-caps); }
+  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-caps); }
+  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-0-5); }
+  .ct.ct-fit-3 .pill { --pill-px: var(--s-8); }
   ul.rows { list-style: none; margin: 0; padding: 0; }
   ul.rows li { align-items: center; border-top: 1px solid var(--line); display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); padding: var(--s-8) 0; }
   ul.rows li:first-child { border-top: none; padding-top: 0; }

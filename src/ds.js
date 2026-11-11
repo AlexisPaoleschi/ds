@@ -648,6 +648,38 @@
     return span;
   }
 
+  /* A card's title that holds something on its line (a menu, a period, a button, the hour it was read: its last element)
+     keeps them on one line when it can: its letters come closer, then smaller (12px, then 11px, the least, with a menu's
+     edges narrower), only as much as needed; past that, the title keeps its size and what it holds goes under it. On loading, when the window changes size, once the fonts have come,
+     and whenever a page draws its cards again. */
+  var FIT = ["ct-fit-1", "ct-fit-2", "ct-fit-3"];
+  function fitTitle(h) {
+    var held = h.lastElementChild;
+    FIT.forEach(function (c) { h.classList.remove(c); });
+    if (!held || held.matches("svg") || !h.offsetParent) return;
+    var words = [].filter.call(h.childNodes, function (n) { return n.nodeType === 3 && n.textContent.trim(); });
+    if (!words.length) return;
+    var range = document.createRange();
+    range.setStartBefore(words[0]);
+    range.setEndAfter(words[words.length - 1]);
+    // what it holds went under the words when it starts below their last line
+    function under() { return held.getBoundingClientRect().top >= range.getBoundingClientRect().bottom - 2; }
+    for (var i = 0; i < FIT.length && under(); i++) {
+      if (i) h.classList.remove(FIT[i - 1]);
+      h.classList.add(FIT[i]);
+    }
+    // not even at the least: the title keeps its size, and what it holds goes under it
+    if (under()) FIT.forEach(function (c) { h.classList.remove(c); });
+  }
+  var fitting = 0;
+  function fitTitles() {
+    if (fitting) return;
+    fitting = requestAnimationFrame(function () {
+      fitting = 0;
+      document.querySelectorAll(".ct").forEach(fitTitle);
+    });
+  }
+
   /* Foldable sections: <details class="fold" data-fold="key"> open as the device left them, each change remembered under
      ds-fold:<key>. On loading, and again with ds.fold(holder) once a page draws them anew. */
   function fold(root) {
@@ -769,7 +801,13 @@
     });
   }
   function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
-  onReady(function () { fold(); arrivals(); cameBack(); });
+  onReady(function () {
+    fold(); arrivals(); cameBack(); fitTitles();
+    window.addEventListener("resize", fitTitles, { passive: true });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+    // a page that draws its cards again: their titles are fitted once it is done
+    new MutationObserver(fitTitles).observe(document.body, { childList: true, subtree: true });
+  });
 
   window.ds = window.ds || {};
   window.ds.toast = toast;
@@ -799,6 +837,7 @@
   window.ds.compact = compact;
   window.ds.avatar = avatar;
   window.ds.fold = fold;
+  window.ds.fitTitles = fitTitles;
   window.ds.route = route;
   window.ds.seek = seek;
 })();

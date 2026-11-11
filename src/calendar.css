@@ -6,7 +6,8 @@
   .cal-dow span { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-align: center; text-transform: uppercase; }
   .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); }
   /* a cell is as tall as eight lines, the most it shows before « +N » */
-  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8); overflow: hidden;
+  .cal-grid { container-type: inline-size; }
+  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8);
     background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); color: inherit; font: inherit; text-align: left; cursor: pointer; }
   .cal-cell:hover { border-color: var(--line-2); }
   .cal-cell.is-off { opacity: .38; }
@@ -20,6 +21,17 @@
   .cal-line.is-bar .cal-lt { color: var(--dim); }
   .cal-line.is-done .cal-lt { color: var(--faint); }
   .cal-line.is-late .cal-lt { color: var(--bad); }
+  /* what runs over several days: one bar in its colour across them, reaching over the cells' edges and the gap between
+     them, the same height in every cell it crosses (an empty line keeps a free lane); its title, where it starts and on
+     each Monday, runs over the days it goes on to */
+  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--fs-12) * var(--lh-text)); }
+  .cal-line.is-run { --reach: calc(var(--s-8) + 1px + var(--s-6) / 2); position: relative; margin: 0 calc(-1 * var(--reach)); padding: 0 var(--s-6);
+    background: color-mix(in srgb, var(--n, var(--dim)) 30%, var(--panel)); }
+  .cal-line.is-run.is-first { margin-left: 0; border-top-left-radius: var(--r-s); border-bottom-left-radius: var(--r-s); }
+  .cal-line.is-run.is-last { margin-right: 0; border-top-right-radius: var(--r-s); border-bottom-right-radius: var(--r-s); }
+  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: 600;
+    max-width: calc(var(--run, 1) * (100cqw - 6 * var(--s-6)) / 7 + (var(--run, 1) - 1) * var(--s-6) - 2 * var(--s-8) - 2 * var(--s-6)); }
+  .cal-line.is-run.is-done { opacity: .55; }
   .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
   /* a group's codes, after its count, are the first thing a narrow cell lets go */
   @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
@@ -77,6 +89,13 @@
   .cal-n { flex: 0 0 100%; margin: 0; }
   .cal-cell .cal-line { gap: 0; }
   .cal-cell .cal-line.is-extra, .cal-cell .cal-lt, .cal-cell .cal-code, .cal-cell .cal-count, .cal-cell .cal-more { display: none; }
+  /* a run stays a bar across its days, thin, without its title (the panel says it), right under the day's number in
+     every cell it crosses, the day's dots under it */
+  .cal-cell:has(> .is-run, > .is-gap) { align-content: flex-start; }
+  .cal-cell .cal-line.is-run, .cal-cell .cal-line.is-gap { flex: 0 0 100%; height: var(--s-4); padding: 0; }
+  .cal-cell .cal-line.is-run { --reach: calc(var(--s-4) + 1px + var(--s-4) / 2); flex-basis: calc(100% + 2 * var(--reach)); background: var(--n, var(--dim)); }
+  .cal-cell .cal-line.is-run.is-first, .cal-cell .cal-line.is-run.is-last { flex-basis: calc(100% + var(--reach)); }
+  .cal-cell .cal-line.is-run.is-first.is-last { flex-basis: 100%; }
   .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
   .cal-cell .cal-mark.is-open { background: transparent; }
   .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
