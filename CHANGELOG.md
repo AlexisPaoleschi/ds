@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.33.0 · 11 novembre 2026
+
+Les petites cases de chiffres avaient deux apparences : chacune dans sa boîte (`.tiles.is-compact`, l’accueil et le compte facture de Bank, Selecta), ou toutes jointes dans une grille au libellé doré (`.minitiles`, les variations d’un cours dans Bank, les moyennes de Studio). Il n’en reste qu’une, celle du reste des pages.
+
+- `.minitiles` : chaque mini-tuile dans sa propre boîte, comme une tuile compacte (même fond, même trait, même arrondi, 8 px entre elles), son libellé en capitales grises au lieu de dorées. Les grandes tuiles (`.tiles`), dont la couleur dit la série, restent jointes.
+
 ## 2.32.0 · 11 novembre 2026
 
 - Un titre de carte qui porte quelque chose sur sa ligne (un menu, une période, un bouton, l’heure de lecture) le garde sur cette ligne quand il le peut : ses lettres se resserrent, puis rapetissent (12 px, puis 11 px au plus petit), seulement autant qu’il le faut ; au-delà, ce qu’il porte passe en dessous, comme avant. `ds.js` le refait au chargement, quand la fenêtre change de taille et quand une page redessine ses cartes (`ds.fitTitles()` le demande aussi).

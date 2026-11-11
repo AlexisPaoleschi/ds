@@ -30,12 +30,13 @@
 @media (max-width: 1024px) {
   .ranks { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); }
 }
-/* mini-tiles: the reference figures at the top of a card (a median, an average), drawn as the big tiles are, smaller:
-   a label in gold capitals, a figure and its unit, what it is taken over. They all take the widest one's width */
-  .minitiles { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: calc(var(--s-2) / 2); width: fit-content; max-width: 100%; margin: 0 0 var(--s-16); overflow: hidden;
-    background: var(--line); border: 1px solid var(--line); border-radius: var(--r-m); }
-  .minitile { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; padding: var(--s-8) var(--s-14) var(--s-10); background: var(--panel-2); }
-  .minitile small { color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; white-space: nowrap; }
+/* mini-tiles: the reference figures at the top of a card (a median, an average), drawn as the compact tiles are, each
+   in its own box: a label in grey capitals, a figure and its unit, what it is taken over. They all take the widest
+   one's width */
+  .minitiles { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: var(--s-8); width: fit-content; max-width: 100%; margin: 0 0 var(--s-16); }
+  .minitile { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; padding: var(--s-10) var(--s-12); background: var(--panel-2);
+    border: 1px solid var(--line); border-radius: var(--r-m); }
+  .minitile small { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; white-space: nowrap; }
   .minitile div { display: flex; align-items: baseline; gap: var(--s-4); white-space: nowrap; }
   .minitile b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
   .minitile span { display: inline-flex; align-items: center; gap: var(--s-2); color: var(--dim); font: 500 var(--fs-12)/var(--lh-tight) var(--body); }
@@ -46,7 +47,6 @@
      figures stay side by side */
   .minitiles:has(> .minitile:nth-child(4)) { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
   .minitiles:has(> .minitile:nth-child(4)) .minitile small { white-space: normal; }
-  .minitiles:has(> .minitile:nth-child(4)) .minitile { padding: var(--s-8) var(--s-10) var(--s-10); }
 }
 /* the verdict: « ×1,4 » in green from 1.2 times the usual, yellow (never grey) in between, red under 0.8; the tall one says
    it in a word under it. An empty one keeps its room, so that the figures beside it stay in line */
