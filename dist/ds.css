@@ -1,4 +1,4 @@
-/* ds 2.28.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.29.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1606,7 +1606,8 @@
 }
 /* The hero: a photo across the page with its title over it, taken from alexispaoleschi.com's events (the event pages, the
    events and the newsletter) and Selecta's gallery cover. <section class="hero"> holds <img class="hero-img"> (or a
-   <picture class="hero-img">, or the page's own background-image) and <div class="hero-in"> with .hero-t, .hero-sub (gold
+   <picture class="hero-img">, or the page's own background-image, or its photo given by the page itself:
+   style="--hero-photo: url(/path/from/the/root.jpg)", a path from the root since the design system's file reads it) and <div class="hero-in"> with .hero-t, .hero-sub (gold
    capitals), .hero-meta (a date, a place) and .hero-acts (its buttons); a .back-link.on-photo may sit in its corner.
    A veil from the overlay tokens keeps the white words readable on any photo; it is over a photo, so it reads the same
    in both themes, each with its own title font.
@@ -1624,7 +1625,7 @@
     position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: var(--hero-h); overflow: hidden; color: var(--white); text-align: center;
     padding: var(--hero-pad) max(var(--hero-side), env(safe-area-inset-right, 0px)) var(--hero-pad-end) max(var(--hero-side), env(safe-area-inset-left, 0px));
-    background-color: var(--night-800); background-position: center; background-size: cover; background-repeat: no-repeat; }
+    background-color: var(--night-800); background-image: var(--hero-photo, none); background-position: center; background-size: cover; background-repeat: no-repeat; }
   .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero-img img { position: static; }
   /* the veil, over the photo and under the words */

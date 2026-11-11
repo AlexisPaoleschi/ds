@@ -1,4 +1,4 @@
-/* ds 2.28.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.29.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* ds.viewer(items, {start, onChange, onClose, label, el, from}): the photo viewer of src/viewer.css, opened on
    items[start]. An item is {src, srcset, sizes, alt, caption, thumb, el}, a plain address, or a function that returns one
    (or a promise of one), called when the photo is first needed: Selecta asks its server for a signed address then.

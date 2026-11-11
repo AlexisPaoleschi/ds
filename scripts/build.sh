@@ -15,7 +15,7 @@ js_photo="src/viewer.js src/photogrid.js"
 css_date="src/datepick.css"
 js_date="src/datepick.js"
 # the site kit: what alexispaoleschi.com shares between its pages and no app needs, in files of their own
-css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css"
+css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css src/home.css src/eventslist.css src/newsletter.css src/testimonials.css"
 js_site="src/site.js"
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css $css_bank $css_studio $css_photo $css_date; } > dist/ds.css
 # the script: the icons' sprite, then the bubble and the dialog

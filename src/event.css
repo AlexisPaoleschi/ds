@@ -325,3 +325,32 @@
     .location-map-connector { display: block; }
     .location-info-map { margin: var(--s-40) 0 0; padding: var(--s-48) var(--s-40); }
   }
+  /* a section's second heading, in the site's gold capitals (the two sessions of a pricing) */
+  .section-subtitle { margin-bottom: var(--s-48); font-family: var(--body); font-size: var(--fs-18); font-weight: 400; letter-spacing: var(--ls-3);
+    text-align: center; text-transform: uppercase; color: var(--accent); }
+  /* the schedule of each session under its own heading, the second one set apart */
+  .section-subtitle.session-title { margin-bottom: var(--s-24); }
+  .schedule-container + .session-title { margin-top: var(--s-48); }
+  /* a box whose text reads from the left */
+  .info-box.is-left p { text-align: left; }
+  /* two prices side by side (.price-display.is-pair: a 2:1 and a 1:1 session), a thin gold line between them */
+  .price-display.is-pair { flex-direction: row; justify-content: center; gap: 0; }
+  .price-option { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 0 var(--s-40); }
+  .price-divider { width: 1px; height: 120px; background: color-mix(in srgb, var(--accent) 20%, transparent); flex-shrink: 0; }
+  .price-display.is-pair .price-amount { font-size: var(--fs-80); }
+  .price-display.is-pair .price-period { color: var(--ink); }
+  .price-label { margin-top: var(--s-8); font-size: var(--fs-14); font-weight: 300; letter-spacing: var(--ls-1); color: var(--faint); }
+  /* two landscape photos side by side (.gallery-grid-duo), stacked on a phone.
+     The doubled class keeps it above the gallery-grid media query overrides. */
+  .gallery-grid.gallery-grid-duo { grid-template-columns: repeat(2, 1fr); margin-top: var(--s-32); }
+  .gallery-grid-duo .gallery-item { aspect-ratio: 16/9; }
+  /* ─── Mobile shared: portrait ≤768px + landscape ≤956px ─── */
+  @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
+    .section-subtitle { font-size: var(--fs-15); letter-spacing: var(--ls-2); }
+    .gallery-grid.gallery-grid-duo { grid-template-columns: 1fr; }
+    /* a phone's price size, which the 80px above would otherwise override */
+    .price-display.is-pair .price-amount { font-size: var(--fs-64); }
+    .price-display.is-pair { flex-direction: column; gap: var(--s-40); }
+    .price-divider { width: 60px; height: 1px; }
+    .price-option { padding: 0; }
+  }

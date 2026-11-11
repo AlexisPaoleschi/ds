@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.29.0 · 11 novembre 2026
+
+Tout ce qu’alexispaoleschi.com dessinait encore lui-même rejoint le kit du site : le site n’a plus de feuille de style à lui.
+
+- Kit du site : l’accueil (`<body class="home">`, `src/home.css`), la liste des événements (`src/eventslist.css`), la page de la newsletter (`src/newsletter.css`) et le bandeau des témoignages (`src/testimonials.css`), tels quels. Les pièces de la page du Sénégal deviennent des variantes qu’une page d’événement peut prendre : deux prix côte à côte (`.price-display.is-pair`), un second titre de section (`.section-subtitle`, `.session-title`), un encadré lu depuis la gauche (`.info-box.is-left`), deux photos larges (`.gallery-grid-duo`).
+- Bandeau photo : la page peut donner sa photo, `style="--hero-photo: url('/chemin/depuis/la/racine.jpg')"` ; les photos du site quittent ainsi ses feuilles de style pour ses pages, où est leur place. Le chemin part de la racine : c’est le fichier du design system qui le lit.
+
 ## 2.28.0 · 11 novembre 2026
 
 Ce que les pages d’alexispaoleschi.com partagent entre elles monte ici, dans un kit à part que les applis ne chargent pas, et le site prend les pièces du design system qu’il redessinait encore.
