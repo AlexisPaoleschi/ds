@@ -1,5 +1,15 @@
 # Changelog
 
+## 2.28.0 · 11 novembre 2026
+
+Ce que les pages d’alexispaoleschi.com partagent entre elles monte ici, dans un kit à part que les applis ne chargent pas, et le site prend les pièces du design system qu’il redessinait encore.
+
+- Le kit du site, `dist/ds-site.css` (40 Ko) et `dist/ds-site.js` (9 Ko) : la base d’une page du site, l’écran de chargement, l’invite à redresser un téléphone couché, le sous-titre et le filet d’or, les pastilles de lien dorées, le lien retour sur la photo d’en-tête, la barre qui apparaît une fois l’en-tête passé et son menu de téléphone, les bandeaux des réseaux et de la newsletter, et les blocs d’une page d’événement (sections, modèles, lieu, accès, programme, tarifs, réservation, FAQ, organisateur, galeries). Le script construit la barre et le lien retour depuis leurs attributs (`<div id="nav">`, `<div id="back-button">`), ouvre et ferme le menu, descend en douceur vers une partie de la page sous la barre, ôte l’écran de chargement (`window.hideLoader()`) et ouvre les galeries dans la visionneuse. Les règles sont celles du site, au pixel près ; les applis n’en voient rien. Les noms qu’une page seule du site utilise autrement changent : le titre d’une galerie d’événement devient `.gallery-heading`, l’animation du plan `map-pulse`.
+- Les icônes dans un fichier à part, `dist/icons.svg`, pour une page sans `ds.js` : `<svg class="ico"><use href="ds/icons-2.28.0.svg#i-mail"/></svg>`, sans script, gardé en cache. `ds.icon(nom, classe)` (dans `ds-site.js`) écrit la même chose. Deux icônes de plus, celles du site : `i-users` et `i-leaf`.
+- Page document : la page légale d’un site (`body.doc.is-legal`) avec son en-tête centré, ses parties, un mot à retenir (`.doc-notice`), le bloc à signer des deux parties (`.doc-sign` et ses champs) et son pied ; sur papier, chaque page garde 20 mm en haut et en bas.
+- `scripts/sync.sh <version> <site> site` copie le kit, la visionneuse seule, les icônes et les polices dans le dossier `ds/` du site.
+- `node checks/site.js` vérifie le kit dans un navigateur : la barre et son menu, les liens, le lien retour et son icône, l’écran de chargement, la visionneuse, les icônes du fichier.
+
 ## 2.27.0 · 10 novembre 2026
 
 Ce que le site a demandé pour n’écrire plus aucune valeur à la main.

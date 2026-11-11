@@ -14,9 +14,18 @@ css_photo="src/viewer-behaviour.css src/photogrid.css src/hero.css src/backlink.
 js_photo="src/viewer.js src/photogrid.js"
 css_date="src/datepick.css"
 js_date="src/datepick.js"
+# the site kit: what alexispaoleschi.com shares between its pages and no app needs, in files of their own
+css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css"
+js_site="src/site.js"
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css $css_bank $css_studio $css_photo $css_date; } > dist/ds.css
 # the script: the icons' sprite, then the bubble and the dialog
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/icons.js src/ds.js $js_bank $js_studio $js_photo $js_date; } > dist/ds.js
 # the photo viewer and the grid of photos alone, for a public page that needs nothing else of ds.js (the site's events)
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $js_photo; } > dist/ds-photo.js
-echo "dist/ds.css dist/ds.js dist/ds-photo.js $version"
+# the site kit, which the site links after ds.css (and ds-photo.js on its event pages)
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css_site; } > dist/ds-site.css
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $js_site; } > dist/ds-site.js
+# the icons alone, in a file a page links to with no script: <svg class="ico"><use href="icons-X.Y.Z.svg#i-mail"/></svg>
+{ echo '<svg xmlns="http://www.w3.org/2000/svg">'; echo "<!-- ds $version · github.com/AlexisPaoleschi/ds · the icons of src/icons.js -->";
+  sed -n '/var sprite = `/,/^`;$/p' src/icons.js | sed '1d;$d'; echo '</svg>'; } > dist/icons.svg
+echo "dist/ds.css dist/ds.js dist/ds-photo.js dist/ds-site.css dist/ds-site.js dist/icons.svg $version"

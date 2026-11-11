@@ -20,3 +20,27 @@
     body.doc { font-weight: 400; }
     body.doc main strong { font-weight: 600; }
   }
+/* A legal page of a site (<body class="doc is-legal">, the site's terms and model releases): its head in the middle, a
+   word to keep in mind (.doc-notice), the two parties' block to sign by hand (.doc-sign), its foot. Its links are in gold
+   without a line, and on paper it keeps room above and below each page. */
+  body.doc .doc-head { margin-bottom: var(--s-40); text-align: center; }
+  body.doc .doc-sub { margin: var(--s-4) 0 0; color: var(--faint); }
+  body.doc .doc-section { margin-bottom: var(--s-32); }
+  body.doc.is-legal main p a { text-decoration: none; }
+  body.doc .doc-notice { margin: var(--s-20) 0; padding: var(--s-12) var(--s-16); font-size: var(--note-size); color: var(--dim); background: var(--accent-soft);
+    border-left: 3px solid var(--accent); }
+  /* the two parties side by side, each with a line to sign and its fields to fill in by hand */
+  body.doc .doc-sign { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-40); margin-top: var(--s-48); break-inside: avoid; }
+  body.doc .doc-sign-party { padding-top: var(--s-16); border-top: 1px solid var(--ink); }
+  body.doc .doc-sign-label { margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--faint); }
+  body.doc .doc-sign-line { height: var(--s-40); margin-bottom: var(--s-8); border-bottom: 1px solid var(--faint); }
+  body.doc .doc-sign-field { display: flex; align-items: baseline; gap: var(--s-6); margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--dim); }
+  body.doc .doc-sign-field-line { flex: 1; border-bottom: 1px solid var(--faint); }
+  body.doc .doc-foot { margin-top: var(--s-48); padding-top: var(--s-20); text-align: center; border-top: 1px solid var(--line); }
+  body.doc .doc-foot p { margin: 0 0 var(--s-4); font-size: var(--note-size); color: var(--faint); }
+  body.doc.is-legal { page: legal; }
+  @page legal { margin-top: 20mm; margin-bottom: 20mm; }
+  @media print {
+    body.doc .doc-notice { background: none; }
+    body.doc :is(.doc-sub, .doc-notice, .doc-sign-label, .doc-sign-field, .doc-foot p) { color: var(--black); }
+  }

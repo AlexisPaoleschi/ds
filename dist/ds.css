@@ -1,4 +1,4 @@
-/* ds 2.27.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.28.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -687,6 +687,30 @@
     body.doc, body.doc main :is(h1, h2, h3, p, li, strong, a, .eyebrow) { color: var(--black); }
     body.doc { font-weight: 400; }
     body.doc main strong { font-weight: 600; }
+  }
+/* A legal page of a site (<body class="doc is-legal">, the site's terms and model releases): its head in the middle, a
+   word to keep in mind (.doc-notice), the two parties' block to sign by hand (.doc-sign), its foot. Its links are in gold
+   without a line, and on paper it keeps room above and below each page. */
+  body.doc .doc-head { margin-bottom: var(--s-40); text-align: center; }
+  body.doc .doc-sub { margin: var(--s-4) 0 0; color: var(--faint); }
+  body.doc .doc-section { margin-bottom: var(--s-32); }
+  body.doc.is-legal main p a { text-decoration: none; }
+  body.doc .doc-notice { margin: var(--s-20) 0; padding: var(--s-12) var(--s-16); font-size: var(--note-size); color: var(--dim); background: var(--accent-soft);
+    border-left: 3px solid var(--accent); }
+  /* the two parties side by side, each with a line to sign and its fields to fill in by hand */
+  body.doc .doc-sign { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-40); margin-top: var(--s-48); break-inside: avoid; }
+  body.doc .doc-sign-party { padding-top: var(--s-16); border-top: 1px solid var(--ink); }
+  body.doc .doc-sign-label { margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--faint); }
+  body.doc .doc-sign-line { height: var(--s-40); margin-bottom: var(--s-8); border-bottom: 1px solid var(--faint); }
+  body.doc .doc-sign-field { display: flex; align-items: baseline; gap: var(--s-6); margin: 0 0 var(--s-4); font-size: var(--fs-13); color: var(--dim); }
+  body.doc .doc-sign-field-line { flex: 1; border-bottom: 1px solid var(--faint); }
+  body.doc .doc-foot { margin-top: var(--s-48); padding-top: var(--s-20); text-align: center; border-top: 1px solid var(--line); }
+  body.doc .doc-foot p { margin: 0 0 var(--s-4); font-size: var(--note-size); color: var(--faint); }
+  body.doc.is-legal { page: legal; }
+  @page legal { margin-top: 20mm; margin-bottom: 20mm; }
+  @media print {
+    body.doc .doc-notice { background: none; }
+    body.doc :is(.doc-sub, .doc-notice, .doc-sign-label, .doc-sign-field, .doc-foot p) { color: var(--black); }
   }
 /* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
    ds.js puts it on the page (ds.toast). */
