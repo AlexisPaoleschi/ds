@@ -325,6 +325,15 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const sp0 = await steady(); await flip(); const sp1 = await steady(); await flip();
   const line = await p.evaluate(() => { const t = document.getElementById('steady-title').getBoundingClientRect(), n = document.querySelector('#steady .periodnav').getBoundingClientRect();
     return n.top < t.bottom && n.left > t.right; });
+  // its picker as wide as the card, not as its title, and its tabs whole
+  await p.locator('#steady-title').click();
+  await p.waitForTimeout(100);
+  const spop = await p.evaluate(() => { const pop = document.getElementById('steady-pop').getBoundingClientRect(), head = document.getElementById('steady').getBoundingClientRect(),
+    title = document.getElementById('steady-title').getBoundingClientRect();
+    return { pop: Math.round(pop.width), head: Math.round(head.width), title: Math.round(title.width), left: Math.round(pop.left - head.left), below: pop.top >= title.bottom,
+      tabs: [...document.querySelectorAll('#steady-pop .dp-tabs button')].every(x => x.scrollWidth <= x.clientWidth) }; });
+  await p.keyboard.press('Escape');
+  assert(spop.pop === spop.head && spop.pop > spop.title && spop.left === 0 && spop.below && spop.tabs, 'stable, sur téléphone : le choix aussi large que la carte, pas que son titre, ses onglets entiers ' + JSON.stringify(spop));
   assert(sp0.title === sp1.title && sp0.after === sp1.after && line, 'stable, sur téléphone : les flèches sur la ligne du titre, et rien ne bouge quand elles paraissent ' + JSON.stringify([sp0, sp1, line]));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();

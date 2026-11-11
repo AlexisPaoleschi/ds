@@ -1,4 +1,4 @@
-/* ds 2.35.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.35.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit's behaviours (dist/ds-site.js), for alexispaoleschi.com's pages; the apps do not load it.
    <div id="nav" data-title data-links='[{"href": "#models", "label": "Models"}]' data-cta-href data-cta-label> becomes
    the bar of an event page (the design system's .topbar.is-site, here .sticky-nav), shown once the page's first hero

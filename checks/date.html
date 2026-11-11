@@ -14,7 +14,7 @@
   </section>
   <section class="card">
     <div class="periodhead is-steady" id="steady">
-      <div class="periodleft"><button class="periodtitle" type="button" id="steady-title">Toutes les dates<span class="caret" aria-hidden="true">▾</span></button></div>
+      <div class="periodleft"><button class="periodtitle" type="button" id="steady-title">Toutes les dates<span class="caret" aria-hidden="true">▾</span></button><div id="steady-pop"></div></div>
       <div class="periodnav"><button class="btn is-icon off" type="button" id="steady-prev" aria-label="Période précédente">‹</button><button class="btn is-icon off" type="button" id="steady-next" aria-label="Période suivante">›</button></div>
     </div>
     <p id="steady-after">Sous le titre.</p>
@@ -36,6 +36,7 @@
       { label: "3 derniers mois", from: "2026-09-01", to: "2026-11-30" },
       { label: "Cette année", from: "2026-01-01", to: "2026-12-31" }
     ];
+    window.steadyDp = P("#steady-pop", { value: {}, quick, min: "2017-01-01", max: today, today, opener: "#steady-title" });
     window.dp = P("#pop", { value: month, quick, min: "2017-01-01", max: today, today, opener: "#title", onPick: v => {
       picks.push(v);
       document.getElementById("label").textContent = v.label;
