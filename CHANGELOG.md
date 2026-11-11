@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.31.0 · 11 novembre 2026
+
+Bank et Studio choisissaient leurs périodes avec deux composants différents du design system : la pilule venue de Bank (« 12 mois ▾ ») et le choix de période venu de Studio (des onglets, et sur téléphone une liste dorée à sa propre flèche). Il n’en reste qu’un.
+
+- `ds.periodPick` garde ses onglets sur ordinateur et prend la pilule sur téléphone (`label.pill.periodpick-list`), la même que pour un mois ou un tri : « 1 an ▾ » dans Studio comme « 12 mois ▾ » dans Bank. La liste dorée et sa flèche dessinée disparaissent. Dans un titre de carte (`.ct`), il se range à droite comme la pilule.
+- Un titre de carte qui replie sa carte lui-même (`.ct.fold[aria-expanded]`, Studio) prend le chevron des sections repliables, au lieu d’un « ▾ » qui se lisait comme une deuxième flèche de menu à côté de la période.
+- La vitrine montre une période avec `ds.periodPick` et garde la pilule pour un mois ou un sens.
+
+## 2.30.0 · 11 novembre 2026
+
+- Kit du site, `ds-site.js` : ce que les scripts du site faisaient chacun de leur côté. `ds.json(url)` lit un fichier JSON (les Gists du site), redemandé à chaque visite et une seule fois par page, quel que soit le nombre de scripts qui le demandent : la page Events le lisait deux fois. `ds.ready(...attentes)` ôte l’écran de chargement une fois ces attentes et la photo d’en-tête de la page arrivées, ou en échec ; `ds.photo(src)` et `ds.images(racine)` attendent une photo, ou toutes celles d’une partie de la page. `ds.screens()` fait défiler une page écran par écran (l’accueil) : un point par écran, celui de l’écran affiché allumé, l’invite à descendre, le saut vers un écran nommé dans l’adresse.
+- `site.html`, la page du kit dans la vitrine, montre aussi une carte de la liste des événements, deux prix côte à côte, les témoignages et la carte de la newsletter.
+
 ## 2.29.0 · 11 novembre 2026
 
 Tout ce qu’alexispaoleschi.com dessinait encore lui-même rejoint le kit du site : le site n’a plus de feuille de style à lui.

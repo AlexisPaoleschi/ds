@@ -1,4 +1,4 @@
-/* ds 2.29.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.31.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -2352,8 +2352,9 @@
    ds.minitiles(items): small tiles of reference figures at the top of a card. items: [{label, value, unit, note}].
    ds.verdict(ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(options, current, pick, {label}): a period selector: buttons on a computer, a list on a phone (768px and
-     less). options: [[value, label]]; pick(value) is called with the chosen one, the selector lights it itself. */
+   ds.periodPick(options, current, pick, {label}): a period selector: buttons on a computer, the design system's menu on
+     a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]]; pick(value)
+     is called with the chosen one, the selector lights it itself. */
 (function () {
   "use strict";
   var WORDS = {
@@ -2421,13 +2422,16 @@
 
   function periodPick(options, current, pick, o) {
     o = o || {};
-    var label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs"), list = el("select", "periodpick-list");
+    var label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
+    // on a phone, the menu: what is chosen in words, the phone's own picker under it
+    var list = el("select"), shown = el("span", "pv"), menu = el("label", "pill periodpick-list", [shown, list]);
     group.setAttribute("role", "group");
     group.setAttribute("aria-label", label);
     list.setAttribute("aria-label", label);
     function light(v) {
       [].forEach.call(group.children, function (b) { b.setAttribute("aria-pressed", b.dataset.value === String(v) ? "true" : "false"); });
       list.value = String(v);
+      shown.textContent = list.selectedIndex < 0 ? "" : list.options[list.selectedIndex].textContent;
     }
     function choose(v) {
       var opt = options.filter(function (x) { return String(x[0]) === String(v); })[0];
@@ -2446,7 +2450,7 @@
     });
     list.addEventListener("change", function () { choose(list.value); });
     light(current);
-    box.append(group, list);
+    box.append(group, menu);
     return box;
   }
 

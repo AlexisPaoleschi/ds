@@ -212,8 +212,8 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   // the period selector: buttons on a computer
   await p.locator('#period .tabs button', { hasText: '1 an' }).click();
   const pp = await p.evaluate(() => ({ periods, pressed: document.querySelector('#period [aria-pressed="true"]').textContent, list: getComputedStyle(document.querySelector('.periodpick-list')).display,
-    value: document.querySelector('.periodpick-list').value }));
-  assert(JSON.stringify(pp.periods) === '[365]' && pp.pressed === '1 an' && pp.list === 'none' && pp.value === '365', 'le choix de période : des boutons sur ordinateur, le choisi allumé');
+    value: document.querySelector('.periodpick-list select').value, shown: document.querySelector('.periodpick-list .pv').textContent }));
+  assert(JSON.stringify(pp.periods) === '[365]' && pp.pressed === '1 an' && pp.list === 'none' && pp.value === '365' && pp.shown === '1 an', 'le choix de période : des boutons sur ordinateur, le choisi allumé');
 
   // the « new version » light, then the live stream: refused once, open again, its events read
   const v1 = await p.evaluate(() => [light.seen('2.17.0'), document.getElementById('reload').classList.contains('is-on'), getComputedStyle(document.querySelector('.newver-pip')).display,
@@ -292,6 +292,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
       dots: getComputedStyle(cell.querySelector('.cal-more-dots')).display, shown: [...cell.querySelectorAll('.cal-line')].filter(l => getComputedStyle(l).display !== 'none').length,
       bar: getComputedStyle(document.querySelector('.cal-cell[data-day="2026-11-09"] .cal-mark.is-bar')).borderRadius,
       list: getComputedStyle(document.querySelector('.periodpick-list')).display, tabs: getComputedStyle(document.querySelector('#period .tabs')).display,
+      pill: document.querySelector('.periodpick-list').matches('label.pill') && getComputedStyle(document.querySelector('.periodpick-list select')).opacity,
       scroll: document.querySelector('.chart-heat-scroll').scrollLeft, sw: document.querySelector('.chart-heat-scroll').scrollWidth > document.querySelector('.chart-heat-scroll').clientWidth,
       mini: getComputedStyle(document.querySelector('#mini .minitiles')).gridTemplateColumns.split(' ').length, ranks: getComputedStyle(document.getElementById('ranks')).gridAutoFlow,
       wide: document.documentElement.scrollWidth };
@@ -300,8 +301,9 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(ph.lt === 'none' && ph.code === 'none' && ph.w === '6px' && ph.round === '50%' && ph.bar === '50%' && ph.extra === 'none' && ph.shown === 3 && ph.more === 'none' && ph.dots === 'block',
     'sur téléphone, une case ne garde que des points de couleur, trois au plus, puis « +N »');
   await p.locator('#period select').selectOption('0');
-  const pp2 = await p.evaluate(() => [JSON.stringify(periods), document.querySelector('#period [aria-pressed="true"]').textContent]);
-  assert(ph.list === 'block' && ph.tabs === 'none' && pp2[0] === '[0]' && pp2[1] === 'Tout', 'sur téléphone, le choix de période devient une liste, qui allume aussi le bouton ' + JSON.stringify(pp2));
+  const pp2 = await p.evaluate(() => [JSON.stringify(periods), document.querySelector('#period [aria-pressed="true"]').textContent, document.querySelector('.periodpick-list .pv').textContent]);
+  assert(/flex/.test(ph.list) && ph.pill === '0' && ph.tabs === 'none' && pp2[0] === '[0]' && pp2[1] === 'Tout' && pp2[2] === 'Tout',
+    'sur téléphone, le choix de période devient la pilule (« Tout ▾ »), qui allume aussi le bouton ' + JSON.stringify(pp2));
   await p.evaluate(() => { heat.querySelector('.chart-heat-scroll').scrollLeft = 0; });
   await p.evaluate(() => ds.chart.heat(document.getElementById('heat'), counts, { color: '--c-rouge', to: '2026-11-09' }));
   await p.waitForTimeout(100);

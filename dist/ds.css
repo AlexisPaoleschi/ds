@@ -1,4 +1,4 @@
-/* ds 2.29.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.31.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -481,12 +481,14 @@
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
-   Its chevron turns; a closed card's title takes no room below it */
+   Its chevron turns; a closed card's title takes no room below it. A card's title that folds its card itself, its state
+   kept by the app (Studio), takes the same chevron: <h2 class="ct fold" role="button" aria-expanded="true">. */
   details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); min-height: var(--s-24); }
   details.fold > summary::-webkit-details-marker { display: none; }
-  details.fold > summary::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
+  details.fold > summary::after, .ct.fold[aria-expanded]::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
     border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease; }
-  details.fold[open] > summary::after { transform: rotate(45deg); }
+  details.fold[open] > summary::after, .ct.fold[aria-expanded="true"]::after { transform: rotate(45deg); }
+  .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
 /* what the address pointed at (ds.seek), lit a moment */
@@ -501,7 +503,7 @@
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
 @media (prefers-reduced-motion: reduce) {
   .is-lit { animation: none; }
-  details.fold > summary::after { transition: none; }
+  details.fold > summary::after, .ct.fold[aria-expanded]::after { transition: none; }
 }
 
 /* buttons: one height, one font, one corner; only the colours tell them apart.
@@ -1505,19 +1507,15 @@
   .verdict.is-none { visibility: hidden; }
   /* vitrine writes a success in dark gold, close to its yellow: the strong verdict is filled, as its badges are */
   [data-theme="vitrine"] .verdict.is-good { color: var(--on-accent); background: var(--good); border-color: var(--good); }
-/* The period selector, taken from Studio (ds.periodPick): the design system's tabs on a computer, a list on a phone, where
-   four periods would not fit beside a card's title. The list keeps the gold of a chosen tab and its own small arrow,
-   drawn from two triangles of the accent. */
+/* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
+   periods would not fit beside a card's title, the design system's menu (.pill, « 1 an ▾ »), the same as a month's or a
+   sort's. In a card's title (.ct) it sits on the right. */
   .periodpick { display: inline-flex; min-width: 0; }
-  /* in the small letters of the tabs it stands for, so that it fits beside a card's title on a phone */
-  .periodpick-list { display: none; padding: var(--s-8) var(--s-32) var(--s-8) var(--field-px); color: var(--accent-text); background-color: var(--field-bg); border-color: var(--accent-line);
-    font-size: var(--fs-13); line-height: var(--lh-ui); font-weight: 600; cursor: pointer; -webkit-appearance: none; appearance: none;
-    background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
-    background-position: calc(100% - var(--s-16)) 55%, calc(100% - var(--s-12)) 55%; background-size: var(--s-4) var(--s-4); background-repeat: no-repeat; }
-  .periodpick-list option { color: var(--ink); background: var(--panel); }
+  .periodpick .periodpick-list { display: none; }
+  .ct > .periodpick { margin-left: auto; }
 @media (max-width: 768px) {
   .periodpick .tabs { display: none; }
-  .periodpick .periodpick-list { display: block; }
+  .periodpick .periodpick-list { display: inline-flex; }
 }
 /* The « new version » light, taken from Studio (ds.version): a page's reload button, <button class="btn is-icon newver">
    with its .newver-pip, takes the gold and a gold dot on its corner when the server says a newer version is on line.

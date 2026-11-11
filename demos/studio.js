@@ -76,8 +76,9 @@
       value: function (x) { return ds.number(x, 3) + "€"; } });
   });
   var SPANS = [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]];
+  // a period: the period selector, in the title's place for it (on the right)
   each("period", function (holder) {
-    holder.append(ds.periodPick(SPANS, 90, function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); }));
+    holder.replaceWith(ds.periodPick(SPANS, 90, function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); }));
   });
 
   /* revenue: a year of months, net in euros, split between subscriptions and single purchases; the month in progress hatched */

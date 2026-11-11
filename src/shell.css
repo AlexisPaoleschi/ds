@@ -175,12 +175,14 @@
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
-   Its chevron turns; a closed card's title takes no room below it */
+   Its chevron turns; a closed card's title takes no room below it. A card's title that folds its card itself, its state
+   kept by the app (Studio), takes the same chevron: <h2 class="ct fold" role="button" aria-expanded="true">. */
   details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); min-height: var(--s-24); }
   details.fold > summary::-webkit-details-marker { display: none; }
-  details.fold > summary::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
+  details.fold > summary::after, .ct.fold[aria-expanded]::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
     border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease; }
-  details.fold[open] > summary::after { transform: rotate(45deg); }
+  details.fold[open] > summary::after, .ct.fold[aria-expanded="true"]::after { transform: rotate(45deg); }
+  .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
 /* what the address pointed at (ds.seek), lit a moment */
@@ -195,6 +197,6 @@
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
 @media (prefers-reduced-motion: reduce) {
   .is-lit { animation: none; }
-  details.fold > summary::after { transition: none; }
+  details.fold > summary::after, .ct.fold[aria-expanded]::after { transition: none; }
 }
 

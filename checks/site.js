@@ -9,8 +9,10 @@ const http = require('http'), fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.svg': 'image/svg+xml', '.woff2': 'font/woff2' };
 const photo = n => `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="800"><rect width="100%" height="100%" fill="hsl(${n * 47 % 360} 45% 42%)"/></svg>`;
+const hits = { json: 0 };
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  if (url.pathname === '/data.json') { hits.json++; res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end('{"events": {"lyon": {"soldOut": true}}}'); }
   const m = url.pathname.match(/^\/photo\/(\d+)\.svg$/);
   if (m) { res.writeHead(200, { 'Content-Type': 'image/svg+xml' }); return res.end(photo(+m[1])); }
   const file = path.join(root, decodeURIComponent(url.pathname));
@@ -60,8 +62,11 @@ function stylesheets() {
   assert(built.land, 'without window.dsLandscapeWarning the page scrolls held sideways (landscape-warning-disabled)');
   assert(!built.visible, 'the bar is hidden over the hero');
 
-  await phone.evaluate(() => window.hideLoader());
-  assert(await phone.evaluate(() => document.querySelector('.page-loader').classList.contains('hidden')), 'window.hideLoader() takes the loader away');
+  const read = await phone.evaluate(async () => { const [a, b] = await Promise.all([ds.json('/data.json'), ds.json('/data.json')]); return [a === b, a.events.lyon.soldOut]; });
+  assert(read[0] && read[1] === true && hits.json === 1, `ds.json reads a file once per page, however many ask (${hits.json} request)`);
+  const waited = await phone.evaluate(async () => { const loader = document.querySelector('.page-loader'); let early;
+    const slow = new Promise(r => setTimeout(() => { early = loader.classList.contains('hidden'); r(); }, 150)); await ds.ready(slow); return [early, loader.classList.contains('hidden')]; });
+  assert(waited[0] === false && waited[1] === true, 'ds.ready takes the loader away once what the page waits for has come');
 
   await phone.evaluate(() => scrollTo(0, document.querySelector('.hero').offsetHeight + 200));
   await phone.waitForTimeout(200);
@@ -100,6 +105,20 @@ function stylesheets() {
   const arrow = await phone.evaluate(() => { const i = document.querySelector('.schedule-list .ico'), b = i.getBBox(), r = i.getBoundingClientRect(); return [b.width > 0, Math.round(r.width), getComputedStyle(i).position]; });
   assert(arrow[0] && arrow[1] === 14 && arrow[2] === 'absolute', 'a schedule line opens with the sprite\'s arrow, 14px, drawn from the file');
   assert(errors.length === 0, 'no error on the page ' + errors.join(' | '));
+
+  // a page that scrolls by screens: a dot per screen, lit as one scrolls, the dots shown past the first
+  const screens = await browser.newPage({ viewport: { width: 390, height: 600 } });
+  await screens.setContent(`<link rel="stylesheet" href="${base}/dist/ds.css"><link rel="stylesheet" href="${base}/dist/ds-site.css">
+    <body class="home"><nav class="scroll-dots"></nav><div class="scroll-hint">Scroll</div><div class="scroll-container">
+    <section class="scroll-section" id="one">1</section><section class="scroll-section" id="two">2</section><section class="scroll-section" id="three">3</section></div>
+    <script src="${base}/dist/ds-site.js"></script></body>`);
+  await screens.evaluate(() => ds.screens());
+  const before = await screens.evaluate(() => [document.querySelectorAll('.scroll-dots .dot').length, document.querySelector('.scroll-dots').classList.contains('visible'), document.querySelector('.scroll-hint').style.opacity]);
+  await screens.evaluate(() => { const c = document.querySelector('.scroll-container'); c.style.scrollBehavior = 'auto'; c.scrollTo(0, document.getElementById('three').offsetTop); });
+  await screens.waitForTimeout(200);
+  const after = await screens.evaluate(() => [[...document.querySelectorAll('.scroll-dots .dot')].findIndex(d => d.classList.contains('active')), document.querySelector('.scroll-dots').classList.contains('visible'), document.querySelector('.scroll-hint').style.opacity]);
+  assert(before[0] === 3 && !before[1] && before[2] === '1', `ds.screens writes a dot per screen, the hint on the first (${before})`);
+  assert(after[0] === 2 && after[1] && after[2] === '0', `ds.screens lights the screen shown and shows the dots past the first (${after})`);
 
   // a page that asks for the prompt to turn the phone upright
   const side = await browser.newPage({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true });
