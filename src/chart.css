@@ -17,6 +17,12 @@
   .chart-line.is-tall .chart-line-svg { height: 180px; }
   .chart-line.is-hover .chart-line-plot { cursor: crosshair; touch-action: pan-y; }
   .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) 12%, transparent); stroke: none; }
+  /* what is foreseen, after today: dashed, on a paler ground, today a thin rule with its name over it */
+  .chart-path.is-ahead { stroke-dasharray: 4 3; opacity: .8; }
+  .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
+  .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
+  .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
+    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
   .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
   .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
   .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;

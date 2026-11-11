@@ -1,12 +1,13 @@
 /* Charts, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns its element; with
    holder null it only returns it, for a page that builds its own tree. The colour of a series is a token, given as its
    name (color: "--c-bleu") and set as --n on the chart; the lines, labels and grounds come from the theme.
-   ds.chart.line(holder, points, {color, label, value, tall, area, ref, marks, hover}): a curve, its highest and lowest
+   ds.chart.line(holder, points, {color, label, value, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
      values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; label(x) and value(v)
      write them (a short date and a figure by default). Tall, a chart of its own (a share's price): taller, its middle
      day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); marks:
      [{x, label}] a dot on each day given (purchases), its label on hover; hover: the day and value under the pointer or
-     the finger, with a cursor.
+     the finger, with a cursor; now: the day that is today, when the curve goes on with what is foreseen: from it the
+     curve is dashed and its ground paler, a thin rule stands on it, nowLabel over it (« aujourd’hui »).
    ds.chart.bars(holder, rows, {color, average, unit, short, selected, pick}): bars on a round scale (0, 500, 1 000…),
      the figure on each bar, a dashed line at the average. rows: [{key, label, value, parts: [{value, color}], live,
      title}]: parts stack their colours in the bar; live hatches a period still running; a "2026-11" key is named by its
@@ -84,9 +85,18 @@
     var s = svg("svg", { viewBox: "0 0 100 " + H, preserveAspectRatio: "none", "aria-hidden": "true", "class": "chart-line-svg" });
     [top, bot].forEach(function (y) { s.append(svg("line", { x1: "0", x2: "100", y1: String(y), y2: String(y), "class": "chart-rule", "vector-effect": "non-scaling-stroke" })); });
     var coords = vals.map(function (v, i) { return X(i).toFixed(2) + "," + Y(v).toFixed(2); });
-    if (o.area) s.append(svg("polygon", { "class": "chart-area", points: "0," + bot + " " + coords.join(" ") + " 100," + bot }));
+    // today, when what follows it is foreseen: the last point on or before it
+    var now = -1;
+    if (o.now != null) { for (var n = 0; n < pts.length; n++) { if (String(pts[n].x) <= String(o.now)) now = n; } }
+    var cut = now >= 0 && now < pts.length - 1 ? now : -1;
+    var done = cut >= 0 ? coords.slice(0, cut + 1) : coords, ahead = cut >= 0 ? coords.slice(cut) : [];
+    if (o.area) {
+      s.append(svg("polygon", { "class": "chart-area", points: "0," + bot + " " + done.join(" ") + " " + X(cut >= 0 ? cut : pts.length - 1).toFixed(2) + "," + bot }));
+      if (ahead.length) s.append(svg("polygon", { "class": "chart-area is-ahead", points: X(cut).toFixed(2) + "," + bot + " " + ahead.join(" ") + " 100," + bot }));
+    }
     if (ref) s.append(svg("line", { x1: "0", x2: "100", y1: Y(ref.v).toFixed(2), y2: Y(ref.v).toFixed(2), "class": "chart-ref", "vector-effect": "non-scaling-stroke" }));
-    s.append(svg("polyline", { "class": "chart-path", "vector-effect": "non-scaling-stroke", points: coords.join(" ") }));
+    if (done.length > 1) s.append(svg("polyline", { "class": "chart-path", "vector-effect": "non-scaling-stroke", points: done.join(" ") }));
+    if (ahead.length) s.append(svg("polyline", { "class": "chart-path is-ahead", "vector-effect": "non-scaling-stroke", points: ahead.join(" ") }));
     var first = pts[0], last = pts[pts.length - 1];
     var box = paint(el("div", "chart-line" + (o.tall ? " is-tall" : "") + (o.hover ? " is-hover" : "")), o.color), plot = el("div", "chart-line-plot");
     var ys = el("div", "chart-line-y"), xs = el("div", "chart-line-x");
@@ -100,6 +110,12 @@
       var name = el("span", "chart-ref-l", ref.label);
       name.style.top = (Y(ref.v) / H * 100) + "%";
       plot.append(name);
+    }
+    if (cut >= 0) {
+      var rule = el("i", "chart-now");
+      rule.style.left = X(cut) + "%";
+      if (o.nowLabel) rule.append(el("span", "chart-now-l", o.nowLabel));
+      plot.append(rule);
     }
     (o.marks || []).forEach(function (m) {
       var i = -1;

@@ -80,6 +80,18 @@
     ds.chart.line(holder, pts, { tall: true, area: true, hover: true, marks: marks, ref: { v: 5.56, label: "prix de revient 5,56€" },
       value: function (x) { return ds.number(x, 3) + "€"; } });
   });
+  // a month's balance (Bank's bills account): as it was up to today, then as it should go, each thing to come a dot
+  each("ahead", function (holder) {
+    var start = today.slice(0, 8), last = new Date(Date.UTC(+today.slice(0, 4), +today.slice(5, 7), 0)).getUTCDate(), v = 7400, pts = [], marks = [];
+    var out = { 2: 300, 4: 1040, 5: 400, 6: 2194, 9: 83, 10: 100, 14: 6, 22: 24, 26: 544, 28: 60, 30: 16 };
+    for (var d = 1; d <= last; d++) {
+      var k = start + String(d).padStart(2, "0");
+      if (out[d]) { v -= out[d]; if (k > today) marks.push({ x: k, label: "≈ " + ds.date(k, "day") + " · −" + out[d] + "€" }); }
+      pts.push({ x: k, v: v });
+    }
+    ds.chart.line(holder, pts, { tall: true, area: true, hover: true, now: today, nowLabel: "aujourd’hui", marks: marks,
+      ref: { v: 100, label: "marge 100€" }, value: function (x) { return ds.number(x) + "€"; } });
+  });
   var SPANS = [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]];
   // a period: the period selector, in the title's place for it (on the right)
   each("period", function (holder) {

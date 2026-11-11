@@ -1,4 +1,4 @@
-/* ds 2.33.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.34.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1330,6 +1330,12 @@
   .chart-line.is-tall .chart-line-svg { height: 180px; }
   .chart-line.is-hover .chart-line-plot { cursor: crosshair; touch-action: pan-y; }
   .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) 12%, transparent); stroke: none; }
+  /* what is foreseen, after today: dashed, on a paler ground, today a thin rule with its name over it */
+  .chart-path.is-ahead { stroke-dasharray: 4 3; opacity: .8; }
+  .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
+  .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
+  .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
+    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
   .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
   .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
   .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;

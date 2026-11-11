@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.34.0 · 11 novembre 2026
+
+- `ds.chart.line` sait dire ce qui est prévu : avec `now` (le jour d’aujourd’hui), la courbe reste pleine jusqu’à lui puis passe en pointillé, sur un fond plus pâle, et un trait fin le marque, son nom au-dessus (`nowLabel`, « aujourd’hui »). Bank y dessine le solde de son compte facture au fil du mois : tel qu’il a été, puis tel qu’il devrait aller, chaque dépense à venir un point à son jour, la marge en pointillé. La vitrine le montre.
+
 ## 2.33.0 · 11 novembre 2026
 
 Les petites cases de chiffres avaient deux apparences : chacune dans sa boîte (`.tiles.is-compact`, l’accueil et le compte facture de Bank, Selecta), ou toutes jointes dans une grille au libellé doré (`.minitiles`, les variations d’un cours dans Bank, les moyennes de Studio). Il n’en reste qu’une, celle du reste des pages.

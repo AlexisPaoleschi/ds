@@ -163,6 +163,15 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(pr.tall && pr.area && pr.ref === 'prix de revient 6,05€' && pr.marks === 2 && JSON.stringify(pr.x) === '["1er oct.","15 oct.","30 oct."]' && pr.height === 180 && pr.hidden
     && tip.shown && tip.text === '30 oct. · 6,29€' && tip.inside && gone,
     'la courbe haute : son fond, son niveau en pointillé et son nom, un point par achat, son jour du milieu ; la bulle suit le pointeur, dans la courbe ' + JSON.stringify([pr, tip]));
+  // what is foreseen: the curve solid up to today, dashed after, on a paler ground; today a rule with its name
+  const ah = await p.evaluate(() => {
+    const lines = [...document.querySelectorAll('#ahead polyline')], rule = document.querySelector('#ahead .chart-now');
+    return { lines: lines.map(l => l.getAttribute('points').split(' ').length), dash: lines.map(l => getComputedStyle(l).strokeDasharray),
+      grounds: document.querySelectorAll('#ahead .chart-area').length, paler: document.querySelectorAll('#ahead .chart-area.is-ahead').length,
+      at: rule && Math.round(parseFloat(rule.style.left)), name: rule && rule.textContent };
+  });
+  assert(JSON.stringify(ah.lines) === '[12,19]' && ah.dash[0] === 'none' && ah.dash[1] !== 'none' && ah.grounds === 2 && ah.paler === 1 && ah.at === 38 && ah.name === 'aujourd’hui',
+    'ce qui est prévu : la courbe pleine jusqu’à aujourd’hui, en pointillé après, sur un fond plus pâle ; aujourd’hui un trait et son nom ' + JSON.stringify(ah));
   // the bars: one per month, a round scale, the average, the figures, the parts, the month running, a click
   const br = await p.evaluate(() => {
     const cols = [...document.querySelectorAll('#bars .chart-bar')], avg = document.querySelector('#bars .chart-bars-avg i');

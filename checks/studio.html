@@ -6,6 +6,7 @@
   <div id="cal"></div>
   <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240</dd><div id="line"></div></div></dl>
   <div id="price" style="max-width: 600px"></div>
+  <div id="ahead" style="max-width: 600px; margin-top: 40px"></div>
   <div id="line-none"></div>
   <div id="bars"></div>
   <div id="bars-long"></div>
@@ -47,6 +48,9 @@
     // tall, a share's price: its cost price, two purchases, the day and value under the pointer
     window.price = ds.chart.line(document.getElementById("price"), pts.map(p => ({ x: p.x, v: p.v / 200 })), { tall: true, area: true, hover: true,
       ref: { v: 6.05, label: "prix de revient 6,05€" }, marks: [{ x: "2026-10-05", label: "achat" }, { x: "2026-10-20", label: "achat" }], value: v => ds.number(v, 2) + "€" });
+    // a month's balance: as it was up to the 12th, then as it should go, the margin dashed
+    window.ahead = ds.chart.line(document.getElementById("ahead"), pts.map((p, i) => ({ x: p.x, v: 3000 - i * 60 })), { tall: true, area: true,
+      now: "2026-10-12", nowLabel: "aujourd’hui", ref: { v: 100, label: "marge 100€" } });
 
     window.picked = [];
     window.months = ["2025-12", "2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06", "2026-07", "2026-08", "2026-09", "2026-10", "2026-11"].map((k, i) => ({
