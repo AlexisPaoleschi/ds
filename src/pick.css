@@ -7,7 +7,7 @@
     position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; padding: var(--pill-py) var(--pill-px);
     border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
     font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
-  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-0-5); background: var(--field-bg); }
+  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
   .pill .pv { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill .pv::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
@@ -61,4 +61,4 @@
   .add-t { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
   .add-t b { font: var(--head-weight) var(--fs-14)/var(--head-lh) var(--title-font); }
   .add-t small { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
-  [data-theme="vitrine"] .add-t b { font-size: var(--fs-16); letter-spacing: var(--ls-1); }
+  [data-theme="vitrine"] .add-t b { font-size: var(--fs-16); letter-spacing: var(--ls-063); }

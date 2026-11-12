@@ -1,7 +1,9 @@
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
-   filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
-   needs no copy of its own; an app's older copy of the same icons can stay until it goes, the first one is used.
+   filled with that colour. This script, dist/ds-icons.js, a file of its own that the browser keeps from one visit to
+   the next, puts the sprite at the top of the page, so a page keeps writing #i-name and needs no copy of its own; an
+   app's older copy of the same icons can stay until it goes, the first one is used. A page without it points at the
+   same icons in dist/icons.svg: <use href="icons-X.Y.Z.svg#i-wallet"/>.
    The first 39, Bank's and Studio's first, were drawn by hand; they are now Lucide's under the same names (the plane
    first: the one drawn by hand leaned, its tail off the plane's axis), save the three brands' (Instagram, Bluesky, X),
    Lucide drawing no brand. The others come from Lucide (lucide.dev) too and, for the brands' logos,
@@ -272,6 +274,6 @@
     holder.innerHTML = '<svg id="ds-icons" width="0" height="0" style="position:absolute" aria-hidden="true">' + sprite + "</svg>";
     document.body.insertBefore(holder.firstChild, document.body.firstChild);
   }
-  // ds.js comes with defer: the page is there; loaded any other way, it waits for it
+  // ds-icons.js comes with defer: the page is there; loaded any other way, it waits for it
   if (document.body) put(); else document.addEventListener("DOMContentLoaded", put);
 })();

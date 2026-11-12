@@ -5,18 +5,22 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body { font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-loose); overflow-x: hidden;
     -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  /* a phone held sideways is still a phone here: the sizes by role (--text-md…, a step bigger from 769px) keep its step */
+  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
+    :root { --text-md: var(--fs-15); --text-lg: var(--fs-18); --text-xl: var(--fs-20); --text-2xl: var(--fs-22); }
+  }
   /* Landscape warning */
   /* over everything, the bubbles included */
   .landscape-warning { position: fixed; top: 0; left: 0; z-index: calc(var(--z-toast) + 1); display: none; flex-direction: column;
     align-items: center; justify-content: center; gap: var(--s-20); width: 100%; height: 100%; padding: var(--s-20); background: var(--ink); }
   .landscape-warning-icon { width: 80px; height: 80px; color: var(--accent); stroke-width: 1; }
-  .landscape-warning-text { font-size: var(--fs-18); font-weight: 500; letter-spacing: var(--ls-1); text-align: center; color: var(--white); }
+  .landscape-warning-text { font-size: var(--fs-18); font-weight: 500; letter-spacing: var(--ls-056); text-align: center; color: var(--white); }
   /* Page Loader: the design system's large spinner (.spinner.is-large) in the middle of a cream page */
   .page-loader { position: fixed; top: 0; left: 0; z-index: calc(var(--z-toast) + 2); display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%; background: var(--bg); transition: opacity var(--t-slow) ease, visibility var(--t-slow) ease; }
   .page-loader.hidden { opacity: 0; visibility: hidden; }
   /* Subtitle */
-  .subtitle { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-3); text-transform: uppercase; color: var(--accent);
+  .subtitle { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-188); text-transform: uppercase; color: var(--accent);
     text-shadow: var(--text-shadow-lg); }
   /* Golden Divider */
   .golden-divider-after { position: relative; padding-bottom: var(--s-24); }
@@ -45,7 +49,7 @@
   }
   /* The gold link chips (a model's Instagram, the organizer's website) */
   .pill-link { display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-12) var(--s-24); font-family: var(--body);
-    font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-1); text-decoration: none; text-transform: uppercase; color: var(--accent);
+    font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-071); text-decoration: none; text-transform: uppercase; color: var(--accent);
     background: var(--accent-soft); border: 1px solid var(--line); transition: all var(--t-fast) ease; }
   .pill-link:hover { transform: translateY(-2px); box-shadow: var(--shadow-card); }
   @media (hover: hover) {

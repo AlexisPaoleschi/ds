@@ -1,0 +1,850 @@
+/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
+   unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
+   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pv.
+   A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
+   (.ct) it sits on the right. */
+  .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
+    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; padding: var(--pill-py) var(--pill-px);
+    border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
+    font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
+  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
+  .pill .pv { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill .pv::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
+  /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
+  .pill select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font-size: var(--fs-16); }
+  @media (hover: hover) { .pill:hover { color: var(--ink); border-color: var(--line-2); } }
+  /* .pill.is-on takes the chosen gold (chosen.css) */
+  /* the menu is unseen: the pill shows where the keyboard is */
+  .pill:has(select:focus-visible):where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
+  [data-theme="vitrine"] .pill:has(select:focus-visible) { border-color: var(--accent); box-shadow: var(--field-halo); }
+  .pills { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6); }
+  .ct .pill { margin-left: auto; }
+
+/* The search picker: a field to type in, then the choices that match it, one tap away (Bank: a bank to connect, a
+   category for an operation). A choice may carry its colour's initial or icon (.picker-av, coloured by --n), a word in
+   small after its name, and what a tap does (.picker-cta, « Connecter → »); choices may stand under headings (a
+   category, then its subcategories). ds.picker draws it in its holder and follows the keys. */
+  .picker { display: grid; gap: var(--s-6); margin-top: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); }
+  .picker-q { width: 100%; box-sizing: border-box; }
+  .picker .picker-q { background: var(--panel); }
+  .picker-list { display: grid; max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+  .picker-g { margin: var(--s-12) var(--s-6) var(--s-4); color: var(--faint);
+    font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .picker-g:first-child { margin-top: var(--s-6); }
+  .picker-opt { position: relative; display: flex; align-items: center; gap: var(--s-12); width: 100%; box-sizing: border-box; margin: 0; padding: var(--s-8) var(--s-6);
+    background: none; border: 0; border-radius: var(--r-m); color: var(--ink); cursor: pointer; font: inherit; text-align: left; text-decoration: none; }
+  /* a straight line between two choices, clear of the rounded corners a lit choice has */
+  .picker-opt + .picker-opt::before { content: ""; position: absolute; top: 0; left: var(--s-6); right: var(--s-6); border-top: 1px solid var(--line); }
+  .picker-opt:hover::before, .picker-opt.is-active::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-active + .picker-opt::before { border-top-color: transparent; }
+  .picker-opt:hover, .picker-opt.is-active { background: var(--accent-soft); }
+  .picker-opt[aria-selected="true"] .picker-name { color: var(--accent-text); }
+  .picker-av { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: var(--r-m);
+    color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent);
+    font: var(--head-weight) var(--fs-14)/var(--lh-tight) var(--title-font); }
+  .picker-av .ico { width: 16px; height: 16px; }
+  /* a colour alone: the small square of the filters */
+  .picker-av.is-dot { margin-inline: var(--s-4); }
+  .picker-name { flex: 1; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .picker-name small { margin-left: var(--s-6); color: var(--faint); font-weight: 500; }
+  .picker-cta { color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); white-space: nowrap; }
+  .picker-none { margin: var(--s-8) var(--s-6); color: var(--dim); font-size: var(--fs-13); }
+  [data-theme="vitrine"] .picker-name { font-weight: 500; }
+
+/* The dashed button that adds one more (Bank: « Connecter une banque »): the page's width, a gold + in its ring, what
+   it adds in bold and a line under it. Lit while what it opened is open (aria-expanded="true"). */
+  .add-btn { display: flex; align-items: center; gap: var(--s-12); width: 100%; box-sizing: border-box; margin: 0; padding: var(--s-12) var(--s-14);
+    background: none; border: 1px dashed var(--line-2); border-radius: var(--r-l); color: var(--ink); cursor: pointer; font: inherit; text-align: left; }
+  .add-btn:hover, .add-btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent-line); }
+  .add-plus { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%;
+    color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent-line); font: 600 var(--fs-22)/var(--lh-tight) var(--body); }
+  .add-plus .ico { width: 16px; height: 16px; }
+  .add-t { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
+  .add-t b { font: var(--head-weight) var(--fs-14)/var(--head-lh) var(--title-font); }
+  .add-t small { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
+  [data-theme="vitrine"] .add-t b { font-size: var(--fs-16); letter-spacing: var(--ls-063); }
+/* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
+   and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
+  .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
+  .periodleft { position: relative; display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
+  .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; min-height: var(--s-24); padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
+    font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
+  .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
+  .periodtitle .yr { color: var(--faint); font-weight: 600; }
+  .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
+  /* an arrow that leads nowhere is gone, and the row with it when both are */
+  .periodnav .off { display: none; }
+  .periodnav:not(:has(> :not(.off))) { display: none; }
+  /* steady (Bank's operations): the arrows keep their room when they lead nowhere, so that choosing a period that has
+     some moves nothing under the title; on a phone they stay on the title's line */
+  .periodhead.is-steady .periodnav:not(:has(> :not(.off))) { display: flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav .off { display: inline-flex; visibility: hidden; }
+  /* the picker under the title: a panel, and buttons that light up in gold when chosen */
+  .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
+    background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
+  .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: 500 var(--fs-13)/var(--lh-tight) var(--body); padding: var(--s-8) var(--s-10); }
+  .periodpop button:not(:where(.tabs button)):hover { border-color: var(--line-2); color: var(--ink); }
+  /* the tabs inside the picker are tabs, only a little tighter */
+  .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; --tab-py: var(--s-6); --tab-px: var(--s-10); }
+@media (max-width: 768px) {
+    .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
+    .periodtitle { font-size: var(--fs-22); }
+    .periodhead.is-steady { flex-direction: row; align-items: center; }
+}
+/* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
+   periods would not fit beside a card's title, the design system's menu (.pill, « 1 an ▾ »), the same as a month's or a
+   sort's. In a card's title (.ct) it sits on the right. */
+  .periodpick { display: inline-flex; min-width: 0; }
+  .periodpick .periodpick-list { display: none; }
+  .ct > .periodpick { margin-left: auto; }
+@media (max-width: 768px) {
+  .periodpick .tabs { display: none; }
+  .periodpick .periodpick-list { display: inline-flex; }
+}
+/* The date and period picker, taken from Bank's operations (ds.datePick): the quick periods two by two, the units as tabs,
+   then a head that steps (‹ novembre 2026 ›, the sprite's chevrons) over a grid of days, months or years. It wears the period head's popover
+   (.periodpop: a panel, framed buttons lit in gold once chosen), floating under a title or laid in the page (.is-inline). */
+  .datepick { display: grid; gap: var(--s-8); }
+  /* in the page: the popover's panel without its float and its shadow, as wide as it would float */
+  .datepick.is-inline { position: static; z-index: auto; width: auto; max-width: 340px; box-shadow: none; }
+  /* under a period's title it floats, even where a page lays its popovers out in place */
+  .periodleft > .datepick:not(.is-inline) { position: absolute; top: calc(100% + var(--s-8)); left: 0; width: min(340px, calc(100vw - 32px)); margin: 0; }
+  .dp-quick { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-6); }
+  /* the tabs share the width, one part per unit offered (four by default, aligned on the four columns of months) */
+  .datepick .tabs { grid-template-columns: repeat(var(--dp-tabs, 4), minmax(0, 1fr)); }
+  .dp-quick + .dp-tabs { margin-top: var(--s-2); }
+  /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
+  .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
+  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; }
+  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .dp-title::first-letter { text-transform: uppercase; }
+  /* the grid: four columns of months or years, seven of days under their initials */
+  .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
+  .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
+  .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
+  .datepick .dp-grid button.is-today:not(.on) { border-color: var(--accent-line); color: var(--ink); }
+  .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
+  /* vitrine's faint gold (5%) would not show the days between: a deeper one */
+  [data-theme="vitrine"] .datepick .dp-grid button.is-in { background: color-mix(in srgb, var(--accent) 20%, transparent); }
+  .datepick button:disabled { opacity: .35; cursor: default; }
+  .datepick button:disabled:hover { border-color: var(--line); color: var(--dim); }
+  .dp-hint { margin: 0; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-ui); }
+  /* the public sites show the keys' place as their fields do: the gold edge and its halo */
+  [data-theme="vitrine"] .datepick button:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+@media (max-width: 768px) {
+  /* the period head stacks its title over its arrows: the picker is as wide as the card, up to its own width */
+  .periodleft > .datepick:not(.is-inline) { width: min(340px, 100%); }
+  /* a steady head keeps its arrows on the title's line, its title only as wide as its words: the picker hangs from the
+     whole head instead, as wide as the card */
+  .periodhead.is-steady > .periodleft { position: static; }
+  .periodhead.is-steady > .periodleft > .datepick:not(.is-inline) { width: min(480px, 100%); }
+}
+@media (max-width: 480px) {
+  /* four units side by side in a phone's width: the tabs' capitals closer, as the calendar's views are */
+  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-045); }
+  .dp-quick button { padding-inline: var(--s-6); }
+}
+/* Drag to reorder (Bank: the order of the accounts on its first page, the banks and the accounts of each bank): each
+   item is moved by its grip, <button class="grip" type="button"><svg class="ico"><use href="#i-grip"/></svg></button>,
+   with the mouse, a finger, or ↑ and ↓ on the grip. ds.reorder runs it. */
+  .grip { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 26px; height: 26px; margin: 0; padding: 0;
+    background: none; border: 0; border-radius: var(--r-s); color: var(--faint); cursor: grab;
+    /* the finger on a grip drags its item: it does not scroll the page */
+    touch-action: none; user-select: none; -webkit-user-select: none; }
+  .grip:hover { color: var(--ink); }
+  .grip .ico { width: 18px; height: 18px; }
+  /* the item being moved follows the pointer, above the others, which make room for it */
+  [data-reorder] > .is-dragging { position: relative; z-index: var(--z-raise); background: var(--panel-2); box-shadow: var(--shadow-pop); cursor: grabbing; }
+  [data-reorder] > .is-dragging .grip { color: var(--accent-text); cursor: grabbing; }
+  [data-reorder] > .is-shifting { transition: transform var(--t-fast) ease; }
+  /* while an item is moved, no text gets selected along the way */
+  :root.is-reordering, :root.is-reordering * { user-select: none; -webkit-user-select: none; cursor: grabbing; }
+  @media (prefers-reduced-motion: reduce) { [data-reorder] > .is-shifting { transition: none; } }
+/* The « new version » light, taken from Studio (ds.version): a page's reload button, <button class="btn is-icon newver">
+   with its .newver-pip, takes the gold and a gold dot on its corner when the server says a newer version is on line.
+   The dot's ring is the ground behind it, so that it reads apart from the button's edge. */
+  .newver { position: relative; }
+  .newver-pip { display: none; position: absolute; top: var(--s-4); right: var(--s-4); }
+  .newver.is-on { color: var(--accent-text); border-color: var(--accent-strong); }
+  .newver.is-on .newver-pip { display: block; }
+/* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
+   note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
+   the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
+   role="dialog" aria-modal="true">, with its .sheet-x; ds.sheet opens and closes it.
+   A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
+  .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
+    background: var(--veil); animation: sheet-veil var(--t-mid) ease-out; }
+  .sheet-panel { position: relative; box-sizing: border-box; min-width: 0; overflow-y: auto; overscroll-behavior: contain; padding: var(--sheet-pad);
+    background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); color: var(--ink); outline: none; }
+  /* in its veil: a window in the middle, the room of a page of reading, scrolling inside when it is longer than the screen */
+  .sheet > .sheet-panel { width: min(var(--read-s), 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
+  /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
+     the title wraps beside it */
+  .sheet-x { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
+    display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+    margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
+    background: var(--panel-2); color: var(--dim); font: 400 var(--fs-22)/var(--lh-tight) var(--body); cursor: pointer; }
+  .sheet-x:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
+  .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
+  .sheet-sub::first-letter { text-transform: uppercase; }
+  .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
+    font: var(--title-weight) var(--fs-22)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
+  .sheet-fig.is-good { color: var(--good); }
+  .sheet-fig.is-bad { color: var(--bad); }
+  /* what it was in another currency, under its euros */
+  .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  /* its actions, on one line while they hold on it, then on two: a word is never cut; on a phone they share the width */
+  .sheet-acts { --btn-px: var(--sheet-acts-btn-px); --btn-ls: var(--sheet-acts-btn-ls); --btn-size: var(--sheet-acts-btn-size); display: flex; flex-wrap: wrap; gap: var(--s-8); margin-top: var(--s-14); }
+  .sheet-acts > .btn { max-width: 100%; }
+  /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
+
+/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
+   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
+  .kv { margin: 0; }
+  .kv > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+  .kv dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  /* words as the bank wrote them */
+  .kv dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .kv dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .kv dd textarea { resize: vertical; line-height: var(--lh-text); }
+
+  @keyframes sheet-veil { from { background-color: transparent; } }
+  @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @keyframes sheet-up { from { transform: translateY(100%); } }
+@media (max-width: 768px) {
+  /* the whole width, rising from the bottom, clear of an iPhone's bar */
+  .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
+  .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
+    padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
+  .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
+  .kv > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
+     does not hold the page */
+  :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet > .sheet-panel { animation: none; }
+}
+/* The filter panel, taken from Studio: a tab on the left edge, the panel beside the content on a computer,
+   a drawer over the page on a phone; inside, groups of buttons that switch a source on or off,
+   each with its colour square. */
+  /* each source's .sq is the design system's swatch (marks.css), filled when on */
+  .fdot { position: absolute; top: var(--s-4); right: var(--s-4); }
+  button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
+  button.edgetab:hover, button.edgetab.on { color: var(--accent-text); border-color: var(--accent-line); }
+  button.edgetab .vt { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  button.edgetab .fdot { position: static; }
+  .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
+  .side-layout.open { grid-template-columns: 230px minmax(0, 1fr); }
+  .side-layout .side { order: 0; }
+  .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
+  .side-layout.open .side { display: block; }
+  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  .sidehead button { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); background: none; border: none; color: var(--faint); font-size: var(--fs-22); line-height: var(--lh-tight); cursor: pointer; padding: 0 var(--s-2); }
+  .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
+  .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
+  .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed] { text-align: left; border-radius: var(--r-m); background: none; border-color: transparent; padding: var(--s-6) var(--s-8); }
+  .side button.chip[aria-pressed]:hover { background: var(--panel-2); }
+  .scrim { display: none; }
+  .fgroup { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: center; }
+  .fhead { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); min-width: 92px; }
+  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
+  button.chip[aria-pressed]:hover { border-color: var(--line-2); }
+  button.chip[aria-pressed] .ico { color: var(--accent); width: 12px; height: 12px; margin-left: calc(-1 * var(--s-2)); }
+  button.chip[aria-pressed="false"] { opacity: var(--o-off); }
+  button.chip[aria-pressed="false"] .sq.on { background: transparent; }
+@media (max-width: 768px) {
+    .side-layout.open { grid-template-columns: minmax(0, 1fr); }
+    .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-drawer); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; overscroll-behavior: contain; padding-top: calc(var(--safe-top) + var(--s-16)); padding-bottom: calc(var(--safe-bottom) + var(--s-16)); }
+    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: var(--veil); z-index: var(--z-scrim); touch-action: none; }
+    /* while the drawer is open, the finger scrolls the filters and the page behind stays still; a drawer left open in a
+       hidden view (an attribute hidden above it) does not hold the page */
+    :root:has(.side-layout.open:not([hidden] *)) { overflow: hidden; }
+}
+@media (max-width: 768px) {
+   .fhead { min-width: 100%; }
+}
+  /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
+     source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
+  .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
+  .side button.fall, .side button.only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
+  .side button.only .ico { width: 15px; height: 15px; }
+  .side button.fall:hover, .side button.only:hover, .side button.fall:focus-visible, .side button.only:focus-visible { color: var(--accent-text); }
+  /* « Tout » takes no height of its own: a group's head stays the same height whether it shows or not */
+  .side .fhead { min-height: var(--s-14); }
+  .side button.fall { position: relative; padding-block: 0; }
+  .side button.fall::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
+  .side .frow { display: flex; align-items: center; }
+  .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
+  .side .frow button.only { opacity: 0; }
+  .side .frow:hover button.only, .side .frow:focus-within button.only { opacity: 1; }
+  @media (hover: none) { .side .frow button.only { opacity: .8; } }
+/* Lists of rows: rows split by a hairline, a row's title, place, date and figure, a word in a palette colour, a person's
+   tag, the late badge, an empty list. */
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
+     settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
+  ul.rows li, .rank li, .kv > div, :where(body.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
+  ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
+  ul.rows li:first-child { border-top: none; padding-top: 0; }
+  .ttl { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
+  .pl { font-size: var(--fs-13); color: var(--faint); }
+  /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
+  .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
+  .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
+  .late { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
+  .empty { color: var(--dim); margin: 0; }
+  /* a list's line: its date or time, and its amount or figure */
+  .t { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
+  .v { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
+  .v .x { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+@media (max-width: 768px) {
+    .v { font-size: var(--fs-12); min-width: 68px; }
+}
+/* The state of a page's sources (ds.status), in an app's footer at the end of its page. */
+  details.status summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: var(--s-8); }
+  details.status summary::-webkit-details-marker { display: none; }
+  details.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  details.status .dot.warn { background: var(--mid); }
+  details.status ul { list-style: none; margin: var(--s-10) 0 0; padding: var(--s-10) var(--s-12); display: grid; gap: var(--s-6); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); }
+  details.status li { display: grid; grid-template-columns: 150px 1fr auto; gap: var(--s-10); }
+  details.status .sn { color: var(--dim); }
+  details.status .sn, details.status .sw { display: inline-flex; align-items: center; gap: var(--s-6); }
+  details.status .ico { flex: none; height: 13px; opacity: var(--o-muted); width: 13px; color: currentColor; }
+  details.status .sw .ico { color: var(--good); opacity: 1; }
+  /* a late row is still a row: the .late badge (a task, a failed read) shares its class name */
+  details.status li.late { font: inherit; color: inherit; background: none; border: 0; padding: 0; border-radius: 0; }
+  details.status li.late .sw, details.status li.late .sw .ico { color: var(--mid); }
+  details.status .sd { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
+  details.status li:not(.late) .sd { display: none; }
+  details.status .sf { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
+  details.status li.sl { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
+  details.status li.sl a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+  /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;
+     any other footer (a site's, Selecta's) keeps its own look */
+  .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
+  .wrap > footer details.status { min-width: 0; }
+@media (max-width: 768px) {
+   details.status li { grid-template-columns: 1fr auto; }
+   details.status .sf { display: none; }
+   /* on a phone the list takes the page's width, however short its lines */
+   .wrap > footer details.status { flex: 1 1 auto; }
+   /* what went wrong goes under the whole row, lined up with the name, so that it does not squeeze the name */
+   details.status .sd { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
+}
+/* Figures read at a glance, taken from Studio's analysis: rankings side by side, small tiles of reference figures,
+   and the verdict on a figure against the usual one. */
+/* rankings: a place, a name with its grey line, a value; the first three places in gold. Side by side, the columns share
+   the width, however many there are; on a tablet and a phone, one under the other */
+  .ranks { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 var(--s-24); align-items: start; }
+  .rank-col { min-width: 0; }
+  .rank-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-10); margin: 0; padding-bottom: var(--s-8); border-bottom: 1px solid var(--line-2);
+    color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .rank-note { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; }
+  /* the rows share their columns (subgrid): every value lines up, and the bars under the names start and end together */
+  .rank { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; column-gap: var(--s-10); margin: 0; padding: 0; list-style: none; }
+  .rank.is-plain { grid-template-columns: minmax(0, 1fr) auto; }
+  .rank li { display: grid; grid-column: 1 / -1; grid-template-columns: subgrid; align-items: center; }
+  .rank li:first-child { border-top: 0; }
+  /* a value, whatever it is, keeps to the right edge */
+  .rank-name ~ * { justify-self: end; }
+  .rank-n { color: var(--faint); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .rank li.is-top .rank-n { color: var(--accent-text); }
+  .rank-name { display: grid; gap: var(--s-2); min-width: 0; }
+  /* a name and its grey line in the text's own spacing, as Studio's rankings have them */
+  .rank-t { overflow: hidden; color: var(--ink); font-size: var(--fs-14); font-weight: 600; line-height: var(--lh-text); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+  /* a name given as a node (a person's link, a name and its tag) keeps the name's colour, in gold under the pointer */
+  .rank-t a { color: inherit; text-decoration: none; }
+  a.rank-t:hover, .rank-t a:hover { color: var(--accent-text); }
+  .rank-name small { overflow: hidden; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
+  /* the share of the first's value, as a thin bar under the name */
+  .rank-bar { display: block; height: 3px; margin-top: var(--s-2); border-radius: var(--r-s);
+    background: linear-gradient(90deg, var(--n, var(--accent)) calc(var(--share, 0) * 100%), var(--line) 0); }
+  .rank-v { color: var(--ink); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+@media (max-width: 1024px) {
+  .ranks { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); }
+}
+/* the verdict: « ×1,4 » in green from 1.2 times the usual, yellow (never grey) in between, red under 0.8; the tall one says
+   it in a word under it. An empty one keeps its room, so that the figures beside it stay in line */
+  .verdict { display: inline-grid; justify-items: center; gap: var(--s-2); box-sizing: border-box; min-width: 50px; padding: var(--s-4) var(--s-8);
+    color: var(--dim); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m);
+    font: 600 var(--fs-13)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
+  .verdict.is-tall { width: 72px; padding: var(--s-6) 0; font-size: var(--fs-14); font-weight: 700; }
+  .verdict small { color: inherit; font: 500 var(--fs-11)/var(--lh-tight) var(--body); opacity: .85; }
+  .verdict.is-good { color: var(--good); background: var(--good-soft); border-color: var(--good-line); }
+  .verdict.is-mid { color: var(--mid); background: var(--mid-soft); border-color: var(--mid-line); }
+  .verdict.is-weak { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+  .verdict.is-none { visibility: hidden; }
+  /* vitrine writes a success in dark gold, close to its yellow: the strong verdict is filled, as its badges are */
+  [data-theme="vitrine"] .verdict.is-good { color: var(--on-accent); background: var(--good); border-color: var(--good); }
+/* Charts, taken from Studio's analysis (ds.chart): a curve with its scale, bars on a scale with the average, a year of days,
+   small bars side by side, one bar split by share; from Bank, paired bars and the donut. A series takes its colour from
+   --n (a palette token), the rest from the theme: rules and scales in its lines, labels in its quiet grey. */
+/* the curve: the highest and lowest values on its right, its first and last days under it */
+  .chart-line { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-4) var(--s-8); min-width: 0; }
+  .tile .chart-line { margin-top: var(--s-12); }
+  .chart-line-svg { display: block; width: 100%; height: 40px; overflow: visible; }
+  .chart-rule { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
+  .chart-path { fill: none; stroke: var(--n, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+  .chart-line-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
+  .chart-line-x { display: flex; justify-content: space-between; }
+  /* tall, a chart of its own: room above it for the bubble; the dashed level and its name, the dots of the days given,
+     the cursor and its bubble over the curve */
+  .chart-line-plot { position: relative; min-width: 0; }
+  .chart-line.is-tall { padding-top: var(--s-24); }
+  .chart-line.is-tall .chart-line-svg { height: 180px; }
+  .chart-line.is-hover .chart-line-plot { cursor: crosshair; touch-action: pan-y; }
+  .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); stroke: none; }
+  /* what is foreseen, after today: dashed, on a paler ground, today a thin rule with its name over it */
+  .chart-path.is-ahead { stroke-dasharray: 4 3; opacity: .8; }
+  .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
+  .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
+  .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
+    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
+  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
+  .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;
+    background: var(--panel); border: 2px solid var(--n, var(--accent)); }
+  .chart-dot { background: var(--n, var(--accent)); pointer-events: none; }
+  .chart-cursor { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line-2); pointer-events: none; }
+  .chart-tip { position: absolute; top: 0; z-index: var(--z-raise); transform: translate(-50%, calc(-100% - var(--s-4))); padding: var(--s-4) var(--s-8);
+    background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-s); box-shadow: var(--shadow-pop); color: var(--ink);
+    font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; pointer-events: none; }
+/* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
+   --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
+   of its own figures (1ch in its font) */
+  .chart-bars { --bars-h: 120px; --bars-room: 18px; position: relative; min-width: 0; padding: var(--bars-room) 0 0 calc(var(--axc, 4) * 1ch + var(--s-6));
+    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+  /* the scale's box stops on the bars' base line, so that its 0 sits on it */
+  .chart-bars-axis, .chart-bars-grid, .chart-bars-avg { position: absolute; top: var(--bars-room); height: calc(var(--bars-h) - 1px); pointer-events: none; }
+  .chart-bars-axis { left: 0; width: calc(var(--axc, 4) * 1ch); }
+  .chart-bars-axis span { position: absolute; right: 0; color: var(--faint); white-space: nowrap; transform: translateY(50%); }
+  .chart-bars-grid, .chart-bars-avg { left: calc(var(--axc, 4) * 1ch + var(--s-6)); right: 0; }
+  .chart-bars-grid i, .chart-bars-avg i { position: absolute; left: 0; right: 0; height: 0; border-top: 1px dashed var(--line-2); }
+  .chart-bars-avg i { border-top-color: var(--dim); opacity: .8; }
+  .chart-bars-cols { position: relative; display: grid; grid-template-columns: repeat(var(--cols, 12), minmax(0, 1fr)); }
+  /* a column keeps its share of the chart: its figure and its name may overflow it, its bar never */
+  .chart-bar { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--bars-h) auto; gap: var(--s-6); justify-items: center; min-width: 0;
+    padding: 0; background: none; border: 0; color: inherit; font: inherit; }
+  button.chart-bar { cursor: pointer; }
+  .chart-bar-area { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 100%; border-bottom: 1px solid var(--line-2); }
+  .chart-bar-fill { position: relative; width: 70%; max-width: 40px; min-height: 2px; }
+  .chart-bars.is-dense .chart-bar-fill { width: 78%; }
+  .chart-bar-stack { display: flex; flex-direction: column-reverse; gap: calc(var(--s-2) / 2); height: 100%; overflow: hidden; border-radius: var(--r-s) var(--r-s) 0 0;
+    opacity: .62; transition: opacity var(--t-fast); }
+  .chart-bar-stack i { display: block; min-height: 0; background: var(--n, var(--accent)); }
+  .chart-bar:hover .chart-bar-stack, .chart-bar.is-on .chart-bar-stack { opacity: 1; }
+  /* a period still running is hatched */
+  .chart-bar.is-live .chart-bar-stack i { background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--bg) 32%, transparent) 0 1px, transparent 1px 6px); }
+  /* the figure sits on its bar; past a year the columns are too narrow: on hover or when chosen only */
+  .chart-bar-v { position: absolute; bottom: calc(100% + var(--s-4)); left: 50%; color: var(--dim); white-space: nowrap; transform: translateX(-50%); }
+  .chart-bars.is-dense .chart-bar-v { visibility: hidden; }
+  .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: 600; }
+  .chart-bar-l { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; text-transform: uppercase; white-space: nowrap; }
+  .chart-bar.is-on .chart-bar-l { color: var(--accent-text); }
+/* paired bars (Bank's money in and out): a bar per series side by side in each column, each in its colour; their figures
+   stacked over the tallest, in the same colours, on hover, under the keys or when chosen. The room above the scale holds
+   two lines of figures */
+  .chart-bars.is-pairs { --bars-room: 30px; }
+  .chart-bars.is-pairs .chart-bar-area { position: relative; gap: var(--s-2); }
+  .chart-bars.is-pairs .chart-bar-fill { width: calc(70% / var(--pairs, 2)); max-width: 20px; }
+  .chart-bars.is-pairs .chart-bar-stack i { flex: 1; }
+  .chart-bar-vs { position: absolute; left: 50%; display: flex; flex-direction: column; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4);
+    transform: translateX(-50%); visibility: hidden; pointer-events: none; }
+  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: 600; transform: none; }
+  .chart-bar:hover .chart-bar-vs, .chart-bar.is-on .chart-bar-vs, .chart-bar:focus-visible .chart-bar-vs, .chart-bars.is-pairs .chart-bar:focus-visible .chart-bar-v { visibility: visible; }
+  .chart-bars-legend { margin-top: var(--s-12); font-family: var(--body); line-height: var(--lh-ui); }
+/* a year of days: one square per day, a column per week, Monday on top; pale, coloured, full */
+  .chart-heat { --heat-gap: var(--s-2); min-width: 0; }
+  /* a narrow card scrolls the year sideways, opened on its latest weeks, instead of shrinking the squares below the size
+     of their labels; the year's width never widens the page around it (contain) */
+  .chart-heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--s-4); contain: inline-size; }
+  .chart-heat-year { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); min-width: 740px; }
+  .chart-heat-year + .chart-heat-year { margin-top: var(--s-14); }
+  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .chart-heat-year.has-below .chart-heat-dow { grid-template-rows: 16px repeat(7, minmax(0, 1fr)) 34px; }
+  .chart-heat-dow span { display: flex; align-items: center; }
+  .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
+  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
+  .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); }
+  .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
+  .heat-day.is-2 { background: var(--n, var(--accent)); }
+  .heat-day.is-out { opacity: .3; }
+  .heat-day.is-future { visibility: hidden; }
+  /* a week's figure under its column, upright: what it gained */
+  .chart-heat-below { height: 34px; margin-top: var(--heat-gap); padding-top: var(--s-4); }
+  .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
+  .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--fs-12); }
+  .chart-heat-legend span { display: inline-flex; align-items: center; gap: var(--s-4); }
+  .chart-heat-legend .heat-day { width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); }
+  .chart-heat-note { color: var(--good); }
+@media (max-width: 768px) {
+  /* the bars: smaller figures, and one month name in two where twelve would touch */
+  .chart-bars { font-size: var(--fs-11); }
+  .chart-bar-v { letter-spacing: var(--ls-tight); }
+  .chart-bar-l { font-size: var(--fs-11); }
+  .chart-bar-yr { display: none; }
+  .chart-bars:not(.is-dense) .chart-bar.is-alt .chart-bar-l { visibility: hidden; }
+  .chart-bars:not(.is-dense) .chart-bar.is-alt:not(.is-on):not(:hover) .chart-bar-v { visibility: hidden; }
+}
+/* small bars side by side, as tall as their value: a day's stories */
+  .chart-spark { display: inline-flex; align-items: flex-end; gap: var(--s-2); height: 24px; }
+  .chart-spark i { display: block; width: 5px; min-height: 2px; background: var(--n, var(--accent)); border-radius: calc(var(--r-s) / 4); opacity: var(--o-muted); }
+/* one bar split by share, then its legend: a colour, a name, an amount, a share */
+  .chart-split { display: grid; gap: var(--s-6); min-width: 0; }
+  .chart-split-bar { display: flex; gap: calc(var(--s-2) / 2); height: 8px; overflow: hidden; background: var(--panel-2); border-radius: var(--r-s); }
+  .chart-split-bar i { display: block; height: 100%; }
+  .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
+  /* on one baseline: the smaller figures would otherwise sit too high */
+  .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
+  .chart-key { align-self: center; }
+  .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
+  .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
+/* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on
+   a phone), one row per slice: its colour, its name, its share, its amount. With pick, slices and rows are buttons: the
+   chosen slice moves out, the others fade, its row is in gold */
+  .chart-donut { display: grid; grid-template-columns: minmax(160px, 200px) minmax(0, 1fr); gap: var(--s-16) var(--s-20); align-items: center; min-width: 0; }
+  .chart-donut-ring { position: relative; aspect-ratio: 1; min-width: 0; }
+  .chart-donut-svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .chart-donut-slice { fill: var(--n, var(--accent)); transition: opacity var(--t-fast), transform var(--t-fast); }
+  .chart-donut.is-pick .chart-donut-slice { cursor: pointer; }
+  .chart-donut.has-on .chart-donut-slice:not(.is-on) { opacity: .35; }
+  /* --dx and --dy are a slice's way out, in the ring's own units */
+  .chart-donut-slice.is-on, .chart-donut.is-pick .chart-donut-slice:hover { opacity: 1; transform: translate(calc(var(--dx) * 1px), calc(var(--dy) * 1px)); }
+  .chart-donut-slice:focus { outline: none; }
+  .chart-donut-slice:focus-visible { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
+  .chart-donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); padding: 0 22%;
+    pointer-events: none; text-align: center; }
+  .chart-donut-c b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls);
+    text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+  .chart-donut-legend { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
+  .chart-donut-legend li + li .chart-donut-row { border-top: 1px solid var(--line); }
+  .chart-donut-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: baseline; gap: var(--s-10); width: 100%; box-sizing: border-box; margin: 0;
+    padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); text-align: left; }
+  button.chart-donut-row { cursor: pointer; }
+  /* what the chosen row opens, under it, the row's line over it */
+  .chart-donut-open { min-width: 0; padding: var(--s-4) 0 var(--s-16); }
+  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+  /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
+  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  .chart-donut-n.is-bad { color: var(--bad); } .chart-donut-n.is-good { color: var(--good); }
+  .chart-donut-row em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
+  .chart-donut-row b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent-text); }
+  .chart-donut-row.is-on b { color: var(--accent-text); }
+@media (max-width: 768px) {
+  .chart-donut { grid-template-columns: minmax(0, 1fr); }
+  .chart-donut-ring { width: min(220px, 100%); margin: 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chart-bar-stack, .chart-donut-slice { transition: none; }
+}
+@media (max-width: 480px) {
+  .chart-line.is-tall .chart-line-svg { height: 150px; }
+}
+/* The table of a list to read, sort and pick from (Bank's operations, Studio's people): <table class="tbl"> in a
+   .tbl-wrap, which scrolls sideways when the table is wider than the page. Figures are right-aligned (.is-num); the
+   column titles are buttons that sort (th > button.sort, ds.sortable), the one in use showing its way; a box per row
+   picks it (.tbl-ck, ds.selection). A row that opens something (a sheet) is .is-link.
+   On a phone, a table .is-cards turns each row into a small card: its box on the left, its name (.tbl-main) and its
+   figure (.tbl-end) on the first line, then its other cells one under the other, each named by its data-label. What
+   only a wide screen shows (.tbl-wide) goes, what only a phone shows (.tbl-phone, e.g. the date and the bank under the
+   name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
+  .tbl-wrap { overflow-x: auto; }
+  .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
+  .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: bottom; white-space: nowrap; color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* money in and money out, what is fresh and what is late */
+  .tbl .is-good { color: var(--good); }
+  .tbl .is-bad { color: var(--bad); }
+  .tbl .tbl-ck { width: 28px; }
+  .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
+  .tbl .tbl-phone { display: none; }
+  .tbl tbody tr.is-link { cursor: pointer; }
+  @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
+  .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
+  /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */
+  /* a finger finds it: its target reaches above and under the short line of capitals */
+  .tbl th .sort::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
+  .tbl th .sort { position: relative; display: inline-flex; align-items: center; gap: var(--s-4); margin: 0; padding: 0; background: none; border: 0; border-radius: var(--r-s); cursor: pointer;
+    color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
+  /* the arrow is not read out: aria-sort says it */
+  .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent-text); }
+  .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent-text); }
+  .tbl-sortmenu { display: none; }
+
+/* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
+   name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
+   picked. ds.selection runs it. Its buttons and menus are small ones, the row of a list's actions. */
+  .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
+    --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
+    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
+    margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
+  .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  [data-theme="vitrine"] .selbar-n { font-weight: 500; }
+
+@media (max-width: 768px) {
+  .tbl .tbl-wide { display: none; }
+  .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tbl-sortmenu { display: inline-flex; }
+  .tbl-wrap:has(> .tbl.is-cards) { overflow-x: visible; }
+  .tbl.is-cards, .tbl.is-cards tbody { display: block; }
+  .tbl.is-cards thead { display: none; }
+  .tbl.is-cards tr { display: grid; grid-template-columns: [ck-start] auto [ck-end main-start] minmax(0, 1fr) [main-end end-start] auto [end-end];
+    gap: var(--s-4) var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
+  .tbl.is-cards tr:not(:has(> .tbl-ck)) { grid-template-columns: [main-start] minmax(0, 1fr) [main-end end-start] auto [end-end]; }
+  .tbl.is-cards td { display: block; min-width: 0; padding: 0; border: 0; grid-column: main-start / end-end; }
+  .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; }
+  .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
+  .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
+  .tbl.is-cards td[colspan] { grid-column: 1 / -1; }
+  /* a cell named by its column: the name on the left, the value on the right */
+  .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
+  .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-ui) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  /* a card is lit whole, not cell by cell; in a .card, out to its edges (over its padding, --card-pad), so that the gold
+     takes the whole width of the screen's line */
+  .tbl.is-cards tbody tr > td, .tbl.is-cards tbody tr.is-selected > td { background: none; }
+  .tbl.is-cards tbody tr.is-selected { background: var(--accent-soft); }
+  .card .tbl.is-cards tbody tr.is-selected { box-shadow: calc(-1 * var(--card-pad)) 0 var(--accent-soft), var(--card-pad) 0 var(--accent-soft); }
+  /* what only a wide screen shows stays hidden in a card too */
+  .tbl.is-cards td.tbl-wide { display: none; }
+}
+/* The calendar, taken from Studio's agenda (ds.calendar): under the period head, a month of day cells and the panel of the
+   selected day, a week of columns, or a list of days. Each item is a line with its coloured mark: a square (filled once
+   done), a dot, or a bar for what has a time (an appointment, a shooting); on a phone the cells only keep the marks, as dots. */
+  .cal-body { display: block; min-width: 0; }
+  .cal-dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); margin-bottom: var(--s-6); }
+  .cal-dow span { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-align: center; text-transform: uppercase; }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); }
+  /* a cell is as tall as eight lines, the most it shows before « +N » */
+  .cal-grid { container-type: inline-size; }
+  .cal-cell { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; min-height: 148px; padding: var(--s-8);
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); color: inherit; font: inherit; text-align: left; cursor: pointer; }
+  .cal-cell:hover { border-color: var(--line-2); }
+  .cal-cell.is-off { opacity: var(--o-off); }
+  .cal-cell.is-today { border-color: var(--accent); }
+  /* the chosen day takes the chosen gold (chosen.css), with the full gold edge and its own text's colour */
+  .cal-cell { --chosen-line: var(--accent); --chosen-ink: currentColor; }
+  .cal-n { margin-bottom: var(--s-2); color: var(--dim); font: 700 var(--fs-15)/var(--lh-tight) var(--mono); }
+  .cal-cell.is-today .cal-n { color: var(--accent-text); }
+  .cal-line { display: flex; align-items: center; gap: var(--s-4); min-width: 0; }
+  .cal-lt { min-width: 0; overflow: hidden; color: var(--ink); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
+  /* what has a time (a bar) reads a little quieter than what is to publish; what is done fades, what is late is red */
+  .cal-line.is-bar .cal-lt { color: var(--dim); }
+  .cal-line.is-done .cal-lt { color: var(--faint); }
+  .cal-line.is-late .cal-lt { color: var(--bad); }
+  /* what runs over several days: one bar in its colour across them, reaching over the cells' edges and the gap between
+     them, the same height in every cell it crosses (an empty line keeps a free lane); its title, where it starts and on
+     each Monday, runs over the days it goes on to */
+  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--fs-12) * var(--lh-text)); }
+  .cal-line.is-run { --reach: calc(var(--s-8) + 1px + var(--s-6) / 2); position: relative; margin: 0 calc(-1 * var(--reach)); padding: 0 var(--s-6);
+    background: color-mix(in srgb, var(--n, var(--dim)) 30%, var(--panel)); }
+  .cal-line.is-run.is-first { margin-left: 0; border-top-left-radius: var(--r-s); border-bottom-left-radius: var(--r-s); }
+  .cal-line.is-run.is-last { margin-right: 0; border-top-right-radius: var(--r-s); border-bottom-right-radius: var(--r-s); }
+  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: 600;
+    max-width: calc(var(--run, 1) * (100cqw - 6 * var(--s-6)) / 7 + (var(--run, 1) - 1) * var(--s-6) - 2 * var(--s-8) - 2 * var(--s-6)); }
+  .cal-line.is-run.is-done { opacity: .55; }
+  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  /* a group's codes, after its count, are the first thing a narrow cell lets go */
+  @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
+  .cal-more { padding-left: var(--s-2); color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-more-dots { display: none; }
+  /* the marks: a square, filled once done; a dot; a bar, thin or thick (a shooting) */
+  .cal-mark.is-dot { border-radius: 50%; }
+  .cal-mark.is-bar, .cal-mark.is-thick { width: 2px; height: 12px; border: 0; border-radius: calc(var(--r-s) / 4); }
+  .cal-mark.is-thick { width: 3px; }
+  /* a short coloured code (a network: « IG », « P »), its full name on hover */
+  .cal-code { display: inline-grid; flex: none; place-items: center; min-width: 18px; height: 15px; padding: 0 var(--s-2); border-radius: var(--r-s);
+    color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--dim)) var(--tint-soft), transparent); font: 700 var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; }
+  /* the day's panel, under the month or one per day in the list */
+  .cal-day { margin-top: var(--s-14); padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); box-shadow: var(--card-shadow); }
+  .cal-day.is-today { border-color: var(--accent-line); }
+  .cal-day-t { margin: 0 0 var(--s-12); font: var(--head-weight) var(--fs-17)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .cal-day-t::first-letter { text-transform: uppercase; }
+  .cal-day .rows .cal-mark, .cal-wcol .rows .cal-mark { align-self: center; }
+  .cal-day li.is-done .ttl, .cal-wcol li.is-done .ttl { color: var(--faint); }
+  .cal-day a.ttl:hover, .cal-wcol a.ttl:hover { color: var(--accent-text); }
+  /* the week: seven columns, today's in gold */
+  .cal-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); align-items: start; }
+  .cal-wcol { min-width: 0; min-height: 160px; padding: var(--s-12) var(--s-10); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); }
+  .cal-wcol.is-today { border-color: var(--accent); }
+  .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .cal-wcol.is-today h3 { color: var(--accent-text); }
+  .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  /* a narrow column cuts its titles between syllables, never in the middle of one */
+  .cal-wcol .ttl { overflow-wrap: break-word; hyphens: auto; }
+  .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-11)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
+  /* the list: the week before folded above its first day */
+  .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
+    color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
+  .cal-prev:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
+  /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
+  .cal-head .periodnav { align-items: stretch; }
+  .cal-head .periodnav .btn { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
+  /* the arrows, the sprite's chevrons, in square buttons */
+  .cal-head .periodnav .btn.is-icon { width: var(--btn-s-h); padding: 0; }
+  .cal-arrows { display: flex; gap: var(--s-6); }
+  /* the month picker under the title is ds.datePick on months (datepick.css): it floats there as every picker under a
+     period's title does */
+@media (max-width: 768px) {
+  /* the views and the arrows share one row under the title; the arrows go under the views where the row is too narrow */
+  .cal-head .periodnav { flex-wrap: wrap; justify-content: space-between; gap: var(--s-6) var(--s-4); }
+  .cal-head .periodnav .tabs { flex: 1 1 auto; min-width: 0; }
+  .cal-head .periodnav .tabs button { flex: 1 1 0; padding: var(--s-6) var(--s-8); font-size: var(--fs-11); letter-spacing: 0; text-align: center; }
+  .cal-arrows { margin-left: auto; gap: var(--s-4); }
+  .cal-head .periodnav .btn { flex: none; padding: 0 var(--s-8); }
+  .cal-dow, .cal-grid { gap: var(--s-4); }
+  /* a phone's month: each item a dot in its colour, three at most, then « +N »; the panel below says the rest */
+  .cal-cell { flex-direction: row; flex-wrap: wrap; align-content: space-between; align-items: center; gap: var(--s-2); min-height: 54px; padding: var(--s-4) var(--s-4) var(--s-6); }
+  .cal-n { flex: 0 0 100%; margin: 0; }
+  .cal-cell .cal-line { gap: 0; }
+  .cal-cell .cal-line.is-extra, .cal-cell .cal-lt, .cal-cell .cal-code, .cal-cell .cal-count, .cal-cell .cal-more { display: none; }
+  /* a run stays a bar across its days, thin, without its title (the panel says it), right under the day's number in
+     every cell it crosses, the day's dots under it */
+  .cal-cell:has(> .is-run, > .is-gap) { align-content: flex-start; }
+  .cal-cell .cal-line.is-run, .cal-cell .cal-line.is-gap { flex: 0 0 100%; height: var(--s-4); padding: 0; }
+  .cal-cell .cal-line.is-run { --reach: calc(var(--s-4) + 1px + var(--s-4) / 2); flex-basis: calc(100% + 2 * var(--reach)); background: var(--n, var(--dim)); }
+  .cal-cell .cal-line.is-run.is-first, .cal-cell .cal-line.is-run.is-last { flex-basis: calc(100% + var(--reach)); }
+  .cal-cell .cal-line.is-run.is-first.is-last { flex-basis: 100%; }
+  .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
+  .cal-cell .cal-mark.is-open { background: transparent; }
+  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-week { grid-template-columns: minmax(0, 1fr); }
+  .cal-wcol { min-height: 0; }
+  .cal-wcol h3 { font-size: var(--fs-12); }
+}
+/* The settings page, shared by the apps: everything on it lives under body.settings,
+   with no added weight (:where), so that a page can still change one of its rules. */
+  body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); margin: 0; }
+  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
+  :where(body.settings) a { color: inherit; }
+  :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: var(--focus-offset); outline: var(--focus); }
+  :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
+  :where(body.settings) .eyebrow { color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
+  :where(body.settings) h1 { font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); margin: 0; }
+  :where(body.settings) .back, :where(body.settings) .reload, :where(body.settings) .jump a, :where(body.settings) button.jl, :where(body.settings) .go, :where(body.settings) button.save { align-items: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); box-sizing: border-box; color: var(--dim); cursor: pointer; display: inline-flex; font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); gap: var(--s-6); justify-content: center; letter-spacing: var(--btn-ls); min-height: var(--btn-h); padding: 0 var(--btn-px); text-decoration: none; text-transform: var(--btn-case); white-space: nowrap; }
+  :where(body.settings) .back:hover, :where(body.settings) .jump a:hover, :where(body.settings) button.jl:hover, :where(body.settings) button.jl[aria-expanded="true"] { border-color: var(--accent-line); color: var(--accent-text); }
+  :where(body.settings) button.jl[aria-expanded="true"] { background: var(--accent-soft); }
+  :where(body.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
+  :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
+  :where(body.settings) .outrow .lede { margin: 0; }
+  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); margin-left: auto; }
+  :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: var(--btn-h); }
+  :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent-text); }
+  :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
+  :where(body.settings) .job, :where(body.settings) section.card { scroll-margin-top: 14px; }
+  :where(body.settings) .reload .pip { display: none; position: absolute; right: 5px; top: 5px; }
+  :where(body.settings) .reload.new { border-color: var(--accent-line); color: var(--accent-text); }
+  :where(body.settings) .reload.new .pip { display: block; }
+  :where(body.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
+  :where(body.settings) .jump::-webkit-scrollbar { display: none; }
+  :where(body.settings) .jump a { flex: none; }
+  :where(body.settings) .card { background: var(--card-bg); border-radius: var(--r-l); border: 1px solid var(--card-line); box-shadow: var(--card-shadow); min-width: 0; padding: var(--card-pad); }
+  :where(body.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); margin: 0 0 var(--s-4); text-transform: uppercase; }
+  :where(body.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
+  :where(body.settings) .job { --row-py: var(--s-12); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); }
+  :where(body.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(body.settings) .job .name { align-items: center; display: flex; font: var(--head-weight) var(--fs-15)/var(--head-lh) var(--title-font); gap: var(--s-8); }
+  :where(body.settings) .dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
+  :where(body.settings) .dot.ok { background: var(--good); }
+  :where(body.settings) .dot.bad { background: var(--bad); }
+  :where(body.settings) .dot.run { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
+  @keyframes pulse { 50% { opacity: .35; } }
+  :where(body.settings) .job .when { color: var(--dim); font-size: var(--fs-13); }
+  :where(body.settings) .job .sum { color: var(--faint); font-size: var(--fs-13); }
+  :where(body.settings) .job .sum.bad { color: var(--bad); }
+  :where(body.settings) .subs { display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-16); margin-top: var(--s-2); }
+  :where(body.settings) .job .acts { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-10); margin-top: var(--s-2); }
+  :where(body.settings) .job .acts .btns { display: flex; gap: var(--s-8); margin-left: auto; }
+  :where(body.settings) .go { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent-text); }
+  :where(body.settings) .go:disabled { background: none; border-color: var(--line); color: var(--faint); cursor: default; }
+  :where(body.settings) label.sw { align-items: center; color: var(--dim); cursor: pointer; display: inline-flex; font-size: var(--fs-13); gap: var(--s-8); user-select: none; white-space: nowrap; }
+  :where(body.settings) label.sw input { -webkit-appearance: none; appearance: none; background: var(--line-2); border-radius: var(--r-m); cursor: pointer; flex: none; height: 20px; margin: 0; position: relative; transition: background var(--t-fast); width: 34px; }
+  :where(body.settings) label.sw input::after { background: var(--ink); border-radius: 50%; content: ""; height: 14px; left: 3px; position: absolute; top: 3px; transition: left var(--t-fast); width: 14px; }
+  :where(body.settings) label.sw input:checked { background: var(--good); }
+  :where(body.settings) label.sw input:checked::after { left: 17px; }
+  :where(body.settings) .group { margin-top: var(--s-16); }
+  :where(body.settings) .group:first-of-type { margin-top: var(--s-4); }
+  :where(body.settings) .group h3 { color: var(--accent-text); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; margin: 0 0 var(--s-6); }
+  :where(body.settings) .field { align-items: center; display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
+  :where(body.settings) .field .lab { font-size: var(--fs-14); }
+  :where(body.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
+  :where(body.settings) .field .inp { align-items: center; display: flex; gap: var(--s-8); grid-column: 2; grid-row: 1 / span 2; }
+  :where(body.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: 600 var(--fs-15)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; }
+  :where(body.settings) .field input.changed { border-color: var(--accent); }
+  :where(body.settings) .field input.wrong { background: var(--bad-soft); border-color: var(--bad); }
+  :where(body.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
+  :where(body.settings) .field .def { white-space: nowrap; }
+  :where(body.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
+  /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
+  :where(body.settings) .bar .msg { display: block; margin: 0 auto 0 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
+  :where(body.settings) .bar .msg.bad { color: var(--bad); }
+  :where(body.settings) .bar .msg.ok { color: var(--good); }
+  :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  :where(body.settings) button.save:disabled { background: var(--line-2); border-color: var(--line-2); color: var(--faint); cursor: default; }
+  :where(body.settings) .conn { --row-py: var(--s-10); align-items: center; display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
+  :where(body.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
+  :where(body.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
+  :where(body.settings) .conn .det { color: var(--dim); font-size: var(--fs-13); grid-column: 1; overflow-wrap: anywhere; }
+  :where(body.settings) .conn a { color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; }
+  :where(body.settings) .conn a:hover { text-decoration: underline; }
+  :where(body.settings) .mem { color: var(--faint); font: 400 var(--fs-12)/var(--lh-text) var(--mono); }
+  :where(body.settings) .err { color: var(--bad); font-size: var(--fs-14); }
+  :where(body.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: var(--s-6); overflow: hidden; }
+  :where(body.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; padding: var(--s-8) var(--s-12); }
+  :where(body.settings) .loghead .live { align-items: center; display: inline-flex; gap: var(--s-8); }
+  :where(body.settings) .loghead a { color: var(--dim); text-decoration: none; white-space: nowrap; }
+  :where(body.settings) .loghead a:hover { color: var(--accent-text); }
+  :where(body.settings) .logs { font: 400 var(--fs-12)/var(--lh-text) var(--mono); max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: var(--s-8) 0 var(--s-10); }
+  :where(body.settings) .ll { display: grid; gap: var(--s-10); grid-template-columns: 64px minmax(0, 1fr); padding: 0 var(--s-12); }
+  :where(body.settings) .ll .lt { color: var(--faint); font-variant-numeric: tabular-nums; }
+  :where(body.settings) .ll .lx { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
+  :where(body.settings) .ll.banner { margin-top: var(--s-8); }
+  :where(body.settings) .ll.banner:first-child { margin-top: 0; }
+  :where(body.settings) .ll.banner .lx { color: var(--accent-text); font-weight: 600; }
+  :where(body.settings) .ll.lwarn .lx { color: var(--mid); }
+  :where(body.settings) .ll.lbad .lx { color: var(--bad); }
+  :where(body.settings) .logs .none { color: var(--faint); padding: 0 var(--s-12); }
+@media (max-width: 768px) {
+  /* the bar of links to the cards, for a phone where the page is long */
+  :where(body.settings) .jump { display: flex; }
+  :where(body.settings) .ll { gap: 0; grid-template-columns: 1fr; }
+  :where(body.settings) .ll .lt { font-size: var(--fs-11); }
+  :where(body.settings) h1 { font-size: var(--fs-22); }
+  :where(body.settings) .subs { display: grid; gap: var(--s-10) var(--s-12); grid-template-columns: 1fr 1fr; }
+  :where(body.settings) .go, :where(body.settings) button.jl { padding: 0 var(--s-10); }
+  :where(body.settings) .job .acts { flex-wrap: nowrap; }
+  :where(body.settings) .job .acts .btns { gap: var(--s-6); }
+  :where(body.settings) .field { align-items: start; }
+  :where(body.settings) .field .help { grid-column: 1 / -1; }
+  :where(body.settings) .field .inp { gap: var(--s-6); grid-row: 1; }
+  :where(body.settings) .field input { width: 72px; }
+  :where(body.settings) .conn .det { grid-column: 1 / -1; }
+  :where(body.settings) .conn a { grid-row: 1; }
+}
+@media (max-width: 480px) {
+  :where(body.settings) .go .mx { display: none; }
+}
+/* Chosen: the gold every framed choice takes, the same everywhere: a pill in use, a period in the date picker, a gold
+   button, the chosen day of the calendar. Its colours are roles (--chosen-ink, --chosen-bg, --chosen-line), which a
+   component may change (the calendar's day keeps the full gold edge). Last of the controls, so that it wins over their
+   hover. The tabs' chosen one is their own (--tab-on-bg). */
+  .pill.is-on, .periodpop button.on, .btn.is-act, .cal-cell.is-sel { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }

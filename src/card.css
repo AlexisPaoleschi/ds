@@ -12,9 +12,9 @@
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
   /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
-  .ct.ct-fit-1 { letter-spacing: var(--ls-1); }
-  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-1); }
-  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-0-5); }
+  .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
+  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }
+  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-045); }
   .ct.ct-fit-3 .pill { --pill-px: var(--s-8); }
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.

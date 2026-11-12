@@ -46,8 +46,12 @@
   --fs-11: 11px; --fs-12: 12px; --fs-13: 13px; --fs-14: 14px; --fs-15: 15px; --fs-17: 17px; --fs-22: 22px; --fs-28: 28px;
   /* the sizes of alexispaoleschi.com: its text, its subtitles, its section titles */
   --fs-16: 16px; --fs-18: 18px; --fs-20: 20px; --fs-24: 24px; --fs-36: 36px; --fs-56: 56px;
-  /* the site's bigger words: its gallery and box titles, its home name, its prices, the title over an event page's photo */
-  --fs-26: 26px; --fs-32: 32px; --fs-40: 40px; --fs-42: 42px; --fs-48: 48px; --fs-52: 52px; --fs-64: 64px; --fs-80: 80px; --fs-84: 84px; --fs-104: 104px;
+  /* the site's bigger words: its gallery and box titles, its home name, its prices, the title over an event page's photo
+     (each a step apart from the next: no two within 4px) */
+  --fs-26: 26px; --fs-32: 32px; --fs-42: 42px; --fs-48: 48px; --fs-64: 64px; --fs-80: 80px; --fs-104: 104px;
+  /* four sizes by role, a step bigger on a computer (from 769px, below): the text, a lead, a box's title, a big title of
+     a public page (Selecta's text and titles, the site's boxes, Vitrine's compact figures) */
+  --text-md: var(--fs-15); --text-lg: var(--fs-18); --text-xl: var(--fs-20); --text-2xl: var(--fs-22);
   /* the big sums at the top of a screen grow with it */
   --fs-display: clamp(34px, 9vw, 50px); --fs-display-2: clamp(var(--fs-22), 6.5vw, 30px);
   --lh-tight: 1; --lh-ui: 1.3; --lh-text: 1.5;
@@ -58,8 +62,14 @@
   --ls-tight: -.015em; --ls-caps: .12em; --ls-wide: .17em; --ls-brand: .22em;
   /* a little air between the letters: Selecta's titles and its footer */
   --ls-loose: .07em;
-  /* the letter spacings of alexispaoleschi.com, in pixels as the site writes them */
-  --ls-0-5: .5px; --ls-1: 1px; --ls-1-5: 1.5px; --ls-2: 2px; --ls-2-5: 2.5px; --ls-3: 3px; --ls-4: 4px; --ls-5: 5px; --ls-6: 6px; --ls-8: 8px;
+  /* the letter spacings of alexispaoleschi.com and of Vitrine, in em like the rest, so that they follow a title that shrinks
+     on a phone; named by their thousandths of the text's size (--ls-125: .125em). Each gives, at the size it is used at on
+     a computer, the very pixels the site wrote (2px on a 24px title: --ls-083, a twelfth of the size) */
+  --ls-031: calc(1em / 32); --ls-036: calc(1em / 28); --ls-038: calc(1em / 26); --ls-045: calc(1em / 22); --ls-050: .05em;
+  --ls-056: calc(1em / 18); --ls-063: .0625em; --ls-068: calc(1.5em / 22); --ls-071: calc(1em / 14); --ls-075: .075em; --ls-077: calc(1em / 13);
+  --ls-083: calc(1em / 12); --ls-091: calc(1em / 11); --ls-094: .09375em; --ls-096: calc(2.5em / 26); --ls-100: .1em; --ls-107: calc(1.5em / 14);
+  --ls-119: calc(5em / 42); --ls-125: .125em; --ls-133: calc(2em / 15); --ls-136: calc(1.5em / 11); --ls-143: calc(1em / 7); --ls-150: .15em;
+  --ls-154: calc(2em / 13); --ls-167: calc(1em / 6); --ls-179: calc(2.5em / 14); --ls-182: calc(2em / 11); --ls-188: .1875em; --ls-214: calc(1.5em / 7);
   /* space: one scale for paddings, margins and gaps */
   --s-2: 2px; --s-4: 4px; --s-6: 6px; --s-8: 8px; --s-10: 10px; --s-12: 12px; --s-14: 14px; --s-16: 16px; --s-18: 18px; --s-20: 20px; --s-24: 24px; --s-28: 28px;
   --s-32: 32px; --s-36: 36px; --s-40: 40px; --s-48: 48px;
@@ -79,8 +89,9 @@
   --safe-top: env(safe-area-inset-top, 0px); --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px); --safe-left: env(safe-area-inset-left, 0px);
   /* the widths where a layout changes are written as numbers in each @media (CSS cannot read a token there):
-     the same three everywhere, those of alexispaoleschi.com: 480 (a phone), 768 (a tablet held upright), 1024px (one held sideways).
-     A public site may also ask for a phone held sideways: (max-width: 956px) and (orientation: landscape) */
+     the same three everywhere, those of alexispaoleschi.com: 480 (a phone), 768 (a tablet held upright), 1024px (one held sideways),
+     769px for « wider than a phone », and 1280px for a very large screen. The site kit alone may also ask for a phone held
+     sideways: (max-width: 956px) and (orientation: landscape) */
   /* the widest a page grows, the same in every app */
   --page-max: 1500px;
   /* the width of a public site's pages, made to be read as much as looked at (alexispaoleschi.com) */
@@ -240,24 +251,24 @@
   /* buttons: 14px spaced capitals, white with a soft gold edge and a soft shadow; they rise on hover */
   --btn-size: var(--fs-14); --btn-weight: 500; --btn-ls: var(--ls-caps); --btn-case: uppercase; --btn-px: var(--s-28);
   /* the large one, the site's: 63px high, more spaced, 48px on each side */
-  --btn-l-h: 63px; --btn-l-px: var(--s-48); --btn-l-ls: var(--ls-2-5);
+  --btn-l-h: 63px; --btn-l-px: var(--s-48); --btn-l-ls: var(--ls-179);
   --btn-bg: var(--overlay-white-strong); --btn-shadow: var(--shadow-card); --btn-lift: calc(-1 * var(--s-2));
   /* the small one is the site's way back (« ← Events ») */
-  --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-2);
+  --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-167);
   /* the action of a passing message, in the buttons' capitals */
   --act-ls: var(--ls-caps); --act-case: uppercase;
   /* fields: 16px, the least that keeps an iPhone from zooming in on them; roomy, a soft gold edge;
      in use, the full gold edge and a faint gold halo */
-  --field-size: var(--fs-16); --field-weight: 400; --field-lh: normal; --field-ls: var(--ls-0-5); --field-py: var(--s-12); --field-px: var(--s-20);
+  --field-size: var(--fs-16); --field-weight: 400; --field-lh: normal; --field-ls: var(--ls-031); --field-py: var(--s-12); --field-px: var(--s-20);
   --field-bg: var(--white); --field-line: var(--line); --field-halo: 0 0 0 3px var(--accent-soft);
   /* the line under a field, as under the site's newsletter field: 13px, medium, a little spaced */
-  --field-note-size: var(--fs-13); --field-note-weight: 500; --field-note-lh: 1.4; --field-note-ls: var(--ls-0-5);
+  --field-note-size: var(--fs-13); --field-note-weight: 500; --field-note-lh: 1.4; --field-note-ls: var(--ls-038);
   /* cards: white, a soft gold edge, a soft shadow, 32px inside; one you click rises 4px */
   --card-bg: var(--white); --card-line: var(--line); --card-pad: var(--s-32); --card-shadow: var(--shadow-card);
   --card-lift: calc(-1 * var(--s-4)); --card-hover-shadow: var(--shadow-pop);
   /* a card's title in 28px spaced capitals; its details in 14px grey capitals, with a gold icon; 16px between them */
-  --card-title-size: var(--fs-28); --card-title-ls: var(--ls-3); --card-gap: var(--s-16);
-  --card-meta-size: var(--fs-14); --card-meta-weight: 400; --card-meta-ls: var(--ls-1-5); --card-meta-lh: 1.8;
+  --card-title-size: var(--fs-28); --card-title-ls: var(--ls-107); --card-gap: var(--s-16);
+  --card-meta-size: var(--fs-14); --card-meta-weight: 400; --card-meta-ls: var(--ls-107); --card-meta-lh: 1.8;
   /* a message as the site's notes (« Transport… is included »): 16px light text, a 24px gold icon, 20 × 28px inside */
   --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: 24px; --msg-icon-top: 0px;
   /* a passing message with the room of the site's pieces, in its regular weight */
@@ -268,19 +279,19 @@
      its links in 14px capitals 32px apart */
   --topbar-bg: var(--overlay-white-strong); --topbar-blur: var(--glass-blur); --topbar-shadow: var(--shadow-soft);
   --topbar-py: var(--s-20); --topbar-px: var(--s-40); --topbar-gap: var(--s-32);
-  --brand-size: var(--fs-20); --brand-ls: var(--ls-2); --brand-color: var(--ink);
-  --topbar-link-size: var(--fs-14); --topbar-link-ls: var(--ls-1-5);
+  --brand-size: var(--fs-20); --brand-ls: var(--ls-100); --brand-color: var(--ink);
+  --topbar-link-size: var(--fs-14); --topbar-link-ls: var(--ls-107);
   /* its action is lower than the page's buttons: 14 × 36px of room, 55px high */
   --topbar-btn-h: 55px; --topbar-btn-px: var(--s-36);
   /* a card's cover photo grows 5% on hover, over .6s; its badge 20px from the corner */
   --cover-zoom: 1.05; --cover-time: .6s; --cover-badge: var(--s-20);
   /* a small card: a 20px title spaced 2px, 20px inside, 12px between its lines, 12px details */
-  --card-s-title-size: var(--fs-20); --card-s-title-ls: var(--ls-2); --card-s-pad: var(--s-20); --card-s-gap: var(--s-12); --card-s-meta-size: var(--fs-12); --card-s-badge: var(--s-12);
+  --card-s-title-size: var(--fs-20); --card-s-title-ls: var(--ls-100); --card-s-pad: var(--s-20); --card-s-gap: var(--s-12); --card-s-meta-size: var(--fs-12); --card-s-badge: var(--s-12);
   /* a way back's spacing, the slider's soft track, a sheet's and a table's bigger words, the room of the buttons of a
      window, of a sheet's actions and of a list's selection bar */
-  --back-ls: var(--ls-2); --zoom-track: var(--line); --kv-k-size: var(--fs-12); --kv-v-size: var(--fs-15);
-  --tbl-size: var(--fs-15); --tbl-th-size: var(--fs-12); --tbl-th-ls: var(--ls-1-5);
-  --dialog-btn-px: var(--s-24); --sheet-acts-btn-px: var(--s-20); --sheet-acts-btn-ls: var(--ls-1-5);
+  --back-ls: var(--ls-167); --zoom-track: var(--line); --kv-k-size: var(--fs-12); --kv-v-size: var(--fs-15);
+  --tbl-size: var(--fs-15); --tbl-th-size: var(--fs-12); --tbl-th-ls: var(--ls-125);
+  --dialog-btn-px: var(--s-24); --sheet-acts-btn-px: var(--s-20); --sheet-acts-btn-ls: var(--ls-107);
   --selbar-field-size: var(--fs-14); --selbar-field-py: var(--s-8); --selbar-field-px: var(--s-12); --selbar-btn-px: var(--s-14);
   /* a tab shown, at 18 % of the gold: its 5 % ground would hardly show on white (a framed choice keeps it) */
   --tab-on-bg: color-mix(in srgb, var(--accent) 18%, transparent);
@@ -289,10 +300,14 @@
   /* the legal pages: a heading as the site's box titles, a gold line under it; bold in medium */
   --doc-h2-size: var(--fs-24); --doc-rule: var(--accent); --doc-h3-weight: 500; --doc-strong: 500;
   /* badges: 12px bold capitals, white on gold */
-  --badge-weight: 600; --badge-size: var(--fs-12); --badge-lh: 1.8; --badge-ls: var(--ls-2); --badge-py: var(--s-6); --badge-px: var(--s-16);
+  --badge-weight: 600; --badge-size: var(--fs-12); --badge-lh: 1.8; --badge-ls: var(--ls-167); --badge-py: var(--s-6); --badge-px: var(--s-16);
   /* a section's head: 56px spaced capitals, then 18px gold capitals */
-  --section-size: var(--fs-56); --section-ls: var(--ls-4); --section-sub-size: var(--fs-18); --section-sub-ls: var(--ls-3);
-  --footer-size: var(--fs-16); --footer-ls: var(--ls-1); --footer-py: var(--s-48);
+  --section-size: var(--fs-56); --section-ls: var(--ls-071); --section-sub-size: var(--fs-18); --section-sub-ls: var(--ls-167);
+  --footer-size: var(--fs-16); --footer-ls: var(--ls-063); --footer-py: var(--s-48);
+}
+/* a computer, wider than a phone: the sizes by role grow a step */
+@media (min-width: 769px) {
+  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28); }
 }
 /* the site's smaller computers, tablets and phones */
 @media (max-width: 1024px) {
@@ -300,15 +315,15 @@
 }
 @media (max-width: 768px) {
   [data-theme="vitrine"] { --badge-size: var(--fs-11); --badge-py: 5px; --badge-px: var(--s-12);
-    --section-size: var(--fs-36); --section-sub-size: var(--fs-15); --section-sub-ls: var(--ls-2);
+    --section-size: var(--fs-36); --section-sub-size: var(--fs-15); --section-sub-ls: var(--ls-133);
     --footer-size: var(--fs-14); --footer-py: var(--s-24); --card-pad: var(--s-24); --card-title-size: var(--fs-24); }
 }
 @media (max-width: 480px) {
-  [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --btn-s-h: 29px; --btn-s-px: var(--s-14); --btn-s-size: var(--fs-11); --btn-s-ls: var(--ls-1-5);
+  [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --btn-s-h: 29px; --btn-s-px: var(--s-14); --btn-s-size: var(--fs-11); --btn-s-ls: var(--ls-136);
     --topbar-px: var(--s-16); --topbar-gap: var(--s-8); --brand-size: var(--fs-17);
     --card-pad: var(--s-20); --badge-size: var(--fs-11); --card-title-size: var(--fs-22); --card-gap: var(--s-12); --card-meta-size: var(--fs-12); --cover-badge: var(--s-12);
     /* a phone gives a window's and a sheet's words the width, and a sheet's actions smaller capitals */
-    --sheet-pad: var(--s-20); --sheet-acts-btn-ls: var(--ls-1); --sheet-acts-btn-size: var(--fs-12); }
+    --sheet-pad: var(--s-20); --sheet-acts-btn-ls: var(--ls-083); --sheet-acts-btn-size: var(--fs-12); }
 }
 /* Less motion, when the device asks for it, in one place: nothing takes time, nothing lifts or zooms on hover, and every
    animation, the looping ones included (the wheels, the site's pulses and bounces), stands still at once. A component

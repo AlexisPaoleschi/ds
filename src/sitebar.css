@@ -7,7 +7,7 @@
   }
   /* a phone held sideways takes the small one too, as the design system gives it to the smallest phones */
   @media (max-width: 956px) and (orientation: landscape) {
-    .back-button.on-photo { --back-ls: var(--ls-1-5); padding: var(--s-8) var(--s-14); font-size: var(--fs-11); }
+    .back-button.on-photo { --back-ls: var(--ls-136); padding: var(--s-8) var(--s-14); font-size: var(--fs-11); }
   }
   /* Sticky Nav: the design system's top bar (.topbar.is-site), fixed at the top of an event page and shown once the
      hero is passed */
@@ -30,7 +30,7 @@
     overflow: hidden; visibility: hidden; background: var(--white); box-shadow: var(--shadow-card); transition: height var(--t-mid) ease, visibility var(--t-mid); }
   .mobile-menu.active { height: calc(100vh - 67px); visibility: visible; transition: height var(--t-mid) ease, visibility 0s; }
   .mobile-menu-links { display: flex; flex-direction: column; padding: var(--s-32) 0; overflow-y: auto; }
-  .mobile-menu-link { padding: var(--s-20) var(--s-32); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-2); text-decoration: none;
+  .mobile-menu-link { padding: var(--s-20) var(--s-32); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-143); text-decoration: none;
     text-transform: uppercase; color: var(--ink); border-left: 3px solid transparent;
     /* its colours only: a transition of everything would also fade in the visibility it takes from the menu, which keeps
        the keyboard out of it for a moment */
@@ -39,7 +39,7 @@
     .mobile-menu-link:hover { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
   }
   .mobile-menu-cta { margin: var(--s-24) var(--s-32); padding: var(--s-18) var(--s-32); font-size: var(--fs-14); font-weight: 500;
-    letter-spacing: var(--ls-2); text-align: center; text-decoration: none; text-transform: uppercase; color: var(--white); background: var(--accent);
+    letter-spacing: var(--ls-143); text-align: center; text-decoration: none; text-transform: uppercase; color: var(--white); background: var(--accent);
     border: 1px solid var(--accent); box-shadow: var(--shadow-card);
     transition: background-color var(--t-fast) ease, border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
   @media (hover: hover) {

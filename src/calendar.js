@@ -154,7 +154,8 @@
       b.addEventListener("click", function () { if (st.view !== v) { st.view = v; changed(); } });
       tabs.append(b);
     });
-    var prev = el("button", "btn is-icon", "‹"), now = el("button", "btn", w.today), next = el("button", "btn is-icon", "›");
+    // the arrows are the sprite's chevrons (ds-icons.js)
+    var prev = el("button", "btn is-icon", window.ds.ico("chevron-left")), now = el("button", "btn", w.today), next = el("button", "btn is-icon", window.ds.ico("chevron-right"));
     [prev, now, next].forEach(function (b) { b.type = "button"; });
     prev.setAttribute("aria-label", w.prev);
     next.setAttribute("aria-label", w.next);

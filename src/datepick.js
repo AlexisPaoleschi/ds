@@ -263,7 +263,7 @@
       return box;
     }
     function headRow() {
-      var w = words(), u = unit(), h = el("div", "dp-head"), prev = btn("dp-step", "‹", "prev"), next = btn("dp-step", "›", "next"), mid;
+      var w = words(), u = unit(), h = el("div", "dp-head"), prev = btn("dp-step", window.ds.ico("chevron-left"), "prev"), next = btn("dp-step", window.ds.ico("chevron-right"), "next"), mid;
       prev.setAttribute("aria-label", w.prev[u]);
       next.setAttribute("aria-label", w.next[u]);
       prev.disabled = !canPage(-1);

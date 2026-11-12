@@ -5,7 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Design system · Alexis Paoleschi</title>
 <link rel="stylesheet" href="dist/ds.css">
+<link rel="stylesheet" href="dist/ds-tools.css">
 <script src="dist/ds.js" defer></script>
+<script src="dist/ds-icons.js" defer></script>
+<script src="dist/ds-tools.js" defer></script>
+<script src="dist/ds-photo.js" defer></script>
 <script src="demos/bank.js" defer></script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
@@ -345,7 +349,7 @@
         check: () => (++tries < 2 ? "Elle ne répond toujours pas." : null) });
     }
   });
-  // the icons: every symbol of the sprite ds.js puts in the page, with its name, by group
+  // the icons: every symbol of the sprite ds-icons.js puts in the page, with its name, by group
   document.addEventListener("DOMContentLoaded", () => {
     const groups = new Map();
     for (const s of document.querySelectorAll("#ds-icons symbol")) {

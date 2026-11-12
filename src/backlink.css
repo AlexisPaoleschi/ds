@@ -22,7 +22,7 @@
     .back-link.on-photo:hover .ico { transform: none; }
   }
 @media (max-width: 480px) {
-  .back-link.on-photo { --back-ls: var(--ls-1-5); padding: var(--s-8) var(--s-14); font-size: var(--fs-11); }
+  .back-link.on-photo { --back-ls: var(--ls-136); padding: var(--s-8) var(--s-14); font-size: var(--fs-11); }
 }
 @media (prefers-reduced-motion: reduce) {
   .back-link, .back-link .ico { transition: none; }

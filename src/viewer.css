@@ -22,7 +22,7 @@
   /* the site's position over the photo: « 2 / 9 » in a blurred pill */
   .viewer-count { position: absolute; z-index: var(--z-raise); left: 50%; bottom: calc(var(--s-32) + var(--safe-bottom)); transform: translateX(-50%); padding: var(--s-12) var(--s-28);
     color: var(--viewer-ink); background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-    font: 300 var(--fs-14)/var(--lh-loose) var(--body); letter-spacing: var(--ls-2); white-space: nowrap; }
+    font: 300 var(--fs-14)/var(--lh-loose) var(--body); letter-spacing: var(--ls-143); white-space: nowrap; }
 @media (max-width: 768px) {
   /* on a phone the photo takes the width, and the arrows sit over it */
   .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); }
@@ -47,7 +47,7 @@
   /* under the photo, in the row viewer.css keeps for an app's bar: a caption, when an item has one */
   .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
   .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
-    font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-0-5); }
+    font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-036); }
   @keyframes viewer-in { from { opacity: 0; } }
 @media (max-width: 768px) {
   .viewer-bar { padding-inline: var(--s-16); }

@@ -7,7 +7,7 @@
   .social-banner-inner--no-border { border-top: none; }
   .social-banner-box { max-width: var(--read-s); margin: 0 auto; text-align: center; }
   .social-banner-title, .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
-    letter-spacing: var(--ls-3); text-transform: uppercase; color: var(--ink); }
+    letter-spacing: var(--ls-107); text-transform: uppercase; color: var(--ink); }
   .social-banner-text { margin-bottom: var(--s-32); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
   .social-banner-links { display: flex; justify-content: center; gap: var(--s-24); }
   .social-banner-icon { width: 18px; height: 18px; }
@@ -21,7 +21,7 @@
   @media (max-width: 480px) {
     .social-banner, .testimonials-banner { padding: 0 var(--s-16); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-48) 0; }
-    .social-banner-title, .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-2); }
+    .social-banner-title, .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-083); }
     .social-banner-text { font-size: var(--fs-14); }
   }
   .signup-banner { padding: var(--s-40); background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
@@ -30,7 +30,7 @@
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
   .signup-banner-icon { flex-shrink: 0; width: 40px; height: 40px; color: var(--accent); }
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--display);
-    font-size: var(--fs-26); font-weight: 400; letter-spacing: var(--ls-2-5); text-transform: uppercase; color: var(--ink); }
+    font-size: var(--fs-26); font-weight: 400; letter-spacing: var(--ls-096); text-transform: uppercase; color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
   .signup-banner-subtitle { font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-loose); color: var(--faint); }
   .signup-banner-form { flex: 1; min-width: 0; }
@@ -40,7 +40,7 @@
   /* the same field in the banner and on the newsletter's page (newsletter.css) */
   .signup-banner input.signup-banner-input, .newsletter-field input.newsletter-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
     background: var(--white); border: 1px solid var(--line); transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-1); }
+  .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-063); }
   .signup-banner input.signup-banner-input:focus, .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
   /* as high as the field beside it: 8px lower than the site's large buttons */
   .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
@@ -65,7 +65,7 @@
     .signup-banner { padding: var(--s-24) var(--s-16); }
     .signup-banner-text { gap: var(--s-14); }
     .signup-banner-icon { width: 32px; height: 32px; }
-    .signup-banner-title { font-size: var(--fs-22); letter-spacing: var(--ls-2); }
+    .signup-banner-title { font-size: var(--fs-22); letter-spacing: var(--ls-091); }
     .signup-banner-subtitle { font-size: var(--fs-14); }
     .signup-banner-field { flex-direction: column; gap: var(--s-12); }
     .signup-banner-button { width: 100%; }

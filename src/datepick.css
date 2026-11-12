@@ -1,5 +1,5 @@
 /* The date and period picker, taken from Bank's operations (ds.datePick): the quick periods two by two, the units as tabs,
-   then a head that steps (‹ novembre 2026 ›) over a grid of days, months or years. It wears the period head's popover
+   then a head that steps (‹ novembre 2026 ›, the sprite's chevrons) over a grid of days, months or years. It wears the period head's popover
    (.periodpop: a panel, framed buttons lit in gold once chosen), floating under a title or laid in the page (.is-inline). */
   .datepick { display: grid; gap: var(--s-8); }
   /* in the page: the popover's panel without its float and its shadow, as wide as it would float */
@@ -10,9 +10,9 @@
   /* the tabs share the width, one part per unit offered (four by default, aligned on the four columns of months) */
   .datepick .tabs { grid-template-columns: repeat(var(--dp-tabs, 4), minmax(0, 1fr)); }
   .dp-quick + .dp-tabs { margin-top: var(--s-2); }
-  /* the head: the arrows in the small buttons' size, the month, the year or the years between them */
+  /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
-  .datepick .dp-step { flex: none; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; font-size: var(--fs-15); }
+  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; }
   .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title::first-letter { text-transform: uppercase; }
   /* the grid: four columns of months or years, seven of days under their initials */
@@ -40,6 +40,6 @@
 }
 @media (max-width: 480px) {
   /* four units side by side in a phone's width: the tabs' capitals closer, as the calendar's views are */
-  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-0-5); }
+  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-045); }
   .dp-quick button { padding-inline: var(--s-6); }
 }

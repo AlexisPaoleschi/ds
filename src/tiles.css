@@ -31,7 +31,8 @@
   [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
     background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
   [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
-  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--fs-28); font-weight: 400; }
+  /* its figure in the big title's size, a step smaller on a phone (--text-2xl) */
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--text-2xl); font-weight: 400; }
   [data-theme="vitrine"] .tiles.is-compact .tile:not(.up):not(.down) dd { color: var(--accent-strong); }
 @media (max-width: 768px) {
   /* four fitted tiles make two rows of two on a phone, where a long label goes on two lines; fewer keep theirs on one, so
@@ -40,5 +41,4 @@
   .tiles.is-fit:has(> .tile:nth-child(4)) .tile dt { white-space: normal; }
   [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-16); }
   [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
-  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--fs-22); }
 }

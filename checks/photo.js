@@ -12,7 +12,7 @@ const photo = (n, w, h) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}"
   `<rect width="100%" height="100%" fill="hsl(${n * 47 % 360} 45% 42%)"/><text x="50%" y="50%" font-size="${Math.round(Math.min(w, h) / 4)}" fill="#fff" ` +
   `text-anchor="middle" dominant-baseline="middle" font-family="sans-serif">${n}</text></svg>`;
 // a page with no script of its own, served as the site serves its pages: only scripts from the site itself
-const cspPage = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="/dist/ds.css"><script src="/dist/ds.js" defer></script></head><body>
+const cspPage = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="/dist/ds.css"><script src="/dist/ds.js" defer></script><script src="/dist/ds-photo.js" defer></script></head><body>
 <div class="photogrid" data-viewer data-viewer-label="Galerie du site"><a href="/photo/51.svg?w=900&amp;h=600"><img src="/photo/51.svg?w=300&amp;h=200" width="300" height="200" alt="Cinquante et un"></a>
 <a href="/photo/52.svg?w=600&amp;h=900"><img src="/photo/52.svg?w=200&amp;h=300" width="200" height="300" alt="Cinquante-deux"></a></div></body></html>`;
 const server = http.createServer((req, res) => {

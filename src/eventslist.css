@@ -13,7 +13,7 @@
   /* Highlights */
   .event-card-highlights { display: flex; flex-wrap: wrap; gap: var(--s-12); margin-top: var(--s-4); }
   .event-card-highlight { display: inline-flex; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--s-14); font-family: var(--body);
-    font-size: var(--fs-12); font-weight: 500; line-height: var(--lh-tight); letter-spacing: var(--ls-1); text-transform: uppercase;
+    font-size: var(--fs-12); font-weight: 500; line-height: var(--lh-tight); letter-spacing: var(--ls-083); text-transform: uppercase;
     color: var(--faint); background: var(--band); border: 1px solid var(--line); }
   .event-card-highlight-icon { flex-shrink: 0; width: 14px; height: 14px; color: var(--accent); }
   /* Models */
@@ -21,13 +21,13 @@
   .event-card-model { display: flex; align-items: center; gap: var(--s-10); }
   /* the design system's round avatar (.avatar.is-round), at the site's size, inside a thin gold ring */
   .event-card-model-avatar { width: 40px; height: 40px; border: 2px solid var(--line); }
-  .event-card-model-name { font-family: var(--body); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-0-5); color: var(--faint); }
+  .event-card-model-name { font-family: var(--body); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-036); color: var(--faint); }
   /* Description */
   .event-card-description { font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--dim); }
   /* Card Footer */
   .event-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--s-20); margin-top: var(--s-8);
     padding-top: var(--s-24); border-top: 1px solid var(--line); }
-  .event-card-price { font-family: var(--display); font-size: var(--fs-32); font-weight: 400; letter-spacing: var(--ls-2); color: var(--ink); }
+  .event-card-price { font-family: var(--display); font-size: var(--fs-32); font-weight: 400; letter-spacing: var(--ls-063); color: var(--ink); }
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .events-main { padding: 0 var(--s-24); }
