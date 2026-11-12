@@ -115,6 +115,9 @@
   }
 
   function version(button, o) {
+    button = window.ds._.find(button);
+    if (!button) return null;
+    if (button._dsVersion) return button._dsVersion;
     o = o || {};
     var meta = document.querySelector('meta[name="version"]'), mine = o.mine || (meta && meta.content) || null, w = words();
     if (!button.querySelector(".newver-pip")) {
@@ -138,6 +141,7 @@
         return true;
       }
     };
+    button._dsVersion = light;
     return light;
   }
 

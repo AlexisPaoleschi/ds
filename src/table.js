@@ -11,12 +11,12 @@
      names in French order, empty cells last whichever the way.
    Returns {by, up, set(by, up)}; called again on the same table it gives the same, so a page that draws its table anew
    (Studio) calls it again on the new one and finds its choice under key.
-   ds.selection(holder, {bar, count, onChange}) picks rows: each row of holder with a data-key and its box
+   ds.selection(holder, {bar, count, onPick}) picks rows: each row of holder with a data-key and its box
    <input type="checkbox" class="sel-box">; a click on a box picks or drops its row, a shift-click the rows since the
    last box; the box .sel-all picks every row shown, half-ticked when some are. A picked row is .is-selected. bar: the
    .selbar (else the one in holder), shown while something is picked, its .selbar-n saying how many (count(n), in
    words), its [data-sel-clear] dropping all. The choice is kept by key, so a list drawn again keeps it: call paint().
-   Returns {keys(), has(key), set(key, on), clear(), paint()}; onChange(keys) after each change. */
+   Returns {keys(), has(key), set(key, on), clear(), paint()}; onPick(keys) after each change. */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find;
@@ -139,7 +139,7 @@
     holder._dsSel = sel;
     function bar() { return find(sel.o.bar) || holder.querySelector(".selbar"); }
     function rows() { return [].filter.call(holder.querySelectorAll("[data-key]"), function (r) { return r.querySelector(".sel-box"); }); }
-    function changed() { sel.paint(); if (sel.o.onChange) sel.o.onChange(sel.keys()); }
+    function changed() { sel.paint(); if (sel.o.onPick) sel.o.onPick(sel.keys()); }
     sel.keys = function () { return Array.from(sel.picked); };
     sel.has = function (key) { return sel.picked.has(String(key)); };
     sel.set = function (key, on) { if (on) sel.picked.add(String(key)); else sel.picked.delete(String(key)); changed(); return sel; };

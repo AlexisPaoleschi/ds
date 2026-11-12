@@ -1,4 +1,4 @@
-/* ds.viewer(items, {start, onChange, onClose, label, el, from}): the photo viewer of src/viewer.css, opened on
+/* ds.viewer(holder, items, {start, onChange, onClose, label, from}): the photo viewer of src/viewer.css, opened on
    items[start]. An item is {src, srcset, sizes, alt, caption, thumb, el}, a plain address, or a function that returns one
    (or a promise of one), called when the photo is first needed: Selecta asks its server for a signed address then.
    thumb is shown, blurred, while the photo loads; el is the page's element for that photo (a grid's link), where the
@@ -7,7 +7,7 @@
    swiped sideways turn the photos, round and round; « 3 / 24 » says where one is; the two neighbours load ahead; the
    spinner turns while a photo loads. Opening moves the focus into it, Tab stays in it, closing gives the focus back to
    what opened it (or to the photo one ended on); the page behind does not scroll meanwhile (viewer-behaviour.css).
-   It drives the page's own .viewer when there is one (opts.el, or a .viewer at the top of <body>: Selecta's, with its
+   It drives the page's own .viewer when there is one (holder, or a .viewer at the top of <body>: Selecta's, with its
    bar under the photo) and adds the parts it lacks; otherwise it builds one. onChange(index, item, viewer) tells each
    photo shown, onClose(index, viewer) the closing. Returns {el, index, isOpen, go(i), next(), prev(), close()}.
    ds.viewer.bind(container, {item, label, onChange, onClose}): a grid of links (item, "a[href]" by default) opens the
@@ -243,9 +243,9 @@
     el.addEventListener("touchcancel", reset);
   }
 
-  function viewer(items, opts) {
+  function viewer(holder, items, opts) {
     opts = opts || {};
-    var el = opts.el ? _.find(opts.el) : document.querySelector("body > .viewer");
+    var el = _.find(holder) || document.querySelector("body > .viewer");
     if (!el) { el = make("div", "viewer", document.body); el.hidden = true; el._dsBuilt = true; }
     var c = setup(el);
     if (open && open !== c) shut(open);
@@ -306,7 +306,7 @@
       var all = [].filter.call(box.querySelectorAll(sel), function (x) { return x.getClientRects().length > 0; }), at = all.indexOf(a);
       if (at < 0) return;
       e.preventDefault();
-      viewer(all.map(linkItem), { start: at, from: a, label: o.label, onChange: o.onChange, onClose: o.onClose, el: o.el });
+      viewer(o.el || null, all.map(linkItem), { start: at, from: a, label: o.label, onChange: o.onChange, onClose: o.onClose });
     };
   }
   function bind(box, o) {

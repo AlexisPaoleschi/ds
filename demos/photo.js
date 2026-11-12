@@ -54,7 +54,7 @@
       return i === 3 ? function () { return new Promise(function (ok) { setTimeout(function () { ok(it); }, 1000); }); } : it;
     });
     col.querySelector('[data-photo="open"]').addEventListener("click", function (e) {
-      ds.viewer(items, { start: 0, label: "Sénégal 2027", from: e.currentTarget,
+      ds.viewer(null, items, { start: 0, label: "Sénégal 2027", from: e.currentTarget,
         onChange: function (i) { seen.textContent = "Photo " + (i + 1) + " sur " + items.length + " montrée."; },
         onClose: function (i) { seen.textContent = "Fermée sur la photo " + (i + 1) + "."; } });
     });

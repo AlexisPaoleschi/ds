@@ -111,6 +111,8 @@
     holder = find(holder);
     if (!holder) return null;
     o = o || {};
+    // called again on the same holder: the same picker, set to the value given (an opener is never bound twice)
+    if (holder._dsDatePick) { if (o.value !== undefined) holder._dsDatePick.set(o.value); return holder._dsDatePick; }
     var id = "ds-datepick-" + (++made), opener = find(o.opener), quick = o.quick || [];
     var modes = (o.modes || MODES).filter(function (m) { return MODES.indexOf(m) >= 0; });
     if (!modes.length) modes = MODES.slice();
@@ -239,7 +241,7 @@
     function quickRow() {
       var box = el("div", "dp-quick"), lit = matchQuick();
       quick.forEach(function (q, i) {
-        var b = btn(q === lit ? "on" : "", q.label, "q" + i);
+        var b = btn("", q.label, "q" + i);
         b.setAttribute("aria-pressed", q === lit ? "true" : "false");
         b.addEventListener("click", function () { pick({ from: q.from, to: q.to }, q); });
         box.append(b);
@@ -252,7 +254,7 @@
       box.setAttribute("aria-label", w.modes);
       box.style.setProperty("--dp-tabs", String(modes.length));
       modes.forEach(function (m) {
-        var on = m === st.mode, b = btn(on ? "on" : "", w[m], "t-" + m);
+        var on = m === st.mode, b = btn("", w[m], "t-" + m);
         b.setAttribute("role", "tab");
         b.setAttribute("aria-selected", on ? "true" : "false");
         b.setAttribute("aria-controls", id + "-grid");
@@ -277,7 +279,7 @@
     }
     function cell(u, k, focusKey) {
       var t = unitKey(u, today()), text = u === "day" ? String(+k.slice(8)) : u === "month" ? fmt(k + "-15", { month: "short" }) : k;
-      var on = chosen(u, k), b = btn((on ? "on" : "") + (between(k) ? " is-in" : "") + (k === t ? " is-today" : ""), text, "c:" + k);
+      var on = chosen(u, k), b = btn((between(k) ? "is-in" : "") + (k === t ? " is-today" : ""), text, "c:" + k);
       b.dataset.key = k;
       b.tabIndex = k === focusKey ? 0 : -1;
       b.disabled = !enabled(u, k);
@@ -416,6 +418,7 @@
       holder.hidden = true;
       opener.setAttribute("aria-expanded", "false");
     }
+    holder._dsDatePick = p;
     reset();
     return draw();
   }
@@ -423,7 +426,6 @@
   datePick.step = step;
   datePick.label = label;
   datePick.kind = kind;
-  datePick.today = parisToday;
   window.ds = window.ds || {};
   window.ds.datePick = datePick;
 })();

@@ -138,15 +138,15 @@ function stylesheets() {
   await p.click('.viewer-close');
   assert(byVeil && onPhoto && await p.evaluate(() => document.querySelector('.viewer').hidden && document.querySelectorAll('.viewer').length === 1),
     'un clic à côté de la photo (le voile) ferme, un clic sur la photo non, la croix ferme ; une seule visionneuse dans la page');
-  const one = await p.evaluate(async () => { ds.viewer(['/photo/40.svg?w=800&h=600']); const v = document.querySelector('.viewer');
+  const one = await p.evaluate(async () => { ds.viewer(null, ['/photo/40.svg?w=800&h=600']); const v = document.querySelector('.viewer');
     const r = { prev: v.querySelector('.viewer-prev').hidden, next: v.querySelector('.viewer-next').hidden, count: v.querySelector('.viewer-count').hidden, bar: v.querySelector('.viewer-bar').hidden };
     ds.viewer.close(); r.closed = v.hidden; return r; });
   assert(one.prev && one.next && one.count && one.bar && one.closed, 'une seule photo : ni flèches ni compte ; sans légende, pas de ligne sous la photo ; ds.viewer.close() ferme ' + JSON.stringify(one));
 
-  const failed = await p.evaluate(async () => { ds.viewer([() => { throw new Error('refusé'); }, '/photo/41.svg?w=800&h=600']); await new Promise(r => setTimeout(r, 100));
+  const failed = await p.evaluate(async () => { ds.viewer(null, [() => { throw new Error('refusé'); }, '/photo/41.svg?w=800&h=600']); await new Promise(r => setTimeout(r, 100));
     const v = document.querySelector('.viewer'), r = { spin: v.querySelector('.spinner').hidden, said: [...document.querySelectorAll('.toast.is-bad .txt')].map(t => t.textContent).join(), open: !v.hidden };
     document.querySelector('.viewer-next').click(); await new Promise(r => setTimeout(r, 200)); r.next = v.querySelector('.viewer-stage img').getAttribute('src'); ds.viewer.close();
-    document.querySelectorAll('.toast .x').forEach(x => x.click()); return r; });
+    document.querySelectorAll('.toast .toast-close').forEach(x => x.click()); return r; });
   assert(failed.spin && failed.said === 'Cette photo n’a pas pu s’ouvrir.' && failed.open && failed.next === '/photo/41.svg?w=800&h=600',
     'une photo qui ne vient pas : la roue s’arrête, la bulle le dit, la visionneuse reste et passe à la suivante ' + JSON.stringify(failed));
 

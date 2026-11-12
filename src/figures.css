@@ -39,7 +39,7 @@
   .verdict small { color: inherit; font: 500 var(--fs-11)/var(--lh-tight) var(--body); opacity: .85; }
   .verdict.is-good { color: var(--good); background: var(--good-soft); border-color: var(--good-line); }
   .verdict.is-mid { color: var(--mid); background: var(--mid-soft); border-color: var(--mid-line); }
-  .verdict.is-weak { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+  .verdict.is-bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
   .verdict.is-none { visibility: hidden; }
   /* vitrine writes a success in dark gold, close to its yellow: the strong verdict is filled, as its badges are */
   [data-theme="vitrine"] .verdict.is-good { color: var(--on-accent); background: var(--good); border-color: var(--good); }

@@ -34,7 +34,7 @@
       () => new Promise(r => setTimeout(() => r({ src: "/photo/33.svg?w=1200&h=800", caption: "Une légende sous la photo" }), 50)),
       { src: "/photo/34.svg?w=1200&h=900" }, { src: "/photo/35.svg?w=900&h=1200" }];
     document.getElementById("open").addEventListener("click", e => {
-      window.v = ds.viewer(items, { start: 2, label: "Visionneuse d’essai", onChange: (i, it) => log.push("v:" + i), onClose: i => log.push("vclose:" + i) });
+      window.v = ds.viewer(null, items, { start: 2, label: "Visionneuse d’essai", onChange: (i, it) => log.push("v:" + i), onClose: i => log.push("vclose:" + i) });
     });
   });
 </script></body></html>

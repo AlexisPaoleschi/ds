@@ -1,7 +1,7 @@
 /* Calendar, taken from Studio's agenda: ds.calendar(holder, opts) draws the period head (the month's name, which opens a
    month picker, ds.datePick on months; the views; ‹ Aujourd’hui ›) and under it one of three views: a month of day
    cells, with the panel of the selected day below; a week of columns; a list of days, each in its panel.
-   opts: view ("month", "week" or "list"), day (the selected day, "2026-11-09": today by default), items(key) (the day's
+   opts: view ("month", "week" or "list"), value (the chosen day, "2026-11-09": today by default), items(key) (the day's
    items, in the order they are shown), panel(key, items) (what the day's panel holds under its title: one or more nodes;
    by default one row per item), row(item, key) (a row of a week's column or of the default panel), body (where the view
    goes: holder by default, after the head; a page may put it beside its filters), lines (lines in a cell, 8 by default),
@@ -16,7 +16,7 @@
    In the month, what runs over several days is one bar in its colour across them, at the same height in every cell it
    crosses, its title on its first day and on each Monday it goes on to, as Google's agenda draws a stay or a trip.
    On a phone, a cell shows a dot per item, three at most, then « +N ».
-   Returns {draw(), set({view, day}), go(step), today(), state()}: state() is {view, day, from, to}, the days shown
+   Returns {draw(), set({view, value}), go(step), today(), state()}: state() is {view, value, from, to}, the days shown
    (to excluded), what a page reads to load them; onChange receives it after each move, then the page calls draw()
    once it has what those days hold. ds.calendar.row(item) and ds.calendar.mark(item) build a default row and a mark,
    for a page that fills the panels itself. */
@@ -72,13 +72,13 @@
   // a row of a day: its time, its mark and codes, its title (a link when it has one), its place
   function defaultRow(it) {
     var li = el("li", it.done ? "is-done" : "");
-    li.append(el("span", "t", it.time || "—"), mark(it));
+    li.append(el("span", "row-date", it.time || "—"), mark(it));
     codes(it).forEach(function (c) { li.append(c); });
-    var t = el(it.href ? "a" : "span", "ttl", it.title || "");
+    var t = el(it.href ? "a" : "span", "row-title", it.title || "");
     if (it.href) { t.href = it.href; t.target = "_blank"; t.rel = "noopener"; }
     li.append(t);
-    if (it.place) li.append(el("span", "pl", it.place));
-    if (it.late && it.lateText) li.append(el("span", "late", it.lateText));
+    if (it.place) li.append(el("span", "row-place", it.place));
+    if (it.late && it.lateText) li.append(el("span", "late-tag", it.lateText));
     return li;
   }
 
@@ -120,8 +120,12 @@
   }
 
   function calendar(holder, opts) {
+    holder = _.find(holder);
+    if (!holder) return null;
     opts = opts || {};
-    var st = { view: VIEWS.indexOf(opts.view) >= 0 ? opts.view : "month", day: opts.day || null, before: false };
+    // called again on the same holder: the same calendar, moved to the view and day given
+    if (holder._dsCalendar) { holder._dsCalendar.set({ view: opts.view, value: opts.value }); return holder._dsCalendar; }
+    var st = { view: VIEWS.indexOf(opts.view) >= 0 ? opts.view : "month", day: opts.value || null, before: false };
     var lines = opts.lines || 8;
     function today() { return opts.today || parisToday(); }
     if (!st.day) st.day = today();
@@ -178,7 +182,7 @@
       if (st.view === "month") { from = weekStart(st.day.slice(0, 8) + "01"); to = addDays(from, 42); }
       else if (st.view === "week") { from = weekStart(st.day); to = addDays(from, 7); }
       else { from = addDays(st.day, st.before ? -7 : 0); to = addDays(st.day, 8); }
-      return { view: st.view, day: st.day, from: from, to: to };
+      return { view: st.view, value: st.day, from: from, to: to };
     }
     function changed() {
       draw();
@@ -197,7 +201,7 @@
     function goToday() { move(today()); }
 
     function titleText() {
-      if (st.view === "month") return [fmt(st.day, { month: "long" }), el("span", "yr", " " + st.day.slice(0, 4))];
+      if (st.view === "month") return [fmt(st.day, { month: "long" }), el("span", "periodtitle-year", " " + st.day.slice(0, 4))];
       var a = st.view === "week" ? weekStart(st.day) : st.day;
       return [shortDay(a) + " – " + shortDay(addDays(a, st.view === "week" ? 6 : 7))];
     }
@@ -208,13 +212,13 @@
       var inside = opts.panel ? opts.panel(key, items) : null;
       if (inside == null) {
         if (items.length) { var ul = el("ul", "rows"); items.forEach(function (it) { ul.append(rowOf(it, key)); }); inside = ul; }
-        else inside = el("p", "empty", words().none);
+        else inside = el("p", "empty-note", words().none);
       }
       [].concat(inside).forEach(function (n) { if (n) sec.append(n); });
       return sec;
     }
     function cell(key, inMonth, week) {
-      var items = itemsOf(key), t = today(), b = el("button", "cal-cell" + (inMonth ? "" : " is-off") + (key === t ? " is-today" : "") + (key === st.day ? " is-sel" : ""));
+      var items = itemsOf(key), t = today(), b = el("button", "cal-cell" + (inMonth ? "" : " is-off") + (key === t ? " is-today" : "") + (key === st.day ? " is-selected" : ""));
       b.type = "button";
       b.dataset.day = key;
       b.setAttribute("aria-pressed", key === st.day ? "true" : "false");
@@ -265,7 +269,7 @@
         h.append(el("span", "cal-wdate", shortDay(key)));
         col.append(h);
         if (items.length) { var ul = el("ul", "rows"); items.forEach(function (it) { ul.append(rowOf(it, key)); }); col.append(ul); }
-        else col.append(el("p", "empty", "—"));
+        else col.append(el("p", "empty-note", "—"));
         out.append(col);
       }
       return [out];
@@ -307,11 +311,12 @@
     function set(o) {
       o = o || {};
       if (VIEWS.indexOf(o.view) >= 0) st.view = o.view;
-      if (o.day) st.day = o.day;
+      if (o.value) st.day = o.value;
       draw();
     }
     draw();
-    return { draw: draw, set: set, go: go, today: goToday, state: state, el: root };
+    holder._dsCalendar = { draw: draw, set: set, go: go, today: goToday, state: state, el: root };
+    return holder._dsCalendar;
   }
 
   // a day's default row, for a page that fills its panels itself (panel) and still wants the calendar's rows

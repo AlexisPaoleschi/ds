@@ -1,17 +1,21 @@
-/* Figures read at a glance, taken from Studio's analysis; each builder returns an element for the page to place.
-   ds.rank(rows, {title, note, empty, plain}): a ranking, one row per name: its place (the first three in gold), the name
+/* Figures read at a glance, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns
+   its element; with holder null it only returns it, for a page that builds its own tree (a verdict in a ranking's row).
+   ds.rank(holder, rows, {title, note, empty, plain}): a ranking, one row per name: its place (the first three in gold), the name
      (a link with href) and a grey line under it (sub), and on the right its value (a text, or a node such as a verdict);
      with share (0 to 1, against the first) a thin bar under the name. plain leaves the places out. Rankings side by side
      go in <div class="ranks">.
-   ds.minitiles(items): small tiles of reference figures at the top of a card. items: [{label, value, unit, note}].
-   ds.verdict(ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
+   ds.minitiles(holder, items): small tiles of reference figures at the top of a card. items: [{label, value, unit, note,
+     tone}]: tone "good", "bad" or "mid" colours the figure.
+   ds.verdict(holder, ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(options, current, pick, {label}): a period selector: buttons on a computer, the design system's menu on
-     a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]]; pick(value)
-     is called with the chosen one, the selector lights it itself. */
+   ds.periodPick(holder, options, {value, onPick, label}): a period selector: buttons on a computer, the design system's
+     menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]];
+     value: the one lit; onPick(value) is called with the chosen one, the selector lights it itself. Called again on the
+     same holder, it gives the same selector back, lit on the value given. */
 (function () {
   "use strict";
-  var _ = window.ds._, el = _.el;
+  var _ = window.ds._, el = _.el, find = _.find;
+  function put(holder, e) { holder = find(holder); if (holder) holder.replaceChildren(e); return e; }
   var WORDS = _.table({
     fr: { strong: "fort", average: "moyen", weak: "faible", against: "par rapport à la médiane", period: "Période", empty: "Rien sur cette période." },
     en: { strong: "strong", average: "average", weak: "weak", against: "against the median", period: "Period", empty: "Nothing over this period." }
@@ -19,12 +23,12 @@
   function words() { return _.words(WORDS); }
   function safe(u) { return typeof u === "string" && /^(https?:\/\/|\/|#)[^\s"'<>]*$/.test(u) ? u : null; }
 
-  function rank(rows, o) {
+  function rank(holder, rows, o) {
     o = o || {};
     var col = el("div", "rank-col"), head = el("p", "rank-head", o.title || "");
     if (o.note) head.append(el("span", "rank-note", o.note));
     col.append(head);
-    if (!rows || !rows.length) { col.append(el("p", "empty", o.empty || words().empty)); return col; }
+    if (!rows || !rows.length) { col.append(el("p", "empty-note", o.empty || words().empty)); return put(holder, col); }
     var list = el("ol", "rank" + (o.plain ? " is-plain" : ""));
     rows.forEach(function (r, i) {
       var li = el("li", i < 3 ? "is-top" : ""), name = el("div", "rank-name"), href = safe(r.href);
@@ -44,36 +48,39 @@
       list.append(li);
     });
     col.append(list);
-    return col;
+    return put(holder, col);
   }
 
   // the compact tiles (tiles.css), each as wide as the widest (.is-fit); .minitiles stays on it for the apps' own rules
-  function minitiles(items) {
+  function minitiles(holder, items) {
     var box = el("dl", "tiles is-compact is-fit minitiles");
     (items || []).filter(Boolean).forEach(function (x) {
-      box.append(el("div", "tile", [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "u", x.unit) : null]),
-        x.note ? el("span", "h", x.note) : null]));
+      box.append(el("div", "tile" + (x.tone ? " is-" + x.tone : ""), [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "tile-unit", x.unit) : null]),
+        x.note ? el("span", "tile-note", x.note) : null]));
     });
-    return box;
+    return put(holder, box);
   }
 
-  function verdict(ratio, o) {
+  function verdict(holder, ratio, o) {
     o = o || {};
     var w = words(), high = o.high || 1.2, low = o.low || 0.8;
-    if (ratio == null || isNaN(ratio)) return el("span", "verdict is-none" + (o.words ? " is-tall" : ""));
-    var level = ratio >= high ? "good" : ratio >= low ? "mid" : "weak";
+    if (ratio == null || isNaN(ratio)) return put(holder, el("span", "verdict is-none" + (o.words ? " is-tall" : "")));
+    var level = ratio >= high ? "good" : ratio >= low ? "mid" : "bad";
     var v = el("span", "verdict is-" + level + (o.words ? " is-tall" : ""), "×" + window.ds.number(Math.round(ratio * 10) / 10, Math.round(ratio * 10) % 10 ? 1 : 0));
     v.title = w.against;
     // short words of the same length, so that every verdict reads the same
     if (o.words) v.append(el("small", "", level === "good" ? w.strong : level === "mid" ? w.average : w.weak));
-    return v;
+    return put(holder, v);
   }
 
-  function periodPick(options, current, pick, o) {
+  function periodPick(holder, options, o) {
     o = o || {};
-    var label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
+    holder = find(holder);
+    var had = holder && holder._dsPeriodPick;
+    if (had) { if (o.value !== undefined) had.light(o.value); return had.el; }
+    var pick = o.onPick, label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
     // on a phone, the menu: what is chosen in words, the phone's own picker under it
-    var list = el("select"), shown = el("span", "pv"), menu = el("label", "pill periodpick-list", [shown, list]);
+    var list = el("select"), shown = el("span", "pill-value"), menu = el("label", "pill periodpick-list", [shown, list]);
     group.setAttribute("role", "group");
     group.setAttribute("aria-label", label);
     list.setAttribute("aria-label", label);
@@ -98,8 +105,9 @@
       list.append(op);
     });
     list.addEventListener("change", function () { choose(list.value); });
-    light(current);
+    light(o.value);
     box.append(group, menu);
+    if (holder) { holder._dsPeriodPick = { el: box, light: light }; holder.replaceChildren(box); }
     return box;
   }
 

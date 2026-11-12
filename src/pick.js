@@ -1,8 +1,8 @@
 /* The behaviour of src/pick.css.
-   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu's choice in its .pv,
+   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu’s choice in its .pill-value,
    and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
    every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
-   ds.picker(holder, {items, value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
+   ds.picker(holder, items, {value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
    holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
      items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
      cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
@@ -10,7 +10,8 @@
      (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
      matches; onPick(item) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the search
      taking the focus. ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
-     Returns {open(), close(), toggle(), set(items), draw(), input}. */
+     Returns {open(), close(), toggle(), set(items, options), draw(), input}; set takes the list once read, and may change
+     the options with it (first, empty…). */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find, tag = _.el;
@@ -26,8 +27,8 @@
     [].forEach.call(list, function (p) {
       var sel = p.querySelector("select");
       if (!sel) return;
-      var pv = p.querySelector(".pv");
-      if (!pv) { pv = tag("span", "pv"); p.insertBefore(pv, p.firstChild); }
+      var pv = p.querySelector(".pill-value");
+      if (!pv) { pv = tag("span", "pill-value"); p.insertBefore(pv, p.firstChild); }
       var o = sel.options[sel.selectedIndex];
       pv.textContent = o ? o.textContent : "";
       if (p.classList.contains("is-filter")) p.classList.toggle("is-on", !!sel.value);
@@ -43,11 +44,14 @@
 
   var made = 0;
   function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
-  function picker(holder, o) {
+  function picker(holder, items, o) {
     holder = find(holder);
     if (!holder) return null;
-    o = o || {};
-    var w = words(), id = "ds-picker-" + (++made), p = { items: o.items === undefined ? [] : o.items, shown: [], active: -1 };
+    o = Object.assign({}, o);
+    // called again on the same holder: the same picker, with the items given
+    if (holder._dsPicker) { if (items !== undefined) holder._dsPicker.set(items); return holder._dsPicker; }
+    var w = words(), id = "ds-picker-" + (++made), p = { items: items === undefined ? [] : items, shown: [], active: -1 };
+    holder._dsPicker = p;
     holder.classList.add("picker");
     var input = tag("input", "picker-q"), list = tag("div", "picker-list");
     input.type = "search";
@@ -118,7 +122,7 @@
       var opts = list.querySelectorAll(".picker-opt");
       if (!opts.length) return;
       p.active = (i + opts.length) % opts.length;
-      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-active", k === p.active); });
+      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-focused", k === p.active); });
       input.setAttribute("aria-activedescendant", opts[p.active].id);
       opts[p.active].scrollIntoView({ block: "nearest" });
     }
@@ -157,7 +161,7 @@
       return p;
     };
     p.toggle = function () { return holder.hidden ? p.open() : p.close(); };
-    p.set = function (items) { p.items = items; return p.draw(); };
+    p.set = function (items, more) { p.items = items; if (more) Object.keys(more).forEach(function (k) { o[k] = more[k]; }); return p.draw(); };
     if (opener) {
       opener.setAttribute("aria-controls", holder.id || (holder.id = id + "-box"));
       opener.setAttribute("aria-expanded", holder.hidden ? "false" : "true");

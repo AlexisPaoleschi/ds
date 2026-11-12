@@ -1,7 +1,7 @@
-/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
-   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pv.
+   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
    A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
    (.ct) it sits on the right. */
   .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
@@ -9,8 +9,8 @@
     border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
     font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
   [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
-  .pill .pv { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pill .pv::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
+  .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill .pill-value::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
   .pill select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font-size: var(--fs-16); }
   @media (hover: hover) { .pill:hover { color: var(--ink); border-color: var(--line-2); } }
@@ -36,8 +36,8 @@
     background: none; border: 0; border-radius: var(--r-m); color: var(--ink); cursor: pointer; font: inherit; text-align: left; text-decoration: none; }
   /* a straight line between two choices, clear of the rounded corners a lit choice has */
   .picker-opt + .picker-opt::before { content: ""; position: absolute; top: 0; left: var(--s-6); right: var(--s-6); border-top: 1px solid var(--line); }
-  .picker-opt:hover::before, .picker-opt.is-active::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-active + .picker-opt::before { border-top-color: transparent; }
-  .picker-opt:hover, .picker-opt.is-active { background: var(--accent-soft); }
+  .picker-opt:hover::before, .picker-opt.is-focused::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-focused + .picker-opt::before { border-top-color: transparent; }
+  .picker-opt:hover, .picker-opt.is-focused { background: var(--accent-soft); }
   .picker-opt[aria-selected="true"] .picker-name { color: var(--accent-text); }
   .picker-av { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: var(--r-m);
     color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent);
@@ -71,16 +71,16 @@
     font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
-  .periodtitle .yr { color: var(--faint); font-weight: 600; }
+  .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
   .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
   .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
   /* an arrow that leads nowhere is gone, and the row with it when both are */
-  .periodnav .off { display: none; }
-  .periodnav:not(:has(> :not(.off))) { display: none; }
+  .periodnav .is-off { display: none; }
+  .periodnav:not(:has(> :not(.is-off))) { display: none; }
   /* steady (Bank's operations): the arrows keep their room when they lead nowhere, so that choosing a period that has
      some moves nothing under the title; on a phone they stay on the title's line */
-  .periodhead.is-steady .periodnav:not(:has(> :not(.off))) { display: flex; visibility: hidden; }
-  .periodhead.is-steady .periodnav .off { display: inline-flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav:not(:has(> :not(.is-off))) { display: flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav .is-off { display: inline-flex; visibility: hidden; }
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
@@ -126,7 +126,7 @@
   .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
   .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
   /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
-  .datepick .dp-grid button.is-today:not(.on) { border-color: var(--accent-line); color: var(--ink); }
+  .datepick .dp-grid button.is-today:not([aria-pressed="true"]) { border-color: var(--accent-line); color: var(--ink); }
   .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
   /* vitrine's faint gold (5%) would not show the days between: a deeper one */
   [data-theme="vitrine"] .datepick .dp-grid button.is-in { background: color-mix(in srgb, var(--accent) 20%, transparent); }
@@ -174,7 +174,7 @@
 /* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
    note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
    the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
-   role="dialog" aria-modal="true">, with its .sheet-x; ds.sheet opens and closes it.
+   role="dialog" aria-modal="true">, with its .sheet-close; ds.sheet opens and closes it.
    A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
   .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
     background: var(--veil); animation: sheet-veil var(--t-mid) ease-out; }
@@ -184,11 +184,11 @@
   .sheet > .sheet-panel { width: min(var(--read-s), 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
   /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
      the title wraps beside it */
-  .sheet-x { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
+  .sheet-close { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
     display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); font: 400 var(--fs-22)/var(--lh-tight) var(--body); cursor: pointer; }
-  .sheet-x:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .sheet-close:hover { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }
@@ -206,14 +206,14 @@
 
 /* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
    each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
-  .kv { margin: 0; }
-  .kv > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
-  .kv dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .kv dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  .facts { margin: 0; }
+  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
   /* words as the bank wrote them */
-  .kv dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
-  .kv dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
-  .kv dd textarea { resize: vertical; line-height: var(--lh-text); }
+  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
 
   @keyframes sheet-veil { from { background-color: transparent; } }
   @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
@@ -224,7 +224,7 @@
   .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
     padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
   .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
-  .kv > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
+  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
      does not hold the page */
   :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }
@@ -235,17 +235,17 @@
 /* The filter panel, taken from Studio: a tab on the left edge, the panel beside the content on a computer,
    a drawer over the page on a phone; inside, groups of buttons that switch a source on or off,
    each with its colour square. */
-  /* each source's .sq is the design system's swatch (marks.css), filled when on */
-  .fdot { position: absolute; top: var(--s-4); right: var(--s-4); }
+  /* each source's square is the design system's .swatch (marks.css), hollow (.is-open) when off */
+  .filter-pip { position: absolute; top: var(--s-4); right: var(--s-4); }
   button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
-  button.edgetab:hover, button.edgetab.on { color: var(--accent-text); border-color: var(--accent-line); }
-  button.edgetab .vt { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  button.edgetab .fdot { position: static; }
+  button.edgetab:hover, button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
+  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  button.edgetab .filter-pip { position: static; }
   .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
-  .side-layout.open { grid-template-columns: 230px minmax(0, 1fr); }
+  .side-layout.is-open { grid-template-columns: 230px minmax(0, 1fr); }
   .side-layout .side { order: 0; }
   .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
-  .side-layout.open .side { display: block; }
+  .side-layout.is-open .side { display: block; }
   .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
   .sidehead button { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); background: none; border: none; color: var(--faint); font-size: var(--fs-22); line-height: var(--lh-tight); cursor: pointer; padding: 0 var(--s-2); }
   .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
@@ -260,14 +260,14 @@
   button.chip[aria-pressed]:hover { border-color: var(--line-2); }
   button.chip[aria-pressed] .ico { color: var(--accent); width: 12px; height: 12px; margin-left: calc(-1 * var(--s-2)); }
   button.chip[aria-pressed="false"] { opacity: var(--o-off); }
-  button.chip[aria-pressed="false"] .sq.on { background: transparent; }
+  button.chip[aria-pressed="false"] .swatch { background: transparent; }
 @media (max-width: 768px) {
-    .side-layout.open { grid-template-columns: minmax(0, 1fr); }
-    .side-layout.open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-drawer); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; overscroll-behavior: contain; padding-top: calc(var(--safe-top) + var(--s-16)); padding-bottom: calc(var(--safe-bottom) + var(--s-16)); }
-    .side-layout.open .scrim { display: block; position: fixed; inset: 0; background: var(--veil); z-index: var(--z-scrim); touch-action: none; }
+    .side-layout.is-open { grid-template-columns: minmax(0, 1fr); }
+    .side-layout.is-open .side { position: fixed; top: 0; bottom: 0; left: 0; width: min(82vw, 300px); z-index: var(--z-drawer); border-radius: 0 var(--r-l) var(--r-l) 0; overflow-y: auto; overscroll-behavior: contain; padding-top: calc(var(--safe-top) + var(--s-16)); padding-bottom: calc(var(--safe-bottom) + var(--s-16)); }
+    .side-layout.is-open .scrim { display: block; position: fixed; inset: 0; background: var(--veil); z-index: var(--z-scrim); touch-action: none; }
     /* while the drawer is open, the finger scrolls the filters and the page behind stays still; a drawer left open in a
        hidden view (an attribute hidden above it) does not hold the page */
-    :root:has(.side-layout.open:not([hidden] *)) { overflow: hidden; }
+    :root:has(.side-layout.is-open:not([hidden] *)) { overflow: hidden; }
 }
 @media (max-width: 768px) {
    .fhead { min-width: 100%; }
@@ -275,71 +275,69 @@
   /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
      source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
   .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
-  .side button.fall, .side button.only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
-  .side button.only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
-  .side button.only .ico { width: 15px; height: 15px; }
-  .side button.fall:hover, .side button.only:hover, .side button.fall:focus-visible, .side button.only:focus-visible { color: var(--accent-text); }
+  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.filter-only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
+  .side button.filter-only .ico { width: 15px; height: 15px; }
+  .side button.filter-all:hover, .side button.filter-only:hover, .side button.filter-all:focus-visible, .side button.filter-only:focus-visible { color: var(--accent-text); }
   /* « Tout » takes no height of its own: a group's head stays the same height whether it shows or not */
   .side .fhead { min-height: var(--s-14); }
-  .side button.fall { position: relative; padding-block: 0; }
-  .side button.fall::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
+  .side button.filter-all { position: relative; padding-block: 0; }
+  .side button.filter-all::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
   .side .frow { display: flex; align-items: center; }
   .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
-  .side .frow button.only { opacity: 0; }
-  .side .frow:hover button.only, .side .frow:focus-within button.only { opacity: 1; }
-  @media (hover: none) { .side .frow button.only { opacity: .8; } }
+  .side .frow button.filter-only { opacity: 0; }
+  .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
+  @media (hover: none) { .side .frow button.filter-only { opacity: .8; } }
 /* Lists of rows: rows split by a hairline, a row's title, place, date and figure, a word in a palette colour, a person's
-   tag, the late badge, an empty list. */
+   tag, the late badge (.late-tag), an empty list (.empty-note). */
   ul.rows { list-style: none; margin: 0; padding: 0; }
   /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
      settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
-  ul.rows li, .rank li, .kv > div, :where(body.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
+  ul.rows li, .rank li, .facts > div, :where(body.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
   ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
   ul.rows li:first-child { border-top: none; padding-top: 0; }
-  .ttl { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
-  .pl { font-size: var(--fs-13); color: var(--faint); }
+  .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
+  .row-place { font-size: var(--fs-13); color: var(--faint); }
   /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
   .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
-  .late { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
-  .empty { color: var(--dim); margin: 0; }
+  .late-tag { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
+  .empty-note { color: var(--dim); margin: 0; }
   /* a list's line: its date or time, and its amount or figure */
-  .t { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
-  .v { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
-  .v .x { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+  .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
+  .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
+  .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
 @media (max-width: 768px) {
-    .v { font-size: var(--fs-12); min-width: 68px; }
+    .row-value { font-size: var(--fs-12); min-width: 68px; }
 }
 /* The state of a page's sources (ds.status), in an app's footer at the end of its page. */
   details.status summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: var(--s-8); }
   details.status summary::-webkit-details-marker { display: none; }
-  details.status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
-  details.status .dot.warn { background: var(--mid); }
+  details.status .status-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--good); }
+  details.status .status-dot.is-mid { background: var(--mid); }
   details.status ul { list-style: none; margin: var(--s-10) 0 0; padding: var(--s-10) var(--s-12); display: grid; gap: var(--s-6); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); }
   details.status li { display: grid; grid-template-columns: 150px 1fr auto; gap: var(--s-10); }
-  details.status .sn { color: var(--dim); }
-  details.status .sn, details.status .sw { display: inline-flex; align-items: center; gap: var(--s-6); }
+  details.status .status-name { color: var(--dim); }
+  details.status .status-name, details.status .status-state { display: inline-flex; align-items: center; gap: var(--s-6); }
   details.status .ico { flex: none; height: 13px; opacity: var(--o-muted); width: 13px; color: currentColor; }
-  details.status .sw .ico { color: var(--good); opacity: 1; }
-  /* a late row is still a row: the .late badge (a task, a failed read) shares its class name */
-  details.status li.late { font: inherit; color: inherit; background: none; border: 0; padding: 0; border-radius: 0; }
-  details.status li.late .sw, details.status li.late .sw .ico { color: var(--mid); }
-  details.status .sd { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
-  details.status li:not(.late) .sd { display: none; }
-  details.status .sf { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
-  details.status li.sl { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
-  details.status li.sl a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+  details.status .status-state .ico { color: var(--good); opacity: 1; }
+  details.status li.is-late .status-state, details.status li.is-late .status-state .ico { color: var(--mid); }
+  details.status .status-detail { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
+  details.status li:not(.is-late) .status-detail { display: none; }
+  details.status .status-every { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
+  details.status li.status-link { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
+  details.status li.status-link a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
   /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;
      any other footer (a site's, Selecta's) keeps its own look */
   .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
   .wrap > footer details.status { min-width: 0; }
 @media (max-width: 768px) {
    details.status li { grid-template-columns: 1fr auto; }
-   details.status .sf { display: none; }
+   details.status .status-every { display: none; }
    /* on a phone the list takes the page's width, however short its lines */
    .wrap > footer details.status { flex: 1 1 auto; }
    /* what went wrong goes under the whole row, lined up with the name, so that it does not squeeze the name */
-   details.status .sd { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
+   details.status .status-detail { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
 }
 /* Figures read at a glance, taken from Studio's analysis: rankings side by side, small tiles of reference figures,
    and the verdict on a figure against the usual one. */
@@ -382,7 +380,7 @@
   .verdict small { color: inherit; font: 500 var(--fs-11)/var(--lh-tight) var(--body); opacity: .85; }
   .verdict.is-good { color: var(--good); background: var(--good-soft); border-color: var(--good-line); }
   .verdict.is-mid { color: var(--mid); background: var(--mid-soft); border-color: var(--mid-line); }
-  .verdict.is-weak { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+  .verdict.is-bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
   .verdict.is-none { visibility: hidden; }
   /* vitrine writes a success in dark gold, close to its yellow: the strong verdict is filled, as its badges are */
   [data-theme="vitrine"] .verdict.is-good { color: var(--on-accent); background: var(--good); border-color: var(--good); }
@@ -607,8 +605,8 @@
   .cal-day-t { margin: 0 0 var(--s-12); font: var(--head-weight) var(--fs-17)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .cal-day-t::first-letter { text-transform: uppercase; }
   .cal-day .rows .cal-mark, .cal-wcol .rows .cal-mark { align-self: center; }
-  .cal-day li.is-done .ttl, .cal-wcol li.is-done .ttl { color: var(--faint); }
-  .cal-day a.ttl:hover, .cal-wcol a.ttl:hover { color: var(--accent-text); }
+  .cal-day li.is-done .row-title, .cal-wcol li.is-done .row-title { color: var(--faint); }
+  .cal-day a.row-title:hover, .cal-wcol a.row-title:hover { color: var(--accent-text); }
   /* the week: seven columns, today's in gold */
   .cal-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); align-items: start; }
   .cal-wcol { min-width: 0; min-height: 160px; padding: var(--s-12) var(--s-10); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); }
@@ -617,7 +615,7 @@
   .cal-wcol.is-today h3 { color: var(--accent-text); }
   .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   /* a narrow column cuts its titles between syllables, never in the middle of one */
-  .cal-wcol .ttl { overflow-wrap: break-word; hyphens: auto; }
+  .cal-wcol .row-title { overflow-wrap: break-word; hyphens: auto; }
   .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-11)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
@@ -668,47 +666,35 @@
   :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
   :where(body.settings) .eyebrow { color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-brand); margin: 0 0 var(--s-6); text-transform: uppercase; }
   :where(body.settings) h1 { font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); margin: 0; }
-  :where(body.settings) .back, :where(body.settings) .reload, :where(body.settings) .jump a, :where(body.settings) button.jl, :where(body.settings) .go, :where(body.settings) button.save { align-items: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); box-sizing: border-box; color: var(--dim); cursor: pointer; display: inline-flex; font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); gap: var(--s-6); justify-content: center; letter-spacing: var(--btn-ls); min-height: var(--btn-h); padding: 0 var(--btn-px); text-decoration: none; text-transform: var(--btn-case); white-space: nowrap; }
-  :where(body.settings) .back:hover, :where(body.settings) .jump a:hover, :where(body.settings) button.jl:hover, :where(body.settings) button.jl[aria-expanded="true"] { border-color: var(--accent-line); color: var(--accent-text); }
-  :where(body.settings) button.jl[aria-expanded="true"] { background: var(--accent-soft); }
   :where(body.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
   :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
   :where(body.settings) .outrow .lede { margin: 0; }
-  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); margin-left: auto; }
-  :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: var(--btn-h); }
-  :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent-text); }
-  :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
   :where(body.settings) .job, :where(body.settings) section.card { scroll-margin-top: 14px; }
-  :where(body.settings) .reload .pip { display: none; position: absolute; right: 5px; top: 5px; }
-  :where(body.settings) .reload.new { border-color: var(--accent-line); color: var(--accent-text); }
-  :where(body.settings) .reload.new .pip { display: block; }
   :where(body.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
   :where(body.settings) .jump::-webkit-scrollbar { display: none; }
-  :where(body.settings) .jump a { flex: none; }
   :where(body.settings) .card { background: var(--card-bg); border-radius: var(--r-l); border: 1px solid var(--card-line); box-shadow: var(--card-shadow); min-width: 0; padding: var(--card-pad); }
   :where(body.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); margin: 0 0 var(--s-4); text-transform: uppercase; }
   :where(body.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
   :where(body.settings) .job { --row-py: var(--s-12); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); }
   :where(body.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
   :where(body.settings) .job .name { align-items: center; display: flex; font: var(--head-weight) var(--fs-15)/var(--head-lh) var(--title-font); gap: var(--s-8); }
-  :where(body.settings) .dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
-  :where(body.settings) .dot.ok { background: var(--good); }
-  :where(body.settings) .dot.bad { background: var(--bad); }
-  :where(body.settings) .dot.run { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
+  /* a sync's dot (a job's, a connection's): grey, is-good, is-bad, or is-running while it runs */
+  :where(body.settings) .sync-dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
+  :where(body.settings) .sync-dot.is-good { background: var(--good); }
+  :where(body.settings) .sync-dot.is-bad { background: var(--bad); }
+  :where(body.settings) .sync-dot.is-running { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
   @keyframes pulse { 50% { opacity: .35; } }
   :where(body.settings) .job .when { color: var(--dim); font-size: var(--fs-13); }
-  :where(body.settings) .job .sum { color: var(--faint); font-size: var(--fs-13); }
-  :where(body.settings) .job .sum.bad { color: var(--bad); }
+  :where(body.settings) .job .job-sum { color: var(--faint); font-size: var(--fs-13); }
+  :where(body.settings) .job .job-sum.is-bad { color: var(--bad); }
   :where(body.settings) .subs { display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-16); margin-top: var(--s-2); }
   :where(body.settings) .job .acts { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-8) var(--s-10); margin-top: var(--s-2); }
   :where(body.settings) .job .acts .btns { display: flex; gap: var(--s-8); margin-left: auto; }
-  :where(body.settings) .go { background: var(--accent-soft); border-color: var(--accent-line); color: var(--accent-text); }
-  :where(body.settings) .go:disabled { background: none; border-color: var(--line); color: var(--faint); cursor: default; }
-  :where(body.settings) label.sw { align-items: center; color: var(--dim); cursor: pointer; display: inline-flex; font-size: var(--fs-13); gap: var(--s-8); user-select: none; white-space: nowrap; }
-  :where(body.settings) label.sw input { -webkit-appearance: none; appearance: none; background: var(--line-2); border-radius: var(--r-m); cursor: pointer; flex: none; height: 20px; margin: 0; position: relative; transition: background var(--t-fast); width: 34px; }
-  :where(body.settings) label.sw input::after { background: var(--ink); border-radius: 50%; content: ""; height: 14px; left: 3px; position: absolute; top: 3px; transition: left var(--t-fast); width: 14px; }
-  :where(body.settings) label.sw input:checked { background: var(--good); }
-  :where(body.settings) label.sw input:checked::after { left: 17px; }
+  :where(body.settings) label.switch { align-items: center; color: var(--dim); cursor: pointer; display: inline-flex; font-size: var(--fs-13); gap: var(--s-8); user-select: none; white-space: nowrap; }
+  :where(body.settings) label.switch input { -webkit-appearance: none; appearance: none; background: var(--line-2); border-radius: var(--r-m); cursor: pointer; flex: none; height: 20px; margin: 0; position: relative; transition: background var(--t-fast); width: 34px; }
+  :where(body.settings) label.switch input::after { background: var(--ink); border-radius: 50%; content: ""; height: 14px; left: 3px; position: absolute; top: 3px; transition: left var(--t-fast); width: 14px; }
+  :where(body.settings) label.switch input:checked { background: var(--good); }
+  :where(body.settings) label.switch input:checked::after { left: 17px; }
   :where(body.settings) .group { margin-top: var(--s-16); }
   :where(body.settings) .group:first-of-type { margin-top: var(--s-4); }
   :where(body.settings) .group h3 { color: var(--accent-text); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; margin: 0 0 var(--s-6); }
@@ -717,17 +703,15 @@
   :where(body.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
   :where(body.settings) .field .inp { align-items: center; display: flex; gap: var(--s-8); grid-column: 2; grid-row: 1 / span 2; }
   :where(body.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: 600 var(--fs-15)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; }
-  :where(body.settings) .field input.changed { border-color: var(--accent); }
-  :where(body.settings) .field input.wrong { background: var(--bad-soft); border-color: var(--bad); }
+  :where(body.settings) .field input.is-changed { border-color: var(--accent); }
+  :where(body.settings) .field input[aria-invalid="true"] { background: var(--bad-soft); border-color: var(--bad); }
   :where(body.settings) .field .unit { color: var(--faint); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); width: 5.6em; }
   :where(body.settings) .field .def { white-space: nowrap; }
   :where(body.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
   /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
   :where(body.settings) .bar .msg { display: block; margin: 0 auto 0 0; padding: 0; background: none; border: 0; border-radius: 0; color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }
-  :where(body.settings) .bar .msg.bad { color: var(--bad); }
-  :where(body.settings) .bar .msg.ok { color: var(--good); }
-  :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-  :where(body.settings) button.save:disabled { background: var(--line-2); border-color: var(--line-2); color: var(--faint); cursor: default; }
+  :where(body.settings) .bar .msg.is-bad { color: var(--bad); }
+  :where(body.settings) .bar .msg.is-good { color: var(--good); }
   :where(body.settings) .conn { --row-py: var(--s-10); align-items: center; display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
   :where(body.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
   :where(body.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
@@ -742,23 +726,22 @@
   :where(body.settings) .loghead a { color: var(--dim); text-decoration: none; white-space: nowrap; }
   :where(body.settings) .loghead a:hover { color: var(--accent-text); }
   :where(body.settings) .logs { font: 400 var(--fs-12)/var(--lh-text) var(--mono); max-height: 380px; overflow: auto; overscroll-behavior: contain; padding: var(--s-8) 0 var(--s-10); }
-  :where(body.settings) .ll { display: grid; gap: var(--s-10); grid-template-columns: 64px minmax(0, 1fr); padding: 0 var(--s-12); }
-  :where(body.settings) .ll .lt { color: var(--faint); font-variant-numeric: tabular-nums; }
-  :where(body.settings) .ll .lx { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
-  :where(body.settings) .ll.banner { margin-top: var(--s-8); }
-  :where(body.settings) .ll.banner:first-child { margin-top: 0; }
-  :where(body.settings) .ll.banner .lx { color: var(--accent-text); font-weight: 600; }
-  :where(body.settings) .ll.lwarn .lx { color: var(--mid); }
-  :where(body.settings) .ll.lbad .lx { color: var(--bad); }
-  :where(body.settings) .logs .none { color: var(--faint); padding: 0 var(--s-12); }
+  :where(body.settings) .log-line { display: grid; gap: var(--s-10); grid-template-columns: 64px minmax(0, 1fr); padding: 0 var(--s-12); }
+  :where(body.settings) .log-line .log-time { color: var(--faint); font-variant-numeric: tabular-nums; }
+  :where(body.settings) .log-line .log-text { color: var(--ink); overflow-wrap: anywhere; white-space: pre-wrap; }
+  :where(body.settings) .log-line.banner { margin-top: var(--s-8); }
+  :where(body.settings) .log-line.banner:first-child { margin-top: 0; }
+  :where(body.settings) .log-line.banner .log-text { color: var(--accent-text); font-weight: 600; }
+  :where(body.settings) .log-line.is-mid .log-text { color: var(--mid); }
+  :where(body.settings) .log-line.is-bad .log-text { color: var(--bad); }
+  :where(body.settings) .logs .log-empty { color: var(--faint); padding: 0 var(--s-12); }
 @media (max-width: 768px) {
   /* the bar of links to the cards, for a phone where the page is long */
   :where(body.settings) .jump { display: flex; }
-  :where(body.settings) .ll { gap: 0; grid-template-columns: 1fr; }
-  :where(body.settings) .ll .lt { font-size: var(--fs-11); }
+  :where(body.settings) .log-line { gap: 0; grid-template-columns: 1fr; }
+  :where(body.settings) .log-line .log-time { font-size: var(--fs-11); }
   :where(body.settings) h1 { font-size: var(--fs-22); }
   :where(body.settings) .subs { display: grid; gap: var(--s-10) var(--s-12); grid-template-columns: 1fr 1fr; }
-  :where(body.settings) .go, :where(body.settings) button.jl { padding: 0 var(--s-10); }
   :where(body.settings) .job .acts { flex-wrap: nowrap; }
   :where(body.settings) .job .acts .btns { gap: var(--s-6); }
   :where(body.settings) .field { align-items: start; }
@@ -769,10 +752,10 @@
   :where(body.settings) .conn a { grid-row: 1; }
 }
 @media (max-width: 480px) {
-  :where(body.settings) .go .mx { display: none; }
+  :where(body.settings) .wide-only { display: none; }
 }
 /* Chosen: the gold every framed choice takes, the same everywhere: a pill in use, a period in the date picker, a gold
    button, the chosen day of the calendar. Its colours are roles (--chosen-ink, --chosen-bg, --chosen-line), which a
    component may change (the calendar's day keeps the full gold edge). Last of the controls, so that it wins over their
    hover. The tabs' chosen one is their own (--tab-on-bg). */
-  .pill.is-on, .periodpop button.on, .btn.is-act, .cal-cell.is-sel { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }
+  .pill.is-on, .periodpop button:is([aria-pressed="true"], [aria-selected="true"]), .btn.is-act, .cal-cell.is-selected { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }

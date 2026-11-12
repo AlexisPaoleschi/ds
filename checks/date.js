@@ -28,7 +28,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const state = () => p.evaluate(() => {
     const box = document.getElementById('pop'), grid = box.querySelector('.dp-grid');
     return { hidden: box.hidden, expanded: document.getElementById('title').getAttribute('aria-expanded'), tab: (box.querySelector('.dp-tabs [aria-selected="true"]') || {}).textContent,
-      head: (box.querySelector('.dp-title') || {}).textContent, on: [...box.querySelectorAll('.dp-grid button.on')].map(x => x.textContent),
+      head: (box.querySelector('.dp-title') || {}).textContent, on: [...box.querySelectorAll('.dp-grid button[aria-pressed="true"]')].map(x => x.textContent),
       cells: grid ? grid.querySelectorAll('button').length : 0, focus: document.activeElement.dataset.key || document.activeElement.id || document.activeElement.getAttribute('data-dp') };
   });
   const cell = text => p.locator(pop + ' .dp-grid button', { hasText: new RegExp('^' + text + '$') });
@@ -40,7 +40,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   await p.locator('#title').click();
   const s1 = await state();
   const open1 = await p.evaluate(() => { const box = document.getElementById('pop');
-    return { quick: [...box.querySelectorAll('.dp-quick button')].map(x => x.textContent + (x.classList.contains('on') ? '*' : '')), tabs: [...box.querySelectorAll('.dp-tabs button')].map(x => x.textContent).join(' '),
+    return { quick: [...box.querySelectorAll('.dp-quick button')].map(x => x.textContent + (x.getAttribute('aria-pressed') === 'true' ? '*' : '')), tabs: [...box.querySelectorAll('.dp-tabs button')].map(x => x.textContent).join(' '),
       off: [...box.querySelectorAll('.dp-grid button:disabled')].map(x => x.textContent), today: box.querySelector('.dp-grid .is-today').textContent, year: box.querySelector('.dp-head .dp-title').textContent,
       next: box.querySelector('[data-dp="next"]').disabled, label: dp.label() }; });
   console.log('      ' + JSON.stringify([s1, open1]));
@@ -109,12 +109,12 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const r0 = await p.evaluate(() => document.querySelector('#pop .dp-hint').textContent);
   await cell('7').click();
   await cell('3').hover();
-  const r1 = await p.evaluate(() => ({ hint: document.querySelector('#pop .dp-hint').textContent, open: !document.getElementById('pop').hidden, on: [...document.querySelectorAll('#pop .dp-grid button.on')].map(x => x.textContent),
+  const r1 = await p.evaluate(() => ({ hint: document.querySelector('#pop .dp-hint').textContent, open: !document.getElementById('pop').hidden, on: [...document.querySelectorAll('#pop .dp-grid button[aria-pressed="true"]')].map(x => x.textContent),
     between: [...document.querySelectorAll('#pop .dp-grid button.is-in')].map(x => x.textContent), n: picks.length }));
   await cell('3').click();
   const r2 = await last();
   await p.locator('#title').click();
-  const r3 = await p.evaluate(() => ({ tab: document.querySelector('#pop .dp-tabs [aria-selected="true"]').textContent, on: [...document.querySelectorAll('#pop .dp-grid button.on')].map(x => x.textContent),
+  const r3 = await p.evaluate(() => ({ tab: document.querySelector('#pop .dp-tabs [aria-selected="true"]').textContent, on: [...document.querySelectorAll('#pop .dp-grid button[aria-pressed="true"]')].map(x => x.textContent),
     between: [...document.querySelectorAll('#pop .dp-grid button.is-in')].map(x => x.textContent) }));
   assert(r0 === 'Choisissez le premier jour, puis le dernier.' && r1.hint === 'Du 7 nov. : choisissez le dernier jour.' && r1.open && same(r1.on, ['7']) && same(r1.between, ['4', '5', '6'])
     && same(r2, { from: '2026-11-03', to: '2026-11-07', mode: 'range', quick: null, label: '3 nov. → 7 nov. 2026' }) && r3.tab === 'Dates' && same(r3.on, ['3', '7']) && same(r3.between, ['4', '5', '6']),
@@ -123,7 +123,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   await cell('12').click().catch(() => {});
   await cell('2').click();
   await p.keyboard.press('Escape');
-  const e1 = await p.evaluate(() => [document.getElementById('pop').hidden, document.querySelector('#pop .dp-hint').textContent, document.querySelectorAll('#pop .dp-grid button.on').length]);
+  const e1 = await p.evaluate(() => [document.getElementById('pop').hidden, document.querySelector('#pop .dp-hint').textContent, document.querySelectorAll('#pop .dp-grid button[aria-pressed="true"]').length]);
   await p.keyboard.press('Escape');
   const e2 = await state();
   assert(!e1[0] && e1[1] === 'Choisissez le premier jour, puis le dernier.' && e1[2] === 2 && e2.hidden && e2.focus === 'title', 'Échap oublie le premier jour, puis ferme le choix et rend le curseur au titre');
@@ -205,10 +205,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   // in the page: always there, two taps for a trip's dates
   const i0 = await p.evaluate(() => { const box = document.getElementById('inline');
     return [box.hidden, box.classList.contains('is-inline'), box.getAttribute('role'), box.querySelectorAll('.dp-tabs').length, box.querySelector('.dp-title').textContent, inline.label(),
-      [...box.querySelectorAll('.dp-grid button.on')].map(x => x.textContent), box.querySelectorAll('.dp-grid button.is-in').length, getComputedStyle(box).position]; });
+      [...box.querySelectorAll('.dp-grid button[aria-pressed="true"]')].map(x => x.textContent), box.querySelectorAll('.dp-grid button.is-in').length, getComputedStyle(box).position]; });
   await p.locator('#inline .dp-grid button', { hasText: /^10$/ }).click();
   await p.locator('#inline .dp-grid button', { hasText: /^12$/ }).click();
-  const i1 = await p.evaluate(() => [JSON.stringify(inlinePicks.map(v => v.from + '/' + v.to)), document.getElementById('inline').hidden, [...document.querySelectorAll('#inline .dp-grid button.on')].map(x => x.textContent),
+  const i1 = await p.evaluate(() => [JSON.stringify(inlinePicks.map(v => v.from + '/' + v.to)), document.getElementById('inline').hidden, [...document.querySelectorAll('#inline .dp-grid button[aria-pressed="true"]')].map(x => x.textContent),
     [...document.querySelectorAll('#inline .dp-grid button.is-in')].map(x => x.textContent), document.activeElement.dataset.key]);
   assert(same(i0, [false, true, 'group', 0, 'août 2026', '1er août → 16 août 2026', ['1', '16'], 14, 'static']) && same(i1, ['["2026-08-10/2026-08-12"]', false, ['10', '12'], ['11'], '2026-08-10']),
     'dans la page : toujours là, sans onglets pour une seule unité ; deux touches pour les dates d’un voyage ' + JSON.stringify([i0, i1]));
@@ -218,7 +218,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     document.documentElement.lang = 'en';
     const holder = document.createElement('div'); document.body.append(holder);
     const x = ds.datePick(holder, { today: '2026-11-09', value: { from: '2026-11-01', to: '2026-11-30' } });
-    const out = { tabs: [...holder.querySelectorAll('.dp-tabs button')].map(b => b.textContent).join(' '), month: holder.querySelector('.dp-grid .on').textContent,
+    const out = { tabs: [...holder.querySelectorAll('.dp-tabs button')].map(b => b.textContent).join(' '), month: holder.querySelector('.dp-grid [aria-pressed="true"]').textContent,
       prev: holder.querySelector('[data-dp="prev"]').getAttribute('aria-label'), name: holder.getAttribute('aria-label') };
     holder.querySelector('[data-dp="t-day"]').click();
     out.wd = [...holder.querySelectorAll('.dp-wd')].map(s => s.textContent).join('');
@@ -295,10 +295,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   // the calendar's month jump is the date picker on months
   await p.locator('#cal .periodtitle').click();
   const cj = await p.evaluate(() => { const j = document.querySelector('#cal .cal-jump');
-    return [j.classList.contains('datepick'), j.querySelectorAll('.dp-tabs').length, j.querySelectorAll('.cal-months button').length, j.querySelector('.cal-months .on').textContent, j.querySelector('.dp-head .dp-title').textContent]; });
+    return [j.classList.contains('datepick'), j.querySelectorAll('.dp-tabs').length, j.querySelectorAll('.cal-months button').length, j.querySelector('.cal-months [aria-pressed="true"]').textContent, j.querySelector('.dp-head .dp-title').textContent]; });
   await p.locator('#cal .dp-step[aria-label="Année suivante"]').click();
   await p.locator('#cal .cal-months button', { hasText: 'janv.' }).click();
-  const cj2 = await p.evaluate(() => [document.querySelector('#cal .periodtitle h3').textContent, cal.state().day, document.querySelector('#cal .cal-jump').hidden]);
+  const cj2 = await p.evaluate(() => [document.querySelector('#cal .periodtitle h3').textContent, cal.state().value, document.querySelector('#cal .cal-jump').hidden]);
   assert(same(cj, [true, 0, 12, 'nov.', '2026']) && same(cj2, ['janvier 2027', '2027-01-01', true]), 'le choix du mois du calendrier est ds.datePick sur les mois : la flèche passe à 2027, janvier y mène');
 
   // vitrine: square corners, the same colours from the tokens
@@ -311,9 +311,9 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   assert(same(vt, ['0px', '0px', 'rgb(155, 140, 242)', 'rgb(179, 150, 84)']), 'Vitrine : les angles carrés, les couleurs de ses jetons (l’or foncé des entrées) ' + JSON.stringify(vt));
 
   const steady = () => p.evaluate(() => { const r = id => Math.round(document.getElementById(id).getBoundingClientRect().top);
-    const off = document.getElementById('steady-prev').classList.contains('off');
+    const off = document.getElementById('steady-prev').classList.contains('is-off');
     return { off, title: r('steady-title'), after: r('steady-after'), arrows: getComputedStyle(document.querySelector('#steady .periodnav')).visibility }; });
-  const flip = () => p.evaluate(() => ['steady-prev', 'steady-next'].forEach(id => document.getElementById(id).classList.toggle('off')));
+  const flip = () => p.evaluate(() => ['steady-prev', 'steady-next'].forEach(id => document.getElementById(id).classList.toggle('is-off')));
   // steady: the arrows hidden keep their room; shown, nothing under the title moves
   const sd0 = await steady(); await flip(); const sd1 = await steady(); await flip();
   assert(sd0.off && sd0.arrows === 'hidden' && !sd1.off && sd1.arrows === 'visible' && sd0.title === sd1.title && sd0.after === sd1.after,

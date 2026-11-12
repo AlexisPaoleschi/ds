@@ -18,7 +18,7 @@
   /* Page Loader: the design system's large spinner (.spinner.is-large) in the middle of a cream page */
   .page-loader { position: fixed; top: 0; left: 0; z-index: calc(var(--z-toast) + 2); display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%; background: var(--bg); transition: opacity var(--t-slow) ease, visibility var(--t-slow) ease; }
-  .page-loader.hidden { opacity: 0; visibility: hidden; }
+  .page-loader.is-hidden { opacity: 0; visibility: hidden; }
   /* Subtitle */
   .subtitle { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-188); text-transform: uppercase; color: var(--accent);
     text-shadow: var(--text-shadow-lg); }

@@ -1,4 +1,4 @@
-/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -394,16 +394,16 @@
   header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
-  /* ds.busy puts the class loading on header.top while something loads; .bt says what, for screen readers only */
-  header.top.loading .busy { visibility: visible; }
-  header.top .busy .bt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  header.top .busy .pc { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  header.top .busy .okc { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
-  header.top .busy .okc svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
-  header.top.loading-done .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
-  header.top.loading-done .busy .spin, header.top.loading-done .busy .pc { display: none; }
-  header.top.loading-done .busy .okc { display: inline-grid; animation: okpop .35s ease-out; }
-  header.top.loading-done .busy .okc svg { animation: okdraw .35s .1s ease-out forwards; }
+  /* ds.busy puts the class loading on header.top while something loads; .busy-text says what, for screen readers only */
+  header.top.is-loading .busy { visibility: visible; }
+  header.top .busy .busy-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  header.top .busy .busy-share { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
+  header.top .busy .busy-ok svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
+  header.top.is-loaded .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
+  header.top.is-loaded .busy .spin, header.top.is-loaded .busy .busy-share { display: none; }
+  header.top.is-loaded .busy .busy-ok { display: inline-grid; animation: okpop .35s ease-out; }
+  header.top.is-loaded .busy .busy-ok svg { animation: okdraw .35s .1s ease-out forwards; }
   @keyframes okpop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes okdraw { to { stroke-dashoffset: 0; } }
   @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
@@ -411,18 +411,18 @@
   header.top .busy .spin { --spin-size: 14px; display: block; }
 /* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
   .boot { display: grid; place-items: center; text-align: center; min-height: 52vh; padding: var(--s-24); transition: opacity var(--t-mid) ease; }
-  .boot.gone { opacity: 0; }
-  .boot .boot-t { margin: 0; font-size: var(--fs-17); font-weight: 600; color: var(--ink); }
-  .boot .boot-s { margin: var(--s-8) 0 0; font-size: var(--fs-13); color: var(--dim); min-height: 1.3em; }
-  .boot .boot-x { margin-top: var(--s-16); }
+  .boot.is-gone { opacity: 0; }
+  .boot .boot-title { margin: 0; font-size: var(--fs-17); font-weight: 600; color: var(--ink); }
+  .boot .boot-text { margin: var(--s-8) 0 0; font-size: var(--fs-13); color: var(--dim); min-height: 1.3em; }
+  .boot .boot-retry { margin-top: var(--s-16); }
 /* over the page below the header, so that nothing moves when it goes: the page is drawn under it, then it fades */
   .boot { position: fixed; inset: calc(72px + var(--safe-top)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
 /* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
-  .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; }
-  .boot .boot-p .spin { --spin-size: 18px; display: block; }
-  .boot .boot-p span { min-width: 3.2ch; text-align: left; }
-  .boot .boot-p span:empty { display: none; }
-  .boot.failed .boot-p { display: none; }
+  .boot .boot-progress { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; }
+  .boot .boot-progress .spin { --spin-size: 18px; display: block; }
+  .boot .boot-progress span { min-width: 3.2ch; text-align: left; }
+  .boot .boot-progress span:empty { display: none; }
+  .boot.is-failed .boot-progress { display: none; }
 /* on an iPhone app, a page shorter than the screen puts the bottom bar higher, by the status bar's height:
      the page always fills the screen, so that the bar stays in the same place while loading and after */
   html { min-height: calc(100% + var(--safe-top)); }
@@ -438,9 +438,9 @@
    header.top .btn.is-icon { width: 32px; min-height: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
-   header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
+   header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok { animation: none; }
    /* the tick is drawn at once and stays, as Studio did (the wheels stand still through tokens.css) */
-   header.top.loading-done .busy .okc svg { stroke-dashoffset: 0; animation: none; }
+   header.top.is-loaded .busy .busy-ok svg { stroke-dashoffset: 0; animation: none; }
 }
   /* the page: one width for every app, the margins clear of the phone's edges */
   .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
@@ -451,26 +451,24 @@
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 /* The small marks, each drawn once.
    The swatch: the small square of an item's colour (--n), a bank, a category, an agenda, a network: .swatch, and the same
-   square wherever ds shows one (a filter's .sq, the calendar's .cal-mark, a chart's key, a tile's title, a picker's
-   colour alone); --swatch-size (10px) and --swatch-c (its colour, --n by default) may change; .is-open draws it hollow.
-   The filter's square still reads --a, for one version. */
-  .swatch, .sq, .cal-mark, .chart-key, .tile dt i, .picker-av.is-dot {
+   square wherever ds shows one (a filter's, the calendar's .cal-mark, a chart's key, a tile's title, a picker's
+   colour alone); --swatch-size (10px) and --swatch-c (its colour, --n by default) may change; .is-open draws it hollow. */
+  .swatch, .cal-mark, .chart-key, .tile dt i, .picker-av.is-dot {
     flex: none; box-sizing: border-box; width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); border-radius: var(--r-xs);
     background: var(--swatch-c, var(--n, var(--dim))); border: 1.5px solid var(--swatch-c, var(--n, var(--dim))); }
-  .swatch.is-open, .cal-mark.is-open, .sq:not(.on) { background: transparent; }
-  .sq { --swatch-c: var(--a, var(--n, var(--dim))); }
+  .swatch.is-open, .cal-mark.is-open { background: transparent; }
   .picker-av.is-dot { --swatch-c: var(--n, var(--accent)); }
 /* The pip: the small gold dot that says something waits (a filter in use on its tab, a new version on the reload button,
    a view with news in the tab bar): .pip, and the same dot wherever ds draws one; --pip-size (7px) may change, and on a
    button it keeps a ring of the button's ground (.newver-pip, the settings' reload). */
-  .pip, .fdot, .newver-pip, .tabs .tabn, :where(body.settings) .reload .pip {
+  .pip, .filter-pip, .newver-pip, .tabs .tabn {
     flex: none; box-sizing: border-box; width: var(--pip-size, 7px); height: var(--pip-size, 7px); border-radius: 50%; background: var(--accent); }
-  .newver-pip, :where(body.settings) .reload .pip { outline: 2px solid var(--panel); }
+  .newver-pip { outline: 2px solid var(--panel); }
 /* The spinner, for every wait, drawn once: a ring (--spin-ring) whose top quarter (--spin-top, the gold) turns at one
    speed (--spin-time), its size --spin-size: 16px in a line, 28px on a photo's tile, 60px for a whole page; the small
    ones of a message's action (11px), a passing message (12px), a button at work (13px, in its text's colour so that it
    shows on a filled button), the header (14px) and the first loading (18px). On a photo, its ring is white. */
-  .spinner, .btn.is-busy::after, .msg .act .spin, header.top .busy .spin, .boot .boot-p .spin, .toast.is-busy .mark {
+  .spinner, .btn.is-busy::after, .msg .act .spin, header.top .busy .spin, .boot .boot-progress .spin, .toast.is-busy .mark {
     flex: none; box-sizing: border-box; width: var(--spin-size, 16px); height: var(--spin-size, 16px); background: none;
     border: 2px solid var(--spin-ring); border-top-color: var(--spin-top, var(--accent)); border-radius: 50%; animation: spin var(--spin-time) linear infinite; }
   .spinner { display: inline-block; }
@@ -534,14 +532,14 @@
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
   .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); cursor: pointer; }
   /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
-  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--tab-on-bg); color: var(--accent-text); }
+  .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"] { background: var(--tab-on-bg); color: var(--accent-text); }
   /* a tab may also be a link (a choice of language: the page's own is aria-current) or a choice among radio buttons (a
      setting: <label><input type="radio" class="visually-hidden">…</label>); .tabs.is-icons holds only icons, each tab
      square around its icon, its name in aria-label and title */
   .tabs > a, .tabs > label { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: var(--s-24);
     padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); border-radius: var(--r-s); color: var(--faint); cursor: pointer; text-decoration: none;
     font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .tabs > a[aria-current="page"], .tabs > a[aria-current="true"], .tabs > a.on, .tabs > label:has(input:checked) { background: var(--tab-on-bg); color: var(--accent-text); }
+  .tabs > a[aria-current="page"], .tabs > a[aria-current="true"], .tabs > label:has(input:checked) { background: var(--tab-on-bg); color: var(--accent-text); }
   .tabs > label:has(input:focus-visible) { outline: var(--focus); outline-offset: var(--focus-offset); }
   .tabs.is-icons > :is(button, a, label) { display: inline-grid; place-items: center; --tab-py: var(--s-4); --tab-px: var(--s-8); }
   .tabs.is-icons .ico { display: block; }
@@ -559,14 +557,14 @@
     background: color-mix(in srgb, var(--panel) 84%, transparent); -webkit-backdrop-filter: blur(var(--blur-l)); backdrop-filter: blur(var(--blur-l)); box-shadow: var(--shadow-sheet); }
   header.top .tabs.is-bar button, .tabs.is-bar button { flex: 1; flex-direction: column; justify-content: center; gap: var(--s-2); height: 40px; padding: 0; border-radius: var(--r-m); }
   .tabs.is-bar button .ico { display: block; width: 19px; height: 19px; }
-  .tabs.is-bar button .tl { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
+  .tabs.is-bar button .tab-label { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
   .tabs.is-bar .tabn { position: absolute; top: var(--s-4); left: calc(50% + var(--s-8)); margin: 0; }
   /* five views or more (Bank, with its Placements): the bar, and the passing messages above it, take the screen's width
      less 8px a side, and its buttons sit closer, so that every name holds; on the narrowest phones a name is shortened */
   :root:has(.tabs.is-bar > button:nth-of-type(5)) { --tabbar-w: min(calc(100% - var(--s-16)), 480px); }
   .tabs.is-bar:has(> button:nth-of-type(5)) { gap: var(--s-2); padding: var(--s-4); }
   .tabs.is-bar:has(> button:nth-of-type(5)) button { flex: 1 1 auto; min-width: 0; }
-  .tabs.is-bar:has(> button:nth-of-type(5)) .tl { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tabs.is-bar:has(> button:nth-of-type(5)) .tab-label { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 }
 /* The card and its parts: the card, its gold line on top (.is-ruled) and its colour (.is-tinted), one you click (.is-link),
    its label (.ct, fitted to its line) and the small headings inside it, a card that folds, its title and lines of
@@ -642,10 +640,10 @@
 /* The message: a sentence in a box, with its icon, good or bad, and its action. */
   .msg { align-items: var(--msg-align); background: var(--box-bg); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--msg-size); gap: var(--msg-gap); margin-top: var(--s-10); padding: var(--msg-py) var(--msg-px); }
   .msg .ico { color: var(--accent); margin-top: var(--msg-icon-top); flex: none; height: var(--msg-icon); width: var(--msg-icon); }
-  .msg.bad { background: var(--bad-soft); border-color: var(--bad-line); }
-  .msg.bad .ico { color: var(--bad); }
-  .msg.good { background: var(--good-soft); border-color: var(--good-line); }
-  .msg.good .ico { color: var(--good); }
+  .msg.is-bad { background: var(--bad-soft); border-color: var(--bad-line); }
+  .msg.is-bad .ico { color: var(--bad); }
+  .msg.is-good { background: var(--good-soft); border-color: var(--good-line); }
+  .msg.is-good .ico { color: var(--good); }
   .msg > .txt { flex: 1 1 auto; min-width: 0; }
   .msg .txt b { color: var(--ink); font-weight: 600; }
   .msg .txt small { display: block; margin-top: var(--s-4); font-size: var(--fs-12); color: var(--faint); }
@@ -662,18 +660,18 @@
   .toast { pointer-events: auto; display: flex; align-items: center; gap: var(--s-10); box-sizing: border-box; max-width: min(400px, calc(100vw - 32px));
     padding: var(--toast-py) var(--toast-pr) var(--toast-py) var(--toast-pl); background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-l);
     box-shadow: var(--shadow-pop); color: var(--ink); font: var(--toast-weight) var(--note-size)/var(--lh-ui) var(--body); animation: toast-in var(--t-mid) ease-out; }
-  .toast.out { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
+  .toast.is-leaving { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
   .toast .mark { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
   .toast.is-good .mark { background: var(--good); }
   .toast.is-bad .mark { background: var(--bad); }
   .toast.is-busy .mark { --spin-size: 12px; }
   .toast .txt { flex: 1 1 auto; min-width: 0; }
-  .toast .act, .toast .x { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
+  .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
   .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls); text-transform: var(--act-case); }
-  .toast .x { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
-  .toast .act:hover, .toast .x:hover { color: var(--ink); }
+  .toast .toast-close { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
+  .toast .act:hover, .toast .toast-close:hover { color: var(--ink); }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
-  @media (prefers-reduced-motion: reduce) { .toast, .toast.out { animation: none; transition: none; transform: none; } }
+  @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }
 @media (max-width: 768px) {
     /* as wide as the tab bar under them, and centred like it */
     .toasts { left: 0; right: 0; margin-inline: auto; width: var(--tabbar-w); align-items: stretch; bottom: calc(var(--safe-bottom) + var(--s-48) + var(--s-48)); }
@@ -684,7 +682,7 @@
   .dialog-veil { position: fixed; inset: 0; z-index: var(--z-dialog); display: grid; place-items: center; padding: var(--s-16); background: var(--veil); }
   .dialog { width: min(420px, 100%); box-sizing: border-box; display: grid; align-content: start; gap: var(--s-12); padding: var(--sheet-pad); background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); }
   .dialog-t { margin: 0; font: var(--head-weight) var(--dialog-t-size)/var(--head-lh) var(--title-font); color: var(--ink); }
-  .dialog-x { margin: 0; font: var(--text-weight) var(--dialog-x-size)/var(--text-lh) var(--body); color: var(--dim); }
+  .dialog-text { margin: 0; font: var(--text-weight) var(--dialog-x-size)/var(--text-lh) var(--body); color: var(--dim); }
   .dialog-in { width: 100%; box-sizing: border-box; }
   /* the buttons keep their height, and go under one another when the line is too short for both */
   .dialog-b { --btn-px: var(--dialog-btn-px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s-8); margin-top: var(--s-4); }
@@ -755,18 +753,21 @@
   .tile { background: var(--panel); padding: var(--s-14) var(--s-14) var(--s-12); min-width: 0; border-top: 3px solid var(--n, var(--line)); }
   .tile dt { display: flex; align-items: center; gap: var(--s-6); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; color: color-mix(in oklab, var(--n, var(--ink)) var(--tint-ink), var(--ink)); margin-bottom: var(--s-10); text-transform: none; }
   .tile dd { margin: 0; font: var(--head-weight) var(--fs-28)/var(--title-lh) var(--title-font); font-variant-numeric: tabular-nums; }
-  .tile .u { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
-  .tile .d { display: block; font: 600 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-6); color: var(--good); letter-spacing: 0; }
-  .tile .h { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
-  .tile a.h:hover, .tile a.h:focus-visible { color: var(--ink); text-decoration: underline; }
-  .tile .d.neg { color: var(--bad); }
-  .tile .d.n { color: var(--dim); font-weight: 500; }
+  .tile .tile-unit { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
+  /* the change under a figure, in a tone (is-good, is-bad, is-mid) or plain */
+  .tile .tile-delta { display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-6); color: var(--dim); letter-spacing: 0; }
+  .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: 600; }
+  .tile .tile-delta.is-good { color: var(--good); }
+  .tile .tile-note { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
+  .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
+  .tile .tile-delta.is-bad { color: var(--bad); }
+  .tile .tile-delta.is-mid { color: var(--mid); }
   /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
   .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
   .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
   .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
   .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
+  .tiles .tile.is-good dd { color: var(--good); } .tiles .tile.is-bad dd { color: var(--bad); } .tiles .tile.is-mid dd { color: var(--mid); }
   /* a set number of columns (Bank's four sums, two by two on a phone): .tiles.is-cols, --tile-cols (4), and on a phone
      --tile-cols-phone (2) */
   .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols, 4), minmax(0, 1fr)); }
@@ -783,9 +784,9 @@
   .tiles.is-fit .tile { display: flex; flex-direction: column; gap: var(--s-6); }
   .tiles.is-fit .tile dt { margin: 0; white-space: nowrap; }
   .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
-  .tiles.is-fit .tile .u { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
-  .tiles.is-fit .tile .u .ico { width: var(--ico-s); height: var(--ico-s); }
-  .tiles.is-fit .tile .h { display: block; margin: 0; color: var(--dim); font: 500 var(--fs-11)/var(--lh-ui) var(--body); opacity: .8; }
+  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
+  .tiles.is-fit .tile .tile-unit .ico { width: var(--ico-s); height: var(--ico-s); }
+  .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: 500 var(--fs-11)/var(--lh-ui) var(--body); opacity: .8; }
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
      the figure in gold above its label */
   /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
@@ -796,7 +797,7 @@
   [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
   /* its figure in the big title's size, a step smaller on a phone (--text-2xl) */
   [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--text-2xl); font-weight: 400; }
-  [data-theme="vitrine"] .tiles.is-compact .tile:not(.up):not(.down) dd { color: var(--accent-strong); }
+  [data-theme="vitrine"] .tiles.is-compact .tile:not(.is-good):not(.is-bad):not(.is-mid) dd { color: var(--accent-strong); }
 @media (max-width: 768px) {
   /* four fitted tiles make two rows of two on a phone, where a long label goes on two lines; fewer keep theirs on one, so
      that their figures stay side by side */
@@ -1157,4 +1158,4 @@
    button, the chosen day of the calendar. Its colours are roles (--chosen-ink, --chosen-bg, --chosen-line), which a
    component may change (the calendar's day keeps the full gold edge). Last of the controls, so that it wins over their
    hover. The tabs' chosen one is their own (--tab-on-bg). */
-  .pill.is-on, .periodpop button.on, .btn.is-act, .cal-cell.is-sel { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }
+  .pill.is-on, .periodpop button:is([aria-pressed="true"], [aria-selected="true"]), .btn.is-act, .cal-cell.is-selected { color: var(--chosen-ink); background: var(--chosen-bg); border-color: var(--chosen-line); }

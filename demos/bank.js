@@ -39,7 +39,7 @@
       var day = ds.date(cells[1].getAttribute("data-value"), "weekday") + " 2026";
       sheetEl.querySelector('[data-b="sheetbody"]').innerHTML =
         '<p class="sheet-sub">' + esc(day) + '</p><h2 class="sheet-t" id="' + title + '">' + esc(name) + '</h2>' +
-        '<p class="sheet-fig' + (good ? " is-good" : "") + '">' + esc(amount) + '</p><dl class="kv">' +
+        '<p class="sheet-fig' + (good ? " is-good" : "") + '">' + esc(amount) + '</p><dl class="facts">' +
         '<div><dt>Catégorie</dt><dd>' + esc(cells[4].textContent) + '</dd></div>' +
         '<div><dt>Compte</dt><dd>' + cells[3].innerHTML + '</dd></div>' +
         '<div><dt>Libellé de la banque</dt><dd class="is-mono">CB ' + esc(name.toUpperCase()) + '</dd></div>' +
@@ -57,10 +57,10 @@
     // the pickers: a category for an operation, always open; a bank to connect, behind the dashed button
     var items = [];
     CATS.forEach(function (c) { c[2].forEach(function (s) { items.push({ value: c[0] + "|" + s[0], label: s[0], group: c[0], keywords: c[0], color: c[1], icon: s[1] }); }); });
-    ds.picker(col.querySelector('[data-b="cats"]'), { items: items, value: "Loisirs|Restaurant", placeholder: "Chercher une catégorie…", limit: 8,
+    ds.picker(col.querySelector('[data-b="cats"]'), items, { value: "Loisirs|Restaurant", placeholder: "Chercher une catégorie…", limit: 8,
       first: ["Loisirs|Restaurant", "Loisirs|Bar", "Courses|Supermarché", "Déplacements|Train"],
       onPick: function (x) { ds.toast({ type: "good", text: x.group + " › " + x.label + " pour Tik Tak", action: { label: "Annuler", run: function () {} } }); } });
-    var banks = ds.picker(col.querySelector('[data-b="banks"]'), { items: null, placeholder: "Chercher une banque…", first: POPULAR, limit: 8,
+    var banks = ds.picker(col.querySelector('[data-b="banks"]'), null, { placeholder: "Chercher une banque…", first: POPULAR, limit: 8,
       opener: col.querySelector('[data-b="addbank"]'), empty: "Aucune banque ne correspond.",
       onPick: function (x) { ds.toast({ type: "info", text: (x.sub ? "Renouveler " : "Connecter ") + x.label + "…" }); } });
     // the list of banks comes from the server: a moment of « Chargement… » the first time

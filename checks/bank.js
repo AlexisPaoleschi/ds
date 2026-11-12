@@ -63,7 +63,7 @@ function stylesheets() {
   assert(await keys(p, '#ops tbody tr') === 'd,b,c,a,e' && await sortOf() === ',none,none,none,descending' && await p.inputValue('#sortmenu') === 'montant|0',
     'une colonne de chiffres commence par les plus grands (« −1 234,50€ » lu comme un nombre), le menu suit');
   await p.click('#ops .sort[data-sort="montant"]');
-  assert(await keys(p, '#ops tbody tr') === 'e,a,c,b,d' && /↑/.test(await arrow('montant')) && await p.textContent('#sortpill .pv') === 'Grosses dépenses d’abord',
+  assert(await keys(p, '#ops tbody tr') === 'e,a,c,b,d' && /↑/.test(await arrow('montant')) && await p.textContent('#sortpill .pill-value') === 'Grosses dépenses d’abord',
     'un deuxième clic retourne l’ordre ; la pilule du téléphone dit le nouveau choix');
   await p.click('#ops .sort[data-sort="nom"]');
   assert(await keys(p, '#ops tbody tr') === 'e,b,a,d,c', 'une colonne de mots commence par A, dans l’ordre français (Écoles avec les E)');
@@ -108,7 +108,7 @@ function stylesheets() {
 
   // the pill
   const pill = async () => p.evaluate(() => { const l = document.getElementById('pill'), s = l.querySelector('select'), a = l.getBoundingClientRect(), z = s.getBoundingClientRect();
-    return { pv: l.querySelector('.pv').textContent, on: l.classList.contains('is-on'), over: a.width - z.width <= 2 && a.height - z.height <= 2, seen: getComputedStyle(s).opacity }; });
+    return { pv: l.querySelector('.pill-value').textContent, on: l.classList.contains('is-on'), over: a.width - z.width <= 2 && a.height - z.height <= 2, seen: getComputedStyle(s).opacity }; });
   const p1 = await pill();
   await p.selectOption('#pill-sel', 'revolut');
   const p2 = await pill();
@@ -122,17 +122,17 @@ function stylesheets() {
   await p.click('#open');
   await slid();
   const sh1 = await p.evaluate(() => { const panel = document.querySelector('#sheet .sheet-panel'), r = panel.getBoundingClientRect();
-    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-x').getAttribute('aria-label') }; });
+    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-close').getAttribute('aria-label') }; });
   assert(sh1.open && sh1.focus && sh1.w === 560 && Math.abs(sh1.gap) <= 1 && sh1.top > 0 && sh1.bottom > 0 && sh1.x === 'Fermer', 'la fiche s’ouvre en fenêtre au milieu, le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
   await p.focus('#last-act');
   await p.keyboard.press('Tab');
-  const t1 = await p.evaluate(() => document.activeElement.classList.contains('sheet-x'));
+  const t1 = await p.evaluate(() => document.activeElement.classList.contains('sheet-close'));
   await p.keyboard.press('Shift+Tab');
   const t2 = await p.evaluate(() => document.activeElement.id);
   assert(t1 && t2 === 'last-act', 'Tab tourne dans la fiche, dans les deux sens');
   // the cross stays in its corner while a long sheet scrolls
   const stuck = await p.evaluate(async () => { const panel = document.querySelector('#sheet .sheet-panel'); panel.scrollTop = 900; await new Promise(r => requestAnimationFrame(r));
-    const x = document.querySelector('#sheet .sheet-x').getBoundingClientRect().top - panel.getBoundingClientRect().top; panel.scrollTop = 0; return Math.round(x); });
+    const x = document.querySelector('#sheet .sheet-close').getBoundingClientRect().top - panel.getBoundingClientRect().top; panel.scrollTop = 0; return Math.round(x); });
   assert(stuck >= 0 && stuck <= 24, 'la croix reste dans son coin quand une longue fiche défile (' + stuck + 'px)');
   await p.keyboard.press('Escape');
   assert(await p.evaluate(() => document.getElementById('sheet').hidden && document.activeElement.id === 'open' && log.includes('closed')), 'Échap ferme, le curseur revient au bouton, onClose est appelé');
@@ -144,7 +144,7 @@ function stylesheets() {
   await slid();
   await p.mouse.click(640, 450);
   const inside = await p.evaluate(() => !document.getElementById('sheet').hidden);
-  await p.click('#sheet .sheet-x');
+  await p.click('#sheet .sheet-close');
   assert(veil && inside && await p.evaluate(() => document.getElementById('sheet').hidden), 'un clic sur le voile ferme, un clic dans la fiche non, la croix ferme');
   // a window over the sheet, a field inside it: each takes its own Escape first
   await p.click('#open');
@@ -168,6 +168,18 @@ function stylesheets() {
   const k2 = await p.evaluate(() => [...document.querySelectorAll('#banks .picker-opt')].map(o => o.querySelector('.picker-name').textContent).join(','));
   assert(k1.open && k1.exp === 'true' && k1.focus && k1.text === 'Chargement de la liste…' && k2 === 'BoursoBank déjà reliée,LCL,Revolut',
     'le bouton ouvre le sélecteur, le curseur dans sa recherche ; « Chargement… », puis les banques que la plupart ont');
+  // the list read later, with the banks to show first given with it (Bank's settings)
+  const late = await p.evaluate(() => {
+    const h = document.createElement('div'); h.id = 'late-pick'; document.body.appendChild(h);
+    const pk = ds.picker(h, null, {});
+    pk.set([{ value: 'A', label: 'A' }, { value: 'B', label: 'B' }, { value: 'C', label: 'C' }], { first: ['C'] });
+    const shown = [...h.querySelectorAll('.picker-name')].map(o => o.textContent).join(',');
+    pk.set([], { empty: 'Liste indisponible.' });
+    const none = h.querySelector('.picker-none').textContent; h.remove();
+    return [shown, none];
+  });
+  assert(JSON.stringify(late) === JSON.stringify(['C', 'Liste indisponible.']), 'set(items, {first, empty}) : la liste lue plus tard, avec ce qu’elle montre d’abord ' + JSON.stringify(late));
+  await p.click('#banks .picker-q');
   await p.keyboard.type('credit');
   const k3 = await p.evaluate(() => [...document.querySelectorAll('#banks .picker-name')].map(o => o.textContent).join(','));
   await p.keyboard.press('ArrowDown');

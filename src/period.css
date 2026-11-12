@@ -6,16 +6,16 @@
     font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
-  .periodtitle .yr { color: var(--faint); font-weight: 600; }
+  .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
   .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
   .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
   /* an arrow that leads nowhere is gone, and the row with it when both are */
-  .periodnav .off { display: none; }
-  .periodnav:not(:has(> :not(.off))) { display: none; }
+  .periodnav .is-off { display: none; }
+  .periodnav:not(:has(> :not(.is-off))) { display: none; }
   /* steady (Bank's operations): the arrows keep their room when they lead nowhere, so that choosing a period that has
      some moves nothing under the title; on a phone they stay on the title's line */
-  .periodhead.is-steady .periodnav:not(:has(> :not(.off))) { display: flex; visibility: hidden; }
-  .periodhead.is-steady .periodnav .off { display: inline-flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav:not(:has(> :not(.is-off))) { display: flex; visibility: hidden; }
+  .periodhead.is-steady .periodnav .is-off { display: inline-flex; visibility: hidden; }
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }

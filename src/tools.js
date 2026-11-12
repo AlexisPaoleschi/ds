@@ -1,5 +1,5 @@
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
-   ds.toast and ds.api, and the core's helpers): ds.drawer(name, {onChange}) runs a page's filters drawer;
+   ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
    ds.busy runs the header's loading wheel; ds.trouble(key, {…}) tells a source that failed, once, with « Réessayer ».
    Their own words follow the page's language, <html lang>: English for "en…", French otherwise. */
@@ -23,29 +23,33 @@
   function toast(o) { return window.ds.toast(o); }
   function api(method, url, body, o) { return window.ds.api(method, url, body, o); }
 
-  /* ds.drawer(name, {onChange}): the filters' drawer of a page. Its markup: the edge tab
-     <button class="edgetab" data-drawer-toggle="name">, the layout <div class="side-layout" data-drawer="name"> with its
+  /* ds.drawer(holder, {onChange}): the filters' drawer of a page, holder its layout <div class="side-layout"
+     data-drawer="name">. Its markup: the edge tab <button class="edgetab" data-drawer-toggle="name">, the layout with its
      .scrim, and a close button with data-drawer-close="name". The name is also the device's key that remembers whether it
      was left open. Escape closes the phone's drawer, which covers the page: opening it moves the focus into it, closing it
      gives the focus back to the tab. Returns {open, set(open), toggle(), mark(on)}: mark(true) puts the gold dot on the tab
      while a filter hides something. A page that draws itself again reads .open in onChange (its markup carries the same
-     data- names, and the class open when .open). */
+     data- names, and the class is-open when .open). */
   var drawers = {};
   function phone() { return window.matchMedia("(max-width: 768px)").matches; }
   function paint(name) {
     var d = drawers[name], w = words();
-    document.querySelectorAll('[data-drawer="' + name + '"]').forEach(function (el) { el.classList.toggle("open", d.open); });
+    document.querySelectorAll('[data-drawer="' + name + '"]').forEach(function (el) { el.classList.toggle("is-open", d.open); });
     document.querySelectorAll('[data-drawer-toggle="' + name + '"]').forEach(function (tab) {
-      tab.classList.toggle("on", d.open);
       // the gold dot on the tab while a filter hides something (mark)
-      var dot = tab.querySelector(".fdot");
-      if (d.marked && !dot) { dot = document.createElement("i"); dot.className = "fdot"; dot.setAttribute("aria-hidden", "true"); tab.appendChild(dot); }
+      var dot = tab.querySelector(".filter-pip");
+      if (d.marked && !dot) { dot = document.createElement("i"); dot.className = "filter-pip"; dot.setAttribute("aria-hidden", "true"); tab.appendChild(dot); }
       if (!d.marked && dot) dot.remove();
       tab.setAttribute("aria-expanded", d.open ? "true" : "false");
       tab.setAttribute("aria-label", d.open ? w.closeFilters : w.openFilters);
     });
   }
-  function drawer(name, opts) {
+  function drawer(holder, opts) {
+    holder = _.find(holder);
+    var name = holder && holder.getAttribute("data-drawer");
+    if (!name) return null;
+    // called again (a page that draws its layout anew): the same drawer, painted on the new markup
+    if (drawers[name]) { if (opts && opts.onChange) drawers[name].onChange = opts.onChange; paint(name); return drawers[name]; }
     var d = drawers[name] = { open: false, onChange: (opts || {}).onChange };
     d.open = _.read(name) === "1";
     // open on a phone, it covers the page: a layer, which Escape closes and Tab stays inside
@@ -83,26 +87,32 @@
      rows: [{icon, name, state, every, ok, detail}] — what was read and when (state), how often (every), whether it is on
      time (ok) and, when not, why (detail) — then link: {href, text}. Whether it is open stays across redraws and visits. */
   function status(holder, o) {
-    var key = "ds-status " + location.pathname, det = tag("details", "status"), summary = tag("summary"), list = tag("ul");
-    det.open = _.read(key, true) === "1";
-    summary.append(tag("i", "dot" + (o.late ? " warn" : "")), o.summary || "");
+    holder = _.find(holder);
+    if (!holder) return null;
+    o = o || {};
+    // called again on the same holder: the same <details>, its rows drawn anew
+    var key = "ds-status " + location.pathname, det = holder._dsStatus || tag("details", "status"), summary = tag("summary"), list = tag("ul");
+    var again = !!holder._dsStatus;
+    holder._dsStatus = det;
+    if (!again) det.open = _.read(key, true) === "1";
+    summary.append(tag("i", "status-dot" + (o.late ? " is-mid" : "")), o.summary || "");
     (o.rows || []).forEach(function (r) {
-      var li = tag("li", r.ok ? "" : "late"), sn = tag("span", "sn"), sw = tag("span", "sw");
+      var li = tag("li", r.ok ? "" : "is-late"), sn = tag("span", "status-name"), sw = tag("span", "status-state");
       sn.append(ico(r.icon || "doc"), r.name || "");
       sw.append(ico(r.ok ? "check" : "alert"), r.state || "");
-      li.append(sn, sw, tag("span", "sf", r.every || ""));
-      if (r.detail) li.append(tag("span", "sd", r.detail));
+      li.append(sn, sw, tag("span", "status-every", r.every || ""));
+      if (r.detail) li.append(tag("span", "status-detail", r.detail));
       list.append(li);
     });
     if (o.link) {
-      var last = tag("li", "sl"), a = tag("a", "", o.link.text);
+      var last = tag("li", "status-link"), a = tag("a", "", o.link.text);
       a.href = o.link.href;
       last.append(a);
       list.append(last);
     }
-    det.append(summary, list);
-    det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
-    holder.replaceChildren(det);
+    det.replaceChildren(summary, list);
+    if (!again) det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
+    if (det.parentNode !== holder) holder.replaceChildren(det);
     return det;
   }
 
@@ -113,6 +123,8 @@
      subs ([nodes]: more switches)}. « Journal » opens the job's last lines, read from GET /api/jobs/<key>/logs?after=<n>
      every 2 s while it is open and the page seen; the list follows its end unless one scrolls up. logsLink: where all
      the lines are; reload: what to call once a job was started. Call it again with the jobs' new state: the open logs stay.
+     It draws ds buttons (.btn, .is-act for « Lancer » and an open « Journal », found by [data-job="run"] and
+     [data-job="journal"]) and returns holder.
      A job's block has the id « job-<key> »; ds.jobs.open(key) opens its journal as its button does, for a page's address
      that asks for it (/settings#patreon/journal). */
   var logs = {};
@@ -121,7 +133,7 @@
     var bad = /^(ERROR|ERREUR|CRITICAL)$/.test(x.level) || x.text.indexOf("✖") >= 0;
     var warn = !bad && (/^(WARNING|ATTENTION)$/.test(x.level) || x.text.indexOf("⚠") >= 0);
     var at = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(date(x.t));
-    return el("div", "ll" + (/^=====/.test(x.text) ? " banner" : "") + (bad ? " lbad" : warn ? " lwarn" : ""), [tag("span", "lt", at), tag("span", "lx", x.text)]);
+    return el("div", "log-line" + (/^=====/.test(x.text) ? " banner" : "") + (bad ? " is-bad" : warn ? " is-mid" : ""), [tag("span", "log-time", at), tag("span", "log-text", x.text)]);
   }
   function fetchLogs(key) {
     var st = logState(key);
@@ -131,7 +143,7 @@
       st.busy = false;
       var first = !st.loaded, list = st.list;
       st.loaded = true;
-      if (!d.lines.length) { if (first && list) list.replaceChildren(tag("p", "none", words().nothing)); return; }
+      if (!d.lines.length) { if (first && list) list.replaceChildren(tag("p", "log-empty", words().nothing)); return; }
       st.lines = st.lines.concat(d.lines).slice(-800);
       st.last = d.last;
       if (!list || !list.isConnected) return;
@@ -147,19 +159,23 @@
   }, 2000);
   var shownJobs = null;
   function jobs(holder, list, opts) {
+    holder = _.find(holder);
+    if (!holder) return null;
     opts = opts || {};
+    list = list || [];
     shownJobs = [holder, list, opts];
     var w = words();
     function draw() { jobs(holder, list, opts); }
     holder.replaceChildren.apply(holder, list.map(function (j) {
-      var st = logState(j.key), dot = j.state === "run" ? "run" : j.state === true ? "ok" : j.state === false ? "bad" : "";
+      var st = logState(j.key), dot = j.state === "run" ? " is-running" : j.state === true ? " is-good" : j.state === false ? " is-bad" : "";
       var go = null;
       if (j.run) {
-        go = tag("button", "go");
+        go = tag("button", "btn is-act");
         go.type = "button";
+        go.setAttribute("data-job", "run");
         go.disabled = !!(j.paused || j.running);
         if (j.running) go.textContent = w.running;
-        else go.append(el("span", "", [w.run, tag("span", "mx", w.runNow)]));
+        else go.append(el("span", "", [w.run, tag("span", "wide-only", w.runNow)]));
         go.addEventListener("click", function () {
           go.disabled = true;
           go.textContent = w.started;
@@ -167,8 +183,9 @@
             .then(function () { if (opts.reload) setTimeout(opts.reload, 800); });
         });
       }
-      var jl = tag("button", "jl", w.journal);
+      var jl = tag("button", "btn" + (st.open ? " is-act" : ""), w.journal);
       jl.type = "button";
+      jl.setAttribute("data-job", "journal");
       jl.setAttribute("aria-expanded", st.open ? "true" : "false");
       jl.addEventListener("click", function () {
         st.open = !st.open;
@@ -182,7 +199,7 @@
         lines.setAttribute("aria-label", w.journalOf(j.label));
         lines.tabIndex = 0;
         if (st.lines.length) st.lines.forEach(function (x) { lines.append(lineEl(x)); });
-        else lines.append(tag("p", "none", st.loaded ? w.nothing : w.loading));
+        else lines.append(tag("p", "log-empty", st.loaded ? w.nothing : w.loading));
         lines.addEventListener("scroll", function () {
           st.stick = lines.scrollTop + lines.clientHeight >= lines.scrollHeight - 8;
           st.top = lines.scrollTop;
@@ -192,16 +209,16 @@
         requestAnimationFrame(function () { lines.scrollTop = st.stick ? lines.scrollHeight : st.top; });
         var link = null;
         if (opts.logsLink) { link = tag("a", "", w.allLogs); link.href = opts.logsLink; link.target = "_blank"; link.rel = "noopener"; }
-        var live = el("span", "live", [tag("i", "dot" + (j.running ? " run" : "")), j.running ? w.live : w.lastRuns]);
+        var live = el("span", "live", [tag("i", "sync-dot" + (j.running ? " is-running" : "")), j.running ? w.live : w.lastRuns]);
         live.firstChild.setAttribute("aria-hidden", "true");
         panel = el("div", "logbox", [el("div", "loghead", [live, link]), lines]);
       }
-      var mark = tag("i", "dot " + dot);
+      var mark = tag("i", "sync-dot" + dot);
       mark.setAttribute("aria-hidden", "true");
       var block = el("div", "job", [
         el("div", "name", [mark, j.label]),
         tag("div", "when", j.when || ""),
-        j.summary ? tag("div", "sum" + (j.bad ? " bad" : ""), j.summary) : null,
+        j.summary ? tag("div", "job-sum" + (j.bad ? " is-bad" : ""), j.summary) : null,
         j.subs && j.subs.length ? el("div", "subs", j.subs) : null,
         el("div", "acts", [j.own || null, el("div", "btns", [jl, go])]),
         panel
@@ -209,10 +226,11 @@
       block.id = "job-" + j.key;
       return block;
     }));
+    return holder;
   }
 
-  /* ds.busy: the loading's wheel in the header, <span class="busy"> in header.top with its .spin, .okc tick, .pc share
-     and .bt words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top). The share
+  /* ds.busy: the loading's wheel in the header, <span class="busy"> in header.top with its .spin, .busy-ok tick, .busy-share
+     share and .busy-text words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top). The share
      climbs at an even speed, so as to reach 99% when this kind of loading (key) ends: as long as it took last time, or
      expected ms the first time. pct(p) says how much of the work is done (Studio: the rows read): the first time, with no
      length known, the end is then foreseen from the work too, and the speed bends towards it gently, never a jump.
@@ -225,7 +243,7 @@
   var bz = { shown: 0, speed: 0, work: 0, arrive: 0, known: false, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
   function busyTop() { return bz.top || document.querySelector("header.top"); }
   function busyText(text) {
-    var top = busyTop(), pc = top && top.querySelector(".busy .pc"), boot = document.getElementById("boot-pc");
+    var top = busyTop(), pc = top && top.querySelector(".busy .busy-share"), boot = document.getElementById("boot-pc");
     // seen, not read aloud: the share changes every 50ms inside a region screen readers follow
     if (pc) { pc.setAttribute("aria-hidden", "true"); pc.textContent = text; }
     if (boot) { boot.setAttribute("aria-hidden", "true"); boot.textContent = text; }
@@ -250,9 +268,9 @@
       bz.known = !!(bz.key && busyTimes()[bz.key]);
       bz.expected = (bz.key && busyTimes()[bz.key]) || o.expected || 3000;
       bz.arrive = bz.start + bz.expected;
-      top.classList.remove("loading-done");
-      top.classList.add("loading");
-      var bt = top.querySelector(".busy .bt");
+      top.classList.remove("is-loaded");
+      top.classList.add("is-loading");
+      var bt = top.querySelector(".busy .busy-text");
       if (bt) bt.textContent = text || words().loading;
       busyText("0%");
       bz.tick = setInterval(busyStep, STEP);
@@ -273,7 +291,7 @@
       var top = busyTop();
       clearInterval(bz.tick); bz.tick = null;
       if (!top) return;
-      if (ok === false) { top.classList.remove("loading"); busyText(""); return; }
+      if (ok === false) { top.classList.remove("is-loading"); busyText(""); return; }
       if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); _.write("ds-busy-ms", JSON.stringify(t)); }
       // what is left runs on to 100% in a quarter of a second, evenly, then the tick
       var from = bz.word ? 100 : bz.shown, steps = 5, n = 0;
@@ -283,26 +301,26 @@
         if (n < steps) return;
         clearInterval(bz.tick); bz.tick = null;
         bz.end = setTimeout(function () {
-          top.classList.remove("loading");
+          top.classList.remove("is-loading");
           busyText("");
           // the tick's animation starts again even when it played a moment ago
           void top.offsetWidth;
-          top.classList.add("loading-done");
+          top.classList.add("is-loaded");
           // the one word screen readers hear at the end, once the region shows again with its tick
-          var bt = top.querySelector(".busy .bt");
+          var bt = top.querySelector(".busy .busy-text");
           if (bt) bt.textContent = words().loaded;
-          bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
+          bz.end = setTimeout(function () { top.classList.remove("is-loaded"); }, 2000);
         }, 100);
       }, STEP);
     },
     say: function (word) {
       var top = busyTop();
-      if (!top || !top.classList.contains("loading")) return;
+      if (!top || !top.classList.contains("is-loading")) return;
       clearInterval(bz.tick); bz.tick = null;
       bz.word = true;
       busyText(word);
     },
-    active: function () { var top = busyTop(); return !!top && top.classList.contains("loading"); }
+    active: function () { var top = busyTop(); return !!top && top.classList.contains("is-loading"); }
   };
 
   /* ds.trouble(key, {name, text, retry, check, link}): a source that could not be read says so once a visit, in an error

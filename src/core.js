@@ -135,10 +135,14 @@
     }
   });
 
+  /* ds.today(): Paris's day, "2026-11-12", whatever the device's clock says (the same as ds.day.today()). */
+  function today() { return day.today(); }
+
   ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
     ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top };
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
   ds.day = day;
+  ds.today = today;
 })();

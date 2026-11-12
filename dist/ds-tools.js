@@ -1,6 +1,6 @@
-/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
-   ds.toast and ds.api, and the core's helpers): ds.drawer(name, {onChange}) runs a page's filters drawer;
+   ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
    ds.busy runs the header's loading wheel; ds.trouble(key, {…}) tells a source that failed, once, with « Réessayer ».
    Their own words follow the page's language, <html lang>: English for "en…", French otherwise. */
@@ -24,29 +24,33 @@
   function toast(o) { return window.ds.toast(o); }
   function api(method, url, body, o) { return window.ds.api(method, url, body, o); }
 
-  /* ds.drawer(name, {onChange}): the filters' drawer of a page. Its markup: the edge tab
-     <button class="edgetab" data-drawer-toggle="name">, the layout <div class="side-layout" data-drawer="name"> with its
+  /* ds.drawer(holder, {onChange}): the filters' drawer of a page, holder its layout <div class="side-layout"
+     data-drawer="name">. Its markup: the edge tab <button class="edgetab" data-drawer-toggle="name">, the layout with its
      .scrim, and a close button with data-drawer-close="name". The name is also the device's key that remembers whether it
      was left open. Escape closes the phone's drawer, which covers the page: opening it moves the focus into it, closing it
      gives the focus back to the tab. Returns {open, set(open), toggle(), mark(on)}: mark(true) puts the gold dot on the tab
      while a filter hides something. A page that draws itself again reads .open in onChange (its markup carries the same
-     data- names, and the class open when .open). */
+     data- names, and the class is-open when .open). */
   var drawers = {};
   function phone() { return window.matchMedia("(max-width: 768px)").matches; }
   function paint(name) {
     var d = drawers[name], w = words();
-    document.querySelectorAll('[data-drawer="' + name + '"]').forEach(function (el) { el.classList.toggle("open", d.open); });
+    document.querySelectorAll('[data-drawer="' + name + '"]').forEach(function (el) { el.classList.toggle("is-open", d.open); });
     document.querySelectorAll('[data-drawer-toggle="' + name + '"]').forEach(function (tab) {
-      tab.classList.toggle("on", d.open);
       // the gold dot on the tab while a filter hides something (mark)
-      var dot = tab.querySelector(".fdot");
-      if (d.marked && !dot) { dot = document.createElement("i"); dot.className = "fdot"; dot.setAttribute("aria-hidden", "true"); tab.appendChild(dot); }
+      var dot = tab.querySelector(".filter-pip");
+      if (d.marked && !dot) { dot = document.createElement("i"); dot.className = "filter-pip"; dot.setAttribute("aria-hidden", "true"); tab.appendChild(dot); }
       if (!d.marked && dot) dot.remove();
       tab.setAttribute("aria-expanded", d.open ? "true" : "false");
       tab.setAttribute("aria-label", d.open ? w.closeFilters : w.openFilters);
     });
   }
-  function drawer(name, opts) {
+  function drawer(holder, opts) {
+    holder = _.find(holder);
+    var name = holder && holder.getAttribute("data-drawer");
+    if (!name) return null;
+    // called again (a page that draws its layout anew): the same drawer, painted on the new markup
+    if (drawers[name]) { if (opts && opts.onChange) drawers[name].onChange = opts.onChange; paint(name); return drawers[name]; }
     var d = drawers[name] = { open: false, onChange: (opts || {}).onChange };
     d.open = _.read(name) === "1";
     // open on a phone, it covers the page: a layer, which Escape closes and Tab stays inside
@@ -84,26 +88,32 @@
      rows: [{icon, name, state, every, ok, detail}] — what was read and when (state), how often (every), whether it is on
      time (ok) and, when not, why (detail) — then link: {href, text}. Whether it is open stays across redraws and visits. */
   function status(holder, o) {
-    var key = "ds-status " + location.pathname, det = tag("details", "status"), summary = tag("summary"), list = tag("ul");
-    det.open = _.read(key, true) === "1";
-    summary.append(tag("i", "dot" + (o.late ? " warn" : "")), o.summary || "");
+    holder = _.find(holder);
+    if (!holder) return null;
+    o = o || {};
+    // called again on the same holder: the same <details>, its rows drawn anew
+    var key = "ds-status " + location.pathname, det = holder._dsStatus || tag("details", "status"), summary = tag("summary"), list = tag("ul");
+    var again = !!holder._dsStatus;
+    holder._dsStatus = det;
+    if (!again) det.open = _.read(key, true) === "1";
+    summary.append(tag("i", "status-dot" + (o.late ? " is-mid" : "")), o.summary || "");
     (o.rows || []).forEach(function (r) {
-      var li = tag("li", r.ok ? "" : "late"), sn = tag("span", "sn"), sw = tag("span", "sw");
+      var li = tag("li", r.ok ? "" : "is-late"), sn = tag("span", "status-name"), sw = tag("span", "status-state");
       sn.append(ico(r.icon || "doc"), r.name || "");
       sw.append(ico(r.ok ? "check" : "alert"), r.state || "");
-      li.append(sn, sw, tag("span", "sf", r.every || ""));
-      if (r.detail) li.append(tag("span", "sd", r.detail));
+      li.append(sn, sw, tag("span", "status-every", r.every || ""));
+      if (r.detail) li.append(tag("span", "status-detail", r.detail));
       list.append(li);
     });
     if (o.link) {
-      var last = tag("li", "sl"), a = tag("a", "", o.link.text);
+      var last = tag("li", "status-link"), a = tag("a", "", o.link.text);
       a.href = o.link.href;
       last.append(a);
       list.append(last);
     }
-    det.append(summary, list);
-    det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
-    holder.replaceChildren(det);
+    det.replaceChildren(summary, list);
+    if (!again) det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
+    if (det.parentNode !== holder) holder.replaceChildren(det);
     return det;
   }
 
@@ -114,6 +124,8 @@
      subs ([nodes]: more switches)}. « Journal » opens the job's last lines, read from GET /api/jobs/<key>/logs?after=<n>
      every 2 s while it is open and the page seen; the list follows its end unless one scrolls up. logsLink: where all
      the lines are; reload: what to call once a job was started. Call it again with the jobs' new state: the open logs stay.
+     It draws ds buttons (.btn, .is-act for « Lancer » and an open « Journal », found by [data-job="run"] and
+     [data-job="journal"]) and returns holder.
      A job's block has the id « job-<key> »; ds.jobs.open(key) opens its journal as its button does, for a page's address
      that asks for it (/settings#patreon/journal). */
   var logs = {};
@@ -122,7 +134,7 @@
     var bad = /^(ERROR|ERREUR|CRITICAL)$/.test(x.level) || x.text.indexOf("✖") >= 0;
     var warn = !bad && (/^(WARNING|ATTENTION)$/.test(x.level) || x.text.indexOf("⚠") >= 0);
     var at = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(date(x.t));
-    return el("div", "ll" + (/^=====/.test(x.text) ? " banner" : "") + (bad ? " lbad" : warn ? " lwarn" : ""), [tag("span", "lt", at), tag("span", "lx", x.text)]);
+    return el("div", "log-line" + (/^=====/.test(x.text) ? " banner" : "") + (bad ? " is-bad" : warn ? " is-mid" : ""), [tag("span", "log-time", at), tag("span", "log-text", x.text)]);
   }
   function fetchLogs(key) {
     var st = logState(key);
@@ -132,7 +144,7 @@
       st.busy = false;
       var first = !st.loaded, list = st.list;
       st.loaded = true;
-      if (!d.lines.length) { if (first && list) list.replaceChildren(tag("p", "none", words().nothing)); return; }
+      if (!d.lines.length) { if (first && list) list.replaceChildren(tag("p", "log-empty", words().nothing)); return; }
       st.lines = st.lines.concat(d.lines).slice(-800);
       st.last = d.last;
       if (!list || !list.isConnected) return;
@@ -148,19 +160,23 @@
   }, 2000);
   var shownJobs = null;
   function jobs(holder, list, opts) {
+    holder = _.find(holder);
+    if (!holder) return null;
     opts = opts || {};
+    list = list || [];
     shownJobs = [holder, list, opts];
     var w = words();
     function draw() { jobs(holder, list, opts); }
     holder.replaceChildren.apply(holder, list.map(function (j) {
-      var st = logState(j.key), dot = j.state === "run" ? "run" : j.state === true ? "ok" : j.state === false ? "bad" : "";
+      var st = logState(j.key), dot = j.state === "run" ? " is-running" : j.state === true ? " is-good" : j.state === false ? " is-bad" : "";
       var go = null;
       if (j.run) {
-        go = tag("button", "go");
+        go = tag("button", "btn is-act");
         go.type = "button";
+        go.setAttribute("data-job", "run");
         go.disabled = !!(j.paused || j.running);
         if (j.running) go.textContent = w.running;
-        else go.append(el("span", "", [w.run, tag("span", "mx", w.runNow)]));
+        else go.append(el("span", "", [w.run, tag("span", "wide-only", w.runNow)]));
         go.addEventListener("click", function () {
           go.disabled = true;
           go.textContent = w.started;
@@ -168,8 +184,9 @@
             .then(function () { if (opts.reload) setTimeout(opts.reload, 800); });
         });
       }
-      var jl = tag("button", "jl", w.journal);
+      var jl = tag("button", "btn" + (st.open ? " is-act" : ""), w.journal);
       jl.type = "button";
+      jl.setAttribute("data-job", "journal");
       jl.setAttribute("aria-expanded", st.open ? "true" : "false");
       jl.addEventListener("click", function () {
         st.open = !st.open;
@@ -183,7 +200,7 @@
         lines.setAttribute("aria-label", w.journalOf(j.label));
         lines.tabIndex = 0;
         if (st.lines.length) st.lines.forEach(function (x) { lines.append(lineEl(x)); });
-        else lines.append(tag("p", "none", st.loaded ? w.nothing : w.loading));
+        else lines.append(tag("p", "log-empty", st.loaded ? w.nothing : w.loading));
         lines.addEventListener("scroll", function () {
           st.stick = lines.scrollTop + lines.clientHeight >= lines.scrollHeight - 8;
           st.top = lines.scrollTop;
@@ -193,16 +210,16 @@
         requestAnimationFrame(function () { lines.scrollTop = st.stick ? lines.scrollHeight : st.top; });
         var link = null;
         if (opts.logsLink) { link = tag("a", "", w.allLogs); link.href = opts.logsLink; link.target = "_blank"; link.rel = "noopener"; }
-        var live = el("span", "live", [tag("i", "dot" + (j.running ? " run" : "")), j.running ? w.live : w.lastRuns]);
+        var live = el("span", "live", [tag("i", "sync-dot" + (j.running ? " is-running" : "")), j.running ? w.live : w.lastRuns]);
         live.firstChild.setAttribute("aria-hidden", "true");
         panel = el("div", "logbox", [el("div", "loghead", [live, link]), lines]);
       }
-      var mark = tag("i", "dot " + dot);
+      var mark = tag("i", "sync-dot" + dot);
       mark.setAttribute("aria-hidden", "true");
       var block = el("div", "job", [
         el("div", "name", [mark, j.label]),
         tag("div", "when", j.when || ""),
-        j.summary ? tag("div", "sum" + (j.bad ? " bad" : ""), j.summary) : null,
+        j.summary ? tag("div", "job-sum" + (j.bad ? " is-bad" : ""), j.summary) : null,
         j.subs && j.subs.length ? el("div", "subs", j.subs) : null,
         el("div", "acts", [j.own || null, el("div", "btns", [jl, go])]),
         panel
@@ -210,10 +227,11 @@
       block.id = "job-" + j.key;
       return block;
     }));
+    return holder;
   }
 
-  /* ds.busy: the loading's wheel in the header, <span class="busy"> in header.top with its .spin, .okc tick, .pc share
-     and .bt words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top). The share
+  /* ds.busy: the loading's wheel in the header, <span class="busy"> in header.top with its .spin, .busy-ok tick, .busy-share
+     share and .busy-text words. start(text, {key, expected, header}) shows it at 0% (in header, or the page's header.top). The share
      climbs at an even speed, so as to reach 99% when this kind of loading (key) ends: as long as it took last time, or
      expected ms the first time. pct(p) says how much of the work is done (Studio: the rows read): the first time, with no
      length known, the end is then foreseen from the work too, and the speed bends towards it gently, never a jump.
@@ -226,7 +244,7 @@
   var bz = { shown: 0, speed: 0, work: 0, arrive: 0, known: false, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
   function busyTop() { return bz.top || document.querySelector("header.top"); }
   function busyText(text) {
-    var top = busyTop(), pc = top && top.querySelector(".busy .pc"), boot = document.getElementById("boot-pc");
+    var top = busyTop(), pc = top && top.querySelector(".busy .busy-share"), boot = document.getElementById("boot-pc");
     // seen, not read aloud: the share changes every 50ms inside a region screen readers follow
     if (pc) { pc.setAttribute("aria-hidden", "true"); pc.textContent = text; }
     if (boot) { boot.setAttribute("aria-hidden", "true"); boot.textContent = text; }
@@ -251,9 +269,9 @@
       bz.known = !!(bz.key && busyTimes()[bz.key]);
       bz.expected = (bz.key && busyTimes()[bz.key]) || o.expected || 3000;
       bz.arrive = bz.start + bz.expected;
-      top.classList.remove("loading-done");
-      top.classList.add("loading");
-      var bt = top.querySelector(".busy .bt");
+      top.classList.remove("is-loaded");
+      top.classList.add("is-loading");
+      var bt = top.querySelector(".busy .busy-text");
       if (bt) bt.textContent = text || words().loading;
       busyText("0%");
       bz.tick = setInterval(busyStep, STEP);
@@ -274,7 +292,7 @@
       var top = busyTop();
       clearInterval(bz.tick); bz.tick = null;
       if (!top) return;
-      if (ok === false) { top.classList.remove("loading"); busyText(""); return; }
+      if (ok === false) { top.classList.remove("is-loading"); busyText(""); return; }
       if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); _.write("ds-busy-ms", JSON.stringify(t)); }
       // what is left runs on to 100% in a quarter of a second, evenly, then the tick
       var from = bz.word ? 100 : bz.shown, steps = 5, n = 0;
@@ -284,26 +302,26 @@
         if (n < steps) return;
         clearInterval(bz.tick); bz.tick = null;
         bz.end = setTimeout(function () {
-          top.classList.remove("loading");
+          top.classList.remove("is-loading");
           busyText("");
           // the tick's animation starts again even when it played a moment ago
           void top.offsetWidth;
-          top.classList.add("loading-done");
+          top.classList.add("is-loaded");
           // the one word screen readers hear at the end, once the region shows again with its tick
-          var bt = top.querySelector(".busy .bt");
+          var bt = top.querySelector(".busy .busy-text");
           if (bt) bt.textContent = words().loaded;
-          bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
+          bz.end = setTimeout(function () { top.classList.remove("is-loaded"); }, 2000);
         }, 100);
       }, STEP);
     },
     say: function (word) {
       var top = busyTop();
-      if (!top || !top.classList.contains("loading")) return;
+      if (!top || !top.classList.contains("is-loading")) return;
       clearInterval(bz.tick); bz.tick = null;
       bz.word = true;
       busyText(word);
     },
-    active: function () { var top = busyTop(); return !!top && top.classList.contains("loading"); }
+    active: function () { var top = busyTop(); return !!top && top.classList.contains("is-loading"); }
   };
 
   /* ds.trouble(key, {name, text, retry, check, link}): a source that could not be read says so once a visit, in an error
@@ -363,7 +381,7 @@
 /* ds.sheet(el, {onOpen, onClose}): the sheet of src/sheet.css, its veil el (<div class="sheet" hidden>) around its
    .sheet-panel. Returns {open(from), close(), toggle(), isOpen}; called again on the same el, it gives the same sheet.
    Opening it moves the focus into the panel, and Tab stays there; closing gives the focus back to what had it (or to
-   from, e.g. the row that opened it). Escape, a click on the veil, its cross (.sheet-x) or a [data-sheet-close] close
+   from, e.g. the row that opened it). Escape, a click on the veil, its cross (.sheet-close) or a [data-sheet-close] close
    it: the last one opened first, and a window of ds.confirm over it keeps its own Escape. On a phone the page behind
    does not scroll while it is open (sheet.css). */
 (function () {
@@ -379,7 +397,7 @@
     var cover = { el: panel, loose: true, close: function () { s.close(); } };
     el._dsSheet = s;
     panel.setAttribute("tabindex", "-1");
-    el.querySelectorAll(".sheet-x").forEach(function (x) { if (!x.hasAttribute("aria-label")) x.setAttribute("aria-label", _.words().close); });
+    el.querySelectorAll(".sheet-close").forEach(function (x) { if (!x.hasAttribute("aria-label")) x.setAttribute("aria-label", _.words().close); });
     s.open = function (from) {
       if (s.isOpen) return s;
       s.isOpen = true;
@@ -405,7 +423,7 @@
     };
     s.toggle = function (from) { return s.isOpen ? s.close() : s.open(from); };
     el.addEventListener("click", function (e) {
-      if (e.target === el || (e.target.closest && e.target.closest(".sheet-x, [data-sheet-close]"))) s.close();
+      if (e.target === el || (e.target.closest && e.target.closest(".sheet-close, [data-sheet-close]"))) s.close();
     });
     return s;
   }
@@ -425,12 +443,12 @@
      names in French order, empty cells last whichever the way.
    Returns {by, up, set(by, up)}; called again on the same table it gives the same, so a page that draws its table anew
    (Studio) calls it again on the new one and finds its choice under key.
-   ds.selection(holder, {bar, count, onChange}) picks rows: each row of holder with a data-key and its box
+   ds.selection(holder, {bar, count, onPick}) picks rows: each row of holder with a data-key and its box
    <input type="checkbox" class="sel-box">; a click on a box picks or drops its row, a shift-click the rows since the
    last box; the box .sel-all picks every row shown, half-ticked when some are. A picked row is .is-selected. bar: the
    .selbar (else the one in holder), shown while something is picked, its .selbar-n saying how many (count(n), in
    words), its [data-sel-clear] dropping all. The choice is kept by key, so a list drawn again keeps it: call paint().
-   Returns {keys(), has(key), set(key, on), clear(), paint()}; onChange(keys) after each change. */
+   Returns {keys(), has(key), set(key, on), clear(), paint()}; onPick(keys) after each change. */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find;
@@ -553,7 +571,7 @@
     holder._dsSel = sel;
     function bar() { return find(sel.o.bar) || holder.querySelector(".selbar"); }
     function rows() { return [].filter.call(holder.querySelectorAll("[data-key]"), function (r) { return r.querySelector(".sel-box"); }); }
-    function changed() { sel.paint(); if (sel.o.onChange) sel.o.onChange(sel.keys()); }
+    function changed() { sel.paint(); if (sel.o.onPick) sel.o.onPick(sel.keys()); }
     sel.keys = function () { return Array.from(sel.picked); };
     sel.has = function (key) { return sel.picked.has(String(key)); };
     sel.set = function (key, on) { if (on) sel.picked.add(String(key)); else sel.picked.delete(String(key)); changed(); return sel; };
@@ -607,7 +625,7 @@
 /* Calendar, taken from Studio's agenda: ds.calendar(holder, opts) draws the period head (the month's name, which opens a
    month picker, ds.datePick on months; the views; ‹ Aujourd’hui ›) and under it one of three views: a month of day
    cells, with the panel of the selected day below; a week of columns; a list of days, each in its panel.
-   opts: view ("month", "week" or "list"), day (the selected day, "2026-11-09": today by default), items(key) (the day's
+   opts: view ("month", "week" or "list"), value (the chosen day, "2026-11-09": today by default), items(key) (the day's
    items, in the order they are shown), panel(key, items) (what the day's panel holds under its title: one or more nodes;
    by default one row per item), row(item, key) (a row of a week's column or of the default panel), body (where the view
    goes: holder by default, after the head; a page may put it beside its filters), lines (lines in a cell, 8 by default),
@@ -622,7 +640,7 @@
    In the month, what runs over several days is one bar in its colour across them, at the same height in every cell it
    crosses, its title on its first day and on each Monday it goes on to, as Google's agenda draws a stay or a trip.
    On a phone, a cell shows a dot per item, three at most, then « +N ».
-   Returns {draw(), set({view, day}), go(step), today(), state()}: state() is {view, day, from, to}, the days shown
+   Returns {draw(), set({view, value}), go(step), today(), state()}: state() is {view, value, from, to}, the days shown
    (to excluded), what a page reads to load them; onChange receives it after each move, then the page calls draw()
    once it has what those days hold. ds.calendar.row(item) and ds.calendar.mark(item) build a default row and a mark,
    for a page that fills the panels itself. */
@@ -678,13 +696,13 @@
   // a row of a day: its time, its mark and codes, its title (a link when it has one), its place
   function defaultRow(it) {
     var li = el("li", it.done ? "is-done" : "");
-    li.append(el("span", "t", it.time || "—"), mark(it));
+    li.append(el("span", "row-date", it.time || "—"), mark(it));
     codes(it).forEach(function (c) { li.append(c); });
-    var t = el(it.href ? "a" : "span", "ttl", it.title || "");
+    var t = el(it.href ? "a" : "span", "row-title", it.title || "");
     if (it.href) { t.href = it.href; t.target = "_blank"; t.rel = "noopener"; }
     li.append(t);
-    if (it.place) li.append(el("span", "pl", it.place));
-    if (it.late && it.lateText) li.append(el("span", "late", it.lateText));
+    if (it.place) li.append(el("span", "row-place", it.place));
+    if (it.late && it.lateText) li.append(el("span", "late-tag", it.lateText));
     return li;
   }
 
@@ -726,8 +744,12 @@
   }
 
   function calendar(holder, opts) {
+    holder = _.find(holder);
+    if (!holder) return null;
     opts = opts || {};
-    var st = { view: VIEWS.indexOf(opts.view) >= 0 ? opts.view : "month", day: opts.day || null, before: false };
+    // called again on the same holder: the same calendar, moved to the view and day given
+    if (holder._dsCalendar) { holder._dsCalendar.set({ view: opts.view, value: opts.value }); return holder._dsCalendar; }
+    var st = { view: VIEWS.indexOf(opts.view) >= 0 ? opts.view : "month", day: opts.value || null, before: false };
     var lines = opts.lines || 8;
     function today() { return opts.today || parisToday(); }
     if (!st.day) st.day = today();
@@ -784,7 +806,7 @@
       if (st.view === "month") { from = weekStart(st.day.slice(0, 8) + "01"); to = addDays(from, 42); }
       else if (st.view === "week") { from = weekStart(st.day); to = addDays(from, 7); }
       else { from = addDays(st.day, st.before ? -7 : 0); to = addDays(st.day, 8); }
-      return { view: st.view, day: st.day, from: from, to: to };
+      return { view: st.view, value: st.day, from: from, to: to };
     }
     function changed() {
       draw();
@@ -803,7 +825,7 @@
     function goToday() { move(today()); }
 
     function titleText() {
-      if (st.view === "month") return [fmt(st.day, { month: "long" }), el("span", "yr", " " + st.day.slice(0, 4))];
+      if (st.view === "month") return [fmt(st.day, { month: "long" }), el("span", "periodtitle-year", " " + st.day.slice(0, 4))];
       var a = st.view === "week" ? weekStart(st.day) : st.day;
       return [shortDay(a) + " – " + shortDay(addDays(a, st.view === "week" ? 6 : 7))];
     }
@@ -814,13 +836,13 @@
       var inside = opts.panel ? opts.panel(key, items) : null;
       if (inside == null) {
         if (items.length) { var ul = el("ul", "rows"); items.forEach(function (it) { ul.append(rowOf(it, key)); }); inside = ul; }
-        else inside = el("p", "empty", words().none);
+        else inside = el("p", "empty-note", words().none);
       }
       [].concat(inside).forEach(function (n) { if (n) sec.append(n); });
       return sec;
     }
     function cell(key, inMonth, week) {
-      var items = itemsOf(key), t = today(), b = el("button", "cal-cell" + (inMonth ? "" : " is-off") + (key === t ? " is-today" : "") + (key === st.day ? " is-sel" : ""));
+      var items = itemsOf(key), t = today(), b = el("button", "cal-cell" + (inMonth ? "" : " is-off") + (key === t ? " is-today" : "") + (key === st.day ? " is-selected" : ""));
       b.type = "button";
       b.dataset.day = key;
       b.setAttribute("aria-pressed", key === st.day ? "true" : "false");
@@ -871,7 +893,7 @@
         h.append(el("span", "cal-wdate", shortDay(key)));
         col.append(h);
         if (items.length) { var ul = el("ul", "rows"); items.forEach(function (it) { ul.append(rowOf(it, key)); }); col.append(ul); }
-        else col.append(el("p", "empty", "—"));
+        else col.append(el("p", "empty-note", "—"));
         out.append(col);
       }
       return [out];
@@ -913,11 +935,12 @@
     function set(o) {
       o = o || {};
       if (VIEWS.indexOf(o.view) >= 0) st.view = o.view;
-      if (o.day) st.day = o.day;
+      if (o.value) st.day = o.value;
       draw();
     }
     draw();
-    return { draw: draw, set: set, go: go, today: goToday, state: state, el: root };
+    holder._dsCalendar = { draw: draw, set: set, go: go, today: goToday, state: state, el: root };
+    return holder._dsCalendar;
   }
 
   // a day's default row, for a page that fills its panels itself (panel) and still wants the calendar's rows
@@ -929,35 +952,35 @@
 /* Charts, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns its element; with
    holder null it only returns it, for a page that builds its own tree. The colour of a series is a token, given as its
    name (color: "--c-bleu") and set as --n on the chart; the lines, labels and grounds come from the theme.
-   ds.chart.line(holder, points, {color, label, value, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
-     values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; label(x) and value(v)
+   ds.chart.line(holder, points, {color, formatDay, format, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
+     values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; formatDay(x) and format(v)
      write them (a short date and a figure by default). Tall, a chart of its own (a share's price): taller, its middle
      day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); marks:
      [{x, label}] a dot on each day given (purchases), its label on hover; hover: the day and value under the pointer or
      the finger, with a cursor; now: the day that is today, when the curve goes on with what is foreseen: from it the
      curve is dashed and its ground paler, a thin rule stands on it, nowLabel over it (« aujourd’hui »).
-   ds.chart.bars(holder, rows, {color, average, unit, short, selected, pick}): bars on a round scale (0, 500, 1 000…),
+   ds.chart.bars(holder, rows, {color, average, unit, short, value, onPick}): bars on a round scale (0, 500, 1 000…),
      the figure on each bar, a dashed line at the average. rows: [{key, label, value, parts: [{value, color}], live,
      title}]: parts stack their colours in the bar; live hatches a period still running; a "2026-11" key is named by its
-     month. pick(key) makes the bars buttons, the selected one lit.
+     month. onPick(key) makes the bars buttons, value the one lit.
      Paired, with pairs: [{key, label, color}] (Bank's money in and out), each row carries one value per series under its
      key ({key: "2026-11", income: 3200, spending: 2104}): a bar per series side by side, their figures stacked over
      them on hover or when chosen, and a legend that adds each series up, written by format(v) (the figure and unit by
      default).
-   ds.chart.heat(holder, counts, {color, to, from, weeks, steps, title, below, legend, note}): a year of days, one square
+   ds.chart.heat(holder, counts, {color, to, from, weeks, steps, tip, below, legend, note}): a year of days, one square
      per day, a column per week, Monday on top, pale on a day with nothing, coloured from steps[0] (1), full from
      steps[1] (2); the days before from fade, those after to (today) are left out; below(weekStart) writes a figure
      under a week (what it gained), or {text, title} to say more on hover. counts: {"2026-11-09": 2}. In a card narrower than a year (740px, a phone) it
      scrolls sideways, opened on its last weeks.
-   ds.chart.spark(holder, values, {color, top, title}): small bars side by side, as tall as their value against top
+   ds.chart.spark(holder, values, {color, top, tip}): small bars side by side, as tall as their value against top
      (a story's views against the best story shown).
    ds.chart.split(holder, parts, {format}): one bar split by share, then its legend. parts: [{label, value, color}].
-   ds.chart.donut(holder, rows, {format, selected, pick, center}): a ring split by share, the total in its hole, and its
+   ds.chart.donut(holder, rows, {format, value, onPick, center}): a ring split by share, the total in its hole, and its
      legend beside it (under it on a phone), a row per slice: its colour, its name, its share, its amount. rows: [{key,
      label, value, color, note, tone}] (nothing at or under 0 is drawn; note: a word under the name, in red with tone
      "bad", in green with "good"); center: the word under the total (« dépensés »), or
-     {value, label}; pick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
-     another tap lets it go (pick(null)); the slices are one stop of the keyboard, the arrows go round them;
+     {value, label}; onPick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
+     another tap lets it go (onPick(null)); value: the one chosen to start with; the slices are one stop of the keyboard, the arrows go round them;
      open(key, holder): what the chosen one opens, right under its row of the legend (holder, empty, for the page to
      fill, then or later), gone when it is let go or another is chosen. */
 (function () {
@@ -976,7 +999,7 @@
     return e;
   }
   function paint(e, color) { if (color) e.style.setProperty("--n", tone(color)); return e; }
-  function put(holder, e) { if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
+  function put(holder, e) { holder = _.find(holder); if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
   function num(v) { return window.ds.number(v); }
   // big figures made short where room is tight: 1 240 → 1,2k, 12 500 → 13k
   function short(v) {
@@ -994,8 +1017,8 @@
     o = o || {};
     var pts = (points || []).filter(function (p) { return p && typeof p.v === "number"; });
     if (pts.length < 2) return put(holder, null);
-    var label = o.label || function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x) ? window.ds.date(x, "day") : String(x); };
-    var value = o.value || num;
+    var label = o.formatDay || function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x) ? window.ds.date(x, "day") : String(x); };
+    var value = o.format || num;
     var ref = o.ref && typeof o.ref.v === "number" ? o.ref : null;
     var vals = pts.map(function (p) { return p.v; }), all = ref ? vals.concat([ref.v]) : vals;
     var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), span = hi - lo || 1;
@@ -1140,7 +1163,7 @@
       area.append(vs);
     }
     rows.forEach(function (r, i) {
-      var c = el(o.pick ? "button" : "div", "chart-bar" + (r.key === o.selected ? " is-on" : "") + (r.live ? " is-live" : "") + ((n - 1 - i) % 2 ? " is-alt" : ""));
+      var c = el(o.onPick ? "button" : "div", "chart-bar" + (r.key === o.value ? " is-on" : "") + (r.live ? " is-live" : "") + ((n - 1 - i) % 2 ? " is-alt" : ""));
       var area = el("span", "chart-bar-area");
       if (pairs) pair(area, r);
       else {
@@ -1166,12 +1189,12 @@
       c.append(area, lab);
       var figs = pairs ? pairs.map(function (q) { return q.label + " " + say(r[q.key] || 0); }).join(" · ") : fig(r.value || 0) + unit;
       c.title = r.title || (name + " · " + figs + (r.live ? " (" + words().live + ")" : ""));
-      if (o.pick) {
+      if (o.onPick) {
         c.type = "button";
-        c.setAttribute("aria-pressed", r.key === o.selected ? "true" : "false");
+        c.setAttribute("aria-pressed", r.key === o.value ? "true" : "false");
         c.addEventListener("click", function () {
           [].forEach.call(cols.children, function (x) { x.classList.toggle("is-on", x === c); x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
-          o.pick(r.key);
+          o.onPick(r.key);
         });
       }
       cols.append(c);
@@ -1194,7 +1217,7 @@
     o = o || {};
     counts = counts || {};
     var w = words(), to = o.to || parisToday(), steps = o.steps || [1, 2], weeks = o.weeks || 53, from = o.from || null;
-    var title = o.title || function (key, n) { return window.ds.date(key, "day") + " · " + n; };
+    var title = o.tip || function (key, n) { return window.ds.date(key, "day") + " · " + n; };
     var lastWeek = weekStart(to), blocks = Math.max(1, Math.ceil(weeks / 53)), box = paint(el("div", "chart-heat"), o.color), scroll = el("div", "chart-heat-scroll");
     // always whole years of 53 weeks, so that the squares keep their size; a longer span stacks them, the latest first
     for (var b = 0; b < blocks; b++) {
@@ -1246,7 +1269,7 @@
       var b = el("i");
       // the smallest still shows
       b.style.height = Math.max(8, Math.round(v / top * 100)) + "%";
-      b.title = o.title ? o.title(v) : num(v);
+      b.title = o.tip ? o.tip(v) : num(v);
       box.append(b);
     });
     return put(holder, box);
@@ -1278,10 +1301,10 @@
     var total = all.reduce(function (s, x) { return s + x.value; }, 0);
     if (!total) return put(holder, null);
     var R = 90, r = 60, gap = all.length > 1 ? 0.02 : 0, angle = -Math.PI / 2;
-    var box = el("div", "chart-donut" + (o.pick ? " is-pick" : "")), ring = el("div", "chart-donut-ring"), legend = el("ul", "chart-donut-legend");
+    var box = el("div", "chart-donut" + (o.onPick ? " is-pick" : "")), ring = el("div", "chart-donut-ring"), legend = el("ul", "chart-donut-legend");
     var s = svg("svg", { viewBox: "0 0 200 200", "class": "chart-donut-svg" }), mid = el("div", "chart-donut-c"), big = el("b"), word = el("small");
     var c = o.center == null ? {} : typeof o.center === "object" ? o.center : { label: String(o.center) };
-    var keys = all.map(function (x) { return String(x.key != null ? x.key : x.label); }), on = o.selected == null ? null : String(o.selected);
+    var keys = all.map(function (x) { return String(x.key != null ? x.key : x.label); }), on = o.value == null ? null : String(o.value);
     var slices = [], items = [], told = [];
     function pt(a, rad) { return (100 + rad * Math.cos(a)).toFixed(2) + " " + (100 + rad * Math.sin(a)).toFixed(2); }
     all.forEach(function (x, i) {
@@ -1302,7 +1325,7 @@
       path.append(tip);
       s.append(path);
       slices.push(path);
-      var li = el("li"), row = el(o.pick ? "button" : "div", "chart-donut-row");
+      var li = el("li"), row = el(o.onPick ? "button" : "div", "chart-donut-row");
       // a row may say a word under its name (note), in a colour (tone: bad, good): what rose against the usual
       var name = el("span", "chart-donut-l", x.label);
       if (x.note) name.append(el("small", "chart-donut-n" + (x.tone ? " is-" + x.tone : ""), x.note));
@@ -1310,7 +1333,7 @@
       li.append(row);
       legend.append(li);
       items.push(row);
-      if (!o.pick) return;
+      if (!o.onPick) return;
       path.setAttribute("role", "button");
       path.setAttribute("aria-label", said);
       path.addEventListener("click", function () { choose(i, true); });
@@ -1323,13 +1346,13 @@
       row.type = "button";
       row.addEventListener("click", function () { choose(i, true); });
     });
-    if (o.pick) s.setAttribute("role", "group");
+    if (o.onPick) s.setAttribute("role", "group");
     else {
       s.setAttribute("role", "img");
       s.setAttribute("aria-label", told.join(", "));
     }
     function rove(i, focus) {
-      if (!o.pick) return;
+      if (!o.onPick) return;
       slices.forEach(function (p, k) { p.setAttribute("tabindex", k === i ? "0" : "-1"); });
       if (focus) slices[i].focus();
     }
@@ -1350,13 +1373,13 @@
       if (user) on = on === k ? null : k;
       var at = on == null ? -1 : keys.indexOf(on);
       box.classList.toggle("has-on", at >= 0);
-      slices.forEach(function (p, j) { p.classList.toggle("is-on", j === at); if (o.pick) p.setAttribute("aria-pressed", j === at ? "true" : "false"); });
-      items.forEach(function (b, j) { b.classList.toggle("is-on", j === at); if (o.pick) b.setAttribute("aria-pressed", j === at ? "true" : "false"); });
+      slices.forEach(function (p, j) { p.classList.toggle("is-on", j === at); if (o.onPick) p.setAttribute("aria-pressed", j === at ? "true" : "false"); });
+      items.forEach(function (b, j) { b.classList.toggle("is-on", j === at); if (o.onPick) b.setAttribute("aria-pressed", j === at ? "true" : "false"); });
       big.textContent = at >= 0 ? format(all[at].value) : c.value != null ? String(c.value) : format(total);
       word.textContent = at >= 0 ? all[at].label : c.label || "";
       word.hidden = !word.textContent;
       openUnder(at);
-      if (user) { rove(i, false); o.pick(on); }
+      if (user) { rove(i, false); o.onPick(on); }
     }
     mid.setAttribute("aria-live", "polite");
     mid.append(big, word);
@@ -1370,20 +1393,24 @@
   window.ds = window.ds || {};
   window.ds.chart = { line: line, bars: bars, heat: heat, spark: spark, split: split, donut: donut };
 })();
-/* Figures read at a glance, taken from Studio's analysis; each builder returns an element for the page to place.
-   ds.rank(rows, {title, note, empty, plain}): a ranking, one row per name: its place (the first three in gold), the name
+/* Figures read at a glance, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns
+   its element; with holder null it only returns it, for a page that builds its own tree (a verdict in a ranking's row).
+   ds.rank(holder, rows, {title, note, empty, plain}): a ranking, one row per name: its place (the first three in gold), the name
      (a link with href) and a grey line under it (sub), and on the right its value (a text, or a node such as a verdict);
      with share (0 to 1, against the first) a thin bar under the name. plain leaves the places out. Rankings side by side
      go in <div class="ranks">.
-   ds.minitiles(items): small tiles of reference figures at the top of a card. items: [{label, value, unit, note}].
-   ds.verdict(ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
+   ds.minitiles(holder, items): small tiles of reference figures at the top of a card. items: [{label, value, unit, note,
+     tone}]: tone "good", "bad" or "mid" colours the figure.
+   ds.verdict(holder, ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(options, current, pick, {label}): a period selector: buttons on a computer, the design system's menu on
-     a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]]; pick(value)
-     is called with the chosen one, the selector lights it itself. */
+   ds.periodPick(holder, options, {value, onPick, label}): a period selector: buttons on a computer, the design system's
+     menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]];
+     value: the one lit; onPick(value) is called with the chosen one, the selector lights it itself. Called again on the
+     same holder, it gives the same selector back, lit on the value given. */
 (function () {
   "use strict";
-  var _ = window.ds._, el = _.el;
+  var _ = window.ds._, el = _.el, find = _.find;
+  function put(holder, e) { holder = find(holder); if (holder) holder.replaceChildren(e); return e; }
   var WORDS = _.table({
     fr: { strong: "fort", average: "moyen", weak: "faible", against: "par rapport à la médiane", period: "Période", empty: "Rien sur cette période." },
     en: { strong: "strong", average: "average", weak: "weak", against: "against the median", period: "Period", empty: "Nothing over this period." }
@@ -1391,12 +1418,12 @@
   function words() { return _.words(WORDS); }
   function safe(u) { return typeof u === "string" && /^(https?:\/\/|\/|#)[^\s"'<>]*$/.test(u) ? u : null; }
 
-  function rank(rows, o) {
+  function rank(holder, rows, o) {
     o = o || {};
     var col = el("div", "rank-col"), head = el("p", "rank-head", o.title || "");
     if (o.note) head.append(el("span", "rank-note", o.note));
     col.append(head);
-    if (!rows || !rows.length) { col.append(el("p", "empty", o.empty || words().empty)); return col; }
+    if (!rows || !rows.length) { col.append(el("p", "empty-note", o.empty || words().empty)); return put(holder, col); }
     var list = el("ol", "rank" + (o.plain ? " is-plain" : ""));
     rows.forEach(function (r, i) {
       var li = el("li", i < 3 ? "is-top" : ""), name = el("div", "rank-name"), href = safe(r.href);
@@ -1416,36 +1443,39 @@
       list.append(li);
     });
     col.append(list);
-    return col;
+    return put(holder, col);
   }
 
   // the compact tiles (tiles.css), each as wide as the widest (.is-fit); .minitiles stays on it for the apps' own rules
-  function minitiles(items) {
+  function minitiles(holder, items) {
     var box = el("dl", "tiles is-compact is-fit minitiles");
     (items || []).filter(Boolean).forEach(function (x) {
-      box.append(el("div", "tile", [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "u", x.unit) : null]),
-        x.note ? el("span", "h", x.note) : null]));
+      box.append(el("div", "tile" + (x.tone ? " is-" + x.tone : ""), [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "tile-unit", x.unit) : null]),
+        x.note ? el("span", "tile-note", x.note) : null]));
     });
-    return box;
+    return put(holder, box);
   }
 
-  function verdict(ratio, o) {
+  function verdict(holder, ratio, o) {
     o = o || {};
     var w = words(), high = o.high || 1.2, low = o.low || 0.8;
-    if (ratio == null || isNaN(ratio)) return el("span", "verdict is-none" + (o.words ? " is-tall" : ""));
-    var level = ratio >= high ? "good" : ratio >= low ? "mid" : "weak";
+    if (ratio == null || isNaN(ratio)) return put(holder, el("span", "verdict is-none" + (o.words ? " is-tall" : "")));
+    var level = ratio >= high ? "good" : ratio >= low ? "mid" : "bad";
     var v = el("span", "verdict is-" + level + (o.words ? " is-tall" : ""), "×" + window.ds.number(Math.round(ratio * 10) / 10, Math.round(ratio * 10) % 10 ? 1 : 0));
     v.title = w.against;
     // short words of the same length, so that every verdict reads the same
     if (o.words) v.append(el("small", "", level === "good" ? w.strong : level === "mid" ? w.average : w.weak));
-    return v;
+    return put(holder, v);
   }
 
-  function periodPick(options, current, pick, o) {
+  function periodPick(holder, options, o) {
     o = o || {};
-    var label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
+    holder = find(holder);
+    var had = holder && holder._dsPeriodPick;
+    if (had) { if (o.value !== undefined) had.light(o.value); return had.el; }
+    var pick = o.onPick, label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
     // on a phone, the menu: what is chosen in words, the phone's own picker under it
-    var list = el("select"), shown = el("span", "pv"), menu = el("label", "pill periodpick-list", [shown, list]);
+    var list = el("select"), shown = el("span", "pill-value"), menu = el("label", "pill periodpick-list", [shown, list]);
     group.setAttribute("role", "group");
     group.setAttribute("aria-label", label);
     list.setAttribute("aria-label", label);
@@ -1470,8 +1500,9 @@
       list.append(op);
     });
     list.addEventListener("change", function () { choose(list.value); });
-    light(current);
+    light(o.value);
     box.append(group, menu);
+    if (holder) { holder._dsPeriodPick = { el: box, light: light }; holder.replaceChildren(box); }
     return box;
   }
 
@@ -1482,10 +1513,10 @@
   window.ds.periodPick = periodPick;
 })();
 /* The behaviour of src/pick.css.
-   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu's choice in its .pv,
+   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu’s choice in its .pill-value,
    and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
    every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
-   ds.picker(holder, {items, value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
+   ds.picker(holder, items, {value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
    holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
      items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
      cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
@@ -1493,7 +1524,8 @@
      (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
      matches; onPick(item) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the search
      taking the focus. ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
-     Returns {open(), close(), toggle(), set(items), draw(), input}. */
+     Returns {open(), close(), toggle(), set(items, options), draw(), input}; set takes the list once read, and may change
+     the options with it (first, empty…). */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find, tag = _.el;
@@ -1509,8 +1541,8 @@
     [].forEach.call(list, function (p) {
       var sel = p.querySelector("select");
       if (!sel) return;
-      var pv = p.querySelector(".pv");
-      if (!pv) { pv = tag("span", "pv"); p.insertBefore(pv, p.firstChild); }
+      var pv = p.querySelector(".pill-value");
+      if (!pv) { pv = tag("span", "pill-value"); p.insertBefore(pv, p.firstChild); }
       var o = sel.options[sel.selectedIndex];
       pv.textContent = o ? o.textContent : "";
       if (p.classList.contains("is-filter")) p.classList.toggle("is-on", !!sel.value);
@@ -1526,11 +1558,14 @@
 
   var made = 0;
   function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
-  function picker(holder, o) {
+  function picker(holder, items, o) {
     holder = find(holder);
     if (!holder) return null;
-    o = o || {};
-    var w = words(), id = "ds-picker-" + (++made), p = { items: o.items === undefined ? [] : o.items, shown: [], active: -1 };
+    o = Object.assign({}, o);
+    // called again on the same holder: the same picker, with the items given
+    if (holder._dsPicker) { if (items !== undefined) holder._dsPicker.set(items); return holder._dsPicker; }
+    var w = words(), id = "ds-picker-" + (++made), p = { items: items === undefined ? [] : items, shown: [], active: -1 };
+    holder._dsPicker = p;
     holder.classList.add("picker");
     var input = tag("input", "picker-q"), list = tag("div", "picker-list");
     input.type = "search";
@@ -1601,7 +1636,7 @@
       var opts = list.querySelectorAll(".picker-opt");
       if (!opts.length) return;
       p.active = (i + opts.length) % opts.length;
-      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-active", k === p.active); });
+      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-focused", k === p.active); });
       input.setAttribute("aria-activedescendant", opts[p.active].id);
       opts[p.active].scrollIntoView({ block: "nearest" });
     }
@@ -1640,7 +1675,7 @@
       return p;
     };
     p.toggle = function () { return holder.hidden ? p.open() : p.close(); };
-    p.set = function (items) { p.items = items; return p.draw(); };
+    p.set = function (items, more) { p.items = items; if (more) Object.keys(more).forEach(function (k) { o[k] = more[k]; }); return p.draw(); };
     if (opener) {
       opener.setAttribute("aria-controls", holder.id || (holder.id = id + "-box"));
       opener.setAttribute("aria-expanded", holder.hidden ? "false" : "true");
@@ -1885,6 +1920,8 @@
     holder = find(holder);
     if (!holder) return null;
     o = o || {};
+    // called again on the same holder: the same picker, set to the value given (an opener is never bound twice)
+    if (holder._dsDatePick) { if (o.value !== undefined) holder._dsDatePick.set(o.value); return holder._dsDatePick; }
     var id = "ds-datepick-" + (++made), opener = find(o.opener), quick = o.quick || [];
     var modes = (o.modes || MODES).filter(function (m) { return MODES.indexOf(m) >= 0; });
     if (!modes.length) modes = MODES.slice();
@@ -2013,7 +2050,7 @@
     function quickRow() {
       var box = el("div", "dp-quick"), lit = matchQuick();
       quick.forEach(function (q, i) {
-        var b = btn(q === lit ? "on" : "", q.label, "q" + i);
+        var b = btn("", q.label, "q" + i);
         b.setAttribute("aria-pressed", q === lit ? "true" : "false");
         b.addEventListener("click", function () { pick({ from: q.from, to: q.to }, q); });
         box.append(b);
@@ -2026,7 +2063,7 @@
       box.setAttribute("aria-label", w.modes);
       box.style.setProperty("--dp-tabs", String(modes.length));
       modes.forEach(function (m) {
-        var on = m === st.mode, b = btn(on ? "on" : "", w[m], "t-" + m);
+        var on = m === st.mode, b = btn("", w[m], "t-" + m);
         b.setAttribute("role", "tab");
         b.setAttribute("aria-selected", on ? "true" : "false");
         b.setAttribute("aria-controls", id + "-grid");
@@ -2051,7 +2088,7 @@
     }
     function cell(u, k, focusKey) {
       var t = unitKey(u, today()), text = u === "day" ? String(+k.slice(8)) : u === "month" ? fmt(k + "-15", { month: "short" }) : k;
-      var on = chosen(u, k), b = btn((on ? "on" : "") + (between(k) ? " is-in" : "") + (k === t ? " is-today" : ""), text, "c:" + k);
+      var on = chosen(u, k), b = btn((between(k) ? "is-in" : "") + (k === t ? " is-today" : ""), text, "c:" + k);
       b.dataset.key = k;
       b.tabIndex = k === focusKey ? 0 : -1;
       b.disabled = !enabled(u, k);
@@ -2190,6 +2227,7 @@
       holder.hidden = true;
       opener.setAttribute("aria-expanded", "false");
     }
+    holder._dsDatePick = p;
     reset();
     return draw();
   }
@@ -2197,7 +2235,6 @@
   datePick.step = step;
   datePick.label = label;
   datePick.kind = kind;
-  datePick.today = parisToday;
   window.ds = window.ds || {};
   window.ds.datePick = datePick;
 })();
@@ -2318,6 +2355,9 @@
   }
 
   function version(button, o) {
+    button = window.ds._.find(button);
+    if (!button) return null;
+    if (button._dsVersion) return button._dsVersion;
     o = o || {};
     var meta = document.querySelector('meta[name="version"]'), mine = o.mine || (meta && meta.content) || null, w = words();
     if (!button.querySelector(".newver-pip")) {
@@ -2341,6 +2381,7 @@
         return true;
       }
     };
+    button._dsVersion = light;
     return light;
   }
 

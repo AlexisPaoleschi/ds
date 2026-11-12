@@ -57,7 +57,7 @@
       xs.forEach(function (it) { ul.append(ds.calendar.row(it)); });
       out.push(h, ul);
     });
-    return out.length ? out : node("p", "empty", "Rien ce jour-là.");
+    return out.length ? out : node("p", "empty-note", "Rien ce jour-là.");
   }
   each("calendar", function (holder) { ds.calendar(holder, { items: itemsOn, panel: panel, years: [2015, +today.slice(0, 4) + 2] }); });
 
@@ -78,7 +78,7 @@
       if (i % 21 === 5) marks.push({ x: pts[i].x, label: "achat de 80 parts" });
     }
     ds.chart.line(holder, pts, { tall: true, area: true, hover: true, marks: marks, ref: { v: 5.56, label: "prix de revient 5,56€" },
-      value: function (x) { return ds.number(x, 3) + "€"; } });
+      format: function (x) { return ds.number(x, 3) + "€"; } });
   });
   // a month's balance (Bank's bills account): as it was up to today, then as it should go, each thing to come a dot
   each("ahead", function (holder) {
@@ -90,12 +90,12 @@
       pts.push({ x: k, v: v });
     }
     ds.chart.line(holder, pts, { tall: true, area: true, hover: true, now: today, nowLabel: "aujourd’hui", marks: marks,
-      ref: { v: 100, label: "marge 100€" }, value: function (x) { return ds.number(x) + "€"; } });
+      ref: { v: 100, label: "marge 100€" }, format: function (x) { return ds.number(x) + "€"; } });
   });
   var SPANS = [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]];
   // a period: the period selector, in the title's place for it (on the right)
   each("period", function (holder) {
-    holder.replaceWith(ds.periodPick(SPANS, 90, function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); }));
+    holder.replaceWith(ds.periodPick(null, SPANS, { value: 90, onPick: function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); } }));
   });
 
   /* revenue: a year of months, net in euros, split between subscriptions and single purchases; the month in progress hatched */
@@ -113,12 +113,12 @@
     split.style.margin = "0 0 var(--s-16)";
     function show(k) {
       var x = months.filter(function (r) { return r.key === k; })[0];
-      top.replaceChildren(ds.minitiles([{ label: ds.date(k, "month") + (x.live ? " · en cours" : ""), value: money(x.value), unit: "net" },
-        { label: "Moyenne 12 mois", value: money(average), unit: "par mois", note: "sans le mois en cours" }]));
+      ds.minitiles(top, [{ label: ds.date(k, "month") + (x.live ? " · en cours" : ""), value: money(x.value), unit: "net" },
+        { label: "Moyenne 12 mois", value: money(average), unit: "par mois", note: "sans le mois en cours" }]);
       ds.chart.split(split, [{ label: "Abonnements", value: x.abo, color: "--c-bleu" }, { label: "Achats uniques", value: x.achats, color: "--accent" }], { format: money });
     }
     show(months[11].key);
-    ds.chart.bars(chart, months, { color: "--c-bleu", average: average, unit: "€", selected: months[11].key, pick: show });
+    ds.chart.bars(chart, months, { color: "--c-bleu", average: average, unit: "€", value: months[11].key, onPick: show });
     holder.append(top, split, chart);
   });
 
@@ -131,10 +131,10 @@
   each("heat", function (holder) {
     var total = 0;
     Object.keys(posts).forEach(function (k) { total += posts[k]; });
-    holder.append(ds.minitiles([{ label: "Posts", value: ds.number(total / 53, 1), unit: "par semaine" }, { label: "Abonnés gagnés", value: "+86", unit: "par semaine" }]));
+    holder.append(ds.minitiles(null, [{ label: "Posts", value: ds.number(total / 53, 1), unit: "par semaine" }, { label: "Abonnés gagnés", value: "+86", unit: "par semaine" }]));
     var box = node("div");
     ds.chart.heat(box, posts, { color: "--c-rouge", legend: ["rien", "1 post", "2 et plus"], note: "sous chaque semaine : les abonnés gagnés",
-      title: function (k, n) { return ds.date(k, "day") + " · " + (n ? n + (n > 1 ? " posts" : " post") : "rien"); },
+      tip: function (k, n) { return ds.date(k, "day") + " · " + (n ? n + (n > 1 ? " posts" : " post") : "rien"); },
       below: function (ws) { return ws > today ? null : "+" + Math.round(40 + rnd(num(ws)) * 110); } });
     holder.append(box);
   });
@@ -144,24 +144,24 @@
     var people = [["Irina", 6, 1.9], ["Léa", 4, 1.5], ["Rebecca", 3, 1.2], ["Maëlle", 5, 1.05], ["Anouk", 2, 0.86], ["Inès", 3, 0.62]];
     var postsTop = [["Série Irina au lac", "12 oct.", 2.4], ["Preview Léa", "28 sept.", 1.7], ["Making-of Lyon", "3 nov.", 1.1], ["Set complet Inès", "19 oct.", 0.7]];
     var types = [["Série", 9, 1.3], ["Preview", 7, 1.0], ["Story", 12, 0.7]];
-    holder.append(ds.minitiles([{ label: "Médiane", value: "1 240", unit: "réactions", note: "48 posts depuis mars 2026" }]));
+    holder.append(ds.minitiles(null, [{ label: "Médiane", value: "1 240", unit: "réactions", note: "48 posts depuis mars 2026" }]));
     var ranks = node("div", "ranks");
     ranks.append(
-      ds.rank(people.map(function (p) { return { name: p[0], href: "#", sub: p[1] + " posts", value: ds.verdict(p[2]) }; }), { title: "Par modèle" }),
-      ds.rank(postsTop.map(function (p) { return { name: p[0], href: "https://www.instagram.com/", sub: p[1], value: ds.verdict(p[2]) }; }), { title: "Par post" }),
-      ds.rank(types.map(function (p) { return { name: p[0], sub: p[1] + " posts", value: ds.verdict(p[2]) }; }), { title: "Par type de contenu", plain: true }));
+      ds.rank(null, people.map(function (p) { return { name: p[0], href: "#", sub: p[1] + " posts", value: ds.verdict(null, p[2]) }; }), { title: "Par modèle" }),
+      ds.rank(null, postsTop.map(function (p) { return { name: p[0], href: "https://www.instagram.com/", sub: p[1], value: ds.verdict(null, p[2]) }; }), { title: "Par post" }),
+      ds.rank(null, types.map(function (p) { return { name: p[0], sub: p[1] + " posts", value: ds.verdict(null, p[2]) }; }), { title: "Par type de contenu", plain: true }));
     holder.append(ranks);
   });
   each("earned", function (holder) {
     var people = [["Irina Lozovaya", 14, 1260], ["Rebecca Bagnol", 9, 840], ["Léa", 6, 515], ["Clémence", 4, 290], ["Zoé", 2, 95]];
     var postsTop = [["Série Irina au lac", 8, 620], ["Pack Lyon 2026", 5, 450], ["Vidéo Rebecca", 4, 180]];
     var paid = [["Preview Léa", "28 sept. · 96€ d’abonnements", "+12"], ["Série Irina au lac", "12 oct. · 64€ d’abonnements", "+8"], ["Story Maëlle", "2 nov.", "+3"]];
-    holder.append(ds.minitiles([{ label: "Ventes des modèles", value: money(3000), unit: "hors packs et accès" }]));
+    holder.append(ds.minitiles(null, [{ label: "Ventes des modèles", value: money(3000), unit: "hors packs et accès" }]));
     var ranks = node("div", "ranks");
     ranks.append(
-      ds.rank(people.map(function (p) { return { name: p[0], href: "#", sub: p[1] + " ventes", value: money(p[2]), share: p[2] / people[0][2] }; }), { title: "Par modèle" }),
-      ds.rank(postsTop.map(function (p) { return { name: p[0], href: "https://www.patreon.com/", sub: p[1] + " ventes", value: money(p[2]) }; }), { title: "Par post" }),
-      ds.rank(paid.map(function (p) { return { name: p[0], sub: p[1], value: p[2] }; }), { title: "Posts qui amènent des payants", note: "30 jours" }));
+      ds.rank(null, people.map(function (p) { return { name: p[0], href: "#", sub: p[1] + " ventes", value: money(p[2]), share: p[2] / people[0][2] }; }), { title: "Par modèle" }),
+      ds.rank(null, postsTop.map(function (p) { return { name: p[0], href: "https://www.patreon.com/", sub: p[1] + " ventes", value: money(p[2]) }; }), { title: "Par post" }),
+      ds.rank(null, paid.map(function (p) { return { name: p[0], sub: p[1], value: p[2] }; }), { title: "Posts qui amènent des payants", note: "30 jours" }));
     holder.append(ranks);
   });
   /* a day of stories: one small bar per story, as tall as its views, and the day against the usual story */
@@ -173,12 +173,12 @@
       days.push({ key: addDays(today, -i), views: vs });
     }
     var top = Math.max.apply(null, days.map(function (x) { return Math.max.apply(null, x.views); }));
-    holder.append(ds.minitiles([{ label: "Médiane", value: ds.number(med), unit: "vues par story", note: "214 stories depuis janvier 2026" }]));
-    holder.append(ds.rank(days.map(function (x) {
+    holder.append(ds.minitiles(null, [{ label: "Médiane", value: ds.number(med), unit: "vues par story", note: "214 stories depuis janvier 2026" }]));
+    holder.append(ds.rank(null, days.map(function (x) {
       var sum = x.views.reduce(function (s, v) { return s + v; }, 0), figs = node("span");
       figs.style.cssText = "display: inline-flex; align-items: center; gap: var(--s-14)";
-      figs.append(ds.chart.spark(null, x.views, { color: "--c-rouge", top: top, title: function (v) { return ds.number(v) + " vues"; } }),
-        node("b", "rank-v", ds.number(Math.round(sum / x.views.length))), ds.verdict(sum / x.views.length / med, { words: true }));
+      figs.append(ds.chart.spark(null, x.views, { color: "--c-rouge", top: top, tip: function (v) { return ds.number(v) + " vues"; } }),
+        node("b", "rank-v", ds.number(Math.round(sum / x.views.length))), ds.verdict(null, sum / x.views.length / med, { words: true }));
       return { name: x.views.length + " stories", sub: ds.date(x.key, "day") + " · " + ds.number(sum) + " vues au total", value: figs };
     }), { title: "Par jour", plain: true }));
   });
@@ -192,7 +192,7 @@
   function say(t, text) {
     keeps.forEach(function (list) {
       var li = node("li");
-      li.append(node("span", "t", t), node("span", "pl", text));
+      li.append(node("span", "row-date", t), node("span", "row-place", text));
       list.append(li);
     });
   }

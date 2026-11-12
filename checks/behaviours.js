@@ -55,7 +55,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const tab = p.locator('[data-drawer-toggle]');
   assert(await tab.getAttribute('aria-label') === 'Ouvrir les filtres' && await tab.getAttribute('aria-expanded') === 'false', 'tiroir fermé au départ, onglet le dit');
   await tab.click();
-  assert(await p.evaluate(() => document.querySelector('[data-drawer]').classList.contains('open') && side.open), 'l’onglet ouvre le tiroir');
+  assert(await p.evaluate(() => document.querySelector('[data-drawer]').classList.contains('is-open') && side.open), 'l’onglet ouvre le tiroir');
   assert(await p.evaluate(() => document.activeElement.classList.contains('side')), 'sur téléphone, le curseur entre dans le tiroir');
   assert(await tab.getAttribute('aria-label') === 'Fermer les filtres', 'l’onglet dit qu’il ferme');
   await p.keyboard.press('Escape');
@@ -69,35 +69,35 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await tab.click();
   const seen = await p.evaluate(() => JSON.stringify(changes)); console.log('      onChange :', seen); assert(seen === '[true,false,true,false,true,false,true]', 'onChange suit chaque changement (4 ouvertures, 3 fermetures)');
   await p.reload(); await p.waitForFunction(() => window.side);
-  assert(await p.evaluate(() => side.open && document.querySelector('[data-drawer]').classList.contains('open')), 'le tiroir resté ouvert l’est encore au retour');
+  assert(await p.evaluate(() => side.open && document.querySelector('[data-drawer]').classList.contains('is-open')), 'le tiroir resté ouvert l’est encore au retour');
   // the drawer's gold dot while a filter hides something
   await p.evaluate(() => side.mark(true));
-  const dot1 = await p.evaluate(() => document.querySelectorAll('[data-drawer-toggle] .fdot').length);
+  const dot1 = await p.evaluate(() => document.querySelectorAll('[data-drawer-toggle] .filter-pip').length);
   await p.evaluate(() => side.set(!side.open));
-  const dot2 = await p.evaluate(() => document.querySelectorAll('[data-drawer-toggle] .fdot').length);
+  const dot2 = await p.evaluate(() => document.querySelectorAll('[data-drawer-toggle] .filter-pip').length);
   await p.evaluate(() => { side.set(!side.open); side.mark(false); });
-  assert(dot1 === 1 && dot2 === 1 && await p.evaluate(() => !document.querySelector('[data-drawer-toggle] .fdot')), 'le point d’or du tiroir : mis, gardé quand il s’ouvre, ôté');
+  assert(dot1 === 1 && dot2 === 1 && await p.evaluate(() => !document.querySelector('[data-drawer-toggle] .filter-pip')), 'le point d’or du tiroir : mis, gardé quand il s’ouvre, ôté');
   // the main views on a phone: a bar at the bottom, the icon above the name, the dot on the icon's corner
   const bar = await p.evaluate(() => { const t = document.querySelector('.tabs.is-bar'), r = t.getBoundingClientRect(), ico = t.querySelector('.ico'), dot = t.querySelector('.tabn');
     return { fixed: getComputedStyle(t).position, bottom: Math.round(innerHeight - r.bottom), h: Math.round(r.height), ico: getComputedStyle(ico).display, dot: getComputedStyle(dot).position }; });
   assert(bar.fixed === 'fixed' && bar.bottom >= 14 && bar.h === 54 && bar.ico === 'block' && bar.dot === 'absolute', 'sur téléphone, les vues en barre en bas, icône au-dessus du nom ' + JSON.stringify(bar));
   // the header's loading wheel: 0 %, climbing on its own, never back, 100 % then the tick
   await p.evaluate(() => ds.busy.start('Lecture des banques…', { expected: 400 }));
-  const b1 = await p.evaluate(() => ({ on: ds.busy.active(), seen: getComputedStyle(document.querySelector('.busy')).visibility, bt: document.querySelector('.busy .bt').textContent }));
+  const b1 = await p.evaluate(() => ({ on: ds.busy.active(), seen: getComputedStyle(document.querySelector('.busy')).visibility, bt: document.querySelector('.busy .busy-text').textContent }));
   await p.waitForTimeout(700);
-  const b2 = await p.evaluate(() => ({ pc: parseInt(document.querySelector('.busy .pc').textContent), boot: document.getElementById('boot-pc').textContent }));
+  const b2 = await p.evaluate(() => ({ pc: parseInt(document.querySelector('.busy .busy-share').textContent), boot: document.getElementById('boot-pc').textContent }));
   await p.evaluate(() => ds.busy.pct(10));
-  const b3 = await p.evaluate(() => parseInt(document.querySelector('.busy .pc').textContent));
+  const b3 = await p.evaluate(() => parseInt(document.querySelector('.busy .busy-share').textContent));
   await p.evaluate(() => ds.busy.done());
   await p.waitForTimeout(500);
-  const b4 = await p.evaluate(() => ({ on: ds.busy.active(), done: document.querySelector('header.top').classList.contains('loading-done'), pc: document.querySelector('.busy .pc').textContent }));
+  const b4 = await p.evaluate(() => ({ on: ds.busy.active(), done: document.querySelector('header.top').classList.contains('is-loaded'), pc: document.querySelector('.busy .busy-share').textContent }));
   assert(b1.on && b1.seen === 'visible' && b1.bt === 'Lecture des banques…' && b2.pc > 10 && b2.boot === b2.pc + '%' && b3 >= b2.pc && !b4.on && b4.done && b4.pc === '',
     'la roue de l’en-tête : visible, le pourcentage monte seul et ne recule jamais, puis la coche ' + JSON.stringify([b1, b2, b3, b4]));
   // an even speed: over a loading foreseen to last 2 s, the share climbs by the same steps; work read ahead of time (half
   // of it at 0.6 s) bends the speed gently, without a jump
   await p.waitForTimeout(2100);
   const even = await p.evaluate(async () => {
-    const pc = () => parseInt(document.querySelector('.busy .pc').textContent), wait = ms => new Promise(r => setTimeout(r, ms)), a = [], b = [];
+    const pc = () => parseInt(document.querySelector('.busy .busy-share').textContent), wait = ms => new Promise(r => setTimeout(r, ms)), a = [], b = [];
     ds.busy.start('Lecture', { expected: 2000 });
     for (let i = 0; i < 8; i++) { await wait(200); a.push(pc()); }
     ds.busy.done(false);
@@ -115,10 +115,10 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.waitForTimeout(2100);
   await p.evaluate(() => { ds.busy.start('Analyse', { expected: 400 }); ds.busy.say('calcul…'); ds.busy.pct(80); });
   await p.waitForTimeout(400);
-  const w1 = await p.evaluate(() => [document.querySelector('.busy .pc').textContent, document.getElementById('boot-pc').textContent]);
+  const w1 = await p.evaluate(() => [document.querySelector('.busy .busy-share').textContent, document.getElementById('boot-pc').textContent]);
   await p.evaluate(() => ds.busy.done());
   await p.waitForTimeout(500);
-  const w2 = await p.evaluate(() => [ds.busy.active(), document.querySelector('header.top').classList.contains('loading-done')]);
+  const w2 = await p.evaluate(() => [ds.busy.active(), document.querySelector('header.top').classList.contains('is-loaded')]);
   assert(w1[0] === 'calcul…' && w1[1] === 'calcul…' && !w2[0] && w2[1], 'un mot à la place du pourcentage (« calcul… ») reste jusqu’à la fin, puis la coche ' + JSON.stringify([w1, w2]));
   // a source that failed: told once, Réessayer, then how it went
   const told = await p.evaluate(async () => {
@@ -144,7 +144,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     return { boot: s, gutter: getComputedStyle(document.documentElement).scrollbarGutter }; });
   assert(shell.boot === 'grid' && shell.gutter === 'stable', 'le premier chargement au milieu, la place de la barre de défilement gardée ' + JSON.stringify(shell));
   // the sources' state
-  const st = await p.evaluate(() => { const d = document.querySelector('#footer details.status'); return { rows: d.querySelectorAll('li').length, late: d.querySelectorAll('li.late').length, dot: !!d.querySelector('.dot.warn'), sd: d.querySelector('li.late .sd').textContent, link: d.querySelector('li.sl a').getAttribute('href'), open: d.open }; });
+  const st = await p.evaluate(() => { const d = document.querySelector('#footer details.status'); return { rows: d.querySelectorAll('li').length, late: d.querySelectorAll('li.is-late').length, dot: !!d.querySelector('.status-dot.is-mid'), sd: d.querySelector('li.is-late .status-detail').textContent, link: d.querySelector('li.status-link a').getAttribute('href'), open: d.open }; });
   assert(st.rows === 3 && st.late === 1 && st.dot && st.sd === 'Compte joint : refusé' && st.link === '/settings' && !st.open, 'la liste des sources : lignes, retard, détail, lien');
   await p.evaluate(() => { document.querySelector('#footer details').open = true; });
   await p.waitForTimeout(50);
@@ -178,24 +178,24 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(JSON.stringify(asked) === JSON.stringify(['1', 'Refusé par le serveur', 'Notion a répondu 502']), 'ds.api : l’en-tête de l’appli, les erreurs des deux serveurs');
   // the syncs and their journal
   await p.setViewportSize({ width: 1280, height: 900 });
-  const jobs = await p.evaluate(() => ({ blocks: document.querySelectorAll('#jobs .job').length, run: document.querySelectorAll('#jobs .go').length,
-    bad: !!document.querySelector('#job-claude .sum.bad'), dot: document.querySelector('#job-banks .dot').className }));
-  assert(jobs.blocks === 2 && jobs.run === 1 && jobs.bad && jobs.dot === 'dot ok', 'les synchros : un bloc par tâche, « Lancer » seulement où il sert');
-  await p.locator('#job-banks .jl').click();
-  await p.waitForFunction(() => document.querySelectorAll('#job-banks .logs .ll').length >= 2);
-  await p.waitForFunction(() => document.querySelectorAll('#job-banks .logs .ll').length >= 4, null, { timeout: 8000 });
-  const log = await p.evaluate(() => ({ lines: document.querySelectorAll('#job-banks .ll').length, bad: document.querySelectorAll('#job-banks .ll.lbad').length,
-    warn: document.querySelectorAll('#job-banks .ll.lwarn').length, link: document.querySelector('#job-banks .loghead a').href }));
+  const jobs = await p.evaluate(() => ({ blocks: document.querySelectorAll('#jobs .job').length, run: document.querySelectorAll('#jobs [data-job="run"]').length,
+    bad: !!document.querySelector('#job-claude .job-sum.is-bad'), dot: document.querySelector('#job-banks .sync-dot').className }));
+  assert(jobs.blocks === 2 && jobs.run === 1 && jobs.bad && jobs.dot === 'sync-dot is-good', 'les synchros : un bloc par tâche, « Lancer » seulement où il sert');
+  await p.locator('#job-banks [data-job="journal"]').click();
+  await p.waitForFunction(() => document.querySelectorAll('#job-banks .logs .log-line').length >= 2);
+  await p.waitForFunction(() => document.querySelectorAll('#job-banks .logs .log-line').length >= 4, null, { timeout: 8000 });
+  const log = await p.evaluate(() => ({ lines: document.querySelectorAll('#job-banks .log-line').length, bad: document.querySelectorAll('#job-banks .log-line.is-bad').length,
+    warn: document.querySelectorAll('#job-banks .log-line.is-mid').length, link: document.querySelector('#job-banks .loghead a').href }));
   assert(log.lines >= 4 && log.bad === 1 && log.warn >= 2 && log.link === 'https://dashboard.render.com/', 'le journal s’ouvre, se complète toutes les 2 s, colore les erreurs');
   await p.evaluate(() => drawJobs(true));
-  assert(await p.evaluate(() => document.querySelectorAll('#job-banks .ll').length >= 4 && document.querySelector('#job-banks .go').disabled), 'redessiné, le journal reste ouvert et « Lancer » attend la fin');
+  assert(await p.evaluate(() => document.querySelectorAll('#job-banks .log-line').length >= 4 && document.querySelector('#job-banks [data-job="run"]').disabled), 'redessiné, le journal reste ouvert et « Lancer » attend la fin');
   await p.evaluate(() => drawJobs(false));
-  await p.locator('#job-banks .go').click();
+  await p.locator('#job-banks [data-job="run"]').click();
   await p.waitForTimeout(1000);
   assert(await p.evaluate(() => JSON.stringify(runs)) === '["banks","reload"]', '« Lancer » lance la tâche, puis la page relit son état');
   // the address can ask for a job's journal (/settings#patreon/journal): opened as by its button, and it stays open
   await p.evaluate(() => ds.jobs.open('claude'));
-  const opened = await p.evaluate(() => [document.querySelector('#job-claude .jl').getAttribute('aria-expanded'), !!document.querySelector('#job-claude .logs')]);
+  const opened = await p.evaluate(() => [document.querySelector('#job-claude [data-job="journal"]').getAttribute('aria-expanded'), !!document.querySelector('#job-claude .logs')]);
   await p.evaluate(() => drawJobs(false));
   assert(opened[0] === 'true' && opened[1] && !!(await p.evaluate(() => document.querySelector('#job-claude .logs'))), 'ds.jobs.open ouvre le journal d’une tâche, qui reste ouvert redessiné');
   // ds 2.19: the server's calls
@@ -259,7 +259,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     const b = ds.h('button', { class: 'btn', type: 'button', onclick: () => clicked++, disabled: false }, ['Lancer ', ds.ico('play'), null]);
     b.click();
     out.push(b.outerHTML.includes('onclick') ? 'inline' : 'listener', clicked, b.querySelector('svg use').getAttribute('href'));
-    const a = ds.avatar('superu', 'data:image/png;base64,broken'); document.body.append(a);
+    const a = ds.avatar(null, { name: 'superu', src: 'data:image/png;base64,broken' }); document.body.append(a);
     out.push(a.textContent);
     return out;
   });
@@ -299,7 +299,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   // a form that deletes asks in ds.confirm; any other shows its button busy
   await p.evaluate(() => { window.sent = 0; document.getElementById('del').addEventListener('submit', e => { if (e.target.dataset.confirmed) { sent++; e.preventDefault(); } }); });
   await p.locator('#del button').click();
-  const askedDel = await p.evaluate(() => [document.querySelector('.dialog-t').textContent, document.querySelector('.dialog-x').textContent, document.querySelector('.dialog-ok').textContent]);
+  const askedDel = await p.evaluate(() => [document.querySelector('.dialog-t').textContent, document.querySelector('.dialog-text').textContent, document.querySelector('.dialog-ok').textContent]);
   await p.locator('.dialog-no').click();
   const after1 = await p.evaluate(() => sent);
   await p.locator('#del button').click();
@@ -330,12 +330,12 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const wheels = await p.evaluate(() => {
     const box = document.createElement('div');
     box.innerHTML = '<div class="toast is-busy"><i class="mark"></i></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
-      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-p"><i class="spin"></i></div></div><i class="spinner"></i>';
+      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-progress"><i class="spin"></i></div></div><i class="spinner"></i>';
     document.body.append(box);
     const still = [];
     for (const theme of ['atelier', 'vitrine']) {
       document.documentElement.dataset.theme = theme;
-      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner']) {
+      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-progress .spin', '.spinner']) {
         const c = getComputedStyle(box.querySelector(sel));
         if (c.borderTopColor === c.borderRightColor || c.animationName !== 'spin') still.push(theme + ' ' + sel);
       }
@@ -348,7 +348,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const settingsBar = await p.evaluate(() => {
     document.body.classList.add('settings');
     const box = document.createElement('div'); box.className = 'bar';
-    box.innerHTML = '<span class="msg" role="status"></span><button type="submit" class="save" disabled>Enregistrer</button>';
+    box.innerHTML = '<span class="msg" role="status"></span><button type="submit" class="btn is-save" disabled>Enregistrer</button>';
     document.body.append(box);
     const m = box.querySelector('.msg'), empty = { w: m.getBoundingClientRect().width, h: box.getBoundingClientRect().height };
     m.textContent = '1 réglage modifié, pas encore enregistré.';
@@ -372,7 +372,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   // nor one that would not fit even at the least
   const fits = await p.evaluate(async () => {
     const make = (w, t) => { const d = document.createElement('div'); d.className = 'card'; d.style.width = w + 'px';
-      d.innerHTML = '<h2 class="ct">' + t + '<label class="pill"><span class="pv">novembre 2026</span><select><option>novembre 2026</option></select></label></h2>';
+      d.innerHTML = '<h2 class="ct">' + t + '<label class="pill"><span class="pill-value">novembre 2026</span><select><option>novembre 2026</option></select></label></h2>';
       document.body.append(d); return d.firstChild; };
     const roomy = make(600, 'Dépenses par catégorie'), tight = make(370, 'Dépenses par catégorie'), never = make(200, 'Dépenses par catégorie');
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
@@ -387,7 +387,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   // a title drawn in a hidden view is fitted once the view is shown (it could not be measured while hidden)
   const shown = await p.evaluate(async () => {
     const view = document.createElement('div'); view.hidden = true;
-    view.innerHTML = '<div class="card" style="width:370px"><h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pv">novembre 2026</span><select><option>novembre 2026</option></select></label></h2></div>';
+    view.innerHTML = '<div class="card" style="width:370px"><h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pill-value">novembre 2026</span><select><option>novembre 2026</option></select></label></h2></div>';
     document.body.append(view);
     const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     await frames(); await frames();
@@ -425,7 +425,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.evaluate(() => { window.held = ds.toast({ type: 'info', text: 'Sélection rouverte', duration: 400, action: { label: 'Annuler', run() {} } }); });
   await p.focus('.toast .act');
   await p.waitForTimeout(800);
-  const kept = await p.evaluate(() => ({ there: !!document.querySelector('.toast:not(.out)'), said: document.querySelector('.toasts [role="status"]').textContent }));
+  const kept = await p.evaluate(() => ({ there: !!document.querySelector('.toast:not(.is-leaving)'), said: document.querySelector('.toasts [role="status"]').textContent }));
   await p.evaluate(() => document.activeElement.blur());
   await p.waitForTimeout(900);
   const gone = await p.evaluate(() => !document.querySelector('.toast .txt') || ![...document.querySelectorAll('.toast .txt')].some(t => t.textContent === 'Sélection rouverte'));
@@ -448,12 +448,12 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     Range.prototype.getBoundingClientRect = function () { n++; return orig.call(this); };
     const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     const card = document.createElement('section'); card.className = 'card'; card.style.width = '392px';
-    card.innerHTML = '<h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pv">Novembre 2026</span></label></h2><p class="pc">0 %</p>';
+    card.innerHTML = '<h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pill-value">Novembre 2026</span></label></h2><p class="pc">0 %</p>';
     document.body.append(card); await frame();
     const onCome = n; n = 0;
     for (let i = 1; i <= 6; i++) { card.querySelector('.pc').textContent = i * 10 + ' %'; await frame(); }
     const onText = n; n = 0;
-    card.querySelector('.pv').textContent = 'Octobre 2026'; await frame();
+    card.querySelector('.pill-value').textContent = 'Octobre 2026'; await frame();
     const onHeld = n;
     Range.prototype.getBoundingClientRect = orig; card.remove();
     return { onCome, onText, onHeld };
@@ -474,7 +474,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     const timer = setInterval(look, 20);
     ds.busy.start('Lecture des banques', { expected: 3000 });
     await new Promise(r => setTimeout(r, 3000));
-    const shown = region.querySelector('.pc').textContent, bootHidden = boot.getAttribute('aria-hidden');
+    const shown = region.querySelector('.busy-share').textContent, bootHidden = boot.getAttribute('aria-hidden');
     ds.busy.done();
     await new Promise(r => setTimeout(r, 900));
     clearInterval(timer);
@@ -489,7 +489,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const still = await p.evaluate(() => {
     const box = document.createElement('div');
     box.innerHTML = '<div class="toast is-busy"><i class="mark"></i></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
-      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-p"><i class="spin"></i></div></div>'
+      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-progress"><i class="spin"></i></div></div>'
       + '<i class="spinner"></i><button class="btn is-busy">Envoyer</button>';
     document.body.append(box);
     const moving = [];
@@ -497,7 +497,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
       document.documentElement.dataset.theme = theme;
       const root = getComputedStyle(document.documentElement);
       if (['--t-fast', '--t-mid', '--t-slow'].some(t => parseFloat(root.getPropertyValue(t)) !== 0)) moving.push(theme + ' durées');
-      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner']) {
+      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-progress .spin', '.spinner']) {
         const c = getComputedStyle(box.querySelector(sel));
         if (parseFloat(c.animationDuration) !== 0 || c.animationIterationCount !== '1') moving.push(theme + ' ' + sel);
       }
@@ -515,7 +515,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const oneSpin = await p.evaluate(() => {
     const box = document.createElement('div');
     box.innerHTML = '<div class="toasts" style="position:static"><div class="toast is-busy"><i class="mark"></i></div></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
-      + '<header class="top loading"><span class="busy"><i class="spin"></i></span></header><div class="boot" style="position:static"><div class="boot-p"><i class="spin"></i></div></div>'
+      + '<header class="top is-loading"><span class="busy"><i class="spin"></i></span></header><div class="boot" style="position:static"><div class="boot-progress"><i class="spin"></i></div></div>'
       + '<i class="spinner"></i><button class="btn is-save is-busy">Envoyer</button>';
     document.body.append(box);
     const out = {};
@@ -524,7 +524,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
       const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
       const probe = document.createElement('i'); probe.style.color = accent; document.body.append(probe);
       const gold = getComputedStyle(probe).color; probe.remove();
-      out[theme] = ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner'].map(sel => {
+      out[theme] = ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-progress .spin', '.spinner'].map(sel => {
         const c = getComputedStyle(box.querySelector(sel));
         return [c.animationName, c.animationDuration, c.borderTopColor === gold, c.borderTopWidth];
       });
@@ -541,24 +541,24 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const squares = await p.evaluate(() => {
     const box = document.createElement('div');
     box.style.cssText = '--n: var(--c-bleu); --a: var(--c-bleu)';
-    box.innerHTML = '<i class="swatch"></i><span class="sq on"></span><i class="cal-mark"></i><i class="chart-key"></i>'
+    box.innerHTML = '<i class="swatch"></i><i class="cal-mark"></i><i class="chart-key"></i>'
       + '<dl class="tiles"><div class="tile"><dt><i></i>Bleu</dt></div></dl><span class="picker-av is-dot"></span><i class="swatch is-open"></i>';
     document.body.append(box);
-    const els = [...box.querySelectorAll('.swatch:not(.is-open), .sq, .cal-mark, .chart-key, .tile dt i, .picker-av')];
+    const els = [...box.querySelectorAll('.swatch:not(.is-open), .cal-mark, .chart-key, .tile dt i, .picker-av')];
     const res = els.map(e => { const c = getComputedStyle(e); return [c.width, c.height, c.backgroundColor]; });
     const open = getComputedStyle(box.querySelector('.swatch.is-open'));
     const hollow = open.backgroundColor === 'rgba(0, 0, 0, 0)' && open.borderTopColor === res[0][2];
     box.remove();
     return { res, hollow };
   });
-  assert(squares.res.length === 6 && squares.res.every(r => r[0] === '10px' && r[1] === '10px' && r[2] === squares.res[0][2]) && squares.hollow,
-    'un seul carré de couleur : les six font 10px et prennent la couleur de --n (le filtre lit encore --a), .is-open le vide ' + JSON.stringify(squares));
+  assert(squares.res.length === 5 && squares.res.every(r => r[0] === '10px' && r[1] === '10px' && r[2] === squares.res[0][2]) && squares.hollow,
+    'un seul carré de couleur : les cinq font 10px et prennent la couleur de --n, .is-open le vide ' + JSON.stringify(squares));
 
   // the layers: a window of ds.confirm over a sheet; Escape closes the window only, then the sheet; Tab stays in each
   const layers = await p.evaluate(async () => {
     const el = document.createElement('div');
     el.className = 'sheet'; el.hidden = true;
-    el.innerHTML = '<div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-x">×</button><p>Fiche</p><button id="lay-a">A</button><button id="lay-b">B</button></div>';
+    el.innerHTML = '<div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-close">×</button><p>Fiche</p><button id="lay-a">A</button><button id="lay-b">B</button></div>';
     document.body.append(el);
     const s = ds.sheet(el);
     s.open();
@@ -595,7 +595,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     const out = {}, cs = (el, k) => getComputedStyle(el)[k], token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
     const probe = c => { const d = document.createElement('i'); d.style.color = c; document.body.append(d); const v = getComputedStyle(d).color; d.remove(); return v; };
     const box = document.createElement('div'); document.body.append(box);
-    box.innerHTML = '<section class="card" id="fc"><h2 class="ct">Ce qui rapporte <label class="pill"><span class="pv">30 jours</span><select><option>30 jours</option></select></label></h2><p>Dedans</p></section>';
+    box.innerHTML = '<section class="card" id="fc"><h2 class="ct">Ce qui rapporte <label class="pill"><span class="pill-value">30 jours</span><select><option>30 jours</option></select></label></h2><p>Dedans</p></section>';
     const card = box.querySelector('#fc'), head = card.querySelector('.ct');
     localStorage.removeItem('ds-fold:test-card');
     const f = ds.foldCard(card, 'test-card');
@@ -639,7 +639,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     tr[1].click();
     out.tabs.push(cs(tr[1], 'color') === on, cs(tr[0], 'color') === on);
     // the tables' sort menu, a pill, hidden on a computer wherever the pill's rule comes
-    box.insertAdjacentHTML('beforeend', '<label class="pill tbl-sortmenu" id="sm"><span class="pv">Date</span><select><option>Date</option></select></label>');
+    box.insertAdjacentHTML('beforeend', '<label class="pill tbl-sortmenu" id="sm"><span class="pill-value">Date</span><select><option>Date</option></select></label>');
     out.sortmenu = cs(box.querySelector('#sm'), 'display');
     box.remove();
     return out;

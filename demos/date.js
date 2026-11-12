@@ -2,7 +2,7 @@
 // Bank's operations and analysis, made up but drawn around today, the same in both columns.
 (function () {
   "use strict";
-  var P = ds.datePick, today = P.today(), month = P.of("month", today);
+  var P = ds.datePick, today = ds.today(), month = P.of("month", today);
   // the same made-up figures on every visit: a seeded draw
   function rnd(n) { var x = Math.sin(n * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
   function node(name, cls, text) { var e = document.createElement(name); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
@@ -50,8 +50,8 @@
     function said() {
       var v = dp.get();
       lab.textContent = capital(dp.label());
-      prev.classList.toggle("off", !dp.canStep(-1));
-      next.classList.toggle("off", !dp.canStep(1));
+      prev.classList.toggle("is-off", !dp.canStep(-1));
+      next.classList.toggle("is-off", !dp.canStep(1));
       read.textContent = v.from ? "La page lit du " + ds.date(v.from, "short") + " au " + ds.date(v.to, "short") + "." : "La page lit toutes les opérations.";
     }
     prev.addEventListener("click", function () { dp.step(-1); });
@@ -71,11 +71,11 @@
     function drawPie() {
       var rows = spending(menu.value);
       ops.replaceChildren();
-      ds.chart.donut(pie, rows, { format: function (n) { return ds.money(n); }, center: "dépensés", pick: function (key) {
+      ds.chart.donut(pie, rows, { format: function (n) { return ds.money(n); }, center: "dépensés", onPick: function (key) {
         var c = rows.filter(function (r) { return r.key === key; })[0];
         ops.replaceChildren.apply(ops, c ? c.ops.map(function (o) {
           var li = node("li");
-          li.append(node("span", "t", o.day + "/" + menu.value.slice(5)), node("span", "ttl", o.name), node("span", "v", ds.money(-o.value)));
+          li.append(node("span", "row-date", o.day + "/" + menu.value.slice(5)), node("span", "row-title", o.name), node("span", "row-value", ds.money(-o.value)));
           return li;
         }) : []);
       } });
@@ -90,7 +90,7 @@
       flowsRead.textContent = capital(ds.date(key, "month")) + (x.live ? " (en cours)" : "") + " : entrées " + euros(x.income) + ", sorties " + euros(x.spending) + ", reste " + euros(x.income - x.spending, true) + ".";
     }
     ds.chart.bars(col.querySelector('[data-date="flows"]'), flows, { pairs: [{ key: "income", label: "Entrées", color: "--good" }, { key: "spending", label: "Sorties", color: "--bad" }],
-      unit: "€", format: euros, selected: flows[11].key, pick: month1 });
+      unit: "€", format: euros, value: flows[11].key, onPick: month1 });
     month1(flows[11].key);
   }
   document.querySelectorAll("#themes > .theme").forEach(column);

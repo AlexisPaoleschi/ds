@@ -1,4 +1,4 @@
-/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -136,12 +136,16 @@
     }
   });
 
+  /* ds.today(): Paris's day, "2026-11-12", whatever the device's clock says (the same as ds.day.today()). */
+  function today() { return day.today(); }
+
   ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
     ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top };
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
   ds.day = day;
+  ds.today = today;
 })();
 /* Design system: the behaviour every app shares.
    ds.toast({type, text, action, duration}) shows a passing message at the bottom right (above the tab bar on a phone)
@@ -211,8 +215,8 @@
     for (var i = 0; i < live.length; i++) if (live[i].text === opts.text) return live[i].update(opts);
     var el = document.createElement("div"), t = { el: el, text: opts.text, life: 0, timer: null, gone: false };
     el.innerHTML = '<span class="mark" aria-hidden="true"></span><span class="txt"></span>' +
-      '<button type="button" class="act" hidden></button><button type="button" class="x" aria-label="' + words().close + '">×</button>';
-    el.querySelector(".x").onclick = function () { t.close(); };
+      '<button type="button" class="act" hidden></button><button type="button" class="toast-close" aria-label="' + words().close + '">×</button>';
+    el.querySelector(".toast-close").onclick = function () { t.close(); };
     // the countdown waits while the pointer, a finger or the keyboard is on the message
     el.addEventListener("pointerenter", function () { clearTimeout(t.timer); });
     el.addEventListener("pointerleave", function () { if (!el.contains(document.activeElement)) t.arm(); });
@@ -244,7 +248,7 @@
       t.gone = true;
       clearTimeout(t.timer);
       live.splice(live.indexOf(t), 1);
-      el.classList.add("out");
+      el.classList.add("is-leaving");
       // taken away once its fade is over, however long the theme makes it
       setTimeout(function () { el.remove(); }, lasts(el) + 20);
     };
@@ -265,9 +269,9 @@
       var veil = document.createElement("div"), field = opts.value != null, n = ++dialogs;
       veil.className = "dialog-veil";
       veil.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-t-' + n + '"><h2 class="dialog-t" id="dialog-t-' + n + '"></h2>' +
-        '<p class="dialog-x" id="dialog-x-' + n + '"></p>' + (field ? '<input class="dialog-in" type="text" aria-labelledby="dialog-t-' + n + '">' : "") +
+        '<p class="dialog-text" id="dialog-text-' + n + '"></p>' + (field ? '<input class="dialog-in" type="text" aria-labelledby="dialog-t-' + n + '">' : "") +
         '<div class="dialog-b"><button type="button" class="btn dialog-no">' + words().cancel + '</button><button type="button" class="btn dialog-ok"></button></div></div>';
-      var ok = veil.querySelector(".dialog-ok"), no = veil.querySelector(".dialog-no"), input = veil.querySelector(".dialog-in"), text = veil.querySelector(".dialog-x");
+      var ok = veil.querySelector(".dialog-ok"), no = veil.querySelector(".dialog-no"), input = veil.querySelector(".dialog-in"), text = veil.querySelector(".dialog-text");
       veil.querySelector(".dialog-t").textContent = opts.title || "";
       text.textContent = opts.text || "";
       text.hidden = !opts.text;
@@ -529,14 +533,19 @@
     return f(n / 1000000, a < 10000000 ? 1 : 0) + "M";
   }
 
-  /* ds.avatar(name, src): a merchant's or a person's logo, its initial underneath while the image comes, or if it never does. */
-  function avatar(name, src, cls) {
+  /* ds.avatar(holder, {name, src}, {cls}): a merchant's or a person's logo, its initial underneath while the image comes, or
+     if it never does; drawn into holder (its content replaced), or only returned with holder null. */
+  function avatar(holder, data, o) {
+    data = data || {}; o = o || {};
+    var name = data.name, src = data.src, cls = o.cls;
     var span = h("span", { class: "avatar" + (cls ? " " + cls : ""), "aria-hidden": "true" }, [String(name || "?").trim().charAt(0).toUpperCase() || "?"]);
     if (src) {
       var img = h("img", { src: src, alt: "", loading: "lazy" });
       img.addEventListener("error", function () { img.remove(); });
       span.appendChild(img);
     }
+    holder = _.find(holder);
+    if (holder) holder.replaceChildren(span);
     return span;
   }
 

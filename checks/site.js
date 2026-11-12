@@ -67,7 +67,7 @@ function stylesheets() {
     back: (document.querySelector('a.back-link.on-photo.back-button use') || { getAttribute: () => '' }).getAttribute('href'),
     backText: (document.querySelector('.back-button') || {}).textContent,
     icon: window.ds.icon('mail', 'ico x'), land: document.documentElement.classList.contains('landscape-warning-disabled'),
-    visible: document.querySelector('.sticky-nav').classList.contains('visible') }));
+    visible: document.querySelector('.sticky-nav').classList.contains('is-visible') }));
   assert(built.bar && built.links === 2 && built.menu === 2 && built.cta === 'Book Now', 'the bar and its phone menu are built from <div id="nav">');
   // the bar's action spaced as the site's other buttons, 2.5px
   const ctaLs = await phone.evaluate(() => getComputedStyle(document.querySelector('.sticky-nav .btn')).letterSpacing);
@@ -91,7 +91,7 @@ function stylesheets() {
   const read = await phone.evaluate(async () => { const [a, b] = await Promise.all([ds.json('/data.json'), ds.json('/data.json')]); return [a === b, a.events.lyon.soldOut]; });
   assert(read[0] && read[1] === true && hits.json === 1, `ds.json reads a file once per page, however many ask (${hits.json} request)`);
   const waited = await phone.evaluate(async () => { const loader = document.querySelector('.page-loader'); let early;
-    const slow = new Promise(r => setTimeout(() => { early = loader.classList.contains('hidden'); r(); }, 150)); await ds.ready(slow); return [early, loader.classList.contains('hidden')]; });
+    const slow = new Promise(r => setTimeout(() => { early = loader.classList.contains('is-hidden'); r(); }, 150)); await ds.ready(slow); return [early, loader.classList.contains('is-hidden')]; });
   assert(waited[0] === false && waited[1] === true, 'ds.ready takes the loader away once what the page waits for has come');
   // hidden, the bar and the closed menu are out of Tab's reach, and no longer hidden from screen readers for good
   const reach = [];
@@ -100,7 +100,7 @@ function stylesheets() {
     // the bar slides away in .3s when Tab goes back up to the top: on screen meanwhile, it is still reachable
     await phone.waitForTimeout(450);
     reach.push(await phone.evaluate(() => { const a = document.activeElement, bar = a.closest('.sticky-nav'), menu = a.closest('.mobile-menu');
-      return bar && !bar.classList.contains('visible') ? 'hidden bar' : menu && !menu.classList.contains('active') ? 'closed menu' : 'ok'; }));
+      return bar && !bar.classList.contains('is-visible') ? 'hidden bar' : menu && !menu.classList.contains('is-open') ? 'closed menu' : 'ok'; }));
   }
   await phone.evaluate(() => { document.activeElement.blur(); scrollTo(0, 0); });
   await phone.waitForTimeout(450);
@@ -114,18 +114,18 @@ function stylesheets() {
 
   await phone.evaluate(() => scrollTo(0, document.querySelector('.hero').offsetHeight + 200));
   await phone.waitForTimeout(200);
-  assert(await phone.evaluate(() => document.querySelector('.sticky-nav').classList.contains('visible')), 'the bar shows once the hero is passed');
+  assert(await phone.evaluate(() => document.querySelector('.sticky-nav').classList.contains('is-visible')), 'the bar shows once the hero is passed');
 
   await phone.click('.mobile-menu-toggle');
   await phone.waitForTimeout(200);
-  const open = await phone.evaluate(() => ['.mobile-menu', '.mobile-menu-overlay', '.mobile-menu-toggle'].every(s => document.querySelector(s).classList.contains('active')) && document.body.style.overflow === 'hidden');
+  const open = await phone.evaluate(() => ['.mobile-menu', '.mobile-menu-overlay', '.mobile-menu-toggle'].every(s => document.querySelector(s).classList.contains('is-open')) && document.body.style.overflow === 'hidden');
   assert(open, 'the button opens the menu, its veil, and holds the page still');
   const opened = await phone.evaluate(() => ({ expanded: document.querySelector('.mobile-menu-toggle').getAttribute('aria-expanded'),
     focus: document.activeElement.className, vis: getComputedStyle(document.querySelector('.mobile-menu')).visibility }));
   assert(opened.expanded === 'true' && opened.focus === 'mobile-menu-link' && opened.vis === 'visible', 'opened, the menu says so and takes the keyboard to its first link ' + JSON.stringify(opened));
   await phone.keyboard.press('Escape');
   await phone.waitForTimeout(200);
-  assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('active') && document.body.style.overflow === ''), 'Escape closes the menu');
+  assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('is-open') && document.body.style.overflow === ''), 'Escape closes the menu');
   const shut = await phone.evaluate(() => ({ expanded: document.querySelector('.mobile-menu-toggle').getAttribute('aria-expanded'), back: document.activeElement.classList.contains('mobile-menu-toggle') }));
   assert(shut.expanded === 'false' && shut.back, 'Escape takes the keyboard back to the menu\'s button, which says it is closed ' + JSON.stringify(shut));
   await phone.waitForTimeout(700);
@@ -133,13 +133,13 @@ function stylesheets() {
   await phone.waitForTimeout(200);
   await phone.evaluate(() => document.querySelector('.mobile-menu-overlay').click());
   await phone.waitForTimeout(200);
-  assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('active')), 'the veil closes the menu');
+  assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('is-open')), 'the veil closes the menu');
   await phone.waitForTimeout(700);
   await phone.click('.mobile-menu-toggle');
   await phone.waitForTimeout(200);
   await phone.click('.mobile-menu-link >> text=FAQ');
   await phone.waitForTimeout(1200);
-  const landed = await phone.evaluate(() => ({ menu: document.querySelector('.mobile-menu').classList.contains('active'),
+  const landed = await phone.evaluate(() => ({ menu: document.querySelector('.mobile-menu').classList.contains('is-open'),
     top: Math.round(document.querySelector('#faq').getBoundingClientRect().top), bar: document.querySelector('.sticky-nav').offsetHeight }));
   assert(!landed.menu, 'a link of the menu closes it');
   assert(Math.abs(landed.top - (landed.bar - 1)) <= 2, `a link to a part of the page lands just below the bar (${landed.top}px, the bar ${landed.bar}px)`);
@@ -186,10 +186,10 @@ function stylesheets() {
     <section class="scroll-section" id="one">1</section><section class="scroll-section" id="two">2</section><section class="scroll-section" id="three">3</section></div>
     <script src="${base}/dist/ds-site.js"></script></body>`);
   await screens.evaluate(() => ds.screens());
-  const before = await screens.evaluate(() => [document.querySelectorAll('.scroll-dots .dot').length, document.querySelector('.scroll-dots').classList.contains('visible'), document.querySelector('.scroll-hint').style.opacity]);
+  const before = await screens.evaluate(() => [document.querySelectorAll('.scroll-dots .scroll-dot').length, document.querySelector('.scroll-dots').classList.contains('is-visible'), document.querySelector('.scroll-hint').style.opacity]);
   await screens.evaluate(() => { const c = document.querySelector('.scroll-container'); c.style.scrollBehavior = 'auto'; c.scrollTo(0, document.getElementById('three').offsetTop); });
   await screens.waitForTimeout(200);
-  const after = await screens.evaluate(() => [[...document.querySelectorAll('.scroll-dots .dot')].findIndex(d => d.classList.contains('active')), document.querySelector('.scroll-dots').classList.contains('visible'), document.querySelector('.scroll-hint').style.opacity]);
+  const after = await screens.evaluate(() => [[...document.querySelectorAll('.scroll-dots .scroll-dot')].findIndex(d => d.classList.contains('is-on')), document.querySelector('.scroll-dots').classList.contains('is-visible'), document.querySelector('.scroll-hint').style.opacity]);
   assert(before[0] === 3 && !before[1] && before[2] === '1', `ds.screens writes a dot per screen, the hint on the first (${before})`);
   assert(after[0] === 2 && after[1] && after[2] === '0', `ds.screens lights the screen shown and shows the dots past the first (${after})`);
 

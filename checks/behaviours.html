@@ -2,11 +2,11 @@
 <link rel="stylesheet" href="../dist/ds.css"><link rel="stylesheet" href="../dist/ds-tools.css"><script src="../dist/ds.js" defer></script><script src="../dist/ds-icons.js" defer></script><script src="../dist/ds-tools.js" defer></script></head>
 <body>
 <header class="top"><span class="brand">Test</span>
-  <span class="busy" role="status" aria-live="polite"><i class="spin"></i><i class="okc" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></i><span class="pc"></span><span class="bt"></span></span>
-  <div class="tabs is-bar" role="tablist"><button type="button" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg><span class="tl">Comptes</span></button><button type="button"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><span class="tl">Opérations</span><i class="tabn"></i></button></div>
+  <span class="busy" role="status" aria-live="polite"><i class="spin"></i><i class="busy-ok" aria-hidden="true"><svg viewBox="0 0 16 16"><path d="M3.5 8.4l3 3 6-6.6"/></svg></i><span class="busy-share"></span><span class="busy-text"></span></span>
+  <div class="tabs is-bar" role="tablist"><button type="button" aria-selected="true"><svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg><span class="tab-label">Comptes</span></button><button type="button"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg><span class="tab-label">Opérations</span><i class="tabn"></i></button></div>
 </header>
-<div class="boot" id="boot" hidden><div><div class="boot-p" aria-hidden="true"><i class="spin"></i><span id="boot-pc"></span></div><p class="boot-t">Chargement…</p></div></div>
-<button class="edgetab" data-drawer-toggle="test-side" type="button"><span class="vt">Filtres</span></button>
+<div class="boot" id="boot" hidden><div><div class="boot-progress" aria-hidden="true"><i class="spin"></i><span id="boot-pc"></span></div><p class="boot-title">Chargement…</p></div></div>
+<button class="edgetab" data-drawer-toggle="test-side" type="button"><span class="edgetab-label">Filtres</span></button>
 <div class="side-layout" data-drawer="test-side">
   <div class="scrim"></div>
   <aside class="side"><div class="sidehead">Filtres<button type="button" data-drawer-close="test-side" aria-label="Fermer les filtres">×</button></div><button class="chip" type="button">Un filtre</button></aside>
@@ -31,7 +31,7 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
     window.changes = [];
-    window.side = ds.drawer("test-side", { onChange: open => changes.push(open) });
+    window.side = ds.drawer(document.querySelector('[data-drawer="test-side"]'), { onChange: open => changes.push(open) });
     ds.status(document.getElementById("footer"), { summary: "Échec : BoursoBank · à 10h21", late: true,
       rows: [{ icon: "coin", name: "BoursoBank", state: "échec aujourd'hui à 10h01", every: "Serveur · toutes les heures", ok: false, detail: "Compte joint : refusé" },
              { icon: "sun", name: "Classement par Claude", state: "à jour aujourd'hui à 6h12", every: "Chaque matin", ok: true }],

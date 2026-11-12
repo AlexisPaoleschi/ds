@@ -1,35 +1,35 @@
 /* Charts, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns its element; with
    holder null it only returns it, for a page that builds its own tree. The colour of a series is a token, given as its
    name (color: "--c-bleu") and set as --n on the chart; the lines, labels and grounds come from the theme.
-   ds.chart.line(holder, points, {color, label, value, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
-     values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; label(x) and value(v)
+   ds.chart.line(holder, points, {color, formatDay, format, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
+     values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; formatDay(x) and format(v)
      write them (a short date and a figure by default). Tall, a chart of its own (a share's price): taller, its middle
      day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); marks:
      [{x, label}] a dot on each day given (purchases), its label on hover; hover: the day and value under the pointer or
      the finger, with a cursor; now: the day that is today, when the curve goes on with what is foreseen: from it the
      curve is dashed and its ground paler, a thin rule stands on it, nowLabel over it (« aujourd’hui »).
-   ds.chart.bars(holder, rows, {color, average, unit, short, selected, pick}): bars on a round scale (0, 500, 1 000…),
+   ds.chart.bars(holder, rows, {color, average, unit, short, value, onPick}): bars on a round scale (0, 500, 1 000…),
      the figure on each bar, a dashed line at the average. rows: [{key, label, value, parts: [{value, color}], live,
      title}]: parts stack their colours in the bar; live hatches a period still running; a "2026-11" key is named by its
-     month. pick(key) makes the bars buttons, the selected one lit.
+     month. onPick(key) makes the bars buttons, value the one lit.
      Paired, with pairs: [{key, label, color}] (Bank's money in and out), each row carries one value per series under its
      key ({key: "2026-11", income: 3200, spending: 2104}): a bar per series side by side, their figures stacked over
      them on hover or when chosen, and a legend that adds each series up, written by format(v) (the figure and unit by
      default).
-   ds.chart.heat(holder, counts, {color, to, from, weeks, steps, title, below, legend, note}): a year of days, one square
+   ds.chart.heat(holder, counts, {color, to, from, weeks, steps, tip, below, legend, note}): a year of days, one square
      per day, a column per week, Monday on top, pale on a day with nothing, coloured from steps[0] (1), full from
      steps[1] (2); the days before from fade, those after to (today) are left out; below(weekStart) writes a figure
      under a week (what it gained), or {text, title} to say more on hover. counts: {"2026-11-09": 2}. In a card narrower than a year (740px, a phone) it
      scrolls sideways, opened on its last weeks.
-   ds.chart.spark(holder, values, {color, top, title}): small bars side by side, as tall as their value against top
+   ds.chart.spark(holder, values, {color, top, tip}): small bars side by side, as tall as their value against top
      (a story's views against the best story shown).
    ds.chart.split(holder, parts, {format}): one bar split by share, then its legend. parts: [{label, value, color}].
-   ds.chart.donut(holder, rows, {format, selected, pick, center}): a ring split by share, the total in its hole, and its
+   ds.chart.donut(holder, rows, {format, value, onPick, center}): a ring split by share, the total in its hole, and its
      legend beside it (under it on a phone), a row per slice: its colour, its name, its share, its amount. rows: [{key,
      label, value, color, note, tone}] (nothing at or under 0 is drawn; note: a word under the name, in red with tone
      "bad", in green with "good"); center: the word under the total (« dépensés »), or
-     {value, label}; pick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
-     another tap lets it go (pick(null)); the slices are one stop of the keyboard, the arrows go round them;
+     {value, label}; onPick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
+     another tap lets it go (onPick(null)); value: the one chosen to start with; the slices are one stop of the keyboard, the arrows go round them;
      open(key, holder): what the chosen one opens, right under its row of the legend (holder, empty, for the page to
      fill, then or later), gone when it is let go or another is chosen. */
 (function () {
@@ -48,7 +48,7 @@
     return e;
   }
   function paint(e, color) { if (color) e.style.setProperty("--n", tone(color)); return e; }
-  function put(holder, e) { if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
+  function put(holder, e) { holder = _.find(holder); if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
   function num(v) { return window.ds.number(v); }
   // big figures made short where room is tight: 1 240 → 1,2k, 12 500 → 13k
   function short(v) {
@@ -66,8 +66,8 @@
     o = o || {};
     var pts = (points || []).filter(function (p) { return p && typeof p.v === "number"; });
     if (pts.length < 2) return put(holder, null);
-    var label = o.label || function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x) ? window.ds.date(x, "day") : String(x); };
-    var value = o.value || num;
+    var label = o.formatDay || function (x) { return /^\d{4}-\d{2}-\d{2}$/.test(x) ? window.ds.date(x, "day") : String(x); };
+    var value = o.format || num;
     var ref = o.ref && typeof o.ref.v === "number" ? o.ref : null;
     var vals = pts.map(function (p) { return p.v; }), all = ref ? vals.concat([ref.v]) : vals;
     var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), span = hi - lo || 1;
@@ -212,7 +212,7 @@
       area.append(vs);
     }
     rows.forEach(function (r, i) {
-      var c = el(o.pick ? "button" : "div", "chart-bar" + (r.key === o.selected ? " is-on" : "") + (r.live ? " is-live" : "") + ((n - 1 - i) % 2 ? " is-alt" : ""));
+      var c = el(o.onPick ? "button" : "div", "chart-bar" + (r.key === o.value ? " is-on" : "") + (r.live ? " is-live" : "") + ((n - 1 - i) % 2 ? " is-alt" : ""));
       var area = el("span", "chart-bar-area");
       if (pairs) pair(area, r);
       else {
@@ -238,12 +238,12 @@
       c.append(area, lab);
       var figs = pairs ? pairs.map(function (q) { return q.label + " " + say(r[q.key] || 0); }).join(" · ") : fig(r.value || 0) + unit;
       c.title = r.title || (name + " · " + figs + (r.live ? " (" + words().live + ")" : ""));
-      if (o.pick) {
+      if (o.onPick) {
         c.type = "button";
-        c.setAttribute("aria-pressed", r.key === o.selected ? "true" : "false");
+        c.setAttribute("aria-pressed", r.key === o.value ? "true" : "false");
         c.addEventListener("click", function () {
           [].forEach.call(cols.children, function (x) { x.classList.toggle("is-on", x === c); x.setAttribute("aria-pressed", x === c ? "true" : "false"); });
-          o.pick(r.key);
+          o.onPick(r.key);
         });
       }
       cols.append(c);
@@ -266,7 +266,7 @@
     o = o || {};
     counts = counts || {};
     var w = words(), to = o.to || parisToday(), steps = o.steps || [1, 2], weeks = o.weeks || 53, from = o.from || null;
-    var title = o.title || function (key, n) { return window.ds.date(key, "day") + " · " + n; };
+    var title = o.tip || function (key, n) { return window.ds.date(key, "day") + " · " + n; };
     var lastWeek = weekStart(to), blocks = Math.max(1, Math.ceil(weeks / 53)), box = paint(el("div", "chart-heat"), o.color), scroll = el("div", "chart-heat-scroll");
     // always whole years of 53 weeks, so that the squares keep their size; a longer span stacks them, the latest first
     for (var b = 0; b < blocks; b++) {
@@ -318,7 +318,7 @@
       var b = el("i");
       // the smallest still shows
       b.style.height = Math.max(8, Math.round(v / top * 100)) + "%";
-      b.title = o.title ? o.title(v) : num(v);
+      b.title = o.tip ? o.tip(v) : num(v);
       box.append(b);
     });
     return put(holder, box);
@@ -350,10 +350,10 @@
     var total = all.reduce(function (s, x) { return s + x.value; }, 0);
     if (!total) return put(holder, null);
     var R = 90, r = 60, gap = all.length > 1 ? 0.02 : 0, angle = -Math.PI / 2;
-    var box = el("div", "chart-donut" + (o.pick ? " is-pick" : "")), ring = el("div", "chart-donut-ring"), legend = el("ul", "chart-donut-legend");
+    var box = el("div", "chart-donut" + (o.onPick ? " is-pick" : "")), ring = el("div", "chart-donut-ring"), legend = el("ul", "chart-donut-legend");
     var s = svg("svg", { viewBox: "0 0 200 200", "class": "chart-donut-svg" }), mid = el("div", "chart-donut-c"), big = el("b"), word = el("small");
     var c = o.center == null ? {} : typeof o.center === "object" ? o.center : { label: String(o.center) };
-    var keys = all.map(function (x) { return String(x.key != null ? x.key : x.label); }), on = o.selected == null ? null : String(o.selected);
+    var keys = all.map(function (x) { return String(x.key != null ? x.key : x.label); }), on = o.value == null ? null : String(o.value);
     var slices = [], items = [], told = [];
     function pt(a, rad) { return (100 + rad * Math.cos(a)).toFixed(2) + " " + (100 + rad * Math.sin(a)).toFixed(2); }
     all.forEach(function (x, i) {
@@ -374,7 +374,7 @@
       path.append(tip);
       s.append(path);
       slices.push(path);
-      var li = el("li"), row = el(o.pick ? "button" : "div", "chart-donut-row");
+      var li = el("li"), row = el(o.onPick ? "button" : "div", "chart-donut-row");
       // a row may say a word under its name (note), in a colour (tone: bad, good): what rose against the usual
       var name = el("span", "chart-donut-l", x.label);
       if (x.note) name.append(el("small", "chart-donut-n" + (x.tone ? " is-" + x.tone : ""), x.note));
@@ -382,7 +382,7 @@
       li.append(row);
       legend.append(li);
       items.push(row);
-      if (!o.pick) return;
+      if (!o.onPick) return;
       path.setAttribute("role", "button");
       path.setAttribute("aria-label", said);
       path.addEventListener("click", function () { choose(i, true); });
@@ -395,13 +395,13 @@
       row.type = "button";
       row.addEventListener("click", function () { choose(i, true); });
     });
-    if (o.pick) s.setAttribute("role", "group");
+    if (o.onPick) s.setAttribute("role", "group");
     else {
       s.setAttribute("role", "img");
       s.setAttribute("aria-label", told.join(", "));
     }
     function rove(i, focus) {
-      if (!o.pick) return;
+      if (!o.onPick) return;
       slices.forEach(function (p, k) { p.setAttribute("tabindex", k === i ? "0" : "-1"); });
       if (focus) slices[i].focus();
     }
@@ -422,13 +422,13 @@
       if (user) on = on === k ? null : k;
       var at = on == null ? -1 : keys.indexOf(on);
       box.classList.toggle("has-on", at >= 0);
-      slices.forEach(function (p, j) { p.classList.toggle("is-on", j === at); if (o.pick) p.setAttribute("aria-pressed", j === at ? "true" : "false"); });
-      items.forEach(function (b, j) { b.classList.toggle("is-on", j === at); if (o.pick) b.setAttribute("aria-pressed", j === at ? "true" : "false"); });
+      slices.forEach(function (p, j) { p.classList.toggle("is-on", j === at); if (o.onPick) p.setAttribute("aria-pressed", j === at ? "true" : "false"); });
+      items.forEach(function (b, j) { b.classList.toggle("is-on", j === at); if (o.onPick) b.setAttribute("aria-pressed", j === at ? "true" : "false"); });
       big.textContent = at >= 0 ? format(all[at].value) : c.value != null ? String(c.value) : format(total);
       word.textContent = at >= 0 ? all[at].label : c.label || "";
       word.hidden = !word.textContent;
       openUnder(at);
-      if (user) { rove(i, false); o.pick(on); }
+      if (user) { rove(i, false); o.onPick(on); }
     }
     mid.setAttribute("aria-live", "polite");
     mid.append(big, word);

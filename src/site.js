@@ -54,7 +54,7 @@
 
   window.hideLoader = function () {
     var loader = document.querySelector(".page-loader");
-    if (loader) loader.classList.add("hidden");
+    if (loader) loader.classList.add("is-hidden");
   };
   setTimeout(window.hideLoader, 5000);
 
@@ -104,12 +104,12 @@
     var hero = document.querySelector(".hero");
     var menu = document.querySelector(".mobile-menu"), toggle = document.querySelector(".mobile-menu-toggle");
     var veil = document.querySelector(".mobile-menu-overlay");
-    var open = function () { return menu && menu.classList.contains("active"); };
+    var open = function () { return menu && menu.classList.contains("is-open"); };
 
     window.addEventListener("scroll", function () {
       if (open() || !hero) return;
       var top = window.pageYOffset || document.documentElement.scrollTop;
-      stickyNav.classList.toggle("visible", top > hero.offsetHeight);
+      stickyNav.classList.toggle("is-visible", top > hero.offsetHeight);
     }, { passive: true });
 
     // a link to a part of the page: there smoothly, just below the bar (1px less on a phone, over the menu's border)
@@ -134,9 +134,9 @@
     var cover = { el: menu, trap: false, close: function () { close(true); } };
     function flip() {
       if (locked) return;
-      var on = menu.classList.toggle("active");
-      veil.classList.toggle("active", on);
-      toggle.classList.toggle("active", on);
+      var on = menu.classList.toggle("is-open");
+      veil.classList.toggle("is-open", on);
+      toggle.classList.toggle("is-open", on);
       toggle.setAttribute("aria-expanded", String(on));
       document.body.style.overflow = on ? "hidden" : "";
       if (on) _.layer(cover); else _.unlayer(cover);
@@ -149,9 +149,9 @@
     function close(back) {
       var inside = menu.contains(document.activeElement);
       _.unlayer(cover);
-      menu.classList.remove("active");
-      veil.classList.remove("active");
-      toggle.classList.remove("active");
+      menu.classList.remove("is-open");
+      veil.classList.remove("is-open");
+      toggle.classList.remove("is-open");
       toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
       // closed with Escape or the veil while the keyboard was in it, the keyboard goes back to its button
@@ -178,7 +178,7 @@
         return { src: img.dataset.full || img.src, alt: img.alt, thumb: img.currentSrc || img.src, el: item };
       });
       items.forEach(function (item, i) {
-        var open = function () { window.ds.viewer(photos, { start: i, from: item, label: label }); };
+        var open = function () { window.ds.viewer(null, photos, { start: i, from: item, label: label }); };
         item.setAttribute("role", "button");
         if (!item.hasAttribute("tabindex")) item.tabIndex = 0;
         item.setAttribute("aria-label", "Open " + (photos[i].alt || label + " photo " + (i + 1)));
@@ -239,28 +239,28 @@
     var sections = document.querySelectorAll(".scroll-section");
     var more = sections.length > 1;
     // the first screen's dot may be written in the page, lit, so that it shows before the script
-    var first = nav.querySelector(".dot");
+    var first = nav.querySelector(".scroll-dot");
     Array.prototype.forEach.call(sections, function (section, i) {
       if (i === 0 && first) return;
       var dot = document.createElement("button");
-      dot.className = "dot";
+      dot.className = "scroll-dot";
       dot.dataset.section = i;
       dot.setAttribute("aria-label", "Go to section " + (i + 1));
       nav.appendChild(dot);
     });
-    var dots = nav.querySelectorAll(".dot");
+    var dots = nav.querySelectorAll(".scroll-dot");
     function light() {
       var current = 0;
       Array.prototype.forEach.call(sections, function (section, i) {
         if (container.scrollTop >= section.offsetTop - window.innerHeight / 2) current = i;
       });
-      nav.classList.toggle("visible", current !== 0);
+      nav.classList.toggle("is-visible", current !== 0);
       if (hint) {
         var show = current === 0 && more;
         hint.style.opacity = show ? "1" : "0";
         hint.style.pointerEvents = show ? "auto" : "none";
       }
-      Array.prototype.forEach.call(dots, function (dot, i) { dot.classList.toggle("active", i === current); });
+      Array.prototype.forEach.call(dots, function (dot, i) { dot.classList.toggle("is-on", i === current); });
     }
     Array.prototype.forEach.call(dots, function (dot, i) {
       dot.addEventListener("click", function () { sections[i].scrollIntoView({ behavior: glide() }); });
@@ -296,6 +296,8 @@
   function newsletter(form, o) {
     form = _.find(form);
     if (!form) return null;
+    // called again on the same form: the same one, never a second sending
+    if (form._dsNewsletter) return form._dsNewsletter;
     o = o || {};
     var w = function () { return _.words(WORDS); };
     var input = _.find(o.input) || form.querySelector('input[type="email"]');
@@ -343,7 +345,8 @@
           if (o.done) o.done(null, false);
         });
     });
-    return { form: form, say: say, busy: busy };
+    form._dsNewsletter = { form: form, say: say, busy: busy };
+    return form._dsNewsletter;
   }
 
   window.ds.icon = icon;

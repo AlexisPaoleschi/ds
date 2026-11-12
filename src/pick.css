@@ -1,6 +1,6 @@
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
-   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pv.
+   <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
    A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
    (.ct) it sits on the right. */
   .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
@@ -8,8 +8,8 @@
     border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
     font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
   [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
-  .pill .pv { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pill .pv::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
+  .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pill .pill-value::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
   .pill select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font-size: var(--fs-16); }
   @media (hover: hover) { .pill:hover { color: var(--ink); border-color: var(--line-2); } }
@@ -35,8 +35,8 @@
     background: none; border: 0; border-radius: var(--r-m); color: var(--ink); cursor: pointer; font: inherit; text-align: left; text-decoration: none; }
   /* a straight line between two choices, clear of the rounded corners a lit choice has */
   .picker-opt + .picker-opt::before { content: ""; position: absolute; top: 0; left: var(--s-6); right: var(--s-6); border-top: 1px solid var(--line); }
-  .picker-opt:hover::before, .picker-opt.is-active::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-active + .picker-opt::before { border-top-color: transparent; }
-  .picker-opt:hover, .picker-opt.is-active { background: var(--accent-soft); }
+  .picker-opt:hover::before, .picker-opt.is-focused::before, .picker-opt:hover + .picker-opt::before, .picker-opt.is-focused + .picker-opt::before { border-top-color: transparent; }
+  .picker-opt:hover, .picker-opt.is-focused { background: var(--accent-soft); }
   .picker-opt[aria-selected="true"] .picker-name { color: var(--accent-text); }
   .picker-av { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: var(--r-m);
     color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent);
