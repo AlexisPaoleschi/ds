@@ -1,5 +1,27 @@
 # Changelog
 
+## 2.38.0 · 12 novembre 2026
+
+Le ménage de l’intérieur : le même code écrit plusieurs fois devient une seule pièce. À l’écran, seulement ce que l’étude annonçait : les roues, les petits carrés, l’espacement des libellés, quelques teintes, la source en retard en jaune, l’onglet choisi en Vitrine.
+
+- Un noyau JavaScript commun, `src/core.js`, en tête de `ds.js`, `ds-photo.js` et `ds-site.js`, chargé une seule fois quand une page en lie plusieurs : la langue et les mots communs, la fabrique d’éléments, le stockage de l’appareil, « moins d’animations », les durées des jetons, la couleur d’un jeton, `ds.h`, `ds.esc`, `ds.ico`, et `ds.day` (les jours de Paris, que le calendrier, les graphiques et le choix de dates partagent ; `ds.datePick.today` reste). Une quarantaine de petites fonctions en double sont retirées des modules ; l’API publique ne change pas.
+- Les couches : la fenêtre de `ds.confirm`, la fiche, la visionneuse, le tiroir sur téléphone, le choix de dates ouvert et le menu du site s’empilent dans le noyau. Échap ferme celle du dessus seulement ; Tab tourne dans la fenêtre, la fiche, la visionneuse et le tiroir (qui ne gardait pas le clavier).
+- Une seule roue de chargement : les six (le bouton occupé, l’action d’un message, l’en-tête, le premier chargement, la bulle, `.spinner`) sont dessinées par la même règle (`--spin-size`, `--spin-ring`, `--spin-top`) et tournent à la même vitesse dans les deux thèmes, 0,8 s.
+- Un seul état « choisi » doré, `src/chosen.css` (la pilule en service, une période du choix de dates, le bouton doré, le jour choisi du calendrier), ses couleurs en jetons ; les onglets dans le choix de dates sont de vrais onglets, un peu plus serrés (`--tab-py`, `--tab-px`).
+- Un seul petit carré de couleur, `.swatch` (`--swatch-size`, `.is-open`), et les carrés des filtres, du calendrier, des graphiques, des tuiles et du sélecteur sont celui-là, 10 px partout ; le filtre lit encore `--a`, pour une version. Le sélecteur passe sa couleur par le même `tone()` que les graphiques.
+- Un seul point d’or, `.pip` (`--pip-size`), pour le filtre en service, la nouvelle version, la vue qui attend, le rechargement des réglages.
+- Les mini-tuiles sont les petites cases : `ds.minitiles` dessine `.tiles.is-compact.is-fit` (la classe `.minitiles` reste pour les règles d’une appli), et les règles à part des mini-tuiles disparaissent.
+- Les libellés en capitales prennent tous le même espacement (`--label-ls`) ; un titre de carte trop long se resserre (1 px) puis rapetisse. Les lignes séparées d’un trait (`ul.rows`, un classement, les paires d’une fiche, les tâches, connexions et champs des réglages) sont une seule règle (`--row-py`). La carte et toute sa famille sont dans `card.css`. Le voile (`--veil`) et le verre sur photo (`--glass-blur`) sont des jetons. Le kit du site partage ses deux bandeaux, le champ et le pot de miel de la newsletter, et la tuile photo de ses trois galeries.
+- Les teintes calculées une seule fois : `--good-soft`, `--good-line`, `--mid-soft`, `--mid-line` à côté de `--bad-soft` et `--bad-line`, à la même part dans chaque thème (`--soft-mix`, `--line-mix`) ; la teinte d’une couleur d’élément, `--tint-soft` (14 %) ; toutes les couleurs transparentes partent de leur couleur de base (`color-mix`), plus aucun RVB recopié.
+- Les jetons qui manquaient : `--s-18`, `--s-28`, `--s-36` (au lieu des calculs), `--page-site` au lieu des six 1200px, les largeurs de lecture (`--read-s`, `--read-m`, `--read-l`, `--read-xl`), les couches `--z-scrim` et `--z-dialog` (une fenêtre passe au-dessus d’une fiche ou de la visionneuse), les flous, `--o-off` et `--o-muted`, `--ico-s` et `--ico-m`, `--touch-target`, `--safe-top`, `--safe-right`, `--safe-bottom`, `--safe-left`, `--r-xs`.
+- Les choix de Vitrine rangés dans les jetons : les règles Vitrine qui ne posaient que des variables (la fiche, la fenêtre, le tableau, la barre de sélection, le lien retour, le curseur de zoom) sont devenues des jetons des deux thèmes ; les arrondis, durées et ombres sont déclarés dans le bloc Atelier aussi, et les quatre jetons qui n’existaient qu’en Vitrine ont leur valeur Atelier.
+- « Attention » en jaune partout : dans l’état des sources, le point et la ligne d’une source en retard prennent `--mid`, et non plus l’or.
+- Vitrine : l’onglet choisi a un fond à 18 % d’or (`--tab-on-bg`) ; un choix encadré (« Ce mois ») garde ses 5 %.
+- Supprimées, une fois montrées et validées : `.errs`, `.msg .txt small.again`, `.event-card-cta`, et trois règles `[hidden]` en double.
+- Les fichiers rangés par rôle : `scripts/build.sh` assemble fondations, marques, contrôles, surfaces, données, pièces publiques, pages, puis l’état choisi ; `shell.css` est découpé (`page.css`, `card.css`, `rows.css`, `msg.css`, `status.css`, `tabs.css`, `avatar.css`), la visionneuse tient dans `viewer.css`, `site.css` devient `public.css`. Les fichiers de `dist` gardent leurs noms et leur contenu.
+- Corrigé : depuis 2.37.0, un titre de carte dessiné dans une vue cachée n’était plus ajusté quand la vue s’affichait (le compte facture de Bank pouvait passer sur deux lignes) ; un titre l’est de nouveau dès que sa largeur change.
+- Nouvelles vérifications : une seule roue à la même vitesse dans les deux thèmes, les six carrés pareils, les couches (Échap ferme la fenêtre puis la fiche, Tab reste dans chacune), un titre ajusté quand sa vue s’affiche, les mini-tuiles qui sont des petites cases.
+
 ## 2.37.0 · 12 novembre 2026
 
 Des corrections, sans rien changer à l’aspect des applis.

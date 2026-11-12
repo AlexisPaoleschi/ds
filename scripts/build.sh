@@ -3,28 +3,33 @@
 set -e
 cd "$(dirname "$0")/.."
 version=$(cat VERSION)
-# the stylesheets, in order: the fonts and tokens, the shell, then the components; Bank's and Studio's own components
-# (moved here once a second app could use them) close the list
-css="src/fonts.css src/tokens.css src/base.css src/shell.css src/buttons.css src/tiles.css src/panel.css src/period.css src/doc.css src/toast.css src/dialog.css src/settings.css src/site.css src/viewer.css src/topbar.css"
-css_bank="src/pick.css src/sheet.css src/table.css src/reorder.css src/meter.css src/ruled.css"
-css_studio="src/calendar.css src/chart.css src/figures.css src/periodpick.css src/live.css"
-js_bank="src/sheet.js src/table.js src/pick.js src/reorder.js"
-js_studio="src/calendar.js src/chart.js src/figures.js src/live.js"
-css_photo="src/viewer-behaviour.css src/photogrid.css src/hero.css src/backlink.css"
+# the stylesheets by role, in this order: the foundation (fonts, tokens, fields, the page), the small marks (swatch, pip,
+# spinner), the controls, the surfaces, the data, the public pieces, the pages; the chosen gold closes the list, so
+# that it wins over the controls' hover
+foundation="src/fonts.css src/tokens.css src/base.css src/page.css"
+marks="src/marks.css"
+controls="src/buttons.css src/tabs.css src/pick.css src/period.css src/periodpick.css src/datepick.css src/reorder.css src/live.css"
+surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/sheet.css src/panel.css src/viewer.css"
+data="src/rows.css src/status.css src/tiles.css src/figures.css src/meter.css src/chart.css src/table.css src/calendar.css"
+public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css"
+pages="src/doc.css src/settings.css"
+states="src/chosen.css"
+# the scripts: the core every bundle starts with, the icons' sprite and the behaviours, then the components
+js_controls="src/pick.js src/reorder.js src/datepick.js src/live.js"
+js_surfaces="src/sheet.js"
+js_data="src/table.js src/calendar.js src/chart.js src/figures.js"
 js_photo="src/viewer.js src/photogrid.js"
-css_date="src/datepick.css"
-js_date="src/datepick.js"
 # the site kit: what alexispaoleschi.com shares between its pages and no app needs, in files of their own
 css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css src/home.css src/eventslist.css src/newsletter.css src/testimonials.css"
 js_site="src/site.js"
-{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css $css_bank $css_studio $css_photo $css_date; } > dist/ds.css
-# the script: the icons' sprite, then the bubble and the dialog
-{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/icons.js src/ds.js $js_bank $js_studio $js_photo $js_date; } > dist/ds.js
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $foundation $marks $controls $surfaces $data $public $pages $states; } > dist/ds.css
+# the script: the core, the icons' sprite, the bubble and the dialog and the rest of ds.js, then the components
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/core.js src/icons.js src/ds.js $js_surfaces $js_data $js_controls $js_photo; } > dist/ds.js
 # the photo viewer and the grid of photos alone, for a public page that needs nothing else of ds.js (the site's events)
-{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $js_photo; } > dist/ds-photo.js
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/core.js $js_photo; } > dist/ds-photo.js
 # the site kit, which the site links after ds.css (and ds-photo.js on its event pages)
 { echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $css_site; } > dist/ds-site.css
-{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat $js_site; } > dist/ds-site.js
+{ echo "/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"; cat src/core.js $js_site; } > dist/ds-site.js
 # the icons alone, in a file a page links to with no script: <svg class="ico"><use href="icons-X.Y.Z.svg#i-mail"/></svg>
 { echo '<svg xmlns="http://www.w3.org/2000/svg">'; echo "<!-- ds $version · github.com/AlexisPaoleschi/ds · the icons of src/icons.js -->";
   sed -n '/var sprite = `/,/^`;$/p' src/icons.js | sed '1d;$d'; echo '</svg>'; } > dist/icons.svg

@@ -21,8 +21,10 @@
    says "all", "day", "month", "year" or "range". The days are Paris's days, written "2026-11-09", whatever the device. */
 (function () {
   "use strict";
-  var TZ = "Europe/Paris", MODES = ["day", "month", "year", "range"], PAGE = 12;
-  var WORDS = {
+  var _ = window.ds._, day = window.ds.day, find = _.find, el = _.el;
+  var parisToday = day.today, at = day.at, addDays = day.add, fmt = day.format;
+  var MODES = ["day", "month", "year", "range"], PAGE = 12;
+  var WORDS = _.table({
     fr: { day: "Jour", month: "Mois", year: "Année", range: "Dates", all: "Toutes les dates", pick: "Choisir la période", modes: "Choisir par",
           prev: { day: "Mois précédent", month: "Année précédente", year: "Années précédentes" },
           next: { day: "Mois suivant", month: "Année suivante", year: "Années suivantes" },
@@ -33,16 +35,8 @@
           next: { day: "Next month", month: "Next year", year: "Later years" },
           first: "Pick the first day, then the last.", last: function (d) { return "From " + d + ": pick the last day."; },
           since: function (d) { return "since " + d; }, until: function (d) { return "until " + d; } }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function find(e) { return typeof e === "string" ? document.querySelector(e) : e; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function btn(cls, text, dp) {
     var b = el("button", cls, text);
     b.type = "button";
@@ -50,16 +44,12 @@
     return b;
   }
 
-  // the days are Paris's days, counted at noon UTC so that no clock change moves them
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
+  // the days are Paris's days, counted at noon UTC so that no clock change moves them (ds.day)
   function pad(n) { return String(n).padStart(2, "0"); }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
   function daysBetween(a, b) { return Math.round((at(b) - at(a)) / 864e5); }
   function monthLen(ym) { return new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate(); }
   function monthIndex(ym) { return +ym.slice(0, 4) * 12 + +ym.slice(5, 7) - 1; }
   function addMonths(ym, n) { var m = monthIndex(ym) + n; return Math.floor(m / 12) + "-" + pad(m % 12 + 1); }
-  function fmt(key, opts) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, opts)).format(at(key)); }
   function date(t, style) { return window.ds.date(t, style); }
   function dayText(key, year) { return date(key, year ? { day: "numeric", month: "short", year: "numeric" } : "day"); }
 
@@ -364,9 +354,8 @@
     holder.addEventListener("keydown", function (e) {
       if (e.defaultPrevented) return;
       if (e.key === "Escape") {
-        // first the day kept for two dates, then the picker itself; inline, Escape goes on to what holds it
+        // first the day kept for two dates; then the popover, the top layer, closes (inline, Escape goes on to what holds it)
         if (st.anchor) { e.preventDefault(); st.anchor = null; st.hover = null; draw(); }
-        else if (opener && !holder.hidden) { e.preventDefault(); p.close(); opener.focus(); }
         return;
       }
       var dp = e.target.getAttribute && e.target.getAttribute("data-dp");
@@ -394,15 +383,18 @@
       paint();
     });
 
+    // opened under its button, a layer: Escape closes it and gives the focus back to the button; Tab is free
+    var cover = { el: holder, trap: false, close: function () { var inside = holder.contains(document.activeElement); p.close(); if (inside || document.activeElement === document.body) opener.focus(); } };
     p.open = function () {
       reset();
       holder.hidden = false;
-      if (opener) opener.setAttribute("aria-expanded", "true");
+      if (opener) { opener.setAttribute("aria-expanded", "true"); _.layer(cover); }
       return draw("cell");
     };
     p.close = function () {
       holder.hidden = true;
       st.anchor = null; st.hover = null;
+      _.unlayer(cover);
       if (opener) opener.setAttribute("aria-expanded", "false");
       return p;
     };
@@ -420,9 +412,6 @@
       // pressed, not clicked: a tap inside that draws the picker again must not look like a tap elsewhere
       document.addEventListener("pointerdown", function (e) {
         if (!holder.hidden && !holder.contains(e.target) && !opener.contains(e.target)) p.close();
-      });
-      opener.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !holder.hidden && !e.defaultPrevented) { e.preventDefault(); p.close(); }
       });
       holder.hidden = true;
       opener.setAttribute("aria-expanded", "false");

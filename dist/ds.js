@@ -1,4 +1,146 @@
-/* ds 2.37.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.38.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
+   once. A page that links several bundles keeps the first core, so that its listeners are wired once.
+   Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
+   handler would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become
+   text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
+   ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
+   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options).
+   For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
+   kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
+   (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
+   (a colour given as a token's name, "--c-bleu", or as a value), and the layers: what covers the page (a window, a sheet,
+   the photo viewer, the phone's drawer, a date picker's popover, the site's phone menu) is opened with layer({el, close,
+   trap, loose}) (el: the element, or a function that finds it) and closed with unlayer(layer). Escape closes the top layer only; Tab goes round inside it when it traps
+   (trap: false for a popover; loose: only while the focus is inside, as in a sheet whose picker floats outside it). */
+(function () {
+  "use strict";
+  if (window.ds && window.ds._) return;
+  var ds = window.ds = window.ds || {};
+  var SVGNS = "http://www.w3.org/2000/svg", TZ = "Europe/Paris";
+
+  // the page's language, read each time, so that a page that changes it is followed
+  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
+  // the words every module says; a module's own table adds to them
+  var COMMON = {
+    fr: { close: "Fermer", cancel: "Annuler" },
+    en: { close: "Close", cancel: "Cancel" }
+  };
+  function table(own) {
+    own = own || {};
+    return { fr: Object.assign({}, COMMON.fr, own.fr), en: Object.assign({}, COMMON.en, own.en) };
+  }
+  function words(t) { return english() ? (t || COMMON).en : (t || COMMON).fr; }
+
+  function find(x) { return typeof x === "string" ? document.querySelector(x) : x; }
+  // an element with its class and either its text or its children (null and false skipped)
+  function el(name, cls, kids) {
+    var e = document.createElement(name);
+    if (cls) e.className = cls;
+    if (kids == null) return e;
+    if (typeof kids === "string" || typeof kids === "number") e.textContent = kids;
+    else [].concat(kids).forEach(function (k) { if (k != null && k !== false) e.append(k); });
+    return e;
+  }
+  function esc(text) {
+    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
+  function h(tag, attrs, kids) {
+    var node = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      var v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === "class") node.className = v;
+      else if (k === "text") node.textContent = v;
+      else if (k === "style") node.setAttribute("style", v);
+      else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v === true ? "" : v);
+    }
+    (kids || []).forEach(function (c) {
+      if (c == null || c === false) return;
+      node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
+    });
+    return node;
+  }
+  function ico(name, cls) {
+    var svg = document.createElementNS(SVGNS, "svg"), use = document.createElementNS(SVGNS, "use");
+    svg.setAttribute("class", "ico" + (cls ? " " + cls : ""));
+    svg.setAttribute("aria-hidden", "true");
+    use.setAttribute("href", "#i-" + name);
+    svg.appendChild(use);
+    return svg;
+  }
+
+  // the device's storage, which a private window or a strict browser may refuse: null, and nothing kept
+  function read(key, session) {
+    try { return (session ? sessionStorage : localStorage).getItem(key); } catch (e) { return null; }
+  }
+  function write(key, value, session) {
+    try {
+      var s = session ? sessionStorage : localStorage;
+      if (value == null) s.removeItem(key); else s.setItem(key, value);
+    } catch (e) {}
+  }
+  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  // a duration token as milliseconds: ".3s", "400ms" (300 when it cannot be read)
+  function ms(text) {
+    var v = parseFloat(text);
+    if (isNaN(v)) return 300;
+    return /ms\s*$/.test(text) ? v : v * 1000;
+  }
+  function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
+
+  // Paris's days
+  function key(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
+  function at(k) { return new Date(k + "T12:00:00Z"); }
+  function add(k, n) { var d = at(k); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
+  var day = {
+    today: function () { return key(new Date()); },
+    key: key,
+    at: at,
+    add: add,
+    weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
+    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); }
+  };
+
+  // the layers over the page, the last one on top
+  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var layers = [];
+  function focusables(box) {
+    return [].filter.call(box.querySelectorAll(FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
+  }
+  function unlayer(l) { var i = layers.indexOf(l); if (i >= 0) layers.splice(i, 1); }
+  function layer(l) { unlayer(l); layers.push(l); return l; }
+  function top() { return layers[layers.length - 1] || null; }
+  // Tab goes round inside the box, never to the page behind it
+  function trap(e, box) {
+    var list = focusables(box), at = document.activeElement;
+    if (!list.length) { e.preventDefault(); return; }
+    var first = list[0], last = list[list.length - 1];
+    if (!box.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+    else if (e.shiftKey && (at === first || at === box)) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+  }
+  // on <html>, after the element that has the focus: a field that takes its own Escape (a picker's search) keeps it
+  document.documentElement.addEventListener("keydown", function (e) {
+    var l = top();
+    if (!l || e.defaultPrevented) return;
+    if (e.key === "Escape") {
+      if (l.close) { e.preventDefault(); l.close(); }
+    } else if (e.key === "Tab" && l.trap !== false) {
+      // el may be a function, for a layer its page draws again (the drawer's panel)
+      var box = typeof l.el === "function" ? l.el() : l.el;
+      if (box && (!l.loose || box.contains(document.activeElement))) trap(e, box);
+    }
+  });
+
+  ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
+    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top };
+  ds.h = h;
+  ds.esc = esc;
+  ds.ico = ico;
+  ds.day = day;
+})();
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -291,25 +433,26 @@
    Their own words follow the page's language, <html lang>: English for "en…", French otherwise. */
 (function () {
   "use strict";
+  var _ = window.ds._, english = _.english, tag = _.el, el = _.el, h = window.ds.h, ico = window.ds.ico;
   var LIFE = { good: 4000, info: 5000, busy: 0, bad: 0 };
-  var WORDS = {
-    fr: { close: "Fermer", cancel: "Annuler", confirm: "Confirmer", openFilters: "Ouvrir les filtres", closeFilters: "Fermer les filtres",
+  var WORDS = _.table({
+    fr: { confirm: "Confirmer", openFilters: "Ouvrir les filtres", closeFilters: "Fermer les filtres",
           never: "jamais", today: "aujourd'hui", yesterday: "hier", tomorrow: "demain", on: "le ", at: " à ", now: "à l’instant",
           ago: function (x) { return "il y a " + x; }, soon: "dans un instant", in: function (x) { return "dans " + x; },
           journal: "Journal", run: "Lancer", runNow: " maintenant", started: "Lancé", running: "En cours", allLogs: "Tout sur Render ↗",
           live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé",
           nothing: "Rien d’écrit depuis le démarrage du serveur.", journalOf: function (x) { return "Journal : " + x; },
           retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour" },
-    en: { close: "Close", cancel: "Cancel", confirm: "Confirm", openFilters: "Open the filters", closeFilters: "Close the filters",
+    en: { confirm: "Confirm", openFilters: "Open the filters", closeFilters: "Close the filters",
           never: "never", today: "today", yesterday: "yesterday", tomorrow: "tomorrow", on: "on ", at: " at ", now: "just now",
           ago: function (x) { return x + " ago"; }, soon: "in a moment", in: function (x) { return "in " + x; },
           journal: "Log", run: "Run", runNow: " now", started: "Started", running: "Running", allLogs: "All on Render ↗",
           live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done",
           nothing: "Nothing written since the server started.", journalOf: function (x) { return "Log: " + x; },
           retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date" }
-  };
+  });
   // read when a message or a window opens, so that a page that changes its language is followed
-  function words() { return english() ? WORDS.en : WORDS.fr; }
+  function words() { return _.words(WORDS); }
   var stack = null, live = [], said = {};
   // the bubbles' place, made once the page is there, with two lines read aloud that stay in it from the start: a
   // screen reader follows a region that was already on the page, not always one added with its words
@@ -396,7 +539,6 @@
   // system and answers with a promise:
   // false when cancelled, true when confirmed, or the typed text when the window has a field (value).
   // A dangerous answer (danger) starts on « Annuler » (Cancel), so Enter never deletes by mistake.
-  var DIALOG_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   var dialogs = 0;
   function confirm(opts) {
     opts = opts || {};
@@ -422,25 +564,19 @@
         if (opts.maxlength) input.maxLength = opts.maxlength;
       }
       var before = document.activeElement, box = veil.firstChild, stilled = [];
+      // the top layer: Escape cancels it, and Tab goes round inside it, never to the page behind
+      var top = _.layer({ el: box, close: function () { end(false); } });
       function end(answer) {
+        _.unlayer(top);
         document.removeEventListener("keydown", key, true);
         stilled.forEach(function (x) { x.inert = false; });
         veil.remove();
         if (before && before.focus) before.focus();
         done(answer);
       }
+      // Enter in its field answers with the text
       function key(e) {
-        if (e.key === "Escape") { e.preventDefault(); end(false); }
-        else if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
-        else if (e.key === "Tab") {
-          // Tab goes round inside the window, never to the page behind it
-          var list = [].filter.call(box.querySelectorAll(DIALOG_FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
-          if (!list.length) return;
-          var first = list[0], last = list[list.length - 1], at = document.activeElement;
-          if (!box.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
-          else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
-        }
+        if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
       }
       ok.onclick = function () { end(input ? input.value : true); };
       no.onclick = function () { end(false); };
@@ -454,7 +590,6 @@
       if (input) { input.focus(); input.select(); } else (opts.danger ? no : ok).focus();
     });
   }
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
 
   /* ds.drawer(name, {onChange}): the filters' drawer of a page. Its markup: the edge tab
      <button class="edgetab" data-drawer-toggle="name">, the layout <div class="side-layout" data-drawer="name"> with its
@@ -480,12 +615,16 @@
   }
   function drawer(name, opts) {
     var d = drawers[name] = { open: false, onChange: (opts || {}).onChange };
-    try { d.open = localStorage.getItem(name) === "1"; } catch (e) {}
+    d.open = _.read(name) === "1";
+    // open on a phone, it covers the page: a layer, which Escape closes and Tab stays inside
+    var cover = { el: function () { return document.querySelector('[data-drawer="' + name + '"] .side'); }, close: function () { d.set(false); } };
+    function covers() { if (d.open && phone()) _.layer(cover); else _.unlayer(cover); }
     d.set = function (open) {
       var was = d.open;
       d.open = !!open;
-      try { localStorage.setItem(name, d.open ? "1" : "0"); } catch (e) {}
+      _.write(name, d.open ? "1" : "0");
       paint(name);
+      covers();
       if (was === d.open) return;
       if (d.onChange) d.onChange(d.open);
       if (!phone()) return;
@@ -495,6 +634,7 @@
     d.toggle = function () { d.set(!d.open); };
     d.mark = function (on) { d.marked = !!on; paint(name); };
     paint(name);
+    covers();
     return d;
   }
   document.addEventListener("click", function (e) {
@@ -505,38 +645,19 @@
     if (!d) return;
     if (t.hasAttribute("data-drawer-toggle")) d.toggle(); else d.set(false);
   });
-  document.addEventListener("keydown", function (e) {
-    // a window of ds.confirm takes its own Escape first
-    if (e.key !== "Escape" || e.defaultPrevented || !phone()) return;
-    Object.keys(drawers).forEach(function (name) { if (drawers[name].open) drawers[name].set(false); });
-  });
 
   /* ds.status(holder, {summary, late, rows, link}) draws the state of a page's sources in holder (its <footer>): one line
      that says it all (summary, a gold dot when late), opening on one row per source,
      rows: [{icon, name, state, every, ok, detail}] — what was read and when (state), how often (every), whether it is on
      time (ok) and, when not, why (detail) — then link: {href, text}. Whether it is open stays across redraws and visits. */
-  function svgIcon(name) {
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"), use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    svg.setAttribute("class", "ico");
-    svg.setAttribute("aria-hidden", "true");
-    use.setAttribute("href", "#i-" + name);
-    svg.appendChild(use);
-    return svg;
-  }
-  function tag(name, cls, text) {
-    var el = document.createElement(name);
-    if (cls) el.className = cls;
-    if (text != null) el.textContent = text;
-    return el;
-  }
   function status(holder, o) {
     var key = "ds-status " + location.pathname, det = tag("details", "status"), summary = tag("summary"), list = tag("ul");
-    try { det.open = sessionStorage.getItem(key) === "1"; } catch (e) {}
+    det.open = _.read(key, true) === "1";
     summary.append(tag("i", "dot" + (o.late ? " warn" : "")), o.summary || "");
     (o.rows || []).forEach(function (r) {
       var li = tag("li", r.ok ? "" : "late"), sn = tag("span", "sn"), sw = tag("span", "sw");
-      sn.append(svgIcon(r.icon || "doc"), r.name || "");
-      sw.append(svgIcon(r.ok ? "check" : "alert"), r.state || "");
+      sn.append(ico(r.icon || "doc"), r.name || "");
+      sw.append(ico(r.ok ? "check" : "alert"), r.state || "");
       li.append(sn, sw, tag("span", "sf", r.every || ""));
       if (r.detail) li.append(tag("span", "sd", r.detail));
       list.append(li);
@@ -548,7 +669,7 @@
       list.append(last);
     }
     det.append(summary, list);
-    det.addEventListener("toggle", function () { try { sessionStorage.setItem(key, det.open ? "1" : "0"); } catch (e) {} });
+    det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
     holder.replaceChildren(det);
     return det;
   }
@@ -560,7 +681,7 @@
   function date(t) { return t instanceof Date ? t : new Date(typeof t === "number" && t < 1e12 ? t * 1000 : t); }
   // a date that cannot be read is written « — », as a missing figure is, instead of stopping the page
   function unreadable(t) { return isNaN(date(t).getTime()); }
-  function dayKey(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
+  var dayKey = window.ds.day.key;
   function clock(d) {
     var parts = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
     var h = +parts.find(function (p) { return p.type === "hour"; }).value, m = parts.find(function (p) { return p.type === "minute"; }).value;
@@ -641,7 +762,7 @@
   var AFTER_LOGIN = "ds-after-login";
   function wait(ms) { return new Promise(function (ok) { setTimeout(ok, ms); }); }
   function signIn(to) {
-    try { sessionStorage.setItem(AFTER_LOGIN, location.pathname + location.search + location.hash); } catch (e) {}
+    _.write(AFTER_LOGIN, location.pathname + location.search + location.hash, true);
     location.href = to;
   }
   function api(method, url, body, o) {
@@ -679,8 +800,8 @@
   }
   // back from the sign-in page, the page opens where it was left
   function cameBack() {
-    var was = null;
-    try { was = sessionStorage.getItem(AFTER_LOGIN); sessionStorage.removeItem(AFTER_LOGIN); } catch (e) {}
+    var was = _.read(AFTER_LOGIN, true);
+    _.write(AFTER_LOGIN, null, true);
     if (!was || location.hash) return;
     var hash = was.indexOf("#") >= 0 ? was.slice(was.indexOf("#")) : "";
     if (hash && was.split("#")[0] === location.pathname + location.search) {
@@ -699,11 +820,6 @@
      that asks for it (/settings#patreon/journal). */
   var logs = {};
   function logState(key) { return logs[key] || (logs[key] = { open: false, lines: [], last: 0, stick: true, top: 0, list: null, loaded: false, busy: false }); }
-  function el(name, cls, kids) {
-    var e = tag(name, cls);
-    (kids || []).forEach(function (k) { if (k != null) e.append(k); });
-    return e;
-  }
   function lineEl(x) {
     var bad = /^(ERROR|ERREUR|CRITICAL)$/.test(x.level) || x.text.indexOf("✖") >= 0;
     var warn = !bad && (/^(WARNING|ATTENTION)$/.test(x.level) || x.text.indexOf("⚠") >= 0);
@@ -817,7 +933,7 @@
     if (pc) { pc.setAttribute("aria-hidden", "true"); pc.textContent = text; }
     if (boot) { boot.setAttribute("aria-hidden", "true"); boot.textContent = text; }
   }
-  function busyTimes() { try { return JSON.parse(localStorage.getItem("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
+  function busyTimes() { try { return JSON.parse(_.read("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
   // one step of the share: the speed that reaches 99% at the end foreseen (arrive), taken gently (a tenth of the change
   // at each step); between two words of the work the end stays put, so the speed stays even
   function busyStep() {
@@ -861,7 +977,7 @@
       clearInterval(bz.tick); bz.tick = null;
       if (!top) return;
       if (ok === false) { top.classList.remove("loading"); busyText(""); return; }
-      if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); try { localStorage.setItem("ds-busy-ms", JSON.stringify(t)); } catch (e) {} }
+      if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); _.write("ds-busy-ms", JSON.stringify(t)); }
       // what is left runs on to 100% in a quarter of a second, evenly, then the tick
       var from = bz.word ? 100 : bz.shown, steps = 5, n = 0;
       bz.tick = setInterval(function () {
@@ -931,39 +1047,7 @@
   }
   trouble.ok = function (key) { var t = troubles[key]; if (t && !t.trying) t.shown = false; };
 
-  /* ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline handler
-     would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become text.
-     ds.ico(name) is an icon of the sprite. Studio drew its whole page so; ds's own parts can too. */
-  var SVGNS = "http://www.w3.org/2000/svg";
-  // ds.esc(text): a text that goes into HTML written as a string, its & < > " and ' made harmless
-  function esc(text) {
-    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
-  }
-  function h(tag, attrs, kids) {
-    var node = document.createElement(tag);
-    if (attrs) for (var k in attrs) {
-      var v = attrs[k];
-      if (v == null || v === false) continue;
-      if (k === "class") node.className = v;
-      else if (k === "text") node.textContent = v;
-      else if (k === "style") node.setAttribute("style", v);
-      else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
-      else node.setAttribute(k, v === true ? "" : v);
-    }
-    (kids || []).forEach(function (c) {
-      if (c == null || c === false) return;
-      node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
-    });
-    return node;
-  }
-  function ico(name, cls) {
-    var svg = document.createElementNS(SVGNS, "svg"), use = document.createElementNS(SVGNS, "use");
-    svg.setAttribute("class", "ico" + (cls ? " " + cls : ""));
-    svg.setAttribute("aria-hidden", "true");
-    use.setAttribute("href", "#i-" + name);
-    svg.appendChild(use);
-    return svg;
-  }
+  // ds.h, ds.esc and ds.ico are the core's (src/core.js), shared with ds-photo.js and ds-site.js
 
   /* ds.compact(n): a figure that must stay short, « 9 850 », « 57,9k », « 578k », « 1,2M » (« 57.9k » in English). */
   function compact(n) {
@@ -1017,11 +1101,24 @@
     if (at && at.closest && at.closest(".ct")) return true;
     return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".ct") || !!n.querySelector(".ct")); });
   }
+  // a title whose width changes is fitted again: its view shown (it was not measured while hidden), its card resized
+  var watched = new WeakSet(), widths = new WeakMap();
+  var resized = window.ResizeObserver ? new ResizeObserver(function (entries) {
+    entries.forEach(function (e) {
+      var w = Math.round(e.contentRect.width);
+      if (widths.get(e.target) === w) return;
+      widths.set(e.target, w);
+      if (w) fitTitle(e.target);
+    });
+  }) : null;
   function fitTitles() {
     if (fitting) return;
     fitting = requestAnimationFrame(function () {
       fitting = 0;
-      document.querySelectorAll(".ct").forEach(fitTitle);
+      document.querySelectorAll(".ct").forEach(function (h) {
+        if (resized && !watched.has(h)) { watched.add(h); resized.observe(h); }
+        fitTitle(h);
+      });
     });
   }
 
@@ -1029,15 +1126,14 @@
      ds-fold:<key>. On loading, and again with ds.fold(holder) once a page draws them anew. */
   function fold(root) {
     (root || document).querySelectorAll("details[data-fold]").forEach(function (d) {
-      var v = null;
-      try { v = localStorage.getItem("ds-fold:" + d.getAttribute("data-fold")); } catch (e) {}
+      var v = _.read("ds-fold:" + d.getAttribute("data-fold"));
       if (v != null) d.open = v === "1";
     });
   }
   document.addEventListener("toggle", function (e) {
     var d = e.target;
     if (!d.matches || !d.matches("details[data-fold]")) return;
-    try { localStorage.setItem("ds-fold:" + d.getAttribute("data-fold"), d.open ? "1" : "0"); } catch (x) {}
+    _.write("ds-fold:" + d.getAttribute("data-fold"), d.open ? "1" : "0");
   }, true);
 
   /* Whole rows that open: a row (tr.is-link, or any [data-row-link]) holding a link a.row-link, or a data-href, opens it on a
@@ -1097,7 +1193,7 @@
     try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
     if (!el) return false;
     for (var d = el.parentElement; d; d = d.parentElement) if (d.tagName === "DETAILS") d.open = true;
-    var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var still = _.reduced();
     el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
     el.classList.remove("is-lit");
     void el.offsetWidth;
@@ -1181,9 +1277,6 @@
   window.ds.jobs = jobs;
   window.ds.busy = busy;
   window.ds.trouble = trouble;
-  window.ds.h = h;
-  window.ds.esc = esc;
-  window.ds.ico = ico;
   window.ds.compact = compact;
   window.ds.avatar = avatar;
   window.ds.fold = fold;
@@ -1199,28 +1292,24 @@
    does not scroll while it is open (sheet.css). */
 (function () {
   "use strict";
-  var WORDS = { fr: { close: "Fermer" }, en: { close: "Close" } };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  // the sheets open, the last one on top
-  var stack = [];
-  function focusables(panel) {
-    return [].filter.call(panel.querySelectorAll(FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
-  }
+  var _ = window.ds._;
   function sheet(el, opts) {
-    if (typeof el === "string") el = document.querySelector(el);
+    el = _.find(el);
     if (!el) return null;
     if (el._dsSheet) { if (opts) el._dsSheet.opts = opts; return el._dsSheet; }
     var panel = el.querySelector(".sheet-panel") || el, s = { el: el, panel: panel, opts: opts || {}, isOpen: false, before: null };
+    // open, a layer: Escape closes it, the last one opened first, and Tab goes round inside it while the focus is in it
+    // (a picker's list floating outside it keeps its own keys)
+    var cover = { el: panel, loose: true, close: function () { s.close(); } };
     el._dsSheet = s;
     panel.setAttribute("tabindex", "-1");
-    el.querySelectorAll(".sheet-x").forEach(function (x) { if (!x.hasAttribute("aria-label")) x.setAttribute("aria-label", words().close); });
+    el.querySelectorAll(".sheet-x").forEach(function (x) { if (!x.hasAttribute("aria-label")) x.setAttribute("aria-label", _.words().close); });
     s.open = function (from) {
       if (s.isOpen) return s;
       s.isOpen = true;
       s.before = from || document.activeElement;
       el.hidden = false;
-      stack.push(s);
+      _.layer(cover);
       panel.scrollTop = 0;
       panel.focus({ preventScroll: true });
       if (s.opts.onOpen) s.opts.onOpen(s);
@@ -1230,7 +1319,7 @@
       if (!s.isOpen) return s;
       s.isOpen = false;
       el.hidden = true;
-      stack.splice(stack.indexOf(s), 1);
+      _.unlayer(cover);
       var back = s.before;
       s.before = null;
       // what opened it may be gone, drawn again while the sheet was open: then the focus stays where the page puts it
@@ -1244,20 +1333,6 @@
     });
     return s;
   }
-  // on <html>, so that a field inside the sheet (a picker's search) takes its own Escape first, and before the
-  // drawer's, which listens on the document: Escape closes what is on top, and only that
-  document.documentElement.addEventListener("keydown", function (e) {
-    var top = stack[stack.length - 1];
-    if (!top || e.defaultPrevented || document.querySelector(".dialog-veil")) return;
-    if (e.key === "Escape") { e.preventDefault(); top.close(); return; }
-    if (e.key !== "Tab") return;
-    // Tab goes round inside the sheet, as long as the focus is in it
-    var panel = top.panel, list = focusables(panel), at = document.activeElement;
-    if (!list.length || !panel.contains(at)) return;
-    var first = list[0], last = list[list.length - 1];
-    if (e.shiftKey && (at === first || at === panel)) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
-  });
   window.ds = window.ds || {};
   window.ds.sheet = sheet;
 })();
@@ -1282,14 +1357,14 @@
    Returns {keys(), has(key), set(key, on), clear(), paint()}; onChange(keys) after each change. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._, find = _.find;
+  var WORDS = _.table({
     fr: { picked: function (n) { return n + (n > 1 ? " lignes choisies" : " ligne choisie"); } },
     en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
-  function store(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
-  function stored(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+  });
+  function words() { return _.words(WORDS); }
+  function store(key, v) { _.write(key, JSON.stringify(v)); }
+  function stored(key) { try { return JSON.parse(_.read(key)); } catch (e) { return null; } }
 
   // a cell's place in its row, its colspans counted, and the cell at that place in another row
   function place(cell) {
@@ -1453,308 +1528,6 @@
   window.ds.sortable = sortable;
   window.ds.selection = selection;
 })();
-/* The behaviour of src/pick.css.
-   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu's choice in its .pv,
-   and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
-   every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
-   ds.picker(holder, {items, value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
-   holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
-     items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
-     cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
-     are read (« Chargement… »); value: the current choice, in gold; first: the values shown before anything is typed
-     (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
-     matches; onPick(item) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the search
-     taking the focus. ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
-     Returns {open(), close(), toggle(), set(items), draw(), input}. */
-(function () {
-  "use strict";
-  var WORDS = {
-    fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…" },
-    en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…" }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
-  function tag(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-
-  function pills(root) {
-    root = find(root) || document;
-    var list = root.matches && root.matches(".pill") ? [root] : root.querySelectorAll(".pill");
-    [].forEach.call(list, function (p) {
-      var sel = p.querySelector("select");
-      if (!sel) return;
-      var pv = p.querySelector(".pv");
-      if (!pv) { pv = tag("span", "pv"); p.insertBefore(pv, p.firstChild); }
-      var o = sel.options[sel.selectedIndex];
-      pv.textContent = o ? o.textContent : "";
-      if (p.classList.contains("is-filter")) p.classList.toggle("is-on", !!sel.value);
-    });
-  }
-  document.addEventListener("change", function (e) {
-    var p = e.target.closest && e.target.closest(".pill");
-    if (p) pills(p);
-  });
-  // now, for what is on the page already, and once it is all there, for what a page's first script drew
-  pills();
-  document.addEventListener("DOMContentLoaded", function () { pills(); });
-
-  var made = 0;
-  function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
-  function picker(holder, o) {
-    holder = find(holder);
-    if (!holder) return null;
-    o = o || {};
-    var w = words(), id = "ds-picker-" + (++made), p = { items: o.items === undefined ? [] : o.items, shown: [], active: -1 };
-    holder.classList.add("picker");
-    var input = tag("input", "picker-q"), list = tag("div", "picker-list");
-    input.type = "search";
-    input.autocomplete = "off";
-    input.spellcheck = false;
-    input.placeholder = o.placeholder || w.search;
-    input.setAttribute("aria-label", o.label || input.placeholder);
-    input.setAttribute("role", "combobox");
-    input.setAttribute("aria-autocomplete", "list");
-    input.setAttribute("aria-expanded", "true");
-    input.setAttribute("aria-controls", id);
-    list.id = id;
-    list.setAttribute("role", "listbox");
-    holder.replaceChildren(input, list);
-    p.input = input;
-
-    function matches() {
-      var items = p.items || [], q = fold(input.value.trim()), limit = o.limit || 12;
-      if (!q) {
-        var start = o.first ? o.first.map(function (v) { return items.filter(function (x) { return fold(x.value) === fold(v); })[0]; }).filter(Boolean) : items;
-        return start.slice(0, limit);
-      }
-      var parts = q.split(/\s+/);
-      return items.filter(function (x) {
-        var text = fold([x.label, x.sub, x.group, x.keywords].join(" "));
-        return parts.every(function (part) { return text.indexOf(part) >= 0; });
-      }).slice(0, limit);
-    }
-    function option(x, i) {
-      var opt = tag(x.href ? "a" : "button", "picker-opt");
-      if (x.href) opt.href = x.href; else opt.type = "button";
-      opt.id = id + "-" + i;
-      opt.tabIndex = -1;
-      opt.setAttribute("role", "option");
-      opt.setAttribute("aria-selected", o.value != null && String(x.value) === String(o.value) ? "true" : "false");
-      if (x.initial || x.icon || x.color) {
-        var av = tag("span", "picker-av" + (x.initial || x.icon ? "" : " is-dot"), x.initial || null);
-        av.setAttribute("aria-hidden", "true");
-        if (x.color) av.style.setProperty("--n", x.color);
-        if (x.icon) {
-          var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"), use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-          svg.setAttribute("class", "ico");
-          use.setAttribute("href", "#i-" + x.icon);
-          svg.appendChild(use);
-          av.appendChild(svg);
-        }
-        opt.appendChild(av);
-      }
-      var name = tag("span", "picker-name", x.label);
-      if (x.sub) { name.append(" "); name.appendChild(tag("small", "", x.sub)); }
-      opt.appendChild(name);
-      if (x.cta) opt.appendChild(tag("span", "picker-cta", x.cta));
-      opt.addEventListener("click", function () { pick(x); });
-      return opt;
-    }
-    p.draw = function () {
-      p.shown = p.items ? matches() : [];
-      p.active = -1;
-      input.removeAttribute("aria-activedescendant");
-      var kids = [], group = null;
-      if (!p.items) kids.push(tag("p", "picker-none", w.loading));
-      else if (!p.shown.length) kids.push(tag("p", "picker-none", o.empty || w.none));
-      p.shown.forEach(function (x, i) {
-        // a heading each time the group changes: a category, then its subcategories
-        if (x.group && x.group !== group) kids.push(tag("p", "picker-g", x.group));
-        group = x.group || null;
-        kids.push(option(x, i));
-      });
-      list.replaceChildren.apply(list, kids);
-      return p;
-    };
-    function light(i) {
-      var opts = list.querySelectorAll(".picker-opt");
-      if (!opts.length) return;
-      p.active = (i + opts.length) % opts.length;
-      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-active", k === p.active); });
-      input.setAttribute("aria-activedescendant", opts[p.active].id);
-      opts[p.active].scrollIntoView({ block: "nearest" });
-    }
-    function pick(x) {
-      o.value = x.value;
-      if (o.onPick) o.onPick(x);
-      if (x.href) return;
-      p.draw();
-    }
-    input.addEventListener("input", p.draw);
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); light(p.active < 0 && e.key === "ArrowUp" ? -1 : p.active + (e.key === "ArrowDown" ? 1 : -1)); }
-      else if (e.key === "Enter") {
-        // Enter takes the lit choice, or the first one once something is typed
-        var x = p.shown[p.active >= 0 ? p.active : input.value.trim() ? 0 : -1];
-        if (!x) return;
-        e.preventDefault();
-        if (x.href) { if (o.onPick) o.onPick(x); location.href = x.href; } else pick(x);
-      } else if (e.key === "Escape") {
-        // first the search, then the picker itself; with nothing left to do, Escape goes on to the sheet around it
-        if (input.value) { e.preventDefault(); input.value = ""; p.draw(); }
-        else if (opener && !holder.hidden) { e.preventDefault(); p.close(); opener.focus(); }
-      }
-    });
-    var opener = find(o.opener);
-    p.open = function () {
-      holder.hidden = false;
-      if (opener) opener.setAttribute("aria-expanded", "true");
-      p.draw();
-      input.focus();
-      return p;
-    };
-    p.close = function () {
-      holder.hidden = true;
-      if (opener) opener.setAttribute("aria-expanded", "false");
-      return p;
-    };
-    p.toggle = function () { return holder.hidden ? p.open() : p.close(); };
-    p.set = function (items) { p.items = items; return p.draw(); };
-    if (opener) {
-      opener.setAttribute("aria-controls", holder.id || (holder.id = id + "-box"));
-      opener.setAttribute("aria-expanded", holder.hidden ? "false" : "true");
-      opener.addEventListener("click", p.toggle);
-    }
-    return p.draw();
-  }
-  window.ds = window.ds || {};
-  window.ds.pills = pills;
-  window.ds.picker = picker;
-})();
-/* ds.reorder(list, {item, handle, onEnd}): the items of list, put in another order by their grip (src/reorder.css).
-   item: what an item is among list's children (a selector; all of them by default); handle: its grip (".grip").
-   With the mouse or a finger, the item follows the pointer and the others make room for it; near the top or the
-   bottom of the screen the page scrolls along. With the keyboard, ↑ and ↓ on a grip move its item by one.
-   A list inside an item (the accounts of a bank) is a list of its own: call ds.reorder on it too; each grip moves the
-   item of its own list only. onEnd(items, item) once an item has landed somewhere else: the items in their new order
-   (read their data-key), and the one that moved. Returns {items()}; called again on the same list it gives the same. */
-(function () {
-  "use strict";
-  var WORDS = { fr: { move: "Déplacer" }, en: { move: "Move" } };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
-  // the neighbours move at once in the page, then slide from where they were to where they are
-  function slide(els, move) {
-    var before = els.map(function (el) { return el.offsetTop; });
-    move();
-    els.forEach(function (el, i) {
-      var delta = before[i] - el.offsetTop;
-      if (!delta) return;
-      el.classList.remove("is-shifting");
-      el.style.transform = "translateY(" + delta + "px)";
-      void el.offsetWidth;
-      el.classList.add("is-shifting");
-      el.style.transform = "";
-      clearTimeout(el._dsSlide);
-      el._dsSlide = setTimeout(function () { el.classList.remove("is-shifting"); }, 450);
-    });
-  }
-  function reorder(list, o) {
-    list = find(list);
-    if (!list) return null;
-    if (list._dsReorder) { if (o) list._dsReorder.o = o; return list._dsReorder; }
-    var r = { o: o || {} }, d = null;
-    list._dsReorder = r;
-    list.setAttribute("data-reorder", "");
-    function handle() { return r.o.handle || ".grip"; }
-    function isItem(c) { return c && c.parentNode === list && (!r.o.item || c.matches(r.o.item)); }
-    r.items = function () { return [].filter.call(list.children, isItem); };
-    function next(it) { var c = it.nextElementSibling; while (c && !isItem(c)) c = c.nextElementSibling; return c; }
-    function prev(it) { var c = it.previousElementSibling; while (c && !isItem(c)) c = c.previousElementSibling; return c; }
-    // a grip of this list, not of a list inside one of its items
-    function grip(target) {
-      var h = target.closest && target.closest(handle());
-      return h && h.closest("[data-reorder]") === list ? h : null;
-    }
-    function itemOf(h) { var c = h; while (c && c.parentNode !== list) c = c.parentNode; return isItem(c) ? c : null; }
-    function name() {
-      list.querySelectorAll(handle()).forEach(function (h) { if (h.closest("[data-reorder]") === list && !h.hasAttribute("aria-label")) h.setAttribute("aria-label", words().move); });
-    }
-    function done(it) { if (r.o.onEnd) r.o.onEnd(r.items(), it); }
-    // where the dragged item should be: under the pointer, within the list; the neighbours it passed go the other way
-    function place() {
-      var it = d.it, all = r.items(), h = it.offsetHeight;
-      var want = d.top + (d.last + window.scrollY) - (d.y + d.sy);
-      var low = Math.min.apply(null, all.map(function (x) { return x.offsetTop; }));
-      var high = Math.max.apply(null, all.map(function (x) { return x.offsetTop + x.offsetHeight; })) - h;
-      want = Math.max(low, Math.min(high, want));
-      // a neighbour gives way once the item's far edge passes its middle, whatever their heights (a bank and its
-      // accounts past a bank with a single one)
-      var sib;
-      while ((sib = next(it)) && want + h > sib.offsetTop + sib.offsetHeight / 2) slide([sib], function () { list.insertBefore(sib, it); });
-      while ((sib = prev(it)) && want < sib.offsetTop + sib.offsetHeight / 2) slide([sib], function () { list.insertBefore(sib, it.nextSibling); });
-      it.style.transform = "translateY(" + (want - it.offsetTop) + "px)";
-    }
-    function move(e) { if (d && e.pointerId === d.id) { d.last = e.clientY; place(); } }
-    // near an edge of the screen, the page scrolls along with the item
-    function edge() {
-      if (!d) return;
-      var zone = 56, v = 0;
-      if (d.last < zone) v = -Math.ceil((zone - d.last) / 4);
-      else if (d.last > window.innerHeight - zone) v = Math.ceil((d.last - window.innerHeight + zone) / 4);
-      if (v) { window.scrollBy(0, v); place(); }
-      d.raf = requestAnimationFrame(edge);
-    }
-    function end() {
-      if (!d) return;
-      var x = d;
-      d = null;
-      cancelAnimationFrame(x.raf);
-      ["pointermove", "pointerup", "pointercancel", "lostpointercapture"].forEach(function (t) { x.h.removeEventListener(t, t === "pointermove" ? move : end); });
-      x.it.classList.remove("is-dragging");
-      x.it.classList.add("is-shifting");
-      x.it.style.transform = "";
-      setTimeout(function () { x.it.classList.remove("is-shifting"); }, 450);
-      document.documentElement.classList.remove("is-reordering");
-      var now = r.items();
-      if (now.some(function (it, i) { return it !== x.order[i]; })) done(x.it);
-    }
-    list.addEventListener("pointerdown", function (e) {
-      if (d || (e.pointerType === "mouse" && e.button !== 0)) return;
-      var h = grip(e.target), it = h && itemOf(h);
-      if (!it) return;
-      e.preventDefault();
-      d = { it: it, h: h, id: e.pointerId, y: e.clientY, last: e.clientY, sy: window.scrollY, top: it.offsetTop, order: r.items(), raf: 0 };
-      try { h.setPointerCapture(e.pointerId); } catch (err) {}
-      it.classList.remove("is-shifting");
-      it.classList.add("is-dragging");
-      document.documentElement.classList.add("is-reordering");
-      h.addEventListener("pointermove", move);
-      ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (t) { h.addEventListener(t, end); });
-      d.raf = requestAnimationFrame(edge);
-    });
-    list.addEventListener("keydown", function (e) {
-      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
-      var h = grip(e.target), it = h && itemOf(h);
-      if (!it) return;
-      e.preventDefault();
-      var up = e.key === "ArrowUp", sib = up ? prev(it) : next(it);
-      if (!sib) return;
-      // the neighbour moves, not the item, so that its grip keeps the focus
-      slide([sib, it], function () { list.insertBefore(sib, up ? it.nextSibling : it); });
-      done(it);
-    });
-    list.addEventListener("focusin", name);
-    name();
-    return r;
-  }
-  window.ds = window.ds || {};
-  window.ds.reorder = reorder;
-})();
 /* Calendar, taken from Studio's agenda: ds.calendar(holder, opts) draws the period head (the month's name, which opens a
    month picker, ds.datePick on months; the views; ‹ Aujourd’hui ›) and under it one of three views: a month of day
    cells, with the panel of the selected day below; a week of columns; a list of days, each in its panel.
@@ -1779,33 +1552,20 @@
    for a page that fills the panels itself. */
 (function () {
   "use strict";
-  var TZ = "Europe/Paris", DOTS = 3, VIEWS = ["month", "week", "list"];
-  var WORDS = {
+  var DOTS = 3, VIEWS = ["month", "week", "list"];
+  var _ = window.ds._, day = window.ds.day, el = _.el, tone = _.tone;
+  var parisToday = day.today, at = day.at, addDays = day.add, weekStart = day.weekStart, fmt = day.format;
+  var WORDS = _.table({
     fr: { month: "Mois", week: "Semaine", list: "Liste", prev: "Précédent", next: "Suivant", today: "Aujourd’hui", pick: "Aller à un autre mois",
           view: "Vue", before: "Jours précédents", hideBefore: "Masquer les jours précédents", none: "Rien ce jour-là.",
           count: function (n) { return n + (n > 1 ? " éléments" : " élément"); } },
     en: { month: "Month", week: "Week", list: "List", prev: "Previous", next: "Next", today: "Today", pick: "Go to another month",
           view: "View", before: "Days before", hideBefore: "Hide the days before", none: "Nothing on that day.",
           count: function (n) { return n + (n > 1 ? " items" : " item"); } }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-  // the days are Paris's days, written "2026-11-09", counted at noon UTC so that no clock change moves them
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function weekStart(key) { return addDays(key, -((at(key).getUTCDay() + 6) % 7)); }
-  function fmt(key, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(key)); }
+  });
+  function words() { return _.words(WORDS); }
   function longDay(key) { return window.ds.date(key, "weekday"); }
   function shortDay(key) { return window.ds.date(key, "day"); }
-  // a colour given as a token's name ("--c-bleu") or as a value
-  function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
 
   function mark(it) {
     var m = el("i", "cal-mark" + (it.mark && it.mark !== "square" ? " is-" + it.mark : "") + (it.open ? " is-open" : ""));
@@ -2126,24 +1886,18 @@
 (function () {
   "use strict";
   var SVG = "http://www.w3.org/2000/svg";
-  var WORDS = {
+  var _ = window.ds._, day = window.ds.day, english = _.english, el = _.el, tone = _.tone;
+  var at = day.at, addDays = day.add, weekStart = day.weekStart, parisToday = day.today;
+  var WORDS = _.table({
     fr: { none: "rien", one: "1", many: function (n) { return n + " et plus"; }, live: "en cours" },
     en: { none: "none", one: "1", many: function (n) { return n + " or more"; }, live: "running" }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function svg(name, attrs) {
     var e = document.createElementNS(SVG, name);
     Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
     return e;
   }
-  function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
   function paint(e, color) { if (color) e.style.setProperty("--n", tone(color)); return e; }
   function put(holder, e) { if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
   function num(v) { return window.ds.number(v); }
@@ -2153,11 +1907,7 @@
     if (a < 1000) return num(Math.round(v));
     return (a < 10000 ? window.ds.number(Math.round(v / 100) / 10, Math.round(v / 100) % 10 ? 1 : 0) : num(Math.round(v / 1000))) + "k";
   }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function weekStart(key) { return addDays(key, -((at(key).getUTCDay() + 6) % 7)); }
   function monthShort(m) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
 
   /* the curve: drawn in a 100 × 30 box stretched to the chart's width (100 × 60 when tall), its lines kept thin whatever
      the stretch. Tall, it is a chart of its own: its middle day under it as well, its ground filled with area; ref draws
@@ -2556,18 +2306,12 @@
      is called with the chosen one, the selector lights it itself. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._, el = _.el;
+  var WORDS = _.table({
     fr: { strong: "fort", average: "moyen", weak: "faible", against: "par rapport à la médiane", period: "Période", empty: "Rien sur cette période." },
     en: { strong: "strong", average: "average", weak: "weak", against: "against the median", period: "Period", empty: "Nothing over this period." }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, kids) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    [].concat(kids == null ? [] : kids).forEach(function (k) { if (k != null) e.append(k); });
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function safe(u) { return typeof u === "string" && /^(https?:\/\/|\/|#)[^\s"'<>]*$/.test(u) ? u : null; }
 
   function rank(rows, o) {
@@ -2598,11 +2342,12 @@
     return col;
   }
 
+  // the compact tiles (tiles.css), each as wide as the widest (.is-fit); .minitiles stays on it for the apps' own rules
   function minitiles(items) {
-    var box = el("div", "minitiles");
+    var box = el("dl", "tiles is-compact is-fit minitiles");
     (items || []).filter(Boolean).forEach(function (x) {
-      box.append(el("div", "minitile", [el("small", "", x.label), el("div", "", [el("b", "", x.value), x.unit != null ? el("span", "", x.unit) : null]),
-        x.note ? el("em", "", x.note) : null]));
+      box.append(el("div", "tile", [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "u", x.unit) : null]),
+        x.note ? el("span", "h", x.note) : null]));
     });
     return box;
   }
@@ -2659,651 +2404,296 @@
   window.ds.verdict = verdict;
   window.ds.periodPick = periodPick;
 })();
-/* Keeping up with the server, taken from Studio.
-   ds.keep: a copy of the last data kept on the device (IndexedDB has room for all of it), so that a page opens at once on
-     it, then refreshes. ds.keep.get(key), put(key, value) and del(key) answer with promises that never fail: where the
-     device keeps nothing (IndexedDB missing, refused, or not answering within 3 s, as in some private windows), get
-     answers null and put false, and the page simply waits for the server, as on a first visit. ds.keep.ok() says
-     whether copies are kept. ds.keep.open(name) is a store of its own (a database name; "ds" for ds.keep itself).
-     ds.keep.fresh(key, load, draw): draws the copy at once if there is one, draw(value, {copy: true, at}), unless the
-     server answers first; then draws what load() answers, draw(value, {copy: false}), and keeps it.
-   ds.stream(url, events, {open, poll, every, retry}): follows the server live through its event stream (EventSource):
-     events {name: function (data)} receive each named event, its data read as JSON when it is. A dropped stream comes
-     back by itself; one the server closed (it was restarting) is opened again after retry ms (2 s, doubling up to a
-     minute), and at once when the page is seen again (a phone closes it in the background). open() is called at each
-     connection, to catch up on what was missed; poll(), if given, every `every` ms (5 min) while the page is seen, as a
-     backup, or instead of the stream where the browser has none. Returns {close(), source()}.
-   ds.version(button, {mine, text}): the « new version » light on a page's reload button (.newver): seen(v) lights it when
-     the server says a version other than this page's own (mine, or <meta name="version">); the button reloads the page. */
+/* The behaviour of src/pick.css.
+   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu's choice in its .pv,
+   and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
+   every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
+   ds.picker(holder, {items, value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
+   holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
+     items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
+     cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
+     are read (« Chargement… »); value: the current choice, in gold; first: the values shown before anything is typed
+     (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
+     matches; onPick(item) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the search
+     taking the focus. ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
+     Returns {open(), close(), toggle(), set(items), draw(), input}. */
 (function () {
   "use strict";
-  var WORDS = {
-    fr: { reload: "Recharger la page", newer: "Nouvelle version du site : recharger la page" },
-    en: { reload: "Reload the page", newer: "A new version is on line: reload the page" }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-
-  var stores = {};
-  function open(name) {
-    if (stores[name]) return stores[name];
-    var db = null;
-    function base() {
-      if (!db) db = new Promise(function (res, rej) {
-        // a browser that neither opens nor refuses (some private windows) is taken as one that keeps nothing
-        var late = setTimeout(function () { rej(new Error("timeout")); }, 3000);
-        try {
-          var r = indexedDB.open(name, 1);
-          r.onupgradeneeded = function () { r.result.createObjectStore("kv"); };
-          r.onsuccess = function () { clearTimeout(late); res(r.result); };
-          r.onerror = r.onblocked = function () { clearTimeout(late); rej(r.error || new Error("blocked")); };
-        } catch (e) { clearTimeout(late); rej(e); }
-      });
-      return db;
-    }
-    // one transaction, answered once it is written (or read): its request, or a refusal
-    function ask(mode, run) {
-      return base().then(function (d) {
-        return new Promise(function (res, rej) {
-          try {
-            var tx = d.transaction("kv", mode), req = run(tx.objectStore("kv"));
-            tx.oncomplete = function () { res(req); };
-            tx.onerror = tx.onabort = function () { rej(tx.error); };
-          } catch (e) { rej(e); }
-        });
-      });
-    }
-    var s = stores[name] = {
-      get: function (key) { return ask("readonly", function (st) { return st.get(key); }).then(function (req) { return req.result === undefined ? null : req.result; }, function () { return null; }); },
-      // a full device (its quota reached) or a value that cannot be kept answers false too: the page keeps working on
-      // what the server sends
-      put: function (key, value) { return ask("readwrite", function (st) { return st.put(value, key); }).then(function () { return true; }, function () { return false; }); },
-      del: function (key) { return ask("readwrite", function (st) { return st.delete(key); }).then(function () { return true; }, function () { return false; }); },
-      ok: function () { return base().then(function () { return true; }, function () { return false; }); },
-      fresh: function (key, load, draw) {
-        var served = false;
-        var copy = s.get(key).then(function (c) {
-          if (c && !served && c.at != null) draw(c.value, { copy: true, at: c.at });
-        });
-        return Promise.resolve().then(load).then(function (value) {
-          served = true;
-          draw(value, { copy: false });
-          return s.put(key, { at: Date.now(), value: value }).then(function () { return value; });
-        }, function (e) { return copy.then(function () { throw e; }); });
-      }
-    };
-    return s;
-  }
-  var keep = open("ds");
-  keep.open = open;
-
-  function stream(url, events, o) {
-    o = o || {};
-    events = events || {};
-    var src = null, wait = o.retry || 2000, timer = null, closed = false;
-    function connect() {
-      clearTimeout(timer);
-      if (closed || !window.EventSource) return;
-      if (src) src.close();
-      src = new EventSource(url);
-      src.onopen = function () { wait = o.retry || 2000; if (o.open) o.open(); };
-      src.onerror = function () {
-        // EventSource tries again by itself while it is CONNECTING; CLOSED means the server refused it (a restart)
-        if (src.readyState !== 2 || closed) return;
-        clearTimeout(timer);
-        timer = setTimeout(connect, wait);
-        wait = Math.min(wait * 2, 60000);
-      };
-      Object.keys(events).forEach(function (name) {
-        src.addEventListener(name, function (e) {
-          var data = e.data;
-          try { data = JSON.parse(e.data); } catch (x) {}
-          events[name](data, e);
-        });
-      });
-    }
-    function seen() { return document.visibilityState === "visible"; }
-    document.addEventListener("visibilitychange", function () {
-      if (seen() && src && src.readyState === 2 && !closed) connect();
-    });
-    var every = null;
-    if (o.poll) every = setInterval(function () { if (seen() && !closed) o.poll(); }, o.every || 300000);
-    connect();
-    return {
-      close: function () { closed = true; clearTimeout(timer); clearInterval(every); if (src) src.close(); },
-      source: function () { return src; }
-    };
-  }
-
-  function version(button, o) {
-    o = o || {};
-    var meta = document.querySelector('meta[name="version"]'), mine = o.mine || (meta && meta.content) || null, w = words();
-    if (!button.querySelector(".newver-pip")) {
-      var pip = document.createElement("i");
-      pip.className = "newver-pip";
-      pip.setAttribute("aria-hidden", "true");
-      button.appendChild(pip);
-    }
-    button.classList.add("newver");
-    if (!button.getAttribute("aria-label")) button.setAttribute("aria-label", w.reload);
-    if (!button.title) button.title = w.reload;
-    button.addEventListener("click", function () { location.reload(); });
-    var light = {
-      on: false,
-      seen: function (v) {
-        if (!v || !mine || String(v) === String(mine) || light.on) return light.on;
-        light.on = true;
-        button.classList.add("is-on");
-        button.title = o.text || w.newer;
-        button.setAttribute("aria-label", o.text || w.newer);
-        return true;
-      }
-    };
-    return light;
-  }
-
-  window.ds = window.ds || {};
-  window.ds.keep = keep;
-  window.ds.stream = stream;
-  window.ds.version = version;
-})();
-/* ds.viewer(items, {start, onChange, onClose, label, el, from}): the photo viewer of src/viewer.css, opened on
-   items[start]. An item is {src, srcset, sizes, alt, caption, thumb, el}, a plain address, or a function that returns one
-   (or a promise of one), called when the photo is first needed: Selecta asks its server for a signed address then.
-   thumb is shown, blurred, while the photo loads; el is the page's element for that photo (a grid's link), where the
-   focus goes back on closing.
-   The cross, a click beside the photo (the veil), Escape or a finger pulled down close it; the arrows, ← → and a finger
-   swiped sideways turn the photos, round and round; « 3 / 24 » says where one is; the two neighbours load ahead; the
-   spinner turns while a photo loads. Opening moves the focus into it, Tab stays in it, closing gives the focus back to
-   what opened it (or to the photo one ended on); the page behind does not scroll meanwhile (viewer-behaviour.css).
-   It drives the page's own .viewer when there is one (opts.el, or a .viewer at the top of <body>: Selecta's, with its
-   bar under the photo) and adds the parts it lacks; otherwise it builds one. onChange(index, item, viewer) tells each
-   photo shown, onClose(index, viewer) the closing. Returns {el, index, isOpen, go(i), next(), prev(), close()}.
-   ds.viewer.bind(container, {item, label, onChange, onClose}): a grid of links (item, "a[href]" by default) opens the
-   viewer on a click, each link's href as its photo (data-srcset, data-sizes and data-caption for more, its image as
-   thumb and alt). The markup <div data-viewer> does the same with no code at all; data-viewer="selector" names the
-   items, data-viewer-label the viewer. Nothing here is written inline, so a page served with script-src 'self' works. */
-(function () {
-  "use strict";
-  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
-  if (window.ds && window.ds.viewer) return;
-  var WORDS = {
-    fr: { label: "Photos", close: "Fermer", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
-    en: { label: "Photos", close: "Close", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
-  // how far a finger travels to turn the photo, and to close the viewer when pulled down (the site's 50px)
-  var SWIPE = 50, DROP = 90, START = 8;
-  var open = null;
-  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
-  function make(name, cls, parent) {
-    var x = document.createElement(name);
-    x.className = cls;
-    if (parent) parent.appendChild(x);
-    return x;
-  }
-  function button(el, cls, label) {
-    var b = el.querySelector("." + cls);
-    if (!b) { b = make("button", "viewer-btn " + cls, el); b.type = "button"; }
-    if (!b.hasAttribute("aria-label")) b.setAttribute("aria-label", label);
-    return b;
-  }
-
-  // the parts the viewer needs, taken from its markup or added: veil, stage and photo, spinner, count, the three buttons
-  function setup(el) {
-    if (el._dsViewer) return el._dsViewer;
-    var w = words(), veil = el.querySelector(".viewer-veil"), stage = el.querySelector(".viewer-stage");
-    if (!veil) { veil = make("div", "viewer-veil"); el.insertBefore(veil, el.firstChild); }
-    if (!stage) { stage = make("div", "viewer-stage"); el.insertBefore(stage, veil.nextSibling); }
-    var img = stage.querySelector("img") || make("img", "", stage);
-    img.draggable = false;
-    img.decoding = "async";
-    var spin = stage.querySelector(".spinner") || make("span", "spinner is-medium on-photo", stage);
-    spin.setAttribute("aria-hidden", "true");
-    // in the stage, the count sits over the photo's foot, above an app's bar when there is one
-    var count = el.querySelector(".viewer-count") || make("div", "viewer-count", stage);
-    count.setAttribute("aria-live", "polite");
-    var c = { el: el, veil: veil, stage: stage, img: img, spin: spin, count: count, items: [], at: 0, opts: {}, token: 0, cache: {}, keep: [], before: null, isOpen: false,
-      close: button(el, "viewer-close", w.close), prev: button(el, "viewer-prev", w.prev), next: button(el, "viewer-next", w.next) };
-    el.setAttribute("role", "dialog");
-    el.setAttribute("aria-modal", "true");
-    el.tabIndex = -1;
-    el.hidden = true;
-    c.handle = { el: el, index: 0, isOpen: false,
-      go: function (i) { show(c, i); return c.handle; },
-      next: function () { show(c, c.at + 1); return c.handle; },
-      prev: function () { show(c, c.at - 1); return c.handle; },
-      close: function () { shut(c); return c.handle; } };
-    el._dsViewer = c;
-    el.addEventListener("click", function (e) {
-      if (!c.isOpen) return;
-      var t = e.target;
-      if (t.closest(".viewer-close")) shut(c);
-      else if (t.closest(".viewer-prev")) show(c, c.at - 1);
-      else if (t.closest(".viewer-next")) show(c, c.at + 1);
-      // the stage covers the veil around the photo: a click there is a click on the veil
-      else if (t === c.veil || t === c.stage) shut(c);
-    });
-    swipes(c);
-    return c;
-  }
-
-  // an item, asked once per opening (a function may ask a server), as {src, …}
-  function item(c, i) {
-    if (!c.cache[i]) {
-      // in a promise from the start, so that a function that throws is a photo that failed, not a viewer that stops
-      var x = c.items[i], p = new Promise(function (ok) { ok(typeof x === "function" ? x(i) : x); }).then(function (it) {
-        if (typeof it === "string") it = { src: it };
-        if (!it || !it.src) throw new Error("no photo");
-        return it;
-      });
-      c.cache[i] = p;
-      // a refusal is asked again next time
-      p.catch(function () { if (c.cache[i] === p) delete c.cache[i]; });
-    }
-    return c.cache[i];
-  }
-  function fill(img, it) {
-    if (it.srcset) { img.sizes = it.sizes || "100vw"; img.srcset = it.srcset; } else img.removeAttribute("srcset");
-    img.src = it.src;
-  }
-  function fetchPhoto(it) {
-    return new Promise(function (ok, ko) {
-      var im = new Image();
-      im.onload = function () { ok(im); };
-      im.onerror = ko;
-      fill(im, it);
-    });
-  }
-  // the neighbours load ahead, so that turning to them shows them at once
-  function ahead(c, j) {
-    var n = c.items.length;
-    j = ((j % n) + n) % n;
-    item(c, j).then(function (it) {
-      var im = new Image();
-      fill(im, it);
-      c.keep = c.keep.slice(-3).concat(im);
-    }).catch(function () {});
-  }
-  function caption(c, text) {
-    var cap = c.el.querySelector(".viewer-caption");
-    // once a photo of this opening has a caption, its line stays for all, even empty, so that the photos keep their
-    // size from one to the next
-    if (text) c.captioned = true;
-    if (!cap && !c.captioned) return;
-    if (!cap) {
-      var bar = c.el.querySelector(".viewer-bar");
-      if (!bar) { bar = make("div", "viewer-bar", c.el); bar._dsOwn = true; }
-      cap = make("p", "viewer-caption", bar);
-    }
-    cap.textContent = text;
-    cap.hidden = !c.captioned;
-    // a bar of ds's own goes with its captions; an app's bar stays
-    if (cap.parentNode._dsOwn) cap.parentNode.hidden = !c.captioned;
-  }
-  // what an item says before it is asked for: a function's item says it once it comes
-  function known(x) { return x && typeof x === "object" ? x : {}; }
-
-  function show(c, i) {
-    var n = c.items.length;
-    if (!n || !c.isOpen) return;
-    i = ((i % n) + n) % n;
-    c.at = c.handle.index = i;
-    c.prev.hidden = c.next.hidden = c.count.hidden = n < 2;
-    c.count.textContent = (i + 1) + " / " + n;
-    var token = ++c.token, img = c.img;
-    img.classList.add("is-loading");
-    img.classList.remove("is-placeholder");
-    c.spin.hidden = false;
-    // the caption changes with the count, not a moment later
-    caption(c, known(c.items[i]).caption || "");
-    function done() {
-      if (token !== c.token) return;
-      img.classList.remove("is-loading", "is-placeholder");
-      c.spin.hidden = true;
-    }
-    item(c, i).then(function (it) {
-      if (token !== c.token) return;
-      img.alt = it.alt || it.caption || "";
-      caption(c, it.caption || "");
-      if (it.thumb) {
-        img.removeAttribute("srcset");
-        img.src = it.thumb;
-        img.classList.add("is-placeholder");
-        img.classList.remove("is-loading");
-      }
-      return fetchPhoto(it).then(function () {
-        if (token !== c.token) return;
-        fill(img, it);
-        // shown once decoded, so that the photo never blinks white or half drawn
-        if (img.decode) img.decode().then(done, done); else done();
-      });
-    }).catch(function () {
-      if (token !== c.token) return;
-      done();
-      if (window.ds && window.ds.toast) window.ds.toast({ type: "bad", text: words().failed });
-    });
-    if (n > 1) ahead(c, i + 1);
-    if (n > 2) ahead(c, i - 1);
-    if (c.opts.onChange) c.opts.onChange(i, c.items[i], c.handle);
-  }
-
-  function shut(c) {
-    if (!c.isOpen) return;
-    c.isOpen = c.handle.isOpen = false;
-    if (open === c) open = null;
-    c.token++;
-    c.el.hidden = true;
-    c.el.classList.remove("is-open", "is-dragging");
-    // the last photo must not flash on the next opening
-    c.img.removeAttribute("srcset");
-    c.img.removeAttribute("src");
-    c.img.style.transform = "";
-    c.veil.style.opacity = "";
-    var it = c.items[c.at], own = it && it.el && it.el.isConnected ? it.el : null, back = own || c.before;
-    c.before = null;
-    if (back && back.focus && back.isConnected) {
-      back.focus({ preventScroll: true });
-      // the photo one ended on comes into sight in its grid
-      if (own && own.scrollIntoView) own.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
-    }
-    if (c.opts.onClose) c.opts.onClose(c.at, c.handle);
-  }
-
-  // a finger: sideways turns the photo, down closes; the photo follows it meanwhile. Two fingers zoom, as the browser does.
-  function swipes(c) {
-    var t = null, el = c.el;
-    function reset() {
-      t = null;
-      el.classList.remove("is-dragging");
-      c.img.style.transform = "";
-      c.veil.style.opacity = "";
-    }
-    el.addEventListener("touchstart", function (e) {
-      t = null;
-      if (!c.isOpen || e.touches.length !== 1 || e.target.closest(".viewer-bar, .viewer-btn")) return;
-      // zoomed in, a finger moves around the photo instead
-      if (window.visualViewport && window.visualViewport.scale > 1.01) return;
-      t = { x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, dy: 0, axis: "" };
-    }, { passive: true });
-    el.addEventListener("touchmove", function (e) {
-      if (!t) return;
-      if (e.touches.length !== 1) { reset(); return; }
-      var dx = e.touches[0].clientX - t.x, dy = e.touches[0].clientY - t.y;
-      if (!t.axis) {
-        if (Math.abs(dx) < START && Math.abs(dy) < START) return;
-        t.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
-        el.classList.add("is-dragging");
-      }
-      t.dx = dx;
-      t.dy = dy;
-      if (t.axis === "x") { c.img.style.transform = "translateX(" + dx + "px)"; return; }
-      var down = Math.max(0, dy);
-      c.img.style.transform = "translateY(" + down + "px)";
-      c.veil.style.opacity = String(Math.max(0.35, 1 - down / Math.max(1, el.clientHeight) * 1.6));
-    }, { passive: true });
-    el.addEventListener("touchend", function () {
-      if (!t) return;
-      var s = t;
-      reset();
-      if (s.axis === "x" && Math.abs(s.dx) > SWIPE && c.items.length > 1) show(c, c.at + (s.dx < 0 ? 1 : -1));
-      else if (s.axis === "y" && s.dy > DROP) shut(c);
-    });
-    el.addEventListener("touchcancel", reset);
-  }
-
-  function viewer(items, opts) {
-    opts = opts || {};
-    var el = opts.el ? (typeof opts.el === "string" ? document.querySelector(opts.el) : opts.el) : document.querySelector("body > .viewer");
-    if (!el) { el = make("div", "viewer", document.body); el.hidden = true; el._dsBuilt = true; }
-    var c = setup(el);
-    if (open && open !== c) shut(open);
-    c.items = [].slice.call(items || []);
-    c.opts = opts;
-    c.cache = {};
-    c.captioned = c.items.some(function (x) { return !!known(x).caption; });
-    if (!c.items.length) return c.handle;
-    var from = opts.from || document.activeElement;
-    if (!c.isOpen) c.before = from;
-    // a viewer ds built takes the theme of what opened it (the showcase has one per column); an app's has its page's
-    if (el._dsBuilt) {
-      var th = from && from.closest ? from.closest("[data-theme]") : null;
-      if (th && th !== document.documentElement) el.setAttribute("data-theme", th.getAttribute("data-theme"));
-      else el.removeAttribute("data-theme");
-    }
-    el.setAttribute("aria-label", opts.label || words().label);
-    if (!c.isOpen) {
-      c.isOpen = c.handle.isOpen = true;
-      open = c;
-      el.hidden = false;
-      el.classList.add("is-open");
-    }
-    show(c, opts.start || 0);
-    el.focus({ preventScroll: true });
-    return c.handle;
-  }
-
-  // on <html> and before the page's own keys: Escape closes the viewer only, and a window of ds.confirm over it
-  // (which listens on the document, earlier still) keeps its own
-  document.documentElement.addEventListener("keydown", function (e) {
-    var c = open;
-    if (!c || e.defaultPrevented || document.querySelector(".dialog-veil")) return;
-    if (e.key === "Escape") { e.preventDefault(); shut(c); return; }
-    // in a field of the app's bar (Selecta's note), the keys belong to the field
-    if (e.target && e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
-    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
-      if (c.items.length > 1) { e.preventDefault(); show(c, c.at + (e.key === "ArrowRight" ? 1 : -1)); }
-      return;
-    }
-    if (e.key !== "Tab") return;
-    // Tab goes round inside the viewer
-    var list = [].filter.call(c.el.querySelectorAll(FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
-    var at = document.activeElement, first = list[0], last = list[list.length - 1];
-    if (!list.length) { e.preventDefault(); return; }
-    if (!c.el.contains(at)) { e.preventDefault(); first.focus(); }
-    else if (e.shiftKey && (at === first || at === c.el)) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
-  }, true);
-
-  // a link of a grid as an item
-  function linkItem(a) {
-    var im = a.querySelector("img");
-    return { src: a.getAttribute("data-src") || a.href || (im && (im.currentSrc || im.src)) || "",
-      srcset: a.getAttribute("data-srcset") || "", sizes: a.getAttribute("data-sizes") || "",
-      alt: (im && im.getAttribute("alt")) || a.getAttribute("aria-label") || "", caption: a.getAttribute("data-caption") || "",
-      thumb: im ? im.currentSrc || im.src : "", el: a };
-  }
-  function clicker(box, o) {
-    return function (e) {
-      // a click with a key held, or the middle button, still opens the photo in a new tab
-      if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-      var sel = o.item || "a[href]", a = e.target.closest ? e.target.closest(sel) : null;
-      if (!a || !box.contains(a)) return;
-      // the photos one can see: those a filter hides are skipped
-      var all = [].filter.call(box.querySelectorAll(sel), function (x) { return x.getClientRects().length > 0; }), at = all.indexOf(a);
-      if (at < 0) return;
-      e.preventDefault();
-      viewer(all.map(linkItem), { start: at, from: a, label: o.label, onChange: o.onChange, onClose: o.onClose, el: o.el });
-    };
-  }
-  function bind(box, o) {
-    if (typeof box === "string") box = document.querySelector(box);
-    if (!box) return null;
-    var fn = clicker(box, o || {});
-    box._dsViewerBound = true;
-    box.addEventListener("click", fn);
-    return { unbind: function () { box.removeEventListener("click", fn); box._dsViewerBound = false; } };
-  }
-  document.addEventListener("click", function (e) {
-    var box = e.target.closest ? e.target.closest("[data-viewer]") : null;
-    if (!box || box._dsViewerBound) return;
-    clicker(box, { item: box.getAttribute("data-viewer") || "", label: box.getAttribute("data-viewer-label") || "" })(e);
+  var _ = window.ds._, find = _.find, tag = _.el;
+  var WORDS = _.table({
+    fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…" },
+    en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…" }
   });
+  function words() { return _.words(WORDS); }
 
-  viewer.bind = bind;
-  viewer.close = function () { if (open) shut(open); };
+  function pills(root) {
+    root = find(root) || document;
+    var list = root.matches && root.matches(".pill") ? [root] : root.querySelectorAll(".pill");
+    [].forEach.call(list, function (p) {
+      var sel = p.querySelector("select");
+      if (!sel) return;
+      var pv = p.querySelector(".pv");
+      if (!pv) { pv = tag("span", "pv"); p.insertBefore(pv, p.firstChild); }
+      var o = sel.options[sel.selectedIndex];
+      pv.textContent = o ? o.textContent : "";
+      if (p.classList.contains("is-filter")) p.classList.toggle("is-on", !!sel.value);
+    });
+  }
+  document.addEventListener("change", function (e) {
+    var p = e.target.closest && e.target.closest(".pill");
+    if (p) pills(p);
+  });
+  // now, for what is on the page already, and once it is all there, for what a page's first script drew
+  pills();
+  document.addEventListener("DOMContentLoaded", function () { pills(); });
+
+  var made = 0;
+  function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function picker(holder, o) {
+    holder = find(holder);
+    if (!holder) return null;
+    o = o || {};
+    var w = words(), id = "ds-picker-" + (++made), p = { items: o.items === undefined ? [] : o.items, shown: [], active: -1 };
+    holder.classList.add("picker");
+    var input = tag("input", "picker-q"), list = tag("div", "picker-list");
+    input.type = "search";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    input.placeholder = o.placeholder || w.search;
+    input.setAttribute("aria-label", o.label || input.placeholder);
+    input.setAttribute("role", "combobox");
+    input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-expanded", "true");
+    input.setAttribute("aria-controls", id);
+    list.id = id;
+    list.setAttribute("role", "listbox");
+    holder.replaceChildren(input, list);
+    p.input = input;
+
+    function matches() {
+      var items = p.items || [], q = fold(input.value.trim()), limit = o.limit || 12;
+      if (!q) {
+        var start = o.first ? o.first.map(function (v) { return items.filter(function (x) { return fold(x.value) === fold(v); })[0]; }).filter(Boolean) : items;
+        return start.slice(0, limit);
+      }
+      var parts = q.split(/\s+/);
+      return items.filter(function (x) {
+        var text = fold([x.label, x.sub, x.group, x.keywords].join(" "));
+        return parts.every(function (part) { return text.indexOf(part) >= 0; });
+      }).slice(0, limit);
+    }
+    function option(x, i) {
+      var opt = tag(x.href ? "a" : "button", "picker-opt");
+      if (x.href) opt.href = x.href; else opt.type = "button";
+      opt.id = id + "-" + i;
+      opt.tabIndex = -1;
+      opt.setAttribute("role", "option");
+      opt.setAttribute("aria-selected", o.value != null && String(x.value) === String(o.value) ? "true" : "false");
+      if (x.initial || x.icon || x.color) {
+        var av = tag("span", "picker-av" + (x.initial || x.icon ? "" : " is-dot"), x.initial || null);
+        av.setAttribute("aria-hidden", "true");
+        // a colour given as a token's name ("--c-bleu") or as a value, as in the charts and the calendar
+        if (x.color) av.style.setProperty("--n", _.tone(x.color));
+        if (x.icon) av.appendChild(window.ds.ico(x.icon));
+        opt.appendChild(av);
+      }
+      var name = tag("span", "picker-name", x.label);
+      if (x.sub) { name.append(" "); name.appendChild(tag("small", "", x.sub)); }
+      opt.appendChild(name);
+      if (x.cta) opt.appendChild(tag("span", "picker-cta", x.cta));
+      opt.addEventListener("click", function () { pick(x); });
+      return opt;
+    }
+    p.draw = function () {
+      p.shown = p.items ? matches() : [];
+      p.active = -1;
+      input.removeAttribute("aria-activedescendant");
+      var kids = [], group = null;
+      if (!p.items) kids.push(tag("p", "picker-none", w.loading));
+      else if (!p.shown.length) kids.push(tag("p", "picker-none", o.empty || w.none));
+      p.shown.forEach(function (x, i) {
+        // a heading each time the group changes: a category, then its subcategories
+        if (x.group && x.group !== group) kids.push(tag("p", "picker-g", x.group));
+        group = x.group || null;
+        kids.push(option(x, i));
+      });
+      list.replaceChildren.apply(list, kids);
+      return p;
+    };
+    function light(i) {
+      var opts = list.querySelectorAll(".picker-opt");
+      if (!opts.length) return;
+      p.active = (i + opts.length) % opts.length;
+      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-active", k === p.active); });
+      input.setAttribute("aria-activedescendant", opts[p.active].id);
+      opts[p.active].scrollIntoView({ block: "nearest" });
+    }
+    function pick(x) {
+      o.value = x.value;
+      if (o.onPick) o.onPick(x);
+      if (x.href) return;
+      p.draw();
+    }
+    input.addEventListener("input", p.draw);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); light(p.active < 0 && e.key === "ArrowUp" ? -1 : p.active + (e.key === "ArrowDown" ? 1 : -1)); }
+      else if (e.key === "Enter") {
+        // Enter takes the lit choice, or the first one once something is typed
+        var x = p.shown[p.active >= 0 ? p.active : input.value.trim() ? 0 : -1];
+        if (!x) return;
+        e.preventDefault();
+        if (x.href) { if (o.onPick) o.onPick(x); location.href = x.href; } else pick(x);
+      } else if (e.key === "Escape") {
+        // first the search, then the picker itself; with nothing left to do, Escape goes on to the sheet around it
+        if (input.value) { e.preventDefault(); input.value = ""; p.draw(); }
+        else if (opener && !holder.hidden) { e.preventDefault(); p.close(); opener.focus(); }
+      }
+    });
+    var opener = find(o.opener);
+    p.open = function () {
+      holder.hidden = false;
+      if (opener) opener.setAttribute("aria-expanded", "true");
+      p.draw();
+      input.focus();
+      return p;
+    };
+    p.close = function () {
+      holder.hidden = true;
+      if (opener) opener.setAttribute("aria-expanded", "false");
+      return p;
+    };
+    p.toggle = function () { return holder.hidden ? p.open() : p.close(); };
+    p.set = function (items) { p.items = items; return p.draw(); };
+    if (opener) {
+      opener.setAttribute("aria-controls", holder.id || (holder.id = id + "-box"));
+      opener.setAttribute("aria-expanded", holder.hidden ? "false" : "true");
+      opener.addEventListener("click", p.toggle);
+    }
+    return p.draw();
+  }
   window.ds = window.ds || {};
-  window.ds.viewer = viewer;
+  window.ds.pills = pills;
+  window.ds.picker = picker;
 })();
-/* ds.photogrid(grid, {sizes, size, key, slider, masonry}): the photo grid of src/photogrid.css, Selecta's masonry made
-   generic. Each child of grid is a tile holding an image (a link, a figure…); the tiles fall in columns of even height,
-   each one into the shortest column, as tall as its photo's shape: the <img>'s width and height, or its own size once
-   loaded (the grid lays itself out again then). It follows the grid's width, tiles added, removed or hidden, and a class
-   set on the grid (a filter); after any other change, layout() lays it out again.
-   sizes: the widths a column may have, in px ([140, 190, 240, 300]); size: the one to start with (190); key: the device
-   remembers the size chosen under it; slider: an <input type="range" class="zoom-slider"> that picks among the sizes,
-   from small to large, offering only those that change the grid (a phone has fewer); masonry: false for even rows,
-   each photo cut to a square-ish tile. The tiles slide to their new places when the size changes, unless the device
-   asks for less motion. Returns {el, size, columns, masonry, layout(), set({size, masonry})}; called again on the same
-   grid, it gives the same one. */
+/* ds.reorder(list, {item, handle, onEnd}): the items of list, put in another order by their grip (src/reorder.css).
+   item: what an item is among list's children (a selector; all of them by default); handle: its grip (".grip").
+   With the mouse or a finger, the item follows the pointer and the others make room for it; near the top or the
+   bottom of the screen the page scrolls along. With the keyboard, ↑ and ↓ on a grip move its item by one.
+   A list inside an item (the accounts of a bank) is a list of its own: call ds.reorder on it too; each grip moves the
+   item of its own list only. onEnd(items, item) once an item has landed somewhere else: the items in their new order
+   (read their data-key), and the one that moved. Returns {items()}; called again on the same list it gives the same. */
 (function () {
   "use strict";
-  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
-  if (window.ds && window.ds.photogrid) return;
-  var WORDS = {
-    fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
-    en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
-  // a duration token as milliseconds: ".3s", "400ms"
-  function ms(text) {
-    var v = parseFloat(text);
-    if (isNaN(v)) return 300;
-    return /ms\s*$/.test(text) ? v : v * 1000;
+  var _ = window.ds._, find = _.find;
+  var WORDS = _.table({ fr: { move: "Déplacer" }, en: { move: "Move" } });
+  function words() { return _.words(WORDS); }
+  // the neighbours move at once in the page, then slide from where they were to where they are
+  function slide(els, move) {
+    var before = els.map(function (el) { return el.offsetTop; });
+    move();
+    els.forEach(function (el, i) {
+      var delta = before[i] - el.offsetTop;
+      if (!delta) return;
+      el.classList.remove("is-shifting");
+      el.style.transform = "translateY(" + delta + "px)";
+      void el.offsetWidth;
+      el.classList.add("is-shifting");
+      el.style.transform = "";
+      clearTimeout(el._dsSlide);
+      el._dsSlide = setTimeout(function () { el.classList.remove("is-shifting"); }, 450);
+    });
   }
-  function clear(t) { ["left", "top", "width", "height"].forEach(function (p) { t.style.removeProperty(p); }); }
-
-  function photogrid(grid, o) {
-    if (typeof grid === "string") grid = document.querySelector(grid);
-    if (!grid) return null;
-    if (grid._dsPhotogrid) return grid._dsPhotogrid;
-    o = o || {};
-    var sizes = (o.sizes && o.sizes.length ? o.sizes : [140, 190, 240, 300]).map(Number).sort(function (a, b) { return a - b; });
-    var slider = typeof o.slider === "string" ? document.querySelector(o.slider) : o.slider || null;
-    var want = sizes.indexOf(+o.size), steps = [], lastW = -1, frame = 0;
-    if (want < 0) want = Math.min(1, sizes.length - 1);
-    if (o.key) { try { var kept = sizes.indexOf(+localStorage.getItem(o.key)); if (kept >= 0) want = kept; } catch (e) {} }
-    var g = { el: grid, size: sizes[want], columns: 1, masonry: o.masonry !== false };
-    grid._dsPhotogrid = g;
-    grid.classList.add("photogrid");
-
-    function gap() { return parseFloat(getComputedStyle(grid).columnGap) || 0; }
-    function cols(px, w, s) { return Math.max(1, Math.floor((w + s) / (px + s))); }
-    function tiles() { return [].filter.call(grid.children, function (t) { return !t.hidden && getComputedStyle(t).display !== "none"; }); }
-    // a tile's height for its width: the <img>'s width and height say it before it loads; a square until then without them
-    function ratio(t) {
-      var im = t.tagName === "IMG" ? t : t.querySelector("img"), w = 0, h = 0;
-      if (im) { w = +im.getAttribute("width"); h = +im.getAttribute("height"); }
-      if (!(w && h) && im && im.naturalWidth) { w = im.naturalWidth; h = im.naturalHeight; }
-      return w && h ? h / w : 1;
+  function reorder(list, o) {
+    list = find(list);
+    if (!list) return null;
+    if (list._dsReorder) { if (o) list._dsReorder.o = o; return list._dsReorder; }
+    var r = { o: o || {} }, d = null;
+    list._dsReorder = r;
+    list.setAttribute("data-reorder", "");
+    function handle() { return r.o.handle || ".grip"; }
+    function isItem(c) { return c && c.parentNode === list && (!r.o.item || c.matches(r.o.item)); }
+    r.items = function () { return [].filter.call(list.children, isItem); };
+    function next(it) { var c = it.nextElementSibling; while (c && !isItem(c)) c = c.nextElementSibling; return c; }
+    function prev(it) { var c = it.previousElementSibling; while (c && !isItem(c)) c = c.previousElementSibling; return c; }
+    // a grip of this list, not of a list inside one of its items
+    function grip(target) {
+      var h = target.closest && target.closest(handle());
+      return h && h.closest("[data-reorder]") === list ? h : null;
     }
-    // the sizes the slider offers: one for each number of columns, the smallest of those that give it, so that every step
-    // changes the grid (a phone, with room for two columns at most, has two)
-    function stepsFor(w, s) {
-      var out = [], last = 0;
-      sizes.forEach(function (px, i) { var n = cols(px, w, s); if (n !== last) { out.push(i); last = n; } });
-      return out;
+    function itemOf(h) { var c = h; while (c && c.parentNode !== list) c = c.parentNode; return isItem(c) ? c : null; }
+    function name() {
+      list.querySelectorAll(handle()).forEach(function (h) { if (h.closest("[data-reorder]") === list && !h.hasAttribute("aria-label")) h.setAttribute("aria-label", words().move); });
     }
-    function paint(j, n) {
-      if (!slider) return;
-      var top = steps.length - 1;
-      slider.min = "0";
-      slider.step = "1";
-      slider.max = String(top);
-      if (+slider.value !== j) slider.value = String(j);
-      slider.disabled = top === 0;
-      slider.setAttribute("aria-valuetext", words().columns(n));
+    function done(it) { if (r.o.onEnd) r.o.onEnd(r.items(), it); }
+    // where the dragged item should be: under the pointer, within the list; the neighbours it passed go the other way
+    function place() {
+      var it = d.it, all = r.items(), h = it.offsetHeight;
+      var want = d.top + (d.last + window.scrollY) - (d.y + d.sy);
+      var low = Math.min.apply(null, all.map(function (x) { return x.offsetTop; }));
+      var high = Math.max.apply(null, all.map(function (x) { return x.offsetTop + x.offsetHeight; })) - h;
+      want = Math.max(low, Math.min(high, want));
+      // a neighbour gives way once the item's far edge passes its middle, whatever their heights (a bank and its
+      // accounts past a bank with a single one)
+      var sib;
+      while ((sib = next(it)) && want + h > sib.offsetTop + sib.offsetHeight / 2) slide([sib], function () { list.insertBefore(sib, it); });
+      while ((sib = prev(it)) && want < sib.offsetTop + sib.offsetHeight / 2) slide([sib], function () { list.insertBefore(sib, it.nextSibling); });
+      it.style.transform = "translateY(" + (want - it.offsetTop) + "px)";
     }
-    function layout() {
-      var w = grid.clientWidth, s = gap();
-      if (!w) return g;
-      lastW = w;
-      steps = stepsFor(w, s);
-      // the size chosen shows as the step with its number of columns (300px on a phone is 190px's single column)
-      var n = cols(sizes[want], w, s), j = 0;
-      while (j < steps.length - 1 && cols(sizes[steps[j]], w, s) > n) j++;
-      var px = sizes[steps[j]];
-      g.size = px;
-      g.columns = n;
-      grid.style.setProperty("--tile", px + "px");
-      paint(j, n);
-      if (grid.classList.contains("is-masonry") !== g.masonry) grid.classList.toggle("is-masonry", g.masonry);
-      if (!g.masonry) { grid.style.removeProperty("height"); [].forEach.call(grid.children, clear); return g; }
-      var cw = (w - s * (n - 1)) / n, bottoms = [];
-      for (var c = 0; c < n; c++) bottoms.push(0);
-      tiles().forEach(function (t) {
-        var k = 0;
-        for (var c = 1; c < n; c++) if (bottoms[c] < bottoms[k]) k = c;
-        // whole pixels, the columns meeting exactly, so that no hairline shows between two photos
-        var x = Math.round(k * (cw + s)), x2 = Math.round(k * (cw + s) + cw), h = Math.round((x2 - x) * ratio(t));
-        t.style.left = x + "px";
-        t.style.top = bottoms[k] + "px";
-        t.style.width = (x2 - x) + "px";
-        t.style.height = h + "px";
-        bottoms[k] += h + s;
-      });
-      grid.style.height = Math.max(0, Math.max.apply(null, bottoms) - s) + "px";
-      return g;
+    function move(e) { if (d && e.pointerId === d.id) { d.last = e.clientY; place(); } }
+    // near an edge of the screen, the page scrolls along with the item
+    function edge() {
+      if (!d) return;
+      var zone = 56, v = 0;
+      if (d.last < zone) v = -Math.ceil((zone - d.last) / 4);
+      else if (d.last > window.innerHeight - zone) v = Math.ceil((d.last - window.innerHeight + zone) / 4);
+      if (v) { window.scrollBy(0, v); place(); }
+      d.raf = requestAnimationFrame(edge);
     }
-    // the tiles near the screen slide from where they were to their new place (a FLIP, as Selecta's)
-    function move(change) {
-      if (reduced() || !grid.animate) { change(); return; }
-      var vh = window.innerHeight, list = tiles().filter(function (t) { var r = t.getBoundingClientRect(); return r.bottom > -vh && r.top < 2 * vh; });
-      var before = list.map(function (t) { return t.getBoundingClientRect(); });
-      list.forEach(function (t) { if (t.getAnimations) t.getAnimations().forEach(function (a) { a.cancel(); }); });
-      change();
-      var time = ms(getComputedStyle(grid).getPropertyValue("--t-mid"));
-      list.forEach(function (t, k) {
-        var a = before[k], b = t.getBoundingClientRect();
-        if (!a.width || !b.width) return;
-        var dx = a.left - b.left, dy = a.top - b.top, sx = a.width / b.width, sy = a.height / b.height;
-        if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01) return;
-        t.animate([{ transform: "translate(" + dx + "px, " + dy + "px) scale(" + sx + ", " + sy + ")" }, { transform: "none" }],
-          { duration: time, easing: "cubic-bezier(.22, 1, .36, 1)" });
-      });
+    function end() {
+      if (!d) return;
+      var x = d;
+      d = null;
+      cancelAnimationFrame(x.raf);
+      ["pointermove", "pointerup", "pointercancel", "lostpointercapture"].forEach(function (t) { x.h.removeEventListener(t, t === "pointermove" ? move : end); });
+      x.it.classList.remove("is-dragging");
+      x.it.classList.add("is-shifting");
+      x.it.style.transform = "";
+      setTimeout(function () { x.it.classList.remove("is-shifting"); }, 450);
+      document.documentElement.classList.remove("is-reordering");
+      var now = r.items();
+      if (now.some(function (it, i) { return it !== x.order[i]; })) done(x.it);
     }
-    function soon() {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(layout);
-    }
-    g.layout = layout;
-    g.set = function (x) {
-      x = x || {};
-      var i = x.size != null ? sizes.indexOf(+x.size) : -1;
-      if (i >= 0) {
-        want = i;
-        if (o.key) { try { localStorage.setItem(o.key, String(sizes[i])); } catch (e) {} }
-      }
-      if (x.masonry != null) g.masonry = !!x.masonry;
-      move(layout);
-      return g;
-    };
-
-    if (slider) {
-      if (!slider.hasAttribute("aria-label") && !(slider.labels && slider.labels.length && slider.labels[0].textContent.trim())) slider.setAttribute("aria-label", words().size);
-      slider.addEventListener("input", function () { var i = steps[+slider.value]; if (i != null) g.set({ size: sizes[i] }); });
-    }
-    if (window.ResizeObserver) new ResizeObserver(function () { if (grid.clientWidth !== lastW) soon(); }).observe(grid);
-    else window.addEventListener("resize", soon);
-    // a photo without its width and height takes its shape once loaded
-    grid.addEventListener("load", function (e) {
-      var im = e.target;
-      if (im.tagName === "IMG" && !(im.getAttribute("width") && im.getAttribute("height"))) soon();
-    }, true);
-    if (window.MutationObserver) {
-      new MutationObserver(function (list) {
-        for (var i = 0; i < list.length; i++) {
-          var m = list[i];
-          if (m.target === grid || (m.attributeName === "hidden" && m.target.parentNode === grid)) { soon(); return; }
-        }
-      }).observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "hidden"] });
-    }
-    return layout();
+    list.addEventListener("pointerdown", function (e) {
+      if (d || (e.pointerType === "mouse" && e.button !== 0)) return;
+      var h = grip(e.target), it = h && itemOf(h);
+      if (!it) return;
+      e.preventDefault();
+      d = { it: it, h: h, id: e.pointerId, y: e.clientY, last: e.clientY, sy: window.scrollY, top: it.offsetTop, order: r.items(), raf: 0 };
+      try { h.setPointerCapture(e.pointerId); } catch (err) {}
+      it.classList.remove("is-shifting");
+      it.classList.add("is-dragging");
+      document.documentElement.classList.add("is-reordering");
+      h.addEventListener("pointermove", move);
+      ["pointerup", "pointercancel", "lostpointercapture"].forEach(function (t) { h.addEventListener(t, end); });
+      d.raf = requestAnimationFrame(edge);
+    });
+    list.addEventListener("keydown", function (e) {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      var h = grip(e.target), it = h && itemOf(h);
+      if (!it) return;
+      e.preventDefault();
+      var up = e.key === "ArrowUp", sib = up ? prev(it) : next(it);
+      if (!sib) return;
+      // the neighbour moves, not the item, so that its grip keeps the focus
+      slide([sib, it], function () { list.insertBefore(sib, up ? it.nextSibling : it); });
+      done(it);
+    });
+    list.addEventListener("focusin", name);
+    name();
+    return r;
   }
   window.ds = window.ds || {};
-  window.ds.photogrid = photogrid;
+  window.ds.reorder = reorder;
 })();
 /* The date and period picker, taken from Bank's operations (ds.datePick): the quick periods, then the units it offers as
    tabs (a day, a month, a year, two dates), then a grid of days, months or years under a head that steps through them.
@@ -3328,8 +2718,10 @@
    says "all", "day", "month", "year" or "range". The days are Paris's days, written "2026-11-09", whatever the device. */
 (function () {
   "use strict";
-  var TZ = "Europe/Paris", MODES = ["day", "month", "year", "range"], PAGE = 12;
-  var WORDS = {
+  var _ = window.ds._, day = window.ds.day, find = _.find, el = _.el;
+  var parisToday = day.today, at = day.at, addDays = day.add, fmt = day.format;
+  var MODES = ["day", "month", "year", "range"], PAGE = 12;
+  var WORDS = _.table({
     fr: { day: "Jour", month: "Mois", year: "Année", range: "Dates", all: "Toutes les dates", pick: "Choisir la période", modes: "Choisir par",
           prev: { day: "Mois précédent", month: "Année précédente", year: "Années précédentes" },
           next: { day: "Mois suivant", month: "Année suivante", year: "Années suivantes" },
@@ -3340,16 +2732,8 @@
           next: { day: "Next month", month: "Next year", year: "Later years" },
           first: "Pick the first day, then the last.", last: function (d) { return "From " + d + ": pick the last day."; },
           since: function (d) { return "since " + d; }, until: function (d) { return "until " + d; } }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function find(e) { return typeof e === "string" ? document.querySelector(e) : e; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function btn(cls, text, dp) {
     var b = el("button", cls, text);
     b.type = "button";
@@ -3357,16 +2741,12 @@
     return b;
   }
 
-  // the days are Paris's days, counted at noon UTC so that no clock change moves them
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
+  // the days are Paris's days, counted at noon UTC so that no clock change moves them (ds.day)
   function pad(n) { return String(n).padStart(2, "0"); }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
   function daysBetween(a, b) { return Math.round((at(b) - at(a)) / 864e5); }
   function monthLen(ym) { return new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate(); }
   function monthIndex(ym) { return +ym.slice(0, 4) * 12 + +ym.slice(5, 7) - 1; }
   function addMonths(ym, n) { var m = monthIndex(ym) + n; return Math.floor(m / 12) + "-" + pad(m % 12 + 1); }
-  function fmt(key, opts) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, opts)).format(at(key)); }
   function date(t, style) { return window.ds.date(t, style); }
   function dayText(key, year) { return date(key, year ? { day: "numeric", month: "short", year: "numeric" } : "day"); }
 
@@ -3671,9 +3051,8 @@
     holder.addEventListener("keydown", function (e) {
       if (e.defaultPrevented) return;
       if (e.key === "Escape") {
-        // first the day kept for two dates, then the picker itself; inline, Escape goes on to what holds it
+        // first the day kept for two dates; then the popover, the top layer, closes (inline, Escape goes on to what holds it)
         if (st.anchor) { e.preventDefault(); st.anchor = null; st.hover = null; draw(); }
-        else if (opener && !holder.hidden) { e.preventDefault(); p.close(); opener.focus(); }
         return;
       }
       var dp = e.target.getAttribute && e.target.getAttribute("data-dp");
@@ -3701,15 +3080,18 @@
       paint();
     });
 
+    // opened under its button, a layer: Escape closes it and gives the focus back to the button; Tab is free
+    var cover = { el: holder, trap: false, close: function () { var inside = holder.contains(document.activeElement); p.close(); if (inside || document.activeElement === document.body) opener.focus(); } };
     p.open = function () {
       reset();
       holder.hidden = false;
-      if (opener) opener.setAttribute("aria-expanded", "true");
+      if (opener) { opener.setAttribute("aria-expanded", "true"); _.layer(cover); }
       return draw("cell");
     };
     p.close = function () {
       holder.hidden = true;
       st.anchor = null; st.hover = null;
+      _.unlayer(cover);
       if (opener) opener.setAttribute("aria-expanded", "false");
       return p;
     };
@@ -3728,9 +3110,6 @@
       document.addEventListener("pointerdown", function (e) {
         if (!holder.hidden && !holder.contains(e.target) && !opener.contains(e.target)) p.close();
       });
-      opener.addEventListener("keydown", function (e) {
-        if (e.key === "Escape" && !holder.hidden && !e.defaultPrevented) { e.preventDefault(); p.close(); }
-      });
       holder.hidden = true;
       opener.setAttribute("aria-expanded", "false");
     }
@@ -3744,4 +3123,635 @@
   datePick.today = parisToday;
   window.ds = window.ds || {};
   window.ds.datePick = datePick;
+})();
+/* Keeping up with the server, taken from Studio.
+   ds.keep: a copy of the last data kept on the device (IndexedDB has room for all of it), so that a page opens at once on
+     it, then refreshes. ds.keep.get(key), put(key, value) and del(key) answer with promises that never fail: where the
+     device keeps nothing (IndexedDB missing, refused, or not answering within 3 s, as in some private windows), get
+     answers null and put false, and the page simply waits for the server, as on a first visit. ds.keep.ok() says
+     whether copies are kept. ds.keep.open(name) is a store of its own (a database name; "ds" for ds.keep itself).
+     ds.keep.fresh(key, load, draw): draws the copy at once if there is one, draw(value, {copy: true, at}), unless the
+     server answers first; then draws what load() answers, draw(value, {copy: false}), and keeps it.
+   ds.stream(url, events, {open, poll, every, retry}): follows the server live through its event stream (EventSource):
+     events {name: function (data)} receive each named event, its data read as JSON when it is. A dropped stream comes
+     back by itself; one the server closed (it was restarting) is opened again after retry ms (2 s, doubling up to a
+     minute), and at once when the page is seen again (a phone closes it in the background). open() is called at each
+     connection, to catch up on what was missed; poll(), if given, every `every` ms (5 min) while the page is seen, as a
+     backup, or instead of the stream where the browser has none. Returns {close(), source()}.
+   ds.version(button, {mine, text}): the « new version » light on a page's reload button (.newver): seen(v) lights it when
+     the server says a version other than this page's own (mine, or <meta name="version">); the button reloads the page. */
+(function () {
+  "use strict";
+  var _ = window.ds._;
+  var WORDS = _.table({
+    fr: { reload: "Recharger la page", newer: "Nouvelle version du site : recharger la page" },
+    en: { reload: "Reload the page", newer: "A new version is on line: reload the page" }
+  });
+  function words() { return _.words(WORDS); }
+
+  var stores = {};
+  function open(name) {
+    if (stores[name]) return stores[name];
+    var db = null;
+    function base() {
+      if (!db) db = new Promise(function (res, rej) {
+        // a browser that neither opens nor refuses (some private windows) is taken as one that keeps nothing
+        var late = setTimeout(function () { rej(new Error("timeout")); }, 3000);
+        try {
+          var r = indexedDB.open(name, 1);
+          r.onupgradeneeded = function () { r.result.createObjectStore("kv"); };
+          r.onsuccess = function () { clearTimeout(late); res(r.result); };
+          r.onerror = r.onblocked = function () { clearTimeout(late); rej(r.error || new Error("blocked")); };
+        } catch (e) { clearTimeout(late); rej(e); }
+      });
+      return db;
+    }
+    // one transaction, answered once it is written (or read): its request, or a refusal
+    function ask(mode, run) {
+      return base().then(function (d) {
+        return new Promise(function (res, rej) {
+          try {
+            var tx = d.transaction("kv", mode), req = run(tx.objectStore("kv"));
+            tx.oncomplete = function () { res(req); };
+            tx.onerror = tx.onabort = function () { rej(tx.error); };
+          } catch (e) { rej(e); }
+        });
+      });
+    }
+    var s = stores[name] = {
+      get: function (key) { return ask("readonly", function (st) { return st.get(key); }).then(function (req) { return req.result === undefined ? null : req.result; }, function () { return null; }); },
+      // a full device (its quota reached) or a value that cannot be kept answers false too: the page keeps working on
+      // what the server sends
+      put: function (key, value) { return ask("readwrite", function (st) { return st.put(value, key); }).then(function () { return true; }, function () { return false; }); },
+      del: function (key) { return ask("readwrite", function (st) { return st.delete(key); }).then(function () { return true; }, function () { return false; }); },
+      ok: function () { return base().then(function () { return true; }, function () { return false; }); },
+      fresh: function (key, load, draw) {
+        var served = false;
+        var copy = s.get(key).then(function (c) {
+          if (c && !served && c.at != null) draw(c.value, { copy: true, at: c.at });
+        });
+        return Promise.resolve().then(load).then(function (value) {
+          served = true;
+          draw(value, { copy: false });
+          return s.put(key, { at: Date.now(), value: value }).then(function () { return value; });
+        }, function (e) { return copy.then(function () { throw e; }); });
+      }
+    };
+    return s;
+  }
+  var keep = open("ds");
+  keep.open = open;
+
+  function stream(url, events, o) {
+    o = o || {};
+    events = events || {};
+    var src = null, wait = o.retry || 2000, timer = null, closed = false;
+    function connect() {
+      clearTimeout(timer);
+      if (closed || !window.EventSource) return;
+      if (src) src.close();
+      src = new EventSource(url);
+      src.onopen = function () { wait = o.retry || 2000; if (o.open) o.open(); };
+      src.onerror = function () {
+        // EventSource tries again by itself while it is CONNECTING; CLOSED means the server refused it (a restart)
+        if (src.readyState !== 2 || closed) return;
+        clearTimeout(timer);
+        timer = setTimeout(connect, wait);
+        wait = Math.min(wait * 2, 60000);
+      };
+      Object.keys(events).forEach(function (name) {
+        src.addEventListener(name, function (e) {
+          var data = e.data;
+          try { data = JSON.parse(e.data); } catch (x) {}
+          events[name](data, e);
+        });
+      });
+    }
+    function seen() { return document.visibilityState === "visible"; }
+    document.addEventListener("visibilitychange", function () {
+      if (seen() && src && src.readyState === 2 && !closed) connect();
+    });
+    var every = null;
+    if (o.poll) every = setInterval(function () { if (seen() && !closed) o.poll(); }, o.every || 300000);
+    connect();
+    return {
+      close: function () { closed = true; clearTimeout(timer); clearInterval(every); if (src) src.close(); },
+      source: function () { return src; }
+    };
+  }
+
+  function version(button, o) {
+    o = o || {};
+    var meta = document.querySelector('meta[name="version"]'), mine = o.mine || (meta && meta.content) || null, w = words();
+    if (!button.querySelector(".newver-pip")) {
+      var pip = document.createElement("i");
+      pip.className = "newver-pip";
+      pip.setAttribute("aria-hidden", "true");
+      button.appendChild(pip);
+    }
+    button.classList.add("newver");
+    if (!button.getAttribute("aria-label")) button.setAttribute("aria-label", w.reload);
+    if (!button.title) button.title = w.reload;
+    button.addEventListener("click", function () { location.reload(); });
+    var light = {
+      on: false,
+      seen: function (v) {
+        if (!v || !mine || String(v) === String(mine) || light.on) return light.on;
+        light.on = true;
+        button.classList.add("is-on");
+        button.title = o.text || w.newer;
+        button.setAttribute("aria-label", o.text || w.newer);
+        return true;
+      }
+    };
+    return light;
+  }
+
+  window.ds = window.ds || {};
+  window.ds.keep = keep;
+  window.ds.stream = stream;
+  window.ds.version = version;
+})();
+/* ds.viewer(items, {start, onChange, onClose, label, el, from}): the photo viewer of src/viewer.css, opened on
+   items[start]. An item is {src, srcset, sizes, alt, caption, thumb, el}, a plain address, or a function that returns one
+   (or a promise of one), called when the photo is first needed: Selecta asks its server for a signed address then.
+   thumb is shown, blurred, while the photo loads; el is the page's element for that photo (a grid's link), where the
+   focus goes back on closing.
+   The cross, a click beside the photo (the veil), Escape or a finger pulled down close it; the arrows, ← → and a finger
+   swiped sideways turn the photos, round and round; « 3 / 24 » says where one is; the two neighbours load ahead; the
+   spinner turns while a photo loads. Opening moves the focus into it, Tab stays in it, closing gives the focus back to
+   what opened it (or to the photo one ended on); the page behind does not scroll meanwhile (viewer-behaviour.css).
+   It drives the page's own .viewer when there is one (opts.el, or a .viewer at the top of <body>: Selecta's, with its
+   bar under the photo) and adds the parts it lacks; otherwise it builds one. onChange(index, item, viewer) tells each
+   photo shown, onClose(index, viewer) the closing. Returns {el, index, isOpen, go(i), next(), prev(), close()}.
+   ds.viewer.bind(container, {item, label, onChange, onClose}): a grid of links (item, "a[href]" by default) opens the
+   viewer on a click, each link's href as its photo (data-srcset, data-sizes and data-caption for more, its image as
+   thumb and alt). The markup <div data-viewer> does the same with no code at all; data-viewer="selector" names the
+   items, data-viewer-label the viewer. Nothing here is written inline, so a page served with script-src 'self' works. */
+(function () {
+  "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.viewer) return;
+  var _ = window.ds._, reduced = _.reduced;
+  var WORDS = _.table({
+    fr: { label: "Photos", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
+    en: { label: "Photos", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
+  });
+  function words() { return _.words(WORDS); }
+  // how far a finger travels to turn the photo, and to close the viewer when pulled down (the site's 50px)
+  var SWIPE = 50, DROP = 90, START = 8;
+  var open = null;
+  function make(name, cls, parent) {
+    var x = _.el(name, cls);
+    if (parent) parent.appendChild(x);
+    return x;
+  }
+  function button(el, cls, label) {
+    var b = el.querySelector("." + cls);
+    if (!b) { b = make("button", "viewer-btn " + cls, el); b.type = "button"; }
+    if (!b.hasAttribute("aria-label")) b.setAttribute("aria-label", label);
+    return b;
+  }
+
+  // the parts the viewer needs, taken from its markup or added: veil, stage and photo, spinner, count, the three buttons
+  function setup(el) {
+    if (el._dsViewer) return el._dsViewer;
+    var w = words(), veil = el.querySelector(".viewer-veil"), stage = el.querySelector(".viewer-stage");
+    if (!veil) { veil = make("div", "viewer-veil"); el.insertBefore(veil, el.firstChild); }
+    if (!stage) { stage = make("div", "viewer-stage"); el.insertBefore(stage, veil.nextSibling); }
+    var img = stage.querySelector("img") || make("img", "", stage);
+    img.draggable = false;
+    img.decoding = "async";
+    var spin = stage.querySelector(".spinner") || make("span", "spinner is-medium on-photo", stage);
+    spin.setAttribute("aria-hidden", "true");
+    // in the stage, the count sits over the photo's foot, above an app's bar when there is one
+    var count = el.querySelector(".viewer-count") || make("div", "viewer-count", stage);
+    count.setAttribute("aria-live", "polite");
+    var c = { el: el, veil: veil, stage: stage, img: img, spin: spin, count: count, items: [], at: 0, opts: {}, token: 0, cache: {}, keep: [], before: null, isOpen: false,
+      close: button(el, "viewer-close", w.close), prev: button(el, "viewer-prev", w.prev), next: button(el, "viewer-next", w.next) };
+    el.setAttribute("role", "dialog");
+    el.setAttribute("aria-modal", "true");
+    el.tabIndex = -1;
+    el.hidden = true;
+    c.handle = { el: el, index: 0, isOpen: false,
+      go: function (i) { show(c, i); return c.handle; },
+      next: function () { show(c, c.at + 1); return c.handle; },
+      prev: function () { show(c, c.at - 1); return c.handle; },
+      close: function () { shut(c); return c.handle; } };
+    el._dsViewer = c;
+    el.addEventListener("click", function (e) {
+      if (!c.isOpen) return;
+      var t = e.target;
+      if (t.closest(".viewer-close")) shut(c);
+      else if (t.closest(".viewer-prev")) show(c, c.at - 1);
+      else if (t.closest(".viewer-next")) show(c, c.at + 1);
+      // the stage covers the veil around the photo: a click there is a click on the veil
+      else if (t === c.veil || t === c.stage) shut(c);
+    });
+    swipes(c);
+    return c;
+  }
+
+  // an item, asked once per opening (a function may ask a server), as {src, …}
+  function item(c, i) {
+    if (!c.cache[i]) {
+      // in a promise from the start, so that a function that throws is a photo that failed, not a viewer that stops
+      var x = c.items[i], p = new Promise(function (ok) { ok(typeof x === "function" ? x(i) : x); }).then(function (it) {
+        if (typeof it === "string") it = { src: it };
+        if (!it || !it.src) throw new Error("no photo");
+        return it;
+      });
+      c.cache[i] = p;
+      // a refusal is asked again next time
+      p.catch(function () { if (c.cache[i] === p) delete c.cache[i]; });
+    }
+    return c.cache[i];
+  }
+  function fill(img, it) {
+    if (it.srcset) { img.sizes = it.sizes || "100vw"; img.srcset = it.srcset; } else img.removeAttribute("srcset");
+    img.src = it.src;
+  }
+  function fetchPhoto(it) {
+    return new Promise(function (ok, ko) {
+      var im = new Image();
+      im.onload = function () { ok(im); };
+      im.onerror = ko;
+      fill(im, it);
+    });
+  }
+  // the neighbours load ahead, so that turning to them shows them at once
+  function ahead(c, j) {
+    var n = c.items.length;
+    j = ((j % n) + n) % n;
+    item(c, j).then(function (it) {
+      var im = new Image();
+      fill(im, it);
+      c.keep = c.keep.slice(-3).concat(im);
+    }).catch(function () {});
+  }
+  function caption(c, text) {
+    var cap = c.el.querySelector(".viewer-caption");
+    // once a photo of this opening has a caption, its line stays for all, even empty, so that the photos keep their
+    // size from one to the next
+    if (text) c.captioned = true;
+    if (!cap && !c.captioned) return;
+    if (!cap) {
+      var bar = c.el.querySelector(".viewer-bar");
+      if (!bar) { bar = make("div", "viewer-bar", c.el); bar._dsOwn = true; }
+      cap = make("p", "viewer-caption", bar);
+    }
+    cap.textContent = text;
+    cap.hidden = !c.captioned;
+    // a bar of ds's own goes with its captions; an app's bar stays
+    if (cap.parentNode._dsOwn) cap.parentNode.hidden = !c.captioned;
+  }
+  // what an item says before it is asked for: a function's item says it once it comes
+  function known(x) { return x && typeof x === "object" ? x : {}; }
+
+  function show(c, i) {
+    var n = c.items.length;
+    if (!n || !c.isOpen) return;
+    i = ((i % n) + n) % n;
+    c.at = c.handle.index = i;
+    c.prev.hidden = c.next.hidden = c.count.hidden = n < 2;
+    c.count.textContent = (i + 1) + " / " + n;
+    var token = ++c.token, img = c.img;
+    img.classList.add("is-loading");
+    img.classList.remove("is-placeholder");
+    c.spin.hidden = false;
+    // the caption changes with the count, not a moment later
+    caption(c, known(c.items[i]).caption || "");
+    function done() {
+      if (token !== c.token) return;
+      img.classList.remove("is-loading", "is-placeholder");
+      c.spin.hidden = true;
+    }
+    item(c, i).then(function (it) {
+      if (token !== c.token) return;
+      img.alt = it.alt || it.caption || "";
+      caption(c, it.caption || "");
+      if (it.thumb) {
+        img.removeAttribute("srcset");
+        img.src = it.thumb;
+        img.classList.add("is-placeholder");
+        img.classList.remove("is-loading");
+      }
+      return fetchPhoto(it).then(function () {
+        if (token !== c.token) return;
+        fill(img, it);
+        // shown once decoded, so that the photo never blinks white or half drawn
+        if (img.decode) img.decode().then(done, done); else done();
+      });
+    }).catch(function () {
+      if (token !== c.token) return;
+      done();
+      if (window.ds && window.ds.toast) window.ds.toast({ type: "bad", text: words().failed });
+    });
+    if (n > 1) ahead(c, i + 1);
+    if (n > 2) ahead(c, i - 1);
+    if (c.opts.onChange) c.opts.onChange(i, c.items[i], c.handle);
+  }
+
+  function shut(c) {
+    if (!c.isOpen) return;
+    c.isOpen = c.handle.isOpen = false;
+    if (open === c) open = null;
+    _.unlayer(c.layer);
+    c.token++;
+    c.el.hidden = true;
+    c.el.classList.remove("is-open", "is-dragging");
+    // the last photo must not flash on the next opening
+    c.img.removeAttribute("srcset");
+    c.img.removeAttribute("src");
+    c.img.style.transform = "";
+    c.veil.style.opacity = "";
+    var it = c.items[c.at], own = it && it.el && it.el.isConnected ? it.el : null, back = own || c.before;
+    c.before = null;
+    if (back && back.focus && back.isConnected) {
+      back.focus({ preventScroll: true });
+      // the photo one ended on comes into sight in its grid
+      if (own && own.scrollIntoView) own.scrollIntoView({ block: "nearest", behavior: reduced() ? "auto" : "smooth" });
+    }
+    if (c.opts.onClose) c.opts.onClose(c.at, c.handle);
+  }
+
+  // a finger: sideways turns the photo, down closes; the photo follows it meanwhile. Two fingers zoom, as the browser does.
+  function swipes(c) {
+    var t = null, el = c.el;
+    function reset() {
+      t = null;
+      el.classList.remove("is-dragging");
+      c.img.style.transform = "";
+      c.veil.style.opacity = "";
+    }
+    el.addEventListener("touchstart", function (e) {
+      t = null;
+      if (!c.isOpen || e.touches.length !== 1 || e.target.closest(".viewer-bar, .viewer-btn")) return;
+      // zoomed in, a finger moves around the photo instead
+      if (window.visualViewport && window.visualViewport.scale > 1.01) return;
+      t = { x: e.touches[0].clientX, y: e.touches[0].clientY, dx: 0, dy: 0, axis: "" };
+    }, { passive: true });
+    el.addEventListener("touchmove", function (e) {
+      if (!t) return;
+      if (e.touches.length !== 1) { reset(); return; }
+      var dx = e.touches[0].clientX - t.x, dy = e.touches[0].clientY - t.y;
+      if (!t.axis) {
+        if (Math.abs(dx) < START && Math.abs(dy) < START) return;
+        t.axis = Math.abs(dx) > Math.abs(dy) ? "x" : "y";
+        el.classList.add("is-dragging");
+      }
+      t.dx = dx;
+      t.dy = dy;
+      if (t.axis === "x") { c.img.style.transform = "translateX(" + dx + "px)"; return; }
+      var down = Math.max(0, dy);
+      c.img.style.transform = "translateY(" + down + "px)";
+      c.veil.style.opacity = String(Math.max(0.35, 1 - down / Math.max(1, el.clientHeight) * 1.6));
+    }, { passive: true });
+    el.addEventListener("touchend", function () {
+      if (!t) return;
+      var s = t;
+      reset();
+      if (s.axis === "x" && Math.abs(s.dx) > SWIPE && c.items.length > 1) show(c, c.at + (s.dx < 0 ? 1 : -1));
+      else if (s.axis === "y" && s.dy > DROP) shut(c);
+    });
+    el.addEventListener("touchcancel", reset);
+  }
+
+  function viewer(items, opts) {
+    opts = opts || {};
+    var el = opts.el ? _.find(opts.el) : document.querySelector("body > .viewer");
+    if (!el) { el = make("div", "viewer", document.body); el.hidden = true; el._dsBuilt = true; }
+    var c = setup(el);
+    if (open && open !== c) shut(open);
+    c.items = [].slice.call(items || []);
+    c.opts = opts;
+    c.cache = {};
+    c.captioned = c.items.some(function (x) { return !!known(x).caption; });
+    if (!c.items.length) return c.handle;
+    var from = opts.from || document.activeElement;
+    if (!c.isOpen) c.before = from;
+    // a viewer ds built takes the theme of what opened it (the showcase has one per column); an app's has its page's
+    if (el._dsBuilt) {
+      var th = from && from.closest ? from.closest("[data-theme]") : null;
+      if (th && th !== document.documentElement) el.setAttribute("data-theme", th.getAttribute("data-theme"));
+      else el.removeAttribute("data-theme");
+    }
+    el.setAttribute("aria-label", opts.label || words().label);
+    if (!c.isOpen) {
+      c.isOpen = c.handle.isOpen = true;
+      open = c;
+      el.hidden = false;
+      el.classList.add("is-open");
+      // a layer over the page: Escape closes it, and Tab goes round inside it
+      c.layer = _.layer(c.layer || { el: el, close: function () { shut(c); } });
+    }
+    show(c, opts.start || 0);
+    el.focus({ preventScroll: true });
+    return c.handle;
+  }
+
+  // the arrows turn the photo, before the page's own keys, while the viewer is the top layer (a window of ds.confirm over
+  // it keeps its keys); Escape and Tab are the layers' (src/core.js)
+  document.documentElement.addEventListener("keydown", function (e) {
+    var c = open;
+    if (!c || e.defaultPrevented || _.top() !== c.layer) return;
+    // in a field of the app's bar (Selecta's note), the keys belong to the field
+    if (e.target && e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
+    if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
+      if (c.items.length > 1) { e.preventDefault(); show(c, c.at + (e.key === "ArrowRight" ? 1 : -1)); }
+    }
+  }, true);
+
+  // a link of a grid as an item
+  function linkItem(a) {
+    var im = a.querySelector("img");
+    return { src: a.getAttribute("data-src") || a.href || (im && (im.currentSrc || im.src)) || "",
+      srcset: a.getAttribute("data-srcset") || "", sizes: a.getAttribute("data-sizes") || "",
+      alt: (im && im.getAttribute("alt")) || a.getAttribute("aria-label") || "", caption: a.getAttribute("data-caption") || "",
+      thumb: im ? im.currentSrc || im.src : "", el: a };
+  }
+  function clicker(box, o) {
+    return function (e) {
+      // a click with a key held, or the middle button, still opens the photo in a new tab
+      if (e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var sel = o.item || "a[href]", a = e.target.closest ? e.target.closest(sel) : null;
+      if (!a || !box.contains(a)) return;
+      // the photos one can see: those a filter hides are skipped
+      var all = [].filter.call(box.querySelectorAll(sel), function (x) { return x.getClientRects().length > 0; }), at = all.indexOf(a);
+      if (at < 0) return;
+      e.preventDefault();
+      viewer(all.map(linkItem), { start: at, from: a, label: o.label, onChange: o.onChange, onClose: o.onClose, el: o.el });
+    };
+  }
+  function bind(box, o) {
+    box = _.find(box);
+    if (!box) return null;
+    var fn = clicker(box, o || {});
+    box._dsViewerBound = true;
+    box.addEventListener("click", fn);
+    return { unbind: function () { box.removeEventListener("click", fn); box._dsViewerBound = false; } };
+  }
+  document.addEventListener("click", function (e) {
+    var box = e.target.closest ? e.target.closest("[data-viewer]") : null;
+    if (!box || box._dsViewerBound) return;
+    clicker(box, { item: box.getAttribute("data-viewer") || "", label: box.getAttribute("data-viewer-label") || "" })(e);
+  });
+
+  viewer.bind = bind;
+  viewer.close = function () { if (open) shut(open); };
+  window.ds = window.ds || {};
+  window.ds.viewer = viewer;
+})();
+/* ds.photogrid(grid, {sizes, size, key, slider, masonry}): the photo grid of src/photogrid.css, Selecta's masonry made
+   generic. Each child of grid is a tile holding an image (a link, a figure…); the tiles fall in columns of even height,
+   each one into the shortest column, as tall as its photo's shape: the <img>'s width and height, or its own size once
+   loaded (the grid lays itself out again then). It follows the grid's width, tiles added, removed or hidden, and a class
+   set on the grid (a filter); after any other change, layout() lays it out again.
+   sizes: the widths a column may have, in px ([140, 190, 240, 300]); size: the one to start with (190); key: the device
+   remembers the size chosen under it; slider: an <input type="range" class="zoom-slider"> that picks among the sizes,
+   from small to large, offering only those that change the grid (a phone has fewer); masonry: false for even rows,
+   each photo cut to a square-ish tile. The tiles slide to their new places when the size changes, unless the device
+   asks for less motion. Returns {el, size, columns, masonry, layout(), set({size, masonry})}; called again on the same
+   grid, it gives the same one. */
+(function () {
+  "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.photogrid) return;
+  var _ = window.ds._, reduced = _.reduced, ms = _.ms;
+  var WORDS = _.table({
+    fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
+    en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }
+  });
+  function words() { return _.words(WORDS); }
+  function clear(t) { ["left", "top", "width", "height"].forEach(function (p) { t.style.removeProperty(p); }); }
+
+  function photogrid(grid, o) {
+    grid = _.find(grid);
+    if (!grid) return null;
+    if (grid._dsPhotogrid) return grid._dsPhotogrid;
+    o = o || {};
+    var sizes = (o.sizes && o.sizes.length ? o.sizes : [140, 190, 240, 300]).map(Number).sort(function (a, b) { return a - b; });
+    var slider = _.find(o.slider) || null;
+    var want = sizes.indexOf(+o.size), steps = [], lastW = -1, frame = 0;
+    if (want < 0) want = Math.min(1, sizes.length - 1);
+    if (o.key) { var kept = sizes.indexOf(+_.read(o.key)); if (kept >= 0) want = kept; }
+    var g = { el: grid, size: sizes[want], columns: 1, masonry: o.masonry !== false };
+    grid._dsPhotogrid = g;
+    grid.classList.add("photogrid");
+
+    function gap() { return parseFloat(getComputedStyle(grid).columnGap) || 0; }
+    function cols(px, w, s) { return Math.max(1, Math.floor((w + s) / (px + s))); }
+    function tiles() { return [].filter.call(grid.children, function (t) { return !t.hidden && getComputedStyle(t).display !== "none"; }); }
+    // a tile's height for its width: the <img>'s width and height say it before it loads; a square until then without them
+    function ratio(t) {
+      var im = t.tagName === "IMG" ? t : t.querySelector("img"), w = 0, h = 0;
+      if (im) { w = +im.getAttribute("width"); h = +im.getAttribute("height"); }
+      if (!(w && h) && im && im.naturalWidth) { w = im.naturalWidth; h = im.naturalHeight; }
+      return w && h ? h / w : 1;
+    }
+    // the sizes the slider offers: one for each number of columns, the smallest of those that give it, so that every step
+    // changes the grid (a phone, with room for two columns at most, has two)
+    function stepsFor(w, s) {
+      var out = [], last = 0;
+      sizes.forEach(function (px, i) { var n = cols(px, w, s); if (n !== last) { out.push(i); last = n; } });
+      return out;
+    }
+    function paint(j, n) {
+      if (!slider) return;
+      var top = steps.length - 1;
+      slider.min = "0";
+      slider.step = "1";
+      slider.max = String(top);
+      if (+slider.value !== j) slider.value = String(j);
+      slider.disabled = top === 0;
+      slider.setAttribute("aria-valuetext", words().columns(n));
+    }
+    function layout() {
+      var w = grid.clientWidth, s = gap();
+      if (!w) return g;
+      lastW = w;
+      steps = stepsFor(w, s);
+      // the size chosen shows as the step with its number of columns (300px on a phone is 190px's single column)
+      var n = cols(sizes[want], w, s), j = 0;
+      while (j < steps.length - 1 && cols(sizes[steps[j]], w, s) > n) j++;
+      var px = sizes[steps[j]];
+      g.size = px;
+      g.columns = n;
+      grid.style.setProperty("--tile", px + "px");
+      paint(j, n);
+      if (grid.classList.contains("is-masonry") !== g.masonry) grid.classList.toggle("is-masonry", g.masonry);
+      if (!g.masonry) { grid.style.removeProperty("height"); [].forEach.call(grid.children, clear); return g; }
+      var cw = (w - s * (n - 1)) / n, bottoms = [];
+      for (var c = 0; c < n; c++) bottoms.push(0);
+      tiles().forEach(function (t) {
+        var k = 0;
+        for (var c = 1; c < n; c++) if (bottoms[c] < bottoms[k]) k = c;
+        // whole pixels, the columns meeting exactly, so that no hairline shows between two photos
+        var x = Math.round(k * (cw + s)), x2 = Math.round(k * (cw + s) + cw), h = Math.round((x2 - x) * ratio(t));
+        t.style.left = x + "px";
+        t.style.top = bottoms[k] + "px";
+        t.style.width = (x2 - x) + "px";
+        t.style.height = h + "px";
+        bottoms[k] += h + s;
+      });
+      grid.style.height = Math.max(0, Math.max.apply(null, bottoms) - s) + "px";
+      return g;
+    }
+    // the tiles near the screen slide from where they were to their new place (a FLIP, as Selecta's)
+    function move(change) {
+      if (reduced() || !grid.animate) { change(); return; }
+      var vh = window.innerHeight, list = tiles().filter(function (t) { var r = t.getBoundingClientRect(); return r.bottom > -vh && r.top < 2 * vh; });
+      var before = list.map(function (t) { return t.getBoundingClientRect(); });
+      list.forEach(function (t) { if (t.getAnimations) t.getAnimations().forEach(function (a) { a.cancel(); }); });
+      change();
+      var time = ms(getComputedStyle(grid).getPropertyValue("--t-mid"));
+      list.forEach(function (t, k) {
+        var a = before[k], b = t.getBoundingClientRect();
+        if (!a.width || !b.width) return;
+        var dx = a.left - b.left, dy = a.top - b.top, sx = a.width / b.width, sy = a.height / b.height;
+        if (Math.abs(dx) < 1 && Math.abs(dy) < 1 && Math.abs(sx - 1) < 0.01 && Math.abs(sy - 1) < 0.01) return;
+        t.animate([{ transform: "translate(" + dx + "px, " + dy + "px) scale(" + sx + ", " + sy + ")" }, { transform: "none" }],
+          { duration: time, easing: "cubic-bezier(.22, 1, .36, 1)" });
+      });
+    }
+    function soon() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(layout);
+    }
+    g.layout = layout;
+    g.set = function (x) {
+      x = x || {};
+      var i = x.size != null ? sizes.indexOf(+x.size) : -1;
+      if (i >= 0) {
+        want = i;
+        if (o.key) _.write(o.key, String(sizes[i]));
+      }
+      if (x.masonry != null) g.masonry = !!x.masonry;
+      move(layout);
+      return g;
+    };
+
+    if (slider) {
+      if (!slider.hasAttribute("aria-label") && !(slider.labels && slider.labels.length && slider.labels[0].textContent.trim())) slider.setAttribute("aria-label", words().size);
+      slider.addEventListener("input", function () { var i = steps[+slider.value]; if (i != null) g.set({ size: sizes[i] }); });
+    }
+    if (window.ResizeObserver) new ResizeObserver(function () { if (grid.clientWidth !== lastW) soon(); }).observe(grid);
+    else window.addEventListener("resize", soon);
+    // a photo without its width and height takes its shape once loaded
+    grid.addEventListener("load", function (e) {
+      var im = e.target;
+      if (im.tagName === "IMG" && !(im.getAttribute("width") && im.getAttribute("height"))) soon();
+    }, true);
+    if (window.MutationObserver) {
+      new MutationObserver(function (list) {
+        for (var i = 0; i < list.length; i++) {
+          var m = list[i];
+          if (m.target === grid || (m.attributeName === "hidden" && m.target.parentNode === grid)) { soon(); return; }
+        }
+      }).observe(grid, { childList: true, subtree: true, attributes: true, attributeFilter: ["class", "hidden"] });
+    }
+    return layout();
+  }
+  window.ds = window.ds || {};
+  window.ds.photogrid = photogrid;
 })();

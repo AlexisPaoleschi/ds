@@ -1,4 +1,5 @@
-/* The pieces of a public site, taken from alexispaoleschi.com: a badge, a section's head, the footer.
+/* The pieces of a public site, taken from alexispaoleschi.com: a badge, a section's head, the footer (the card's parts
+   are in card.css).
    Selecta and the site use them; in atelier they take atelier's fonts and colours. */
   .badge { display: inline-block; padding: var(--badge-py) var(--badge-px) var(--badge-py) calc(var(--badge-px) + var(--badge-ls));
     font: var(--badge-weight) var(--badge-size)/var(--badge-lh) var(--label-font); letter-spacing: var(--badge-ls); text-transform: uppercase; white-space: nowrap;
@@ -19,22 +20,3 @@
   .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-32); }
   .site-footer a { color: var(--accent-text); text-decoration: none; font: 400 var(--footer-size)/var(--title-lh) var(--body); letter-spacing: var(--footer-ls); transition: color var(--t-fast) ease; }
   @media (hover: hover) { .site-footer a:hover { color: var(--accent-strong); } }
-  /* a card's title, then its lines of details (a place, a date), each with its icon */
-  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--title-weight) var(--card-title-size)/var(--title-lh) var(--title-font);
-    letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
-  .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
-    font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
-  .card-meta svg { flex: none; width: 18px; height: 18px; color: var(--accent); }
-  /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
-     and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
-  .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
-  /* the photo keeps its 16:9 and the line goes under it, on a page that counts borders in sizes (box-sizing) too */
-  .card-cover { position: relative; display: block; box-sizing: content-box; aspect-ratio: 16 / 9; overflow: hidden; background: var(--band); border-bottom: 3px solid var(--accent); }
-  .card-cover img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform var(--cover-time) ease; }
-  .card-cover .badge { position: absolute; top: var(--cover-badge); right: var(--cover-badge); }
-  @media (hover: hover) { .card.is-link:hover .card-cover img { transform: scale(var(--cover-zoom)); } }
-  .card-body { display: flex; flex: 1; flex-direction: column; gap: var(--card-gap); padding: var(--card-pad); }
-  .card-body > * { margin: 0; }
-  /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
-  .card.is-small { --card-title-size: var(--card-s-title-size); --card-title-ls: var(--card-s-title-ls); --card-pad: var(--card-s-pad);
-    --card-gap: var(--card-s-gap); --card-meta-size: var(--card-s-meta-size); --cover-badge: var(--card-s-badge); }

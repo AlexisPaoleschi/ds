@@ -19,14 +19,14 @@
    Returns {keys(), has(key), set(key, on), clear(), paint()}; onChange(keys) after each change. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._, find = _.find;
+  var WORDS = _.table({
     fr: { picked: function (n) { return n + (n > 1 ? " lignes choisies" : " ligne choisie"); } },
     en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
-  function store(key, v) { try { localStorage.setItem(key, JSON.stringify(v)); } catch (e) {} }
-  function stored(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (e) { return null; } }
+  });
+  function words() { return _.words(WORDS); }
+  function store(key, v) { _.write(key, JSON.stringify(v)); }
+  function stored(key) { try { return JSON.parse(_.read(key)); } catch (e) { return null; } }
 
   // a cell's place in its row, its colspans counted, and the cell at that place in another row
   function place(cell) {

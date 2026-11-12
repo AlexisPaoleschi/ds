@@ -328,7 +328,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     const make = (w, t) => { const d = document.createElement('div'); d.className = 'card'; d.style.width = w + 'px';
       d.innerHTML = '<h2 class="ct">' + t + '<label class="pill"><span class="pv">novembre 2026</span><select><option>novembre 2026</option></select></label></h2>';
       document.body.append(d); return d.firstChild; };
-    const roomy = make(600, 'Dépenses par catégorie'), tight = make(392, 'Dépenses par catégorie'), never = make(200, 'Dépenses par catégorie');
+    const roomy = make(600, 'Dépenses par catégorie'), tight = make(370, 'Dépenses par catégorie'), never = make(200, 'Dépenses par catégorie');
     await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
     const pv = tight.querySelector('.pill').getBoundingClientRect(), words = document.createRange();
     words.selectNodeContents(tight.firstChild);
@@ -338,6 +338,21 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   assert(fits[0] === 'ct' && /ct-fit-/.test(fits[1]) && fits[3] && fits[2] === 'ct',
     'un titre trop long pour son menu se resserre puis rapetisse, seulement s’il le faut ' + JSON.stringify(fits));
+  // a title drawn in a hidden view is fitted once the view is shown (it could not be measured while hidden)
+  const shown = await p.evaluate(async () => {
+    const view = document.createElement('div'); view.hidden = true;
+    view.innerHTML = '<div class="card" style="width:370px"><h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pv">novembre 2026</span><select><option>novembre 2026</option></select></label></h2></div>';
+    document.body.append(view);
+    const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    await frames(); await frames();
+    const hidden = view.querySelector('.ct').className;
+    view.hidden = false;
+    await frames(); await frames();
+    const after = view.querySelector('.ct').className;
+    view.remove();
+    return [hidden, after];
+  });
+  assert(shown[0] === 'ct' && /ct-fit-/.test(shown[1]), 'un titre dessiné dans une vue cachée s’ajuste quand la vue s’affiche ' + JSON.stringify(shown));
   // ds.confirm keeps the keyboard: Tab goes round inside, the page behind is inert, the window is named and described
   await p.evaluate(() => { window.asked = ds.confirm({ title: 'Supprimer la règle ?', text: 'Elle ne sera plus appliquée.', ok: 'Supprimer', danger: true }); });
   const inside = [];
@@ -448,6 +463,84 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   await p.emulateMedia({ reducedMotion: 'no-preference' });
   assert(still.length === 0, 'quand l’appareil demande moins d’animations, plus de durée et chaque roue s’arrête, dans les deux thèmes ' + JSON.stringify(still));
+
+  // one spinner: every wheel drawn by the same rule, at the same speed in both themes, its gold quarter on top (the
+  // button's in its text's colour, on its fill)
+  const oneSpin = await p.evaluate(() => {
+    const box = document.createElement('div');
+    box.innerHTML = '<div class="toasts" style="position:static"><div class="toast is-busy"><i class="mark"></i></div></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
+      + '<header class="top loading"><span class="busy"><i class="spin"></i></span></header><div class="boot" style="position:static"><div class="boot-p"><i class="spin"></i></div></div>'
+      + '<i class="spinner"></i><button class="btn is-save is-busy">Envoyer</button>';
+    document.body.append(box);
+    const out = {};
+    for (const theme of ['atelier', 'vitrine']) {
+      document.documentElement.dataset.theme = theme;
+      const accent = getComputedStyle(document.body).getPropertyValue('--accent').trim();
+      const probe = document.createElement('i'); probe.style.color = accent; document.body.append(probe);
+      const gold = getComputedStyle(probe).color; probe.remove();
+      out[theme] = ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner'].map(sel => {
+        const c = getComputedStyle(box.querySelector(sel));
+        return [c.animationName, c.animationDuration, c.borderTopColor === gold, c.borderTopWidth];
+      });
+      const after = getComputedStyle(box.querySelector('.btn.is-busy'), '::after');
+      out[theme].push([after.animationName, after.animationDuration, after.borderTopColor === 'rgba(0, 0, 0, 0)', after.borderTopWidth]);
+    }
+    document.documentElement.dataset.theme = 'atelier'; box.remove();
+    return out;
+  });
+  const oneWheel = ['atelier', 'vitrine'].every(t => oneSpin[t].every(w => w[0] === 'spin' && w[1] === '0.8s' && w[2] && w[3] === '2px'));
+  assert(oneWheel, 'une seule roue : les six tournent à la même vitesse (0,8 s) dans les deux thèmes, quart doré en haut ' + JSON.stringify(oneSpin));
+
+  // one swatch: the six small squares of an item's colour, the same size and the same colour
+  const squares = await p.evaluate(() => {
+    const box = document.createElement('div');
+    box.style.cssText = '--n: var(--c-bleu); --a: var(--c-bleu)';
+    box.innerHTML = '<i class="swatch"></i><span class="sq on"></span><i class="cal-mark"></i><i class="chart-key"></i>'
+      + '<dl class="tiles"><div class="tile"><dt><i></i>Bleu</dt></div></dl><span class="picker-av is-dot"></span><i class="swatch is-open"></i>';
+    document.body.append(box);
+    const els = [...box.querySelectorAll('.swatch:not(.is-open), .sq, .cal-mark, .chart-key, .tile dt i, .picker-av')];
+    const res = els.map(e => { const c = getComputedStyle(e); return [c.width, c.height, c.backgroundColor]; });
+    const open = getComputedStyle(box.querySelector('.swatch.is-open'));
+    const hollow = open.backgroundColor === 'rgba(0, 0, 0, 0)' && open.borderTopColor === res[0][2];
+    box.remove();
+    return { res, hollow };
+  });
+  assert(squares.res.length === 6 && squares.res.every(r => r[0] === '10px' && r[1] === '10px' && r[2] === squares.res[0][2]) && squares.hollow,
+    'un seul carré de couleur : les six font 10px et prennent la couleur de --n (le filtre lit encore --a), .is-open le vide ' + JSON.stringify(squares));
+
+  // the layers: a window of ds.confirm over a sheet; Escape closes the window only, then the sheet; Tab stays in each
+  const layers = await p.evaluate(async () => {
+    const el = document.createElement('div');
+    el.className = 'sheet'; el.hidden = true;
+    el.innerHTML = '<div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-x">×</button><p>Fiche</p><button id="lay-a">A</button><button id="lay-b">B</button></div>';
+    document.body.append(el);
+    const s = ds.sheet(el);
+    s.open();
+    const key = (k, shift) => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key: k, shiftKey: !!shift, bubbles: true, cancelable: true }));
+    const out = { order: [] };
+    // Tab from the last button of the sheet goes back to its first
+    document.getElementById('lay-b').focus();
+    key('Tab');
+    out.sheetTab = el.contains(document.activeElement);
+    let answered = null;
+    const asked = ds.confirm({ title: 'Supprimer ?', ok: 'Supprimer', danger: true }).then(a => { answered = a; });
+    await new Promise(r => setTimeout(r, 50));
+    out.windowTop = ds._.top() && ds._.top().el === document.querySelector('.dialog');
+    const last = [...document.querySelectorAll('.dialog button')].pop();
+    last.focus(); key('Tab');
+    out.windowTab = !!document.activeElement.closest('.dialog');
+    key('Escape');
+    await asked;
+    out.order.push(answered === false && s.isOpen ? 'window' : 'wrong');
+    document.getElementById('lay-a').focus();
+    key('Escape');
+    out.order.push(!s.isOpen ? 'sheet' : 'wrong');
+    out.empty = ds._.top() === null;
+    el.remove();
+    return out;
+  });
+  assert(layers.sheetTab && layers.windowTop && layers.windowTab && layers.order.join(',') === 'window,sheet' && layers.empty,
+    'les couches : Échap ferme la fenêtre posée sur la fiche, puis la fiche ; Tab reste dans chacune ' + JSON.stringify(layers));
 
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();

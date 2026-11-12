@@ -13,18 +13,12 @@
      Returns {open(), close(), toggle(), set(items), draw(), input}. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._, find = _.find, tag = _.el;
+  var WORDS = _.table({
     fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…" },
     en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…" }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
-  function tag(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
 
   function pills(root) {
     root = find(root) || document;
@@ -92,14 +86,9 @@
       if (x.initial || x.icon || x.color) {
         var av = tag("span", "picker-av" + (x.initial || x.icon ? "" : " is-dot"), x.initial || null);
         av.setAttribute("aria-hidden", "true");
-        if (x.color) av.style.setProperty("--n", x.color);
-        if (x.icon) {
-          var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"), use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-          svg.setAttribute("class", "ico");
-          use.setAttribute("href", "#i-" + x.icon);
-          svg.appendChild(use);
-          av.appendChild(svg);
-        }
+        // a colour given as a token's name ("--c-bleu") or as a value, as in the charts and the calendar
+        if (x.color) av.style.setProperty("--n", _.tone(x.color));
+        if (x.icon) av.appendChild(window.ds.ico(x.icon));
         opt.appendChild(av);
       }
       var name = tag("span", "picker-name", x.label);

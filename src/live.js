@@ -16,12 +16,12 @@
      the server says a version other than this page's own (mine, or <meta name="version">); the button reloads the page. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._;
+  var WORDS = _.table({
     fr: { reload: "Recharger la page", newer: "Nouvelle version du site : recharger la page" },
     en: { reload: "Reload the page", newer: "A new version is on line: reload the page" }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
+  });
+  function words() { return _.words(WORDS); }
 
   var stores = {};
   function open(name) {

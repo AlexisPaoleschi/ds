@@ -1,0 +1,66 @@
+/* The page of an app (Bank, Studio): its reset, its header and the loading in it, the first loading over the page, the
+   page's width and margins, the room of the phone's tab bar, words for screen readers only. */
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); -webkit-font-smoothing: antialiased; }
+  a { color: inherit; }
+  .ico { width: var(--ico-m); height: var(--ico-m); flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-12); position: relative; }
+  .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
+  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+/* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
+  /* ds.busy puts the class loading on header.top while something loads; .bt says what, for screen readers only */
+  header.top.loading .busy { visibility: visible; }
+  header.top .busy .bt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  header.top .busy .pc { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  header.top .busy .okc { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
+  header.top .busy .okc svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
+  header.top.loading-done .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
+  header.top.loading-done .busy .spin, header.top.loading-done .busy .pc { display: none; }
+  header.top.loading-done .busy .okc { display: inline-grid; animation: okpop .35s ease-out; }
+  header.top.loading-done .busy .okc svg { animation: okdraw .35s .1s ease-out forwards; }
+  @keyframes okpop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes okdraw { to { stroke-dashoffset: 0; } }
+  @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+  
+  header.top .busy .spin { --spin-size: 14px; display: block; }
+/* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
+  .boot { display: grid; place-items: center; text-align: center; min-height: 52vh; padding: var(--s-24); transition: opacity var(--t-mid) ease; }
+  .boot.gone { opacity: 0; }
+  .boot .boot-t { margin: 0; font-size: var(--fs-17); font-weight: 600; color: var(--ink); }
+  .boot .boot-s { margin: var(--s-8) 0 0; font-size: var(--fs-13); color: var(--dim); min-height: 1.3em; }
+  .boot .boot-x { margin-top: var(--s-16); }
+/* over the page below the header, so that nothing moves when it goes: the page is drawn under it, then it fades */
+  .boot { position: fixed; inset: calc(72px + var(--safe-top)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
+/* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
+  .boot .boot-p { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; }
+  .boot .boot-p .spin { --spin-size: 18px; display: block; }
+  .boot .boot-p span { min-width: 3.2ch; text-align: left; }
+  .boot .boot-p span:empty { display: none; }
+  .boot.failed .boot-p { display: none; }
+/* on an iPhone app, a page shorter than the screen puts the bottom bar higher, by the status bar's height:
+     the page always fills the screen, so that the bar stays in the same place while loading and after */
+  html { min-height: calc(100% + var(--safe-top)); }
+@media (max-width: 768px) {
+    /* the room the bar of tabs takes at the foot of a phone page, only on a page that has one (not the site's, nor Selecta's) */
+    body:not(.settings):has(.tabs.is-bar) { padding-bottom: calc(90px + var(--safe-bottom)); }
+}
+@media (max-width: 480px) {
+   header.top { gap: var(--s-6); }
+   header.top .brand { letter-spacing: var(--ls-caps); }
+   header.top .tabs button { padding: var(--s-8) var(--s-8); letter-spacing: 0; }
+   header.top .gear { width: 32px; height: 32px; }
+}
+@media (prefers-reduced-motion: reduce) {
+   header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
+   /* the tick is drawn at once and stays, as Studio did (the wheels stand still through tokens.css) */
+   header.top.loading-done .busy .okc svg { stroke-dashoffset: 0; animation: none; }
+}
+  /* the page: one width for every app, the margins clear of the phone's edges */
+  .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
+/* the tools keep the scroll bar's room, so that the page never shifts sideways when a list grows longer than the screen;
+   the public sites (Vitrine) do not have this bar's room to keep */
+  :root:not([data-theme="vitrine"]) { scrollbar-gutter: stable; }
+/* words for screen readers only, kept out of sight */
+  .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

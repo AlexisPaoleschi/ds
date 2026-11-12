@@ -13,30 +13,24 @@
   "use strict";
   // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
   if (window.ds && window.ds.photogrid) return;
-  var WORDS = {
+  var _ = window.ds._, reduced = _.reduced, ms = _.ms;
+  var WORDS = _.table({
     fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
     en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
-  // a duration token as milliseconds: ".3s", "400ms"
-  function ms(text) {
-    var v = parseFloat(text);
-    if (isNaN(v)) return 300;
-    return /ms\s*$/.test(text) ? v : v * 1000;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function clear(t) { ["left", "top", "width", "height"].forEach(function (p) { t.style.removeProperty(p); }); }
 
   function photogrid(grid, o) {
-    if (typeof grid === "string") grid = document.querySelector(grid);
+    grid = _.find(grid);
     if (!grid) return null;
     if (grid._dsPhotogrid) return grid._dsPhotogrid;
     o = o || {};
     var sizes = (o.sizes && o.sizes.length ? o.sizes : [140, 190, 240, 300]).map(Number).sort(function (a, b) { return a - b; });
-    var slider = typeof o.slider === "string" ? document.querySelector(o.slider) : o.slider || null;
+    var slider = _.find(o.slider) || null;
     var want = sizes.indexOf(+o.size), steps = [], lastW = -1, frame = 0;
     if (want < 0) want = Math.min(1, sizes.length - 1);
-    if (o.key) { try { var kept = sizes.indexOf(+localStorage.getItem(o.key)); if (kept >= 0) want = kept; } catch (e) {} }
+    if (o.key) { var kept = sizes.indexOf(+_.read(o.key)); if (kept >= 0) want = kept; }
     var g = { el: grid, size: sizes[want], columns: 1, masonry: o.masonry !== false };
     grid._dsPhotogrid = g;
     grid.classList.add("photogrid");
@@ -126,7 +120,7 @@
       var i = x.size != null ? sizes.indexOf(+x.size) : -1;
       if (i >= 0) {
         want = i;
-        if (o.key) { try { localStorage.setItem(o.key, String(sizes[i])); } catch (e) {} }
+        if (o.key) _.write(o.key, String(sizes[i]));
       }
       if (x.masonry != null) g.masonry = !!x.masonry;
       move(layout);

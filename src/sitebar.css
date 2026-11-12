@@ -38,7 +38,7 @@
   @media (hover: hover) {
     .mobile-menu-link:hover { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
   }
-  .mobile-menu-cta { margin: var(--s-24) var(--s-32); padding: calc(var(--s-16) + var(--s-2)) var(--s-32); font-size: var(--fs-14); font-weight: 500;
+  .mobile-menu-cta { margin: var(--s-24) var(--s-32); padding: var(--s-18) var(--s-32); font-size: var(--fs-14); font-weight: 500;
     letter-spacing: var(--ls-2); text-align: center; text-decoration: none; text-transform: uppercase; color: var(--white); background: var(--accent);
     border: 1px solid var(--accent); box-shadow: var(--shadow-card);
     transition: background-color var(--t-fast) ease, border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }

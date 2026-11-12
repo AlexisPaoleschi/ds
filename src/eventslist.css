@@ -3,7 +3,7 @@
   /* Hero: the design system's page hero (.hero), on the site's photo under a light veil */
   .events-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Main */
-  .events-main { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-40); }
+  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
   /* Grid */
   .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--s-40);
     margin-top: calc(var(--s-32) * 2); margin-bottom: var(--s-80); }
@@ -41,12 +41,11 @@
   /* ─── Portrait phone only (≤768px) ─── */
   @media (max-width: 768px) {
     .event-card-footer { flex-direction: column; align-items: stretch; gap: var(--s-16); text-align: center; }
-    .event-card-cta { width: 100%; }
   }
   /* ─── Small portrait (≤480px) ─── */
   @media (max-width: 480px) {
     .events-main { padding: 0 var(--s-16); }
-    .events-grid { gap: var(--s-24); margin-top: calc(var(--s-32) + var(--s-4)); margin-bottom: var(--s-48); }
+    .events-grid { gap: var(--s-24); margin-top: var(--s-36); margin-bottom: var(--s-48); }
     .event-card-highlights { gap: var(--s-8); }
     .event-card-highlight { padding: calc(var(--s-10) / 2) var(--s-10); font-size: var(--fs-11); }
     .event-card-description { font-size: var(--fs-14); }

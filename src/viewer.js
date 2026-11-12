@@ -18,19 +18,17 @@
   "use strict";
   // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
   if (window.ds && window.ds.viewer) return;
-  var WORDS = {
-    fr: { label: "Photos", close: "Fermer", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
-    en: { label: "Photos", close: "Close", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
-  };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var _ = window.ds._, reduced = _.reduced;
+  var WORDS = _.table({
+    fr: { label: "Photos", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
+    en: { label: "Photos", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
+  });
+  function words() { return _.words(WORDS); }
   // how far a finger travels to turn the photo, and to close the viewer when pulled down (the site's 50px)
   var SWIPE = 50, DROP = 90, START = 8;
   var open = null;
-  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
   function make(name, cls, parent) {
-    var x = document.createElement(name);
-    x.className = cls;
+    var x = _.el(name, cls);
     if (parent) parent.appendChild(x);
     return x;
   }
@@ -184,6 +182,7 @@
     if (!c.isOpen) return;
     c.isOpen = c.handle.isOpen = false;
     if (open === c) open = null;
+    _.unlayer(c.layer);
     c.token++;
     c.el.hidden = true;
     c.el.classList.remove("is-open", "is-dragging");
@@ -246,7 +245,7 @@
 
   function viewer(items, opts) {
     opts = opts || {};
-    var el = opts.el ? (typeof opts.el === "string" ? document.querySelector(opts.el) : opts.el) : document.querySelector("body > .viewer");
+    var el = opts.el ? _.find(opts.el) : document.querySelector("body > .viewer");
     if (!el) { el = make("div", "viewer", document.body); el.hidden = true; el._dsBuilt = true; }
     var c = setup(el);
     if (open && open !== c) shut(open);
@@ -269,32 +268,24 @@
       open = c;
       el.hidden = false;
       el.classList.add("is-open");
+      // a layer over the page: Escape closes it, and Tab goes round inside it
+      c.layer = _.layer(c.layer || { el: el, close: function () { shut(c); } });
     }
     show(c, opts.start || 0);
     el.focus({ preventScroll: true });
     return c.handle;
   }
 
-  // on <html> and before the page's own keys: Escape closes the viewer only, and a window of ds.confirm over it
-  // (which listens on the document, earlier still) keeps its own
+  // the arrows turn the photo, before the page's own keys, while the viewer is the top layer (a window of ds.confirm over
+  // it keeps its keys); Escape and Tab are the layers' (src/core.js)
   document.documentElement.addEventListener("keydown", function (e) {
     var c = open;
-    if (!c || e.defaultPrevented || document.querySelector(".dialog-veil")) return;
-    if (e.key === "Escape") { e.preventDefault(); shut(c); return; }
+    if (!c || e.defaultPrevented || _.top() !== c.layer) return;
     // in a field of the app's bar (Selecta's note), the keys belong to the field
     if (e.target && e.target.closest && e.target.closest("input, textarea, select, [contenteditable]")) return;
     if (e.key === "ArrowLeft" || e.key === "ArrowRight") {
       if (c.items.length > 1) { e.preventDefault(); show(c, c.at + (e.key === "ArrowRight" ? 1 : -1)); }
-      return;
     }
-    if (e.key !== "Tab") return;
-    // Tab goes round inside the viewer
-    var list = [].filter.call(c.el.querySelectorAll(FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
-    var at = document.activeElement, first = list[0], last = list[list.length - 1];
-    if (!list.length) { e.preventDefault(); return; }
-    if (!c.el.contains(at)) { e.preventDefault(); first.focus(); }
-    else if (e.shiftKey && (at === first || at === c.el)) { e.preventDefault(); last.focus(); }
-    else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
   }, true);
 
   // a link of a grid as an item
@@ -319,7 +310,7 @@
     };
   }
   function bind(box, o) {
-    if (typeof box === "string") box = document.querySelector(box);
+    box = _.find(box);
     if (!box) return null;
     var fn = clicker(box, o || {});
     box._dsViewerBound = true;

@@ -7,9 +7,9 @@
    (read their data-key), and the one that moved. Returns {items()}; called again on the same list it gives the same. */
 (function () {
   "use strict";
-  var WORDS = { fr: { move: "Déplacer" }, en: { move: "Move" } };
-  function words() { return /^en\b/i.test(document.documentElement.lang || "") ? WORDS.en : WORDS.fr; }
-  function find(el) { return typeof el === "string" ? document.querySelector(el) : el; }
+  var _ = window.ds._, find = _.find;
+  var WORDS = _.table({ fr: { move: "Déplacer" }, en: { move: "Move" } });
+  function words() { return _.words(WORDS); }
   // the neighbours move at once in the page, then slide from where they were to where they are
   function slide(els, move) {
     var before = els.map(function (el) { return el.offsetTop; });

@@ -32,7 +32,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
 
 // the stylesheets: a token for every colour, size, space, radius, layer, duration and shadow; only the three widths
 function stylesheets() {
-  const files = ['viewer-behaviour', 'photogrid', 'hero', 'backlink'].map(n => 'src/' + n + '.css');
+  const files = ['viewer', 'photogrid', 'hero', 'backlink'].map(n => 'src/' + n + '.css');
   const props = /^(color|background(-color)?|font(-size)?|line-height|letter-spacing|margin(-\w+)*|padding(-\w+)*|gap|row-gap|column-gap|border-radius|z-index|box-shadow|transition|animation(-duration)?|text-shadow|outline-offset)$/;
   const wrong = [];
   for (const f of files) {

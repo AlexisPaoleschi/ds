@@ -2,7 +2,6 @@
    then a head that steps (‹ novembre 2026 ›) over a grid of days, months or years. It wears the period head's popover
    (.periodpop: a panel, framed buttons lit in gold once chosen), floating under a title or laid in the page (.is-inline). */
   .datepick { display: grid; gap: var(--s-8); }
-  .datepick[hidden] { display: none; }
   /* in the page: the popover's panel without its float and its shadow, as wide as it would float */
   .datepick.is-inline { position: static; z-index: auto; width: auto; max-width: 340px; box-shadow: none; }
   /* under a period's title it floats, even where a page lays its popovers out in place */
@@ -20,7 +19,7 @@
   .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
   .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
   .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
-  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
   /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
   .datepick .dp-grid button.is-today:not(.on) { border-color: var(--accent-line); color: var(--ink); }
   .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }

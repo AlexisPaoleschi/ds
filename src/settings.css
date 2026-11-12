@@ -1,7 +1,7 @@
 /* The settings page, shared by the apps: everything on it lives under body.settings,
    with no added weight (:where), so that a page can still change one of its rules. */
   body:where(.settings) { -webkit-font-smoothing: antialiased; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); margin: 0; }
-  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) 60px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  :where(body.settings) .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
   :where(body.settings) a { color: inherit; }
   :where(body.settings) a:focus-visible, :where(body.settings) button:focus-visible, :where(body.settings) input:focus-visible { border-radius: var(--r-s); outline-offset: var(--focus-offset); outline: var(--focus); }
   :where(body.settings) header { align-items: flex-end; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-14); }
@@ -13,21 +13,21 @@
   :where(body.settings) .hacts { align-items: center; display: flex; gap: var(--s-8); }
   :where(body.settings) .outrow { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-10) var(--s-16); justify-content: space-between; }
   :where(body.settings) .outrow .lede { margin: 0; }
-  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: color-mix(in srgb, var(--bad) 35%, transparent); color: var(--bad); margin-left: auto; }
+  :where(body.settings) .outrow .go { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); margin-left: auto; }
   :where(body.settings) .reload { color: var(--faint); padding: 0; position: relative; width: var(--btn-h); }
   :where(body.settings) .reload:hover { border-color: var(--accent-line); color: var(--accent-text); }
   :where(body.settings) .reload svg { fill: none; height: 16px; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.5; stroke: currentColor; width: 16px; }
   :where(body.settings) .job, :where(body.settings) section.card { scroll-margin-top: 14px; }
-  :where(body.settings) .reload .pip { background: var(--accent); border-radius: 50%; box-shadow: 0 0 0 2px var(--panel); display: none; height: 7px; position: absolute; right: 5px; top: 5px; width: 7px; }
+  :where(body.settings) .reload .pip { display: none; position: absolute; right: 5px; top: 5px; }
   :where(body.settings) .reload.new { border-color: var(--accent-line); color: var(--accent-text); }
   :where(body.settings) .reload.new .pip { display: block; }
   :where(body.settings) .jump { display: none; gap: var(--s-6); overflow-x: auto; scrollbar-width: none; }
   :where(body.settings) .jump::-webkit-scrollbar { display: none; }
   :where(body.settings) .jump a { flex: none; }
   :where(body.settings) .card { background: var(--card-bg); border-radius: var(--r-l); border: 1px solid var(--card-line); box-shadow: var(--card-shadow); min-width: 0; padding: var(--card-pad); }
-  :where(body.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-wide); margin: 0 0 var(--s-4); text-transform: uppercase; }
+  :where(body.settings) .ct { color: var(--faint); font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); margin: 0 0 var(--s-4); text-transform: uppercase; }
   :where(body.settings) .lede { color: var(--dim); font-size: var(--fs-14); margin: 0 0 var(--s-14); max-width: 70ch; }
-  :where(body.settings) .job { border-top: 1px solid var(--line); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); padding: var(--s-12) 0; }
+  :where(body.settings) .job { --row-py: var(--s-12); display: grid; gap: var(--s-6) var(--s-14); grid-template-columns: minmax(0, 1fr); }
   :where(body.settings) .job:first-of-type { border-top: none; padding-top: var(--s-4); }
   :where(body.settings) .job .name { align-items: center; display: flex; font: var(--head-weight) var(--fs-15)/var(--head-lh) var(--title-font); gap: var(--s-8); }
   :where(body.settings) .dot { background: var(--faint); border-radius: 50%; flex: none; height: 8px; width: 8px; }
@@ -51,7 +51,7 @@
   :where(body.settings) .group { margin-top: var(--s-16); }
   :where(body.settings) .group:first-of-type { margin-top: var(--s-4); }
   :where(body.settings) .group h3 { color: var(--accent-text); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; margin: 0 0 var(--s-6); }
-  :where(body.settings) .field { align-items: center; border-top: 1px solid var(--line); display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; padding: var(--s-8) 0; }
+  :where(body.settings) .field { align-items: center; display: grid; gap: var(--s-4) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
   :where(body.settings) .field .lab { font-size: var(--fs-14); }
   :where(body.settings) .field .help { color: var(--faint); font-size: var(--fs-12); grid-column: 1; }
   :where(body.settings) .field .inp { align-items: center; display: flex; gap: var(--s-8); grid-column: 2; grid-row: 1 / span 2; }
@@ -67,7 +67,7 @@
   :where(body.settings) .bar .msg.ok { color: var(--good); }
   :where(body.settings) button.save { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   :where(body.settings) button.save:disabled { background: var(--line-2); border-color: var(--line-2); color: var(--faint); cursor: default; }
-  :where(body.settings) .conn { align-items: center; border-top: 1px solid var(--line); display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; padding: var(--s-10) 0; }
+  :where(body.settings) .conn { --row-py: var(--s-10); align-items: center; display: grid; gap: var(--s-2) var(--s-14); grid-template-columns: minmax(0, 1fr) auto; }
   :where(body.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
   :where(body.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
   :where(body.settings) .conn .det { color: var(--dim); font-size: var(--fs-13); grid-column: 1; overflow-wrap: anywhere; }

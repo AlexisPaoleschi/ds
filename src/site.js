@@ -13,7 +13,7 @@
    The galleries of an event page (.gallery-item, each .model-gallery's .model-gallery-item, .portfolio-item, each with
    its <img data-full>) open in the photo viewer when ds-photo.js is on the page too, with a click, or Enter or Space.
    ds.icon(name, cls) writes an icon of the sprite file that sits beside this script (icons-X.Y.Z.svg). ds.h(tag, attrs, kids)
-   builds a node and ds.esc(text) makes a text harmless in HTML, as in ds.js, for what a page writes from a Gist.
+   builds a node and ds.esc(text) makes a text harmless in HTML (the core's, src/core.js), for what a page writes from a Gist.
    ds.json(url) reads a JSON file (the site's Gists), asked for afresh on every visit (?t=…) and once per page however
    many scripts ask for it. ds.photo(src) and ds.images(root) settle once a photo, or every <img> under root, has loaded
    or failed. ds.ready(...waits) takes the page loader away once these and the photo the page gives its header
@@ -24,6 +24,7 @@
    screen, and an address with #screen going there. */
 (function () {
   "use strict";
+  var _ = window.ds._, esc = window.ds.esc;
   var here = document.currentScript && document.currentScript.src || "";
   var version = (here.match(/ds-site-(\d+\.\d+\.\d+)\.js/) || [])[1];
   var sprite = here.replace(/[^/]*$/, "") + (version ? "icons-" + version + ".svg" : "icons.svg");
@@ -49,36 +50,13 @@
   setTimeout(window.hideLoader, 5000);
 
   // smooth scrolling, unless the device asks for less motion
-  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
-  function glide() { return reduced() ? "auto" : "smooth"; }
+  function glide() { return _.reduced() ? "auto" : "smooth"; }
   // the element an address's #part names, read as an id, so that « #2026 » works where a selector would fail
   function byHash(hash) {
     if (!hash || hash.length < 2) return null;
     try { return document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { return null; }
   }
 
-  // ds.esc and ds.h, the same as ds.js's, for a page that loads only the site kit: what comes from outside the page (the
-  // Gists) is written escaped, or built as nodes, never as raw HTML
-  function esc(text) {
-    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
-  }
-  function h(tag, attrs, kids) {
-    var node = document.createElement(tag);
-    if (attrs) for (var k in attrs) {
-      var v = attrs[k];
-      if (v == null || v === false) continue;
-      if (k === "class") node.className = v;
-      else if (k === "text") node.textContent = v;
-      else if (k === "style") node.setAttribute("style", v);
-      else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
-      else node.setAttribute(k, v === true ? "" : v);
-    }
-    (kids || []).forEach(function (c) {
-      if (c == null || c === false) return;
-      node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
-    });
-    return node;
-  }
 
   // the bar and its menu, from <div id="nav">
   function bar() {
@@ -143,6 +121,8 @@
 
     if (!menu || !toggle || !veil) return;
     var locked = false;
+    // open, the menu is the top layer: Escape closes it (the photo viewer, over it, first), and takes the keyboard back to its button
+    var cover = { el: menu, trap: false, close: function () { close(true); } };
     function flip() {
       if (locked) return;
       var on = menu.classList.toggle("active");
@@ -150,6 +130,7 @@
       toggle.classList.toggle("active", on);
       toggle.setAttribute("aria-expanded", String(on));
       document.body.style.overflow = on ? "hidden" : "";
+      if (on) _.layer(cover); else _.unlayer(cover);
       // opened, the keyboard goes to its first link (the menu is shown at once, it only unrolls)
       if (on) {
         var first = menu.querySelector("a");
@@ -158,6 +139,7 @@
     }
     function close(back) {
       var inside = menu.contains(document.activeElement);
+      _.unlayer(cover);
       menu.classList.remove("active");
       veil.classList.remove("active");
       toggle.classList.remove("active");
@@ -173,10 +155,6 @@
     veil.addEventListener("click", function () { close(true); });
     document.addEventListener("click", function (e) {
       if (e.target.closest && e.target.closest(".mobile-menu-link, .mobile-menu-cta, .topbar-brand")) close();
-    });
-    // Escape closes the menu (the viewer handles its own keys first)
-    document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && open()) close(true);
     });
   }
 
@@ -301,8 +279,6 @@
 
   window.ds = window.ds || {};
   window.ds.icon = icon;
-  window.ds.esc = window.ds.esc || esc;
-  window.ds.h = window.ds.h || h;
   window.ds.json = json;
   window.ds.photo = photo;
   window.ds.images = images;

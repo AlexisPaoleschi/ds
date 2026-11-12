@@ -17,7 +17,7 @@ const keys = (p, sel) => p.evaluate(s => [...document.querySelectorAll(s)].map(x
 
 // the stylesheets: a token for every colour, size, space, radius, layer, duration and shadow; only the three widths
 function stylesheets() {
-  const files = ['pick', 'sheet', 'table', 'reorder', 'meter', 'ruled'].map(n => 'src/' + n + '.css');
+  const files = ['pick', 'sheet', 'table', 'reorder', 'meter', 'card', 'marks', 'chosen'].map(n => 'src/' + n + '.css');
   const props = /^(color|background(-color)?|font(-size)?|line-height|letter-spacing|margin(-\w+)*|padding(-\w+)*|gap|row-gap|column-gap|border-radius|z-index|box-shadow|transition|animation(-duration)?|text-shadow|outline-offset)$/;
   const wrong = [];
   for (const f of files) {

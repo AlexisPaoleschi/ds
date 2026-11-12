@@ -1,4 +1,4 @@
-/* ds 2.37.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.38.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -92,7 +92,7 @@
   @media (hover: hover) {
     .mobile-menu-link:hover { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
   }
-  .mobile-menu-cta { margin: var(--s-24) var(--s-32); padding: calc(var(--s-16) + var(--s-2)) var(--s-32); font-size: var(--fs-14); font-weight: 500;
+  .mobile-menu-cta { margin: var(--s-24) var(--s-32); padding: var(--s-18) var(--s-32); font-size: var(--fs-14); font-weight: 500;
     letter-spacing: var(--ls-2); text-align: center; text-decoration: none; text-transform: uppercase; color: var(--white); background: var(--accent);
     border: 1px solid var(--accent); box-shadow: var(--shadow-card);
     transition: background-color var(--t-fast) ease, border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
@@ -126,35 +126,36 @@
   }
 /* The site kit: the banners at the foot of the site's pages, its networks and its newsletter (the words and the
    links are the site's, written by its own scripts). */
-  /* the networks' banner: the outer wrapper takes the page's column, the inner one carries the border (1120px) */
-  .social-banner { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-40); }
-  .social-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
+  /* the bands at the foot of the site's pages (its networks, its testimonials): the outer wrapper takes the page's column,
+     the inner one carries the border (1120px); their titles alike */
+  .social-banner, .testimonials-banner { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
+  .social-banner-inner, .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
   .social-banner-inner--no-border { border-top: none; }
-  .social-banner-box { max-width: 560px; margin: 0 auto; text-align: center; }
-  .social-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
+  .social-banner-box { max-width: var(--read-s); margin: 0 auto; text-align: center; }
+  .social-banner-title, .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
     letter-spacing: var(--ls-3); text-transform: uppercase; color: var(--ink); }
   .social-banner-text { margin-bottom: var(--s-32); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
   .social-banner-links { display: flex; justify-content: center; gap: var(--s-24); }
   .social-banner-icon { width: 18px; height: 18px; }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .social-banner { padding: 0 var(--s-24); }
-    .social-banner-inner { padding: var(--s-60) 0; }
+    .social-banner, .testimonials-banner { padding: 0 var(--s-24); }
+    .social-banner-inner, .testimonials-banner-inner { padding: var(--s-60) 0; }
     .social-banner-links { gap: var(--s-16); }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .social-banner { padding: 0 var(--s-16); }
-    .social-banner-inner { padding: var(--s-48) 0; }
-    .social-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-2); }
+    .social-banner, .testimonials-banner { padding: 0 var(--s-16); }
+    .social-banner-inner, .testimonials-banner-inner { padding: var(--s-48) 0; }
+    .social-banner-title, .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-2); }
     .social-banner-text { font-size: var(--fs-14); }
   }
   .signup-banner { padding: var(--s-40); background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
-  .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: 1200px;
+  .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: var(--page-site);
     margin: 0 auto; }
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
   .signup-banner-icon { flex-shrink: 0; width: 40px; height: 40px; color: var(--accent); }
-  .signup-banner-title { position: relative; margin-bottom: calc(var(--s-16) + var(--s-2)); padding-bottom: var(--s-12); font-family: var(--display);
+  .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--display);
     font-size: var(--fs-26); font-weight: 400; letter-spacing: var(--ls-2-5); text-transform: uppercase; color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
   .signup-banner-subtitle { font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-loose); color: var(--faint); }
@@ -162,26 +163,27 @@
   .signup-banner-field { display: flex; gap: var(--s-12); }
   /* the newsletter's banner: its field written as long as the design system's field rule, so that the site's field keeps its own size; its text is the
      design system's, 16px, the least that keeps an iPhone from zooming in on it */
-  .signup-banner input.signup-banner-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
+  /* the same field in the banner and on the newsletter's page (newsletter.css) */
+  .signup-banner input.signup-banner-input, .newsletter-field input.newsletter-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
     background: var(--white); border: 1px solid var(--line); transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .signup-banner-input::placeholder { color: var(--faint); letter-spacing: var(--ls-1); }
-  .signup-banner input.signup-banner-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+  .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-1); }
+  .signup-banner input.signup-banner-input:focus, .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
   /* as high as the field beside it: 8px lower than the site's large buttons */
-  .signup-banner-button { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
+  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
   /* Honeypot: moved off-screen rather than display:none, because some bots skip
      fields that are explicitly hidden and would give themselves away less. */
-  .signup-banner-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .signup-banner-honeypot, .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   /* its message: the design system's line under a field (.field-note.is-reserved, is-good or is-bad) */
   /* Responsive - Large tablet / landscape phone */
   @media (max-width: 1024px) {
-    .signup-banner { padding: calc(var(--s-32) + var(--s-4)) var(--s-24); }
-    .signup-banner-inner { flex-direction: column; align-items: stretch; gap: calc(var(--s-24) + var(--s-4)); }
+    .signup-banner { padding: var(--s-36) var(--s-24); }
+    .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .signup-banner { padding: calc(var(--s-24) + var(--s-4)) var(--s-24); }
-    .signup-banner-inner { flex-direction: column; align-items: stretch; gap: calc(var(--s-24) + var(--s-4)); }
+    .signup-banner { padding: var(--s-28) var(--s-24); }
+    .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Mobile */
@@ -201,7 +203,7 @@
    The photo bands between the sections are the design system's (.hero.is-band.is-parallax). */
   /* The photo bands between the sections: the design system's (.hero.is-band.is-parallax); each page gives their photos */
   /* Content Sections */
-  .content-section { max-width: 1200px; margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
+  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
   .dark-section { background: var(--band); }
   .pricing-section { background: var(--white); }
   .elegant-box { padding: var(--s-80) var(--s-48); background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
@@ -231,17 +233,19 @@
   /* CTA */
   .cta-center { margin-top: var(--s-48); text-align: center; }
   /* Models */
-  .models-container { display: flex; flex-direction: column; gap: var(--s-80); max-width: 1200px; margin: 0 auto; }
+  .models-container { display: flex; flex-direction: column; gap: var(--s-80); max-width: var(--page-site); margin: 0 auto; }
   .model-card-full { display: flex; flex-direction: column; gap: var(--s-32); }
   .model-info { margin-bottom: var(--s-16); text-align: center; }
   .model-links { justify-content: center; }
   .model-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-16); }
-  .model-gallery-item { aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-card); cursor: pointer;
-    transition: all var(--t-mid) ease; }
-  .model-gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .model-gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
+  /* the photos of an event page, one tile for the three galleries (a model's, the portfolio, the venue): it rises and its
+     photo grows a little under the pointer */
+  .model-gallery-item, .portfolio-item, .gallery-item { overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }
+  .model-gallery-item:hover, .portfolio-item:hover, .gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
+  .model-gallery-image, .portfolio-image, .gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
     backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .model-gallery-item:hover .model-gallery-image { transform: scale(1.1); }
+  .model-gallery-item:hover .model-gallery-image, .portfolio-item:hover .portfolio-image, .gallery-item:hover .gallery-image { transform: scale(1.1); }
+  .model-gallery-item { aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   .model-name { font-family: var(--display); font-size: var(--fs-42); font-weight: 400; letter-spacing: var(--ls-3); text-transform: uppercase;
     color: var(--ink); }
   .model-bio { margin-top: var(--s-16); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--dim); }
@@ -297,7 +301,7 @@
   .location-dest-time { font-family: var(--body); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-1);
     line-height: var(--lh-relaxed); color: var(--accent); }
   .location-transport-note { display: flex; align-items: center; gap: var(--s-12); margin-top: var(--s-32);
-    padding: var(--s-20) calc(var(--s-24) + var(--s-4)); background: var(--accent-soft); border: 1px solid var(--line); }
+    padding: var(--s-20) var(--s-28); background: var(--accent-soft); border: 1px solid var(--line); }
   .transport-note-icon { flex-shrink: 0; width: 24px; height: 24px; color: var(--accent); stroke-width: 1; }
   .location-transport-note span { font-family: var(--body); font-weight: 300; color: var(--dim); }
   /* Schedule */
@@ -357,7 +361,7 @@
   .contact-card:hover .contact-link { color: var(--accent-strong); }
   .sold-out-banner { display: none; }
   body[data-sold-out] .sold-out-banner { display: flex; align-items: center; justify-content: center;
-    padding: calc(var(--s-16) + var(--s-2)) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
+    padding: var(--s-18) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
   .sold-out-label { font-family: var(--body); font-size: var(--fs-14); font-weight: 500; letter-spacing: var(--ls-2-5); text-transform: uppercase;
     color: var(--white); }
   /* Payment */
@@ -395,12 +399,7 @@
   .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--body); font-size: var(--fs-14); font-weight: 300; font-style: italic;
     letter-spacing: var(--ls-1); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-16); }
-  .portfolio-item { position: relative; aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-card);
-    cursor: pointer; transition: all var(--t-mid) ease; }
-  .portfolio-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .portfolio-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .portfolio-item:hover .portfolio-image { transform: scale(1.1); }
+  .portfolio-item { position: relative; aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   /* Venue Gallery */
   .venue-gallery { margin-top: var(--s-80); padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .gallery-heading { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-42); font-weight: 400; letter-spacing: var(--ls-3);
@@ -408,12 +407,7 @@
   .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--body); font-size: var(--fs-14); font-weight: 300; font-style: italic;
     letter-spacing: var(--ls-1); text-align: center; color: var(--faint); }
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s-16); }
-  .gallery-item { position: relative; aspect-ratio: 4/3; overflow: hidden; border: 1px solid var(--line); cursor: pointer;
-    transition: all var(--t-mid) ease; }
-  .gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .gallery-item:hover .gallery-image { transform: scale(1.1); }
+  .gallery-item { position: relative; aspect-ratio: 4/3; }
   /* less motion: a photo neither rises nor zooms under the pointer (the durations are already nothing, see tokens.css) */
   @media (prefers-reduced-motion: reduce) {
     .model-gallery-item:hover, .portfolio-item:hover, .gallery-item:hover, .contact-card:hover, .location-destination:hover,
@@ -424,7 +418,7 @@
     /* Sections */
     .content-section { padding: var(--s-40) var(--s-16); }
     .elegant-box { padding: var(--s-40) var(--s-16); }
-    .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) calc(var(--s-24) + var(--s-4)); }
+    .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) var(--s-28); }
     .highlight-text { display: none; }
     .highlight-list { display: flex; }
     .highlight-separator { display: none; }
@@ -506,7 +500,7 @@
     /* Sections */
     .content-section { padding: var(--s-48) var(--s-32); }
     .elegant-box { padding: var(--s-48) var(--s-32); }
-    .highlight-box { margin: var(--s-40) 0 0; padding: calc(var(--s-24) + var(--s-4)) var(--s-32); }
+    .highlight-box { margin: var(--s-40) 0 0; padding: var(--s-28) var(--s-32); }
     .highlight-text { display: block; }
     .highlight-list { display: none; }
     .highlight-separator { display: inline-block; }
@@ -622,7 +616,7 @@
   /* Scroll Hint */
   .scroll-hint { position: fixed; bottom: 0; left: 0; right: 0; z-index: var(--z-over); display: flex; flex-direction: row; align-items: center;
     justify-content: center; gap: var(--s-12); height: 40px; padding: 0 var(--s-32); background: var(--overlay-black-soft);
-    border-top: 1px solid var(--overlay-white-lighter); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); opacity: 0;
+    border-top: 1px solid var(--overlay-white-lighter); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); opacity: 0;
     pointer-events: none; transition: opacity var(--t-fast) ease; }
   .scroll-hint p { padding-right: var(--s-2); font-family: var(--body); font-size: var(--fs-13); font-weight: 400; letter-spacing: var(--ls-2);
     text-align: center; text-transform: uppercase; white-space: nowrap; color: var(--white); text-shadow: var(--text-shadow-sm); }
@@ -641,13 +635,13 @@
   /* the design system's badge, in the photo's corner */
   .gallery-badge { position: absolute; top: 32px; left: 32px; z-index: var(--z-raise); }
   .gallery-center { position: absolute; top: 50%; left: 50%; z-index: var(--z-raise); display: flex; flex-direction: column; align-items: center;
-    gap: calc(var(--s-24) + var(--s-4)); text-align: center; transform: translate(-50%, -50%); }
+    gap: var(--s-28); text-align: center; transform: translate(-50%, -50%); }
   .gallery-center .btn { white-space: nowrap; }
   .gallery-title { font-family: var(--display); font-size: var(--fs-52); font-weight: 400; letter-spacing: var(--ls-6); text-align: center;
     text-transform: uppercase; color: var(--white); text-shadow: var(--text-shadow-lg); }
   .gallery-bar { position: absolute; bottom: 0; left: 0; right: 0; z-index: var(--z-raise); display: flex; align-items: center;
     justify-content: center; gap: var(--s-24); min-height: 40px; padding: 0 var(--s-32); background: var(--overlay-black-soft);
-    border-top: 1px solid var(--overlay-white-lighter); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+    border-top: 1px solid var(--overlay-white-lighter); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); }
   .gallery-location { font-family: var(--body); font-size: var(--fs-13); font-weight: 400; letter-spacing: var(--ls-2); text-transform: uppercase;
     white-space: nowrap; color: var(--accent); }
   .gallery-description { font-family: var(--body); font-size: var(--fs-13); font-weight: 400; letter-spacing: var(--ls-1);
@@ -700,7 +694,7 @@
     .scroll-container, .scroll-dots { display: none !important; }
     .gallery-title { font-size: var(--fs-42); }
     .section-main { align-items: center; justify-content: center; }
-    .container { flex-direction: row; align-items: center; justify-content: center; gap: var(--s-40); width: 100%; max-width: 900px;
+    .container { flex-direction: row; align-items: center; justify-content: center; gap: var(--s-40); width: 100%; max-width: var(--read-xl);
       padding: var(--s-20) var(--s-40) var(--s-56); }
     .profile-section { display: flex; flex-direction: column; align-items: center; flex: 0 0 38%; margin-bottom: 0; padding-right: var(--s-40);
       position: relative; border-right: none; }
@@ -734,7 +728,7 @@
   /* Hero: the design system's page hero (.hero), on the site's photo under a light veil */
   .events-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Main */
-  .events-main { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-40); }
+  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
   /* Grid */
   .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--s-40);
     margin-top: calc(var(--s-32) * 2); margin-bottom: var(--s-80); }
@@ -772,12 +766,11 @@
   /* ─── Portrait phone only (≤768px) ─── */
   @media (max-width: 768px) {
     .event-card-footer { flex-direction: column; align-items: stretch; gap: var(--s-16); text-align: center; }
-    .event-card-cta { width: 100%; }
   }
   /* ─── Small portrait (≤480px) ─── */
   @media (max-width: 480px) {
     .events-main { padding: 0 var(--s-16); }
-    .events-grid { gap: var(--s-24); margin-top: calc(var(--s-32) + var(--s-4)); margin-bottom: var(--s-48); }
+    .events-grid { gap: var(--s-24); margin-top: var(--s-36); margin-bottom: var(--s-48); }
     .event-card-highlights { gap: var(--s-8); }
     .event-card-highlight { padding: calc(var(--s-10) / 2) var(--s-10); font-size: var(--fs-11); }
     .event-card-description { font-size: var(--fs-14); }
@@ -789,7 +782,7 @@
      The design system's page hero (.hero), on the site's photo under a light veil. */
   .newsletter-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Card: the design system's card with its gold rule (.card.is-ruled); the page keeps its layout and its room */
-  .newsletter-main { max-width: 720px; margin: 0 auto; padding: 0 var(--s-40); }
+  .newsletter-main { max-width: var(--read-l); margin: 0 auto; padding: 0 var(--s-40); }
   .newsletter-card { display: flex; flex-direction: column; align-items: center; gap: var(--s-24); margin: calc(var(--s-32) * 2) 0 var(--s-80);
     padding: var(--s-48) var(--s-40); text-align: center; }
   /* Same thin gold envelope everywhere: the one icon the page ever shows,
@@ -799,25 +792,17 @@
     color: var(--dim); }
   /* One field, one button, every state — the field row itself never changes
      shape depending on how the visitor arrived. */
-  .newsletter-form { width: 100%; max-width: 560px; }
+  .newsletter-form { width: 100%; max-width: var(--read-s); }
   /* Wide enough for the longest label a button can take ("Unsubscribing…"), so
      saying what it is doing never resizes it or shifts the field beside it. */
   /* as high as the field beside it: 8px lower than the site's large buttons */
-  .newsletter-form .btn { min-width: 270px; --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
+  .newsletter-form .btn { min-width: 270px; }
   .newsletter-field { display: flex; gap: var(--s-12); }
-  /* written as long as the design system's field rule, so that the site's field keeps its own size; its text is the
-     design system's, 16px, the least that keeps an iPhone from zooming in on it */
-  .newsletter-field input.newsletter-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
-    background: var(--white); border: 1px solid var(--line); transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-1); }
-  .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
+  /* its field, its button's height and its honeypot are the banner's (banners.css) */
   /* An address the visitor did not type — proven by their link, or just entered
      a moment ago — reads as settled rather than editable. */
   .newsletter-field input.newsletter-input:read-only { color: var(--faint); background: var(--band); cursor: default; }
   .newsletter-field input.newsletter-input:read-only:focus { border-color: var(--line); box-shadow: none; }
-  /* Off-screen rather than display:none, because some bots skip fields that are
-     explicitly hidden and would give themselves away less. */
-  .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   /* Outcome line: the design system's line under a field (.field-note.is-reserved), as in the events banner, so a
      signup reads the same whichever page it happens on: left-aligned like the banner's (a form child, not the card's own
      centered text), as wide as the message above it. */
@@ -829,7 +814,7 @@
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .newsletter-main { padding: 0 var(--s-24); }
-    .newsletter-card { margin: var(--s-48) 0 var(--s-60); padding: var(--s-40) calc(var(--s-24) + var(--s-4)); }
+    .newsletter-card { margin: var(--s-48) 0 var(--s-60); padding: var(--s-40) var(--s-28); }
   }
   /* ─── Landscape phone wider than 768px: a phone's hero, as the design system draws it from 768px down ─── */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
@@ -838,7 +823,7 @@
   /* ─── Small portrait (≤480px) ─── */
   @media (max-width: 480px) {
     .newsletter-main { padding: 0 var(--s-16); }
-    .newsletter-card { gap: var(--s-20); margin: calc(var(--s-32) + var(--s-4)) 0 var(--s-48); padding: var(--s-32) var(--s-20); }
+    .newsletter-card { gap: var(--s-20); margin: var(--s-36) 0 var(--s-48); padding: var(--s-32) var(--s-20); }
     .newsletter-envelope { width: 40px; height: 40px; }
     .newsletter-message { font-size: var(--fs-15); }
     .newsletter-field { flex-direction: column; }
@@ -846,16 +831,11 @@
     .newsletter-form .btn, .newsletter-actions .btn { width: 100%; min-width: 0; }
   }
 /* The site kit: the testimonials' banner (the events list): the photographers' words, each in the design system's card. */
-  /* Outer wrapper mirrors events-main geometry */
-  .testimonials-banner { max-width: 1200px; margin: 0 auto; padding: 0 var(--s-40); }
-  /* Inner section carries the border, constrained by outer padding → 1120px */
-  .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
-  .testimonials-banner-head { max-width: 560px; margin: 0 auto var(--s-48); text-align: center; }
-  .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
-    letter-spacing: var(--ls-3); text-transform: uppercase; color: var(--ink); }
+  /* its wrapper, its inner border and its title are the bands' (banners.css) */
+  .testimonials-banner-head { max-width: var(--read-s); margin: 0 auto var(--s-48); text-align: center; }
   .testimonials-banner-subtitle { font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
   .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--s-32); }
-  .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: calc(var(--s-32) + var(--s-4)) var(--s-32);
+  .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: var(--s-36) var(--s-32);
     transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
   .testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-pop); }
   .testimonial-quote-mark { font-family: var(--display); font-size: var(--fs-56); line-height: calc(var(--lh-tight) * .6); color: var(--accent); }
@@ -866,17 +846,12 @@
     letter-spacing: var(--ls-1-5); text-transform: uppercase; color: var(--faint); }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .testimonials-banner { padding: 0 var(--s-24); }
-    .testimonials-banner-inner { padding: var(--s-60) 0; }
-    .testimonials-banner-head { margin-bottom: calc(var(--s-32) + var(--s-4)); }
+    .testimonials-banner-head { margin-bottom: var(--s-36); }
     .testimonials-grid { gap: var(--s-24); }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .testimonials-banner { padding: 0 var(--s-16); }
-    .testimonials-banner-inner { padding: var(--s-48) 0; }
-    .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-2); }
     .testimonials-banner-subtitle { font-size: var(--fs-14); }
-    .testimonial-card { padding: calc(var(--s-24) + var(--s-4)) var(--s-24); }
+    .testimonial-card { padding: var(--s-28) var(--s-24); }
     .testimonial-text { font-size: var(--fs-14); }
   }

@@ -35,24 +35,18 @@
 (function () {
   "use strict";
   var SVG = "http://www.w3.org/2000/svg";
-  var WORDS = {
+  var _ = window.ds._, day = window.ds.day, english = _.english, el = _.el, tone = _.tone;
+  var at = day.at, addDays = day.add, weekStart = day.weekStart, parisToday = day.today;
+  var WORDS = _.table({
     fr: { none: "rien", one: "1", many: function (n) { return n + " et plus"; }, live: "en cours" },
     en: { none: "none", one: "1", many: function (n) { return n + " or more"; }, live: "running" }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function svg(name, attrs) {
     var e = document.createElementNS(SVG, name);
     Object.keys(attrs || {}).forEach(function (k) { e.setAttribute(k, attrs[k]); });
     return e;
   }
-  function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
   function paint(e, color) { if (color) e.style.setProperty("--n", tone(color)); return e; }
   function put(holder, e) { if (holder) holder.replaceChildren.apply(holder, e ? [e] : []); return e; }
   function num(v) { return window.ds.number(v); }
@@ -62,11 +56,7 @@
     if (a < 1000) return num(Math.round(v));
     return (a < 10000 ? window.ds.number(Math.round(v / 100) / 10, Math.round(v / 100) % 10 ? 1 : 0) : num(Math.round(v / 1000))) + "k";
   }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function weekStart(key) { return addDays(key, -((at(key).getUTCDay() + 6) % 7)); }
   function monthShort(m) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Paris", year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
 
   /* the curve: drawn in a 100 × 30 box stretched to the chart's width (100 × 60 when tall), its lines kept thin whatever
      the stretch. Tall, it is a chart of its own: its middle day under it as well, its ground filled with area; ref draws

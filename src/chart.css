@@ -16,7 +16,7 @@
   .chart-line.is-tall { padding-top: var(--s-24); }
   .chart-line.is-tall .chart-line-svg { height: 180px; }
   .chart-line.is-hover .chart-line-plot { cursor: crosshair; touch-action: pan-y; }
-  .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) 12%, transparent); stroke: none; }
+  .chart-area { fill: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); stroke: none; }
   /* what is foreseen, after today: dashed, on a paler ground, today a thin rule with its name over it */
   .chart-path.is-ahead { stroke-dasharray: 4 3; opacity: .8; }
   .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
@@ -32,7 +32,6 @@
   .chart-tip { position: absolute; top: 0; z-index: var(--z-raise); transform: translate(-50%, calc(-100% - var(--s-4))); padding: var(--s-4) var(--s-8);
     background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-s); box-shadow: var(--shadow-pop); color: var(--ink);
     font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; pointer-events: none; }
-  .chart-line-plot [hidden] { display: none; }
 /* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
    --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
    of its own figures (1ch in its font) */
@@ -90,7 +89,7 @@
   .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
   .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
   .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
-  .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) 13%, transparent); border-radius: var(--r-s); }
+  .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); }
   .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
   .heat-day.is-2 { background: var(--n, var(--accent)); }
   .heat-day.is-out { opacity: .3; }
@@ -100,7 +99,7 @@
   .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
   .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--fs-12); }
   .chart-heat-legend span { display: inline-flex; align-items: center; gap: var(--s-4); }
-  .chart-heat-legend .heat-day { width: 11px; height: 11px; }
+  .chart-heat-legend .heat-day { width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); }
   .chart-heat-note { color: var(--good); }
 @media (max-width: 768px) {
   /* the bars: smaller figures, and one month name in two where twelve would touch */
@@ -113,7 +112,7 @@
 }
 /* small bars side by side, as tall as their value: a day's stories */
   .chart-spark { display: inline-flex; align-items: flex-end; gap: var(--s-2); height: 24px; }
-  .chart-spark i { display: block; width: 5px; min-height: 2px; background: var(--n, var(--accent)); border-radius: calc(var(--r-s) / 4); opacity: .75; }
+  .chart-spark i { display: block; width: 5px; min-height: 2px; background: var(--n, var(--accent)); border-radius: calc(var(--r-s) / 4); opacity: var(--o-muted); }
 /* one bar split by share, then its legend: a colour, a name, an amount, a share */
   .chart-split { display: grid; gap: var(--s-6); min-width: 0; }
   .chart-split-bar { display: flex; gap: calc(var(--s-2) / 2); height: 8px; overflow: hidden; background: var(--panel-2); border-radius: var(--r-s); }
@@ -121,7 +120,7 @@
   .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
   /* on one baseline: the smaller figures would otherwise sit too high */
   .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
-  .chart-key { flex: none; align-self: center; width: 8px; height: 8px; background: var(--n, var(--dim)); border-radius: calc(var(--r-s) / 2); }
+  .chart-key { align-self: center; }
   .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
   .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
 /* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on
@@ -140,7 +139,7 @@
   .chart-donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); padding: 0 22%;
     pointer-events: none; text-align: center; }
   .chart-donut-c b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--ls-caps);
+  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls);
     text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
   .chart-donut-legend { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
   .chart-donut-legend li + li .chart-donut-row { border-top: 1px solid var(--line); }

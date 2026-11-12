@@ -23,8 +23,6 @@
   .photogrid-zoom { display: inline-flex; align-items: center; gap: var(--s-8); color: var(--faint); cursor: pointer; }
   .photogrid-zoom .ico { width: 16px; height: 16px; }
   /* the rail's edge: Atelier's strong line; vitrine's strong line is the full gold, so it takes the soft one */
-  .zoom-slider { --zoom-track: var(--line-2); }
-  [data-theme="vitrine"] .zoom-slider { --zoom-track: var(--line); }
   /* written longer than the fields' rule of base.css, so that a range is never drawn as a field */
   input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { -webkit-appearance: none; appearance: none;
     box-sizing: border-box; width: 120px; height: 24px; margin: 0; padding: 0; background: transparent; border: 0; border-radius: 0; box-shadow: none; cursor: pointer; }
@@ -43,7 +41,7 @@
 @media (max-width: 480px) {
   /* on a phone the slider takes the room it has, for the thumb */
   .photogrid-zoom { flex: 1 1 auto; }
-  input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { flex: 1 1 auto; width: auto; min-width: 0; height: 44px; }
+  input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { flex: 1 1 auto; width: auto; min-width: 0; height: var(--touch-target); }
 }
 @media (prefers-reduced-motion: reduce) {
   .photogrid > * img { transition: none; }

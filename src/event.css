@@ -4,7 +4,7 @@
    The photo bands between the sections are the design system's (.hero.is-band.is-parallax). */
   /* The photo bands between the sections: the design system's (.hero.is-band.is-parallax); each page gives their photos */
   /* Content Sections */
-  .content-section { max-width: 1200px; margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
+  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
   .dark-section { background: var(--band); }
   .pricing-section { background: var(--white); }
   .elegant-box { padding: var(--s-80) var(--s-48); background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
@@ -34,17 +34,19 @@
   /* CTA */
   .cta-center { margin-top: var(--s-48); text-align: center; }
   /* Models */
-  .models-container { display: flex; flex-direction: column; gap: var(--s-80); max-width: 1200px; margin: 0 auto; }
+  .models-container { display: flex; flex-direction: column; gap: var(--s-80); max-width: var(--page-site); margin: 0 auto; }
   .model-card-full { display: flex; flex-direction: column; gap: var(--s-32); }
   .model-info { margin-bottom: var(--s-16); text-align: center; }
   .model-links { justify-content: center; }
   .model-gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-16); }
-  .model-gallery-item { aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-card); cursor: pointer;
-    transition: all var(--t-mid) ease; }
-  .model-gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .model-gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
+  /* the photos of an event page, one tile for the three galleries (a model's, the portfolio, the venue): it rises and its
+     photo grows a little under the pointer */
+  .model-gallery-item, .portfolio-item, .gallery-item { overflow: hidden; border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }
+  .model-gallery-item:hover, .portfolio-item:hover, .gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
+  .model-gallery-image, .portfolio-image, .gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
     backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .model-gallery-item:hover .model-gallery-image { transform: scale(1.1); }
+  .model-gallery-item:hover .model-gallery-image, .portfolio-item:hover .portfolio-image, .gallery-item:hover .gallery-image { transform: scale(1.1); }
+  .model-gallery-item { aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   .model-name { font-family: var(--display); font-size: var(--fs-42); font-weight: 400; letter-spacing: var(--ls-3); text-transform: uppercase;
     color: var(--ink); }
   .model-bio { margin-top: var(--s-16); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--dim); }
@@ -100,7 +102,7 @@
   .location-dest-time { font-family: var(--body); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-1);
     line-height: var(--lh-relaxed); color: var(--accent); }
   .location-transport-note { display: flex; align-items: center; gap: var(--s-12); margin-top: var(--s-32);
-    padding: var(--s-20) calc(var(--s-24) + var(--s-4)); background: var(--accent-soft); border: 1px solid var(--line); }
+    padding: var(--s-20) var(--s-28); background: var(--accent-soft); border: 1px solid var(--line); }
   .transport-note-icon { flex-shrink: 0; width: 24px; height: 24px; color: var(--accent); stroke-width: 1; }
   .location-transport-note span { font-family: var(--body); font-weight: 300; color: var(--dim); }
   /* Schedule */
@@ -160,7 +162,7 @@
   .contact-card:hover .contact-link { color: var(--accent-strong); }
   .sold-out-banner { display: none; }
   body[data-sold-out] .sold-out-banner { display: flex; align-items: center; justify-content: center;
-    padding: calc(var(--s-16) + var(--s-2)) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
+    padding: var(--s-18) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
   .sold-out-label { font-family: var(--body); font-size: var(--fs-14); font-weight: 500; letter-spacing: var(--ls-2-5); text-transform: uppercase;
     color: var(--white); }
   /* Payment */
@@ -198,12 +200,7 @@
   .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--body); font-size: var(--fs-14); font-weight: 300; font-style: italic;
     letter-spacing: var(--ls-1); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-16); }
-  .portfolio-item { position: relative; aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow-card);
-    cursor: pointer; transition: all var(--t-mid) ease; }
-  .portfolio-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .portfolio-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .portfolio-item:hover .portfolio-image { transform: scale(1.1); }
+  .portfolio-item { position: relative; aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   /* Venue Gallery */
   .venue-gallery { margin-top: var(--s-80); padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .gallery-heading { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-42); font-weight: 400; letter-spacing: var(--ls-3);
@@ -211,12 +208,7 @@
   .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--body); font-size: var(--fs-14); font-weight: 300; font-style: italic;
     letter-spacing: var(--ls-1); text-align: center; color: var(--faint); }
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s-16); }
-  .gallery-item { position: relative; aspect-ratio: 4/3; overflow: hidden; border: 1px solid var(--line); cursor: pointer;
-    transition: all var(--t-mid) ease; }
-  .gallery-item:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
-    backface-visibility: hidden; -webkit-backface-visibility: hidden; }
-  .gallery-item:hover .gallery-image { transform: scale(1.1); }
+  .gallery-item { position: relative; aspect-ratio: 4/3; }
   /* less motion: a photo neither rises nor zooms under the pointer (the durations are already nothing, see tokens.css) */
   @media (prefers-reduced-motion: reduce) {
     .model-gallery-item:hover, .portfolio-item:hover, .gallery-item:hover, .contact-card:hover, .location-destination:hover,
@@ -227,7 +219,7 @@
     /* Sections */
     .content-section { padding: var(--s-40) var(--s-16); }
     .elegant-box { padding: var(--s-40) var(--s-16); }
-    .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) calc(var(--s-24) + var(--s-4)); }
+    .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) var(--s-28); }
     .highlight-text { display: none; }
     .highlight-list { display: flex; }
     .highlight-separator { display: none; }
@@ -309,7 +301,7 @@
     /* Sections */
     .content-section { padding: var(--s-48) var(--s-32); }
     .elegant-box { padding: var(--s-48) var(--s-32); }
-    .highlight-box { margin: var(--s-40) 0 0; padding: calc(var(--s-24) + var(--s-4)) var(--s-32); }
+    .highlight-box { margin: var(--s-40) 0 0; padding: var(--s-28) var(--s-32); }
     .highlight-text { display: block; }
     .highlight-list { display: none; }
     .highlight-separator { display: inline-block; }

@@ -11,18 +11,12 @@
      is called with the chosen one, the selector lights it itself. */
 (function () {
   "use strict";
-  var WORDS = {
+  var _ = window.ds._, el = _.el;
+  var WORDS = _.table({
     fr: { strong: "fort", average: "moyen", weak: "faible", against: "par rapport à la médiane", period: "Période", empty: "Rien sur cette période." },
     en: { strong: "strong", average: "average", weak: "weak", against: "against the median", period: "Period", empty: "Nothing over this period." }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, kids) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    [].concat(kids == null ? [] : kids).forEach(function (k) { if (k != null) e.append(k); });
-    return e;
-  }
+  });
+  function words() { return _.words(WORDS); }
   function safe(u) { return typeof u === "string" && /^(https?:\/\/|\/|#)[^\s"'<>]*$/.test(u) ? u : null; }
 
   function rank(rows, o) {
@@ -53,11 +47,12 @@
     return col;
   }
 
+  // the compact tiles (tiles.css), each as wide as the widest (.is-fit); .minitiles stays on it for the apps' own rules
   function minitiles(items) {
-    var box = el("div", "minitiles");
+    var box = el("dl", "tiles is-compact is-fit minitiles");
     (items || []).filter(Boolean).forEach(function (x) {
-      box.append(el("div", "minitile", [el("small", "", x.label), el("div", "", [el("b", "", x.value), x.unit != null ? el("span", "", x.unit) : null]),
-        x.note ? el("em", "", x.note) : null]));
+      box.append(el("div", "tile", [el("dt", "", x.label), el("dd", "", [x.value, x.unit != null ? el("span", "u", x.unit) : null]),
+        x.note ? el("span", "h", x.note) : null]));
     });
     return box;
   }

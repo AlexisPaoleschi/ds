@@ -13,25 +13,26 @@
    Their own words follow the page's language, <html lang>: English for "en…", French otherwise. */
 (function () {
   "use strict";
+  var _ = window.ds._, english = _.english, tag = _.el, el = _.el, h = window.ds.h, ico = window.ds.ico;
   var LIFE = { good: 4000, info: 5000, busy: 0, bad: 0 };
-  var WORDS = {
-    fr: { close: "Fermer", cancel: "Annuler", confirm: "Confirmer", openFilters: "Ouvrir les filtres", closeFilters: "Fermer les filtres",
+  var WORDS = _.table({
+    fr: { confirm: "Confirmer", openFilters: "Ouvrir les filtres", closeFilters: "Fermer les filtres",
           never: "jamais", today: "aujourd'hui", yesterday: "hier", tomorrow: "demain", on: "le ", at: " à ", now: "à l’instant",
           ago: function (x) { return "il y a " + x; }, soon: "dans un instant", in: function (x) { return "dans " + x; },
           journal: "Journal", run: "Lancer", runNow: " maintenant", started: "Lancé", running: "En cours", allLogs: "Tout sur Render ↗",
           live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé",
           nothing: "Rien d’écrit depuis le démarrage du serveur.", journalOf: function (x) { return "Journal : " + x; },
           retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour" },
-    en: { close: "Close", cancel: "Cancel", confirm: "Confirm", openFilters: "Open the filters", closeFilters: "Close the filters",
+    en: { confirm: "Confirm", openFilters: "Open the filters", closeFilters: "Close the filters",
           never: "never", today: "today", yesterday: "yesterday", tomorrow: "tomorrow", on: "on ", at: " at ", now: "just now",
           ago: function (x) { return x + " ago"; }, soon: "in a moment", in: function (x) { return "in " + x; },
           journal: "Log", run: "Run", runNow: " now", started: "Started", running: "Running", allLogs: "All on Render ↗",
           live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done",
           nothing: "Nothing written since the server started.", journalOf: function (x) { return "Log: " + x; },
           retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date" }
-  };
+  });
   // read when a message or a window opens, so that a page that changes its language is followed
-  function words() { return english() ? WORDS.en : WORDS.fr; }
+  function words() { return _.words(WORDS); }
   var stack = null, live = [], said = {};
   // the bubbles' place, made once the page is there, with two lines read aloud that stay in it from the start: a
   // screen reader follows a region that was already on the page, not always one added with its words
@@ -118,7 +119,6 @@
   // system and answers with a promise:
   // false when cancelled, true when confirmed, or the typed text when the window has a field (value).
   // A dangerous answer (danger) starts on « Annuler » (Cancel), so Enter never deletes by mistake.
-  var DIALOG_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
   var dialogs = 0;
   function confirm(opts) {
     opts = opts || {};
@@ -144,25 +144,19 @@
         if (opts.maxlength) input.maxLength = opts.maxlength;
       }
       var before = document.activeElement, box = veil.firstChild, stilled = [];
+      // the top layer: Escape cancels it, and Tab goes round inside it, never to the page behind
+      var top = _.layer({ el: box, close: function () { end(false); } });
       function end(answer) {
+        _.unlayer(top);
         document.removeEventListener("keydown", key, true);
         stilled.forEach(function (x) { x.inert = false; });
         veil.remove();
         if (before && before.focus) before.focus();
         done(answer);
       }
+      // Enter in its field answers with the text
       function key(e) {
-        if (e.key === "Escape") { e.preventDefault(); end(false); }
-        else if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
-        else if (e.key === "Tab") {
-          // Tab goes round inside the window, never to the page behind it
-          var list = [].filter.call(box.querySelectorAll(DIALOG_FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
-          if (!list.length) return;
-          var first = list[0], last = list[list.length - 1], at = document.activeElement;
-          if (!box.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
-          else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
-          else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
-        }
+        if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
       }
       ok.onclick = function () { end(input ? input.value : true); };
       no.onclick = function () { end(false); };
@@ -176,7 +170,6 @@
       if (input) { input.focus(); input.select(); } else (opts.danger ? no : ok).focus();
     });
   }
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
 
   /* ds.drawer(name, {onChange}): the filters' drawer of a page. Its markup: the edge tab
      <button class="edgetab" data-drawer-toggle="name">, the layout <div class="side-layout" data-drawer="name"> with its
@@ -202,12 +195,16 @@
   }
   function drawer(name, opts) {
     var d = drawers[name] = { open: false, onChange: (opts || {}).onChange };
-    try { d.open = localStorage.getItem(name) === "1"; } catch (e) {}
+    d.open = _.read(name) === "1";
+    // open on a phone, it covers the page: a layer, which Escape closes and Tab stays inside
+    var cover = { el: function () { return document.querySelector('[data-drawer="' + name + '"] .side'); }, close: function () { d.set(false); } };
+    function covers() { if (d.open && phone()) _.layer(cover); else _.unlayer(cover); }
     d.set = function (open) {
       var was = d.open;
       d.open = !!open;
-      try { localStorage.setItem(name, d.open ? "1" : "0"); } catch (e) {}
+      _.write(name, d.open ? "1" : "0");
       paint(name);
+      covers();
       if (was === d.open) return;
       if (d.onChange) d.onChange(d.open);
       if (!phone()) return;
@@ -217,6 +214,7 @@
     d.toggle = function () { d.set(!d.open); };
     d.mark = function (on) { d.marked = !!on; paint(name); };
     paint(name);
+    covers();
     return d;
   }
   document.addEventListener("click", function (e) {
@@ -227,38 +225,19 @@
     if (!d) return;
     if (t.hasAttribute("data-drawer-toggle")) d.toggle(); else d.set(false);
   });
-  document.addEventListener("keydown", function (e) {
-    // a window of ds.confirm takes its own Escape first
-    if (e.key !== "Escape" || e.defaultPrevented || !phone()) return;
-    Object.keys(drawers).forEach(function (name) { if (drawers[name].open) drawers[name].set(false); });
-  });
 
   /* ds.status(holder, {summary, late, rows, link}) draws the state of a page's sources in holder (its <footer>): one line
      that says it all (summary, a gold dot when late), opening on one row per source,
      rows: [{icon, name, state, every, ok, detail}] — what was read and when (state), how often (every), whether it is on
      time (ok) and, when not, why (detail) — then link: {href, text}. Whether it is open stays across redraws and visits. */
-  function svgIcon(name) {
-    var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg"), use = document.createElementNS("http://www.w3.org/2000/svg", "use");
-    svg.setAttribute("class", "ico");
-    svg.setAttribute("aria-hidden", "true");
-    use.setAttribute("href", "#i-" + name);
-    svg.appendChild(use);
-    return svg;
-  }
-  function tag(name, cls, text) {
-    var el = document.createElement(name);
-    if (cls) el.className = cls;
-    if (text != null) el.textContent = text;
-    return el;
-  }
   function status(holder, o) {
     var key = "ds-status " + location.pathname, det = tag("details", "status"), summary = tag("summary"), list = tag("ul");
-    try { det.open = sessionStorage.getItem(key) === "1"; } catch (e) {}
+    det.open = _.read(key, true) === "1";
     summary.append(tag("i", "dot" + (o.late ? " warn" : "")), o.summary || "");
     (o.rows || []).forEach(function (r) {
       var li = tag("li", r.ok ? "" : "late"), sn = tag("span", "sn"), sw = tag("span", "sw");
-      sn.append(svgIcon(r.icon || "doc"), r.name || "");
-      sw.append(svgIcon(r.ok ? "check" : "alert"), r.state || "");
+      sn.append(ico(r.icon || "doc"), r.name || "");
+      sw.append(ico(r.ok ? "check" : "alert"), r.state || "");
       li.append(sn, sw, tag("span", "sf", r.every || ""));
       if (r.detail) li.append(tag("span", "sd", r.detail));
       list.append(li);
@@ -270,7 +249,7 @@
       list.append(last);
     }
     det.append(summary, list);
-    det.addEventListener("toggle", function () { try { sessionStorage.setItem(key, det.open ? "1" : "0"); } catch (e) {} });
+    det.addEventListener("toggle", function () { _.write(key, det.open ? "1" : "0", true); });
     holder.replaceChildren(det);
     return det;
   }
@@ -282,7 +261,7 @@
   function date(t) { return t instanceof Date ? t : new Date(typeof t === "number" && t < 1e12 ? t * 1000 : t); }
   // a date that cannot be read is written « — », as a missing figure is, instead of stopping the page
   function unreadable(t) { return isNaN(date(t).getTime()); }
-  function dayKey(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
+  var dayKey = window.ds.day.key;
   function clock(d) {
     var parts = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
     var h = +parts.find(function (p) { return p.type === "hour"; }).value, m = parts.find(function (p) { return p.type === "minute"; }).value;
@@ -363,7 +342,7 @@
   var AFTER_LOGIN = "ds-after-login";
   function wait(ms) { return new Promise(function (ok) { setTimeout(ok, ms); }); }
   function signIn(to) {
-    try { sessionStorage.setItem(AFTER_LOGIN, location.pathname + location.search + location.hash); } catch (e) {}
+    _.write(AFTER_LOGIN, location.pathname + location.search + location.hash, true);
     location.href = to;
   }
   function api(method, url, body, o) {
@@ -401,8 +380,8 @@
   }
   // back from the sign-in page, the page opens where it was left
   function cameBack() {
-    var was = null;
-    try { was = sessionStorage.getItem(AFTER_LOGIN); sessionStorage.removeItem(AFTER_LOGIN); } catch (e) {}
+    var was = _.read(AFTER_LOGIN, true);
+    _.write(AFTER_LOGIN, null, true);
     if (!was || location.hash) return;
     var hash = was.indexOf("#") >= 0 ? was.slice(was.indexOf("#")) : "";
     if (hash && was.split("#")[0] === location.pathname + location.search) {
@@ -421,11 +400,6 @@
      that asks for it (/settings#patreon/journal). */
   var logs = {};
   function logState(key) { return logs[key] || (logs[key] = { open: false, lines: [], last: 0, stick: true, top: 0, list: null, loaded: false, busy: false }); }
-  function el(name, cls, kids) {
-    var e = tag(name, cls);
-    (kids || []).forEach(function (k) { if (k != null) e.append(k); });
-    return e;
-  }
   function lineEl(x) {
     var bad = /^(ERROR|ERREUR|CRITICAL)$/.test(x.level) || x.text.indexOf("✖") >= 0;
     var warn = !bad && (/^(WARNING|ATTENTION)$/.test(x.level) || x.text.indexOf("⚠") >= 0);
@@ -539,7 +513,7 @@
     if (pc) { pc.setAttribute("aria-hidden", "true"); pc.textContent = text; }
     if (boot) { boot.setAttribute("aria-hidden", "true"); boot.textContent = text; }
   }
-  function busyTimes() { try { return JSON.parse(localStorage.getItem("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
+  function busyTimes() { try { return JSON.parse(_.read("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
   // one step of the share: the speed that reaches 99% at the end foreseen (arrive), taken gently (a tenth of the change
   // at each step); between two words of the work the end stays put, so the speed stays even
   function busyStep() {
@@ -583,7 +557,7 @@
       clearInterval(bz.tick); bz.tick = null;
       if (!top) return;
       if (ok === false) { top.classList.remove("loading"); busyText(""); return; }
-      if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); try { localStorage.setItem("ds-busy-ms", JSON.stringify(t)); } catch (e) {} }
+      if (bz.key) { var t = busyTimes(); t[bz.key] = Math.max(500, Date.now() - bz.start); _.write("ds-busy-ms", JSON.stringify(t)); }
       // what is left runs on to 100% in a quarter of a second, evenly, then the tick
       var from = bz.word ? 100 : bz.shown, steps = 5, n = 0;
       bz.tick = setInterval(function () {
@@ -653,39 +627,7 @@
   }
   trouble.ok = function (key) { var t = troubles[key]; if (t && !t.trying) t.shown = false; };
 
-  /* ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline handler
-     would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become text.
-     ds.ico(name) is an icon of the sprite. Studio drew its whole page so; ds's own parts can too. */
-  var SVGNS = "http://www.w3.org/2000/svg";
-  // ds.esc(text): a text that goes into HTML written as a string, its & < > " and ' made harmless
-  function esc(text) {
-    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
-  }
-  function h(tag, attrs, kids) {
-    var node = document.createElement(tag);
-    if (attrs) for (var k in attrs) {
-      var v = attrs[k];
-      if (v == null || v === false) continue;
-      if (k === "class") node.className = v;
-      else if (k === "text") node.textContent = v;
-      else if (k === "style") node.setAttribute("style", v);
-      else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
-      else node.setAttribute(k, v === true ? "" : v);
-    }
-    (kids || []).forEach(function (c) {
-      if (c == null || c === false) return;
-      node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
-    });
-    return node;
-  }
-  function ico(name, cls) {
-    var svg = document.createElementNS(SVGNS, "svg"), use = document.createElementNS(SVGNS, "use");
-    svg.setAttribute("class", "ico" + (cls ? " " + cls : ""));
-    svg.setAttribute("aria-hidden", "true");
-    use.setAttribute("href", "#i-" + name);
-    svg.appendChild(use);
-    return svg;
-  }
+  // ds.h, ds.esc and ds.ico are the core's (src/core.js), shared with ds-photo.js and ds-site.js
 
   /* ds.compact(n): a figure that must stay short, « 9 850 », « 57,9k », « 578k », « 1,2M » (« 57.9k » in English). */
   function compact(n) {
@@ -739,11 +681,24 @@
     if (at && at.closest && at.closest(".ct")) return true;
     return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".ct") || !!n.querySelector(".ct")); });
   }
+  // a title whose width changes is fitted again: its view shown (it was not measured while hidden), its card resized
+  var watched = new WeakSet(), widths = new WeakMap();
+  var resized = window.ResizeObserver ? new ResizeObserver(function (entries) {
+    entries.forEach(function (e) {
+      var w = Math.round(e.contentRect.width);
+      if (widths.get(e.target) === w) return;
+      widths.set(e.target, w);
+      if (w) fitTitle(e.target);
+    });
+  }) : null;
   function fitTitles() {
     if (fitting) return;
     fitting = requestAnimationFrame(function () {
       fitting = 0;
-      document.querySelectorAll(".ct").forEach(fitTitle);
+      document.querySelectorAll(".ct").forEach(function (h) {
+        if (resized && !watched.has(h)) { watched.add(h); resized.observe(h); }
+        fitTitle(h);
+      });
     });
   }
 
@@ -751,15 +706,14 @@
      ds-fold:<key>. On loading, and again with ds.fold(holder) once a page draws them anew. */
   function fold(root) {
     (root || document).querySelectorAll("details[data-fold]").forEach(function (d) {
-      var v = null;
-      try { v = localStorage.getItem("ds-fold:" + d.getAttribute("data-fold")); } catch (e) {}
+      var v = _.read("ds-fold:" + d.getAttribute("data-fold"));
       if (v != null) d.open = v === "1";
     });
   }
   document.addEventListener("toggle", function (e) {
     var d = e.target;
     if (!d.matches || !d.matches("details[data-fold]")) return;
-    try { localStorage.setItem("ds-fold:" + d.getAttribute("data-fold"), d.open ? "1" : "0"); } catch (x) {}
+    _.write("ds-fold:" + d.getAttribute("data-fold"), d.open ? "1" : "0");
   }, true);
 
   /* Whole rows that open: a row (tr.is-link, or any [data-row-link]) holding a link a.row-link, or a data-href, opens it on a
@@ -819,7 +773,7 @@
     try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
     if (!el) return false;
     for (var d = el.parentElement; d; d = d.parentElement) if (d.tagName === "DETAILS") d.open = true;
-    var still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var still = _.reduced();
     el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
     el.classList.remove("is-lit");
     void el.offsetWidth;
@@ -903,9 +857,6 @@
   window.ds.jobs = jobs;
   window.ds.busy = busy;
   window.ds.trouble = trouble;
-  window.ds.h = h;
-  window.ds.esc = esc;
-  window.ds.ico = ico;
   window.ds.compact = compact;
   window.ds.avatar = avatar;
   window.ds.fold = fold;

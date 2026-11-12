@@ -22,33 +22,20 @@
    for a page that fills the panels itself. */
 (function () {
   "use strict";
-  var TZ = "Europe/Paris", DOTS = 3, VIEWS = ["month", "week", "list"];
-  var WORDS = {
+  var DOTS = 3, VIEWS = ["month", "week", "list"];
+  var _ = window.ds._, day = window.ds.day, el = _.el, tone = _.tone;
+  var parisToday = day.today, at = day.at, addDays = day.add, weekStart = day.weekStart, fmt = day.format;
+  var WORDS = _.table({
     fr: { month: "Mois", week: "Semaine", list: "Liste", prev: "Précédent", next: "Suivant", today: "Aujourd’hui", pick: "Aller à un autre mois",
           view: "Vue", before: "Jours précédents", hideBefore: "Masquer les jours précédents", none: "Rien ce jour-là.",
           count: function (n) { return n + (n > 1 ? " éléments" : " élément"); } },
     en: { month: "Month", week: "Week", list: "List", prev: "Previous", next: "Next", today: "Today", pick: "Go to another month",
           view: "View", before: "Days before", hideBefore: "Hide the days before", none: "Nothing on that day.",
           count: function (n) { return n + (n > 1 ? " items" : " item"); } }
-  };
-  function english() { return /^en\b/i.test(document.documentElement.lang || ""); }
-  function words() { return english() ? WORDS.en : WORDS.fr; }
-  function el(name, cls, text) {
-    var e = document.createElement(name);
-    if (cls) e.className = cls;
-    if (text != null) e.textContent = text;
-    return e;
-  }
-  // the days are Paris's days, written "2026-11-09", counted at noon UTC so that no clock change moves them
-  function parisToday() { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()); }
-  function at(key) { return new Date(key + "T12:00:00Z"); }
-  function addDays(key, n) { var d = at(key); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
-  function weekStart(key) { return addDays(key, -((at(key).getUTCDay() + 6) % 7)); }
-  function fmt(key, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(key)); }
+  });
+  function words() { return _.words(WORDS); }
   function longDay(key) { return window.ds.date(key, "weekday"); }
   function shortDay(key) { return window.ds.date(key, "day"); }
-  // a colour given as a token's name ("--c-bleu") or as a value
-  function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
 
   function mark(it) {
     var m = el("i", "cal-mark" + (it.mark && it.mark !== "square" ? " is-" + it.mark : "") + (it.open ? " is-open" : ""));

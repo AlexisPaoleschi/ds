@@ -7,9 +7,7 @@
    only a wide screen shows (.tbl-wide) goes, what only a phone shows (.tbl-phone, e.g. the date and the bank under the
    name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
   .tbl-wrap { overflow-x: auto; }
-  .tbl { --tbl-size: var(--fs-14); --tbl-th-size: var(--fs-11); --tbl-th-ls: var(--ls-caps);
-    width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
-  [data-theme="vitrine"] .tbl { --tbl-size: var(--fs-15); --tbl-th-size: var(--fs-12); --tbl-th-ls: var(--ls-1-5); }
+  .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: bottom; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
@@ -37,12 +35,12 @@
 /* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
    name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
    picked. ds.selection runs it. Its buttons and menus are small ones, the row of a list's actions. */
-  .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--btn-s-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls); --field-py: var(--s-6);
-    position: sticky; top: env(safe-area-inset-top, 0px); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
+  .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
+    --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
+    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
     margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
   .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
   .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
-  [data-theme="vitrine"] .selbar { --field-size: var(--fs-14); --field-py: var(--s-8); --field-px: var(--s-12); --btn-px: var(--s-14); }
   [data-theme="vitrine"] .selbar-n { font-weight: 500; }
 
 @media (max-width: 768px) {
