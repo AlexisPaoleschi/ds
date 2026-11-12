@@ -16,6 +16,8 @@
    items, data-viewer-label the viewer. Nothing here is written inline, so a page served with script-src 'self' works. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.viewer) return;
   var WORDS = {
     fr: { label: "Photos", close: "Fermer", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
     en: { label: "Photos", close: "Close", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }

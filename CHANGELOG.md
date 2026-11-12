@@ -1,5 +1,23 @@
 # Changelog
 
+## 2.37.0 · 12 novembre 2026
+
+Des corrections, sans rien changer à l’aspect des applis.
+
+- `ds.confirm` garde le clavier : Tab tourne à l’intérieur de la fenêtre, la page derrière ne répond plus tant qu’elle est ouverte (`inert`, les bulles exceptées), son titre la nomme et son texte la décrit pour les lecteurs d’écran, avec des noms propres à chaque fenêtre ; son champ porte le titre comme nom.
+- Le kit du site au clavier : la barre cachée et le menu fermé ne se laissent plus atteindre avec Tab (ils passent en `visibility: hidden` une fois partis), ils ne sont plus cachés en permanence aux lecteurs d’écran ; le bouton du menu dit s’il est ouvert (`aria-expanded`, `aria-controls`), l’ouvrir mène le clavier au premier lien, Échap ou le voile le ramènent au bouton.
+- Les galeries d’une page d’événement s’ouvrent au clavier : chaque photo se laisse atteindre avec Tab et s’ouvre avec Entrée ou Espace, et se nomme (« Open … »).
+- L’ajustement des titres de carte ne mesure plus à chaque changement de la page : seulement quand un titre arrive ou que ce qu’il porte change. Le pourcentage du chargement, la bulle d’une courbe sous la souris ou un journal ouvert ne le déclenchent plus.
+- Les bulles : ôtées une fois leur fondu fini (il durait 0,3 s en Vitrine, la bulle partait à 0,2 s), leur compte à rebours attend aussi quand le clavier est dessus, et elles sont lues à voix haute par deux lignes qui restent dans la page dès son chargement.
+- « Moins d’animations » respecté partout, par une seule règle dans `tokens.css` : plus aucune durée, ni montée ni zoom au survol, et toutes les animations s’arrêtent, les roues et les pulsations du site comprises ; le site va d’un coup à une partie de la page au lieu d’y glisser.
+- Le chargement n’est plus lu en boucle par les lecteurs d’écran : la part qui monte (`.pc`, et `#boot-pc` du premier chargement) reste affichée mais n’est plus lue ; ils entendent les mots de `ds.busy.start` une fois, puis « Chargement terminé » (« Loading done » en anglais).
+- `ds.esc(text)` écrit un texte sans danger dans du HTML, et le kit du site reçoit `ds.h` et `ds.esc`, les mêmes que `ds.js`, pour une page qui ne charge que lui : le site s’en sert pour ce qui vient de ses Gists.
+- Les quatre jetons que personne n’utilisait sont retirés : `--z-veil`, `--overlay-black-light`, `--overlay-black-lighter`, `--viewer-hover`.
+- La règle du pied de page ne vise plus que celui d’une appli (`.wrap > footer`), sur une ligne qui se resserre au lieu de passer à la ligne : Selecta n’a plus à l’annuler, Bank et Studio retirent leurs corrections.
+- Quelques plantages évités : `ds.date`, `ds.when`, `ds.ago` et `ds.soon` écrivent « — » pour une date illisible ; un lien du site vers un id comme `#2026` fonctionne ; une photo de galerie sans image n’empêche plus les autres galeries de s’ouvrir ; la visionneuse et la grille de photos chargées deux fois (`ds.js` et `ds-photo.js`) ne s’installent qu’une fois.
+- README et CHANGELOG remis d’accord avec le code : signatures (`ds.periodPick`, `ds.calendar`, `ds.picker`, `ds.toast`, `ds.viewer`, `ds.confirm`), noms des paramètres tels qu’ils sont, taille de `ds.js`, test de chaque appli, largeurs 956 et 1376px du site, date de 2.11.0.
+- Nouvelles vérifications : un chargement de 3 s entendu au début et à la fin seulement, `ds.h` et `ds.esc` du kit du site, Tab dans `ds.confirm`, le menu du site au clavier, une galerie ouverte avec Entrée, l’ajustement des titres qui ne mesure rien sur un changement de texte, la pause d’une bulle sous le clavier, les roues arrêtées quand l’appareil demande moins d’animations.
+
 ## 2.36.0 · 12 novembre 2026
 
 - `ds.chart.donut` : avec `open(key, holder)`, la part choisie ouvre son détail juste sous sa ligne de la légende (holder, vide, que la page remplit tout de suite ou plus tard), et le referme quand on la laisse ou qu’on en choisit une autre. Bank y ouvre les sous-catégories et les opérations d’une catégorie, sous la catégorie elle-même.
@@ -28,7 +46,7 @@ Les petites cases de chiffres avaient deux apparences : chacune dans sa boîte (
 - Un titre de carte qui porte quelque chose sur sa ligne (un menu, une période, un bouton, l’heure de lecture) le garde sur cette ligne quand il le peut : ses lettres se resserrent, puis rapetissent (12 px, puis 11 px au plus petit), seulement autant qu’il le faut ; au-delà, ce qu’il porte passe en dessous, comme avant. `ds.js` le refait au chargement, quand la fenêtre change de taille et quand une page redessine ses cartes (`ds.fitTitles()` le demande aussi).
 - `ds.calendar` : ce qui dure plusieurs jours (un séjour, un voyage ; `span: {from, to}` sur l’élément de chacun de ses jours) devient dans le mois une seule barre à sa couleur, d’un jour à l’autre, à la même hauteur dans chaque case qu’elle traverse, son titre à son début et au lundi où elle continue, comme dans l’agenda de Google. Sur téléphone, un trait fin sous le numéro du jour.
 - `ds.chart.donut` : une ligne de la légende peut porter un mot sous son nom (`note`), en rouge (`tone: "bad"`) ou en vert (`"good"`). Bank y dit ce qui a augmenté par rapport à d’habitude, à la place de sa carte « Ce qui augmente ».
-- Les 38 premières icônes, dessinées à la main pour Bank et Studio, prennent le dessin de Lucide sous le même nom (35 ; `list` garde ses coches avec `list-checks`, `sliders` ses deux curseurs avec `settings-2`), comme toutes les autres. Seuls les trois logos de marque (Instagram, Bluesky, X) restent dessinés à la main : Lucide ne dessine plus de marques. Bank et Studio retirent leur propre copie de ces icônes : celles du design system suffisent.
+- Les 39 premières icônes, dessinées à la main pour Bank et Studio, prennent le dessin de Lucide sous le même nom (35 ; `list` garde ses coches avec `list-checks`, `sliders` ses deux curseurs avec `settings-2`), comme toutes les autres. Seuls les trois logos de marque (Instagram, Bluesky, X) restent dessinés à la main : Lucide ne dessine plus de marques. Bank et Studio retirent leur propre copie de ces icônes : celles du design system suffisent.
 - La visionneuse : ses trois boutons deviennent carrés, dans le verre sombre de son compteur, avec la croix et les flèches des icônes (celles de « ← Home » sur le site), et se remplissent d’or au survol comme les autres boutons du site ; ils restaient ronds, transparents et à peine teintés.
 - L’icône de l’avion (`i-plane`, l’onglet Voyages de Bank, la destination des pages d’événement du site) était dessinée de travers : sa queue sortait de l’axe de l’avion. Elle prend le dessin de Lucide, symétrique.
 
@@ -280,7 +298,7 @@ Le thème Vitrine pris sur alexispaoleschi.com, et les pièces que le site et Se
 - Nouveau : les voiles et les ombres de texte sur photo (`--overlay-*`, `--text-shadow-*`), une seule roue de chargement (`.spinner`, `is-medium`, `is-large`, `on-photo`), la page document complète (titres, listes, impression), et les mots de `ds.js` en anglais pour une page en anglais.
 - Nouveau : la pastille (`.badge`, `is-bad`, `is-soft`), le petit bouton (`.btn.is-small`), la carte au filet or (`.card.is-ruled`), son titre (`.card-title`) et ses lignes de détails (`.card-meta`), la carte avec photo de couverture (`.card.has-cover`, `.card-cover`, `.card-body`), en grand ou en petit (`.card.is-small`) et la carte qui se clique (`.card.is-link`), l’en-tête de section (`.section-head`, son sous-titre `.section-sub`) et le pied de page d’un site (`.site-footer`), dans `src/site.css`.
 
-## 2.11.0 · 8 novembre 2026
+## 2.11.0 · 9 novembre 2026
 
 Le thème Vitrine retrouve l’or et les angles d’alexispaoleschi.com.
 

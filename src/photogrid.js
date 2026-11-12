@@ -11,6 +11,8 @@
    grid, it gives the same one. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.photogrid) return;
   var WORDS = {
     fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
     en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }

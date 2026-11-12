@@ -217,6 +217,11 @@
   .gallery-image { width: 100%; height: 100%; object-fit: cover; transition: transform var(--t-slow) ease; image-rendering: auto;
     backface-visibility: hidden; -webkit-backface-visibility: hidden; }
   .gallery-item:hover .gallery-image { transform: scale(1.1); }
+  /* less motion: a photo neither rises nor zooms under the pointer (the durations are already nothing, see tokens.css) */
+  @media (prefers-reduced-motion: reduce) {
+    .model-gallery-item:hover, .portfolio-item:hover, .gallery-item:hover, .contact-card:hover, .location-destination:hover,
+    .model-gallery-item:hover .model-gallery-image, .portfolio-item:hover .portfolio-image, .gallery-item:hover .gallery-image { transform: none; }
+  }
   /* Media Queries */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     /* Sections */

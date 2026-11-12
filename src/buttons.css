@@ -37,5 +37,4 @@
   .btn.is-busy { cursor: progress; opacity: .75; }
   .btn.is-busy::after { content: ""; flex: none; width: 13px; height: 13px; box-sizing: border-box; border-radius: 50%;
     border: 2px solid currentColor; border-top-color: transparent; animation: spin .8s linear infinite; }
-@media (prefers-reduced-motion: reduce) { .btn.is-busy::after { animation: none; } }
 

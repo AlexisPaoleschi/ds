@@ -1,5 +1,7 @@
 // The shared behaviour of ds.js in a real browser: the drawer, the sources' state, the time in words, the header's
-// loading wheel, a failing source's bubble, the main views' bar.
+// loading wheel, a failing source's bubble, the main views' bar; and with the keyboard and a screen reader in mind: Tab
+// inside ds.confirm, a bubble that waits under the keyboard, a loading heard twice, the titles fitted only when they
+// change, an unreadable date, the wheels standing still when the device asks for less motion.
 // usage: node checks/behaviours.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -336,6 +338,117 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   assert(fits[0] === 'ct' && /ct-fit-/.test(fits[1]) && fits[3] && fits[2] === 'ct',
     'un titre trop long pour son menu se resserre puis rapetisse, seulement s’il le faut ' + JSON.stringify(fits));
+  // ds.confirm keeps the keyboard: Tab goes round inside, the page behind is inert, the window is named and described
+  await p.evaluate(() => { window.asked = ds.confirm({ title: 'Supprimer la règle ?', text: 'Elle ne sera plus appliquée.', ok: 'Supprimer', danger: true }); });
+  const inside = [];
+  for (let i = 0; i < 5; i++) {
+    await p.keyboard.press(i === 4 ? 'Shift+Tab' : 'Tab');
+    inside.push(await p.evaluate(() => !!document.activeElement.closest('.dialog')));
+  }
+  const named = await p.evaluate(() => {
+    const d = document.querySelector('.dialog'), t = document.getElementById(d.getAttribute('aria-labelledby')), x = document.getElementById(d.getAttribute('aria-describedby'));
+    const behind = [...document.body.children].filter(c => !c.classList.contains('dialog-veil') && !c.classList.contains('toasts') && c.tagName !== 'SCRIPT');
+    return { title: t && t.textContent, text: x && x.textContent, inert: behind.every(c => c.inert), toasts: !document.querySelector('.toasts').inert };
+  });
+  await p.keyboard.press('Escape');
+  const after = await p.evaluate(async () => ({ answer: await window.asked, inert: [...document.body.children].some(c => c.inert) }));
+  assert(inside.every(Boolean) && named.title === 'Supprimer la règle ?' && named.text === 'Elle ne sera plus appliquée.' && named.inert && named.toasts
+    && after.answer === false && !after.inert, 'ds.confirm garde le clavier, rend la page derrière inerte, se nomme et se décrit ' + JSON.stringify([inside, named, after]));
+  const ids = await p.evaluate(() => { ds.confirm({ title: 'Un', value: '' }); ds.confirm({ title: 'Deux', value: '' });
+    const t = [...document.querySelectorAll('.dialog-t')].map(h => h.id), f = [...document.querySelectorAll('.dialog-in')].map(i => i.getAttribute('aria-labelledby'));
+    document.querySelectorAll('.dialog-no').forEach(b => b.click()); return { t, f }; });
+  assert(ids.t.length === 2 && ids.t[0] !== ids.t[1] && ids.f[0] === ids.t[0] && ids.f[1] === ids.t[1], 'deux fenêtres ont chacune leur nom, et leur champ porte leur titre ' + JSON.stringify(ids));
+
+  // a bubble waits while the keyboard is on it, is read aloud by a line that stays on the page, and goes once its fade is over
+  const regions = await p.evaluate(() => [...document.querySelectorAll('.toasts > [aria-live]')].map(r => r.getAttribute('role') + ':' + r.getAttribute('aria-live')).join(' '));
+  await p.evaluate(() => { window.held = ds.toast({ type: 'info', text: 'Sélection rouverte', duration: 400, action: { label: 'Annuler', run() {} } }); });
+  await p.focus('.toast .act');
+  await p.waitForTimeout(800);
+  const kept = await p.evaluate(() => ({ there: !!document.querySelector('.toast:not(.out)'), said: document.querySelector('.toasts [role="status"]').textContent }));
+  await p.evaluate(() => document.activeElement.blur());
+  await p.waitForTimeout(900);
+  const gone = await p.evaluate(() => !document.querySelector('.toast .txt') || ![...document.querySelectorAll('.toast .txt')].some(t => t.textContent === 'Sélection rouverte'));
+  assert(regions === 'status:polite alert:assertive' && kept.there && kept.said === 'Sélection rouverte' && gone,
+    'une bulle attend sous le clavier, est lue par une ligne qui reste dans la page, puis s’en va ' + JSON.stringify([regions, kept, gone]));
+  const fade = await p.evaluate(async () => {
+    document.documentElement.dataset.theme = 'vitrine';
+    const t = ds.toast({ type: 'good', text: 'Fondu entier' }), el = t.el; t.close();
+    const at = ms => new Promise(r => setTimeout(() => r(el.isConnected), ms));
+    const mid = await at(220), end = await at(200);
+    document.documentElement.dataset.theme = 'atelier';
+    return [mid, end];
+  });
+  assert(fade[0] === true && fade[1] === false, 'en Vitrine, une bulle reste le temps de son fondu (0,3 s), puis s’en va ' + JSON.stringify(fade));
+
+  // fitting the titles measures only when a title comes or what it holds changes: not on a text changed elsewhere
+  const measures = await p.evaluate(async () => {
+    let n = 0;
+    const orig = Range.prototype.getBoundingClientRect;
+    Range.prototype.getBoundingClientRect = function () { n++; return orig.call(this); };
+    const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+    const card = document.createElement('section'); card.className = 'card'; card.style.width = '392px';
+    card.innerHTML = '<h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pv">Novembre 2026</span></label></h2><p class="pc">0 %</p>';
+    document.body.append(card); await frame();
+    const onCome = n; n = 0;
+    for (let i = 1; i <= 6; i++) { card.querySelector('.pc').textContent = i * 10 + ' %'; await frame(); }
+    const onText = n; n = 0;
+    card.querySelector('.pv').textContent = 'Octobre 2026'; await frame();
+    const onHeld = n;
+    Range.prototype.getBoundingClientRect = orig; card.remove();
+    return { onCome, onText, onHeld };
+  });
+  assert(measures.onCome > 0 && measures.onText === 0 && measures.onHeld > 0,
+    'l’ajustement des titres mesure à l’arrivée d’un titre et quand ce qu’il porte change, jamais sur un texte ailleurs ' + JSON.stringify(measures));
+
+  // a date that cannot be read is written « — », as a missing figure, instead of stopping the page
+  const unread = await p.evaluate(() => [ds.date('pas une date'), ds.when('pas une date'), ds.ago('pas une date'), ds.soon('pas une date'), ds.date('2026-11-09')]);
+  assert(unread.slice(0, 4).every(x => x === '—') && unread[4] === '9 novembre 2026', 'une date illisible s’écrit « — » ' + JSON.stringify(unread));
+
+  // a loading of 3s is heard twice, not at every step of its share: its words at the start, « Chargement terminé » at the end
+  const heard = await p.evaluate(async () => {
+    const region = document.querySelector('header.top .busy'), boot = document.getElementById('boot-pc');
+    const exposed = el => [...el.childNodes].map(n => n.nodeType === 3 ? n.textContent : n.nodeType === 1 && n.getAttribute('aria-hidden') !== 'true' ? exposed(n) : '').join('');
+    const seen = []; let last = null;
+    const look = () => { const t = getComputedStyle(region).visibility === 'visible' ? exposed(region).trim() : ''; if (t !== last) { seen.push(t); last = t; } };
+    const timer = setInterval(look, 20);
+    ds.busy.start('Lecture des banques', { expected: 3000 });
+    await new Promise(r => setTimeout(r, 3000));
+    const shown = region.querySelector('.pc').textContent, bootHidden = boot.getAttribute('aria-hidden');
+    ds.busy.done();
+    await new Promise(r => setTimeout(r, 900));
+    clearInterval(timer);
+    return { seen: seen.filter(Boolean), shown, bootHidden };
+  });
+  assert(heard.seen.length <= 3 && heard.seen[0] === 'Lecture des banques' && heard.seen[heard.seen.length - 1] === 'Chargement terminé'
+    && /^\d+%$/.test(heard.shown) && heard.bootHidden === 'true',
+    'un chargement de 3 s se dit au début et à la fin, sa part reste affichée sans être lue ' + JSON.stringify(heard));
+
+  // less motion: the durations are nothing and every wheel stands still, in both themes
+  await p.emulateMedia({ reducedMotion: 'reduce' });
+  const still = await p.evaluate(() => {
+    const box = document.createElement('div');
+    box.innerHTML = '<div class="toast is-busy"><i class="mark"></i></div><div class="msg"><span class="act"><i class="spin"></i></span></div>'
+      + '<header class="top"><span class="busy"><i class="spin"></i></span></header><div class="boot"><div class="boot-p"><i class="spin"></i></div></div>'
+      + '<i class="spinner"></i><button class="btn is-busy">Envoyer</button>';
+    document.body.append(box);
+    const moving = [];
+    for (const theme of ['atelier', 'vitrine']) {
+      document.documentElement.dataset.theme = theme;
+      const root = getComputedStyle(document.documentElement);
+      if (['--t-fast', '--t-mid', '--t-slow'].some(t => parseFloat(root.getPropertyValue(t)) !== 0)) moving.push(theme + ' durées');
+      for (const sel of ['.toast .mark', '.msg .spin', 'header.top .spin', '.boot-p .spin', '.spinner']) {
+        const c = getComputedStyle(box.querySelector(sel));
+        if (parseFloat(c.animationDuration) !== 0 || c.animationIterationCount !== '1') moving.push(theme + ' ' + sel);
+      }
+      const after = getComputedStyle(box.querySelector('.btn.is-busy'), '::after');
+      if (parseFloat(after.animationDuration) !== 0 || after.animationIterationCount !== '1') moving.push(theme + ' .btn.is-busy');
+    }
+    document.documentElement.dataset.theme = 'atelier'; box.remove();
+    return moving;
+  });
+  await p.emulateMedia({ reducedMotion: 'no-preference' });
+  assert(still.length === 0, 'quand l’appareil demande moins d’animations, plus de durée et chaque roue s’arrête, dans les deux thèmes ' + JSON.stringify(still));
+
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

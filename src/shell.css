@@ -71,7 +71,10 @@
   details.status li.sl a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
   .late { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid color-mix(in srgb, var(--bad) 30%, transparent); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
   .empty { color: var(--dim); margin: 0; }
-  footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: wrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
+  /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;
+     any other footer (a site's, Selecta's) keeps its own look */
+  .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
+  .wrap > footer details.status { min-width: 0; }
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
   .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--s-8) var(--s-14); cursor: pointer; }
   /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
@@ -114,7 +117,7 @@
    details.status li { grid-template-columns: 1fr auto; }
    details.status .sf { display: none; }
    /* on a phone the list takes the page's width, however short its lines */
-   footer details.status { flex: 1 1 auto; }
+   .wrap > footer details.status { flex: 1 1 auto; }
    /* what went wrong goes under the whole row, lined up with the name, so that it does not squeeze the name */
    details.status .sd { grid-column: 1 / -1; padding-left: calc(13px + var(--s-6)); }
 }
@@ -130,10 +133,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
-   /* the wheel stands still and the tick is drawn at once (as Studio did) */
-   header.top .busy .spin { animation: none; }
+   /* the tick is drawn at once and stays, as Studio did (the wheels stand still through tokens.css) */
    header.top.loading-done .busy .okc svg { stroke-dashoffset: 0; animation: none; }
-   .boot .boot-p .spin { animation: none; }
 }
   /* a list's line: its date or time, and its amount or figure */
   .t { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }

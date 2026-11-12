@@ -1,17 +1,20 @@
-/* ds 2.36.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.37.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit's behaviours (dist/ds-site.js), for alexispaoleschi.com's pages; the apps do not load it.
    <div id="nav" data-title data-links='[{"href": "#models", "label": "Models"}]' data-cta-href data-cta-label> becomes
    the bar of an event page (the design system's .topbar.is-site, here .sticky-nav), shown once the page's first hero
    is passed, with its phone menu (.mobile-menu, its button, its veil; Escape, the veil or a link close it). On that
-   page a link to #something scrolls there smoothly, just below the bar.
+   page a link to #something scrolls there smoothly (at once when the device asks for less motion), just below the bar.
+   Hidden, the bar and the closed menu cannot be reached with Tab; the menu's button says whether it is open, opening it
+   takes the keyboard to its first link, and Escape or the veil take it back to the button.
    <div id="back-button" data-href data-label> becomes the way back over the hero's photo (.back-link.on-photo).
    window.hideLoader() takes the page loader (.page-loader, written in the page so that it shows at once) away; it goes
    by itself after 5s if a page never calls it.
    window.dsLandscapeWarning = true, set before this script, puts the prompt to turn a phone upright over the page held
    sideways; without it the page scrolls held sideways too (.landscape-warning-disabled on <html>).
    The galleries of an event page (.gallery-item, each .model-gallery's .model-gallery-item, .portfolio-item, each with
-   its <img data-full>) open in the photo viewer when ds-photo.js is on the page too.
-   ds.icon(name, cls) writes an icon of the sprite file that sits beside this script (icons-X.Y.Z.svg).
+   its <img data-full>) open in the photo viewer when ds-photo.js is on the page too, with a click, or Enter or Space.
+   ds.icon(name, cls) writes an icon of the sprite file that sits beside this script (icons-X.Y.Z.svg). ds.h(tag, attrs, kids)
+   builds a node and ds.esc(text) makes a text harmless in HTML, as in ds.js, for what a page writes from a Gist.
    ds.json(url) reads a JSON file (the site's Gists), asked for afresh on every visit (?t=…) and once per page however
    many scripts ask for it. ds.photo(src) and ds.images(root) settle once a photo, or every <img> under root, has loaded
    or failed. ds.ready(...waits) takes the page loader away once these and the photo the page gives its header
@@ -46,8 +49,36 @@
   };
   setTimeout(window.hideLoader, 5000);
 
-  function esc(s) {
-    return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; });
+  // smooth scrolling, unless the device asks for less motion
+  function reduced() { return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }
+  function glide() { return reduced() ? "auto" : "smooth"; }
+  // the element an address's #part names, read as an id, so that « #2026 » works where a selector would fail
+  function byHash(hash) {
+    if (!hash || hash.length < 2) return null;
+    try { return document.getElementById(decodeURIComponent(hash.slice(1))); } catch (e) { return null; }
+  }
+
+  // ds.esc and ds.h, the same as ds.js's, for a page that loads only the site kit: what comes from outside the page (the
+  // Gists) is written escaped, or built as nodes, never as raw HTML
+  function esc(text) {
+    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
+  function h(tag, attrs, kids) {
+    var node = document.createElement(tag);
+    if (attrs) for (var k in attrs) {
+      var v = attrs[k];
+      if (v == null || v === false) continue;
+      if (k === "class") node.className = v;
+      else if (k === "text") node.textContent = v;
+      else if (k === "style") node.setAttribute("style", v);
+      else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
+      else node.setAttribute(k, v === true ? "" : v);
+    }
+    (kids || []).forEach(function (c) {
+      if (c == null || c === false) return;
+      node.appendChild(typeof c === "string" || typeof c === "number" ? document.createTextNode(String(c)) : c);
+    });
+    return node;
   }
 
   // the bar and its menu, from <div id="nav">
@@ -59,13 +90,14 @@
     var navLinks = links.map(function (l) { return '<a class="topbar-link" href="' + esc(l.href) + '">' + esc(l.label) + "</a>"; }).join(" ");
     var menuLinks = links.map(function (l) { return '<a class="mobile-menu-link" href="' + esc(l.href) + '">' + esc(l.label) + "</a>"; }).join(" ");
     target.outerHTML =
-      '<nav aria-hidden="true" class="topbar is-site sticky-nav"><div class="topbar-in">' +
+      '<nav class="topbar is-site sticky-nav"><div class="topbar-in">' +
       '<a class="topbar-brand" href="#">' + esc(target.dataset.title || "") + "</a>" +
       '<div class="topbar-nav is-center is-wide">' + navLinks + "</div>" +
       '<a class="btn is-save is-wide" href="' + ctaHref + '">' + ctaLabel + "</a>" +
-      '<button aria-label="Toggle menu" class="mobile-menu-toggle"><span></span> <span></span> <span></span></button>' +
+      '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu" class="mobile-menu-toggle">' +
+      '<span></span> <span></span> <span></span></button>' +
       "</div></nav>" +
-      '<div aria-hidden="true" class="mobile-menu"><div class="mobile-menu-links">' + menuLinks +
+      '<div class="mobile-menu" id="site-menu"><div class="mobile-menu-links">' + menuLinks +
       '<a class="mobile-menu-cta" href="' + ctaHref + '">' + ctaLabel + "</a></div></div>" +
       '<div aria-hidden="true" class="mobile-menu-overlay"></div>';
   }
@@ -101,13 +133,13 @@
       e.preventDefault();
       var href = a.getAttribute("href");
       if (href === "#") {
-        window.scrollTo({ top: 0, behavior: "smooth" });
+        window.scrollTo({ top: 0, behavior: glide() });
         return;
       }
-      var to = document.querySelector(href);
+      var to = byHash(href);
       if (!to) return;
       var navHeight = stickyNav.offsetHeight - (menu ? 1 : 0);
-      window.scrollTo({ top: to.getBoundingClientRect().top + window.pageYOffset - navHeight, behavior: "smooth" });
+      window.scrollTo({ top: to.getBoundingClientRect().top + window.pageYOffset - navHeight, behavior: glide() });
     });
 
     if (!menu || !toggle || !veil) return;
@@ -117,38 +149,57 @@
       var on = menu.classList.toggle("active");
       veil.classList.toggle("active", on);
       toggle.classList.toggle("active", on);
+      toggle.setAttribute("aria-expanded", String(on));
       document.body.style.overflow = on ? "hidden" : "";
+      // opened, the keyboard goes to its first link (the menu is shown at once, it only unrolls)
+      if (on) {
+        var first = menu.querySelector("a");
+        if (first) requestAnimationFrame(function () { first.focus({ preventScroll: true }); });
+      }
     }
-    function close() {
+    function close(back) {
+      var inside = menu.contains(document.activeElement);
       menu.classList.remove("active");
       veil.classList.remove("active");
       toggle.classList.remove("active");
+      toggle.setAttribute("aria-expanded", "false");
       document.body.style.overflow = "";
+      // closed with Escape or the veil while the keyboard was in it, the keyboard goes back to its button
+      if (back && inside) toggle.focus({ preventScroll: true });
       // a tap that closes the menu (a link) does not reopen it through the button underneath
       locked = true;
       setTimeout(function () { locked = false; }, 600);
     }
     toggle.addEventListener("click", flip);
-    veil.addEventListener("click", close);
+    veil.addEventListener("click", function () { close(true); });
     document.addEventListener("click", function (e) {
       if (e.target.closest && e.target.closest(".mobile-menu-link, .mobile-menu-cta, .topbar-brand")) close();
     });
     // Escape closes the menu (the viewer handles its own keys first)
     document.addEventListener("keydown", function (e) {
-      if (e.key === "Escape" && open()) close();
+      if (e.key === "Escape" && open()) close(true);
     });
   }
 
-  // the galleries of an event page, each in the photo viewer, which turns round its own photos
+  // the galleries of an event page, each in the photo viewer, which turns round its own photos; each photo is a button
+  // the keyboard reaches and opens with Enter or Space. An item without a photo is left out, and the others still work
   function galleries() {
     if (!window.ds || !window.ds.viewer) return;
     function wire(items, label) {
-      var photos = Array.prototype.map.call(items, function (item) {
+      items = Array.prototype.filter.call(items, function (item) { return !!item.querySelector("img"); });
+      var photos = items.map(function (item) {
         var img = item.querySelector("img");
         return { src: img.dataset.full || img.src, alt: img.alt, thumb: img.currentSrc || img.src, el: item };
       });
-      Array.prototype.forEach.call(items, function (item, i) {
-        item.addEventListener("click", function () { window.ds.viewer(photos, { start: i, from: item, label: label }); });
+      items.forEach(function (item, i) {
+        var open = function () { window.ds.viewer(photos, { start: i, from: item, label: label }); };
+        item.setAttribute("role", "button");
+        if (!item.hasAttribute("tabindex")) item.tabIndex = 0;
+        item.setAttribute("aria-label", "Open " + (photos[i].alt || label + " photo " + (i + 1)));
+        item.addEventListener("click", open);
+        item.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(); }
+        });
       });
     }
     wire(document.querySelectorAll(".gallery-item"), "Venue");
@@ -226,19 +277,19 @@
       Array.prototype.forEach.call(dots, function (dot, i) { dot.classList.toggle("active", i === current); });
     }
     Array.prototype.forEach.call(dots, function (dot, i) {
-      dot.addEventListener("click", function () { sections[i].scrollIntoView({ behavior: "smooth" }); });
+      dot.addEventListener("click", function () { sections[i].scrollIntoView({ behavior: glide() }); });
     });
     if (hint && more) {
       hint.style.cursor = "pointer";
       hint.style.pointerEvents = "auto";
-      hint.addEventListener("click", function () { sections[1].scrollIntoView({ behavior: "smooth" }); });
+      hint.addEventListener("click", function () { sections[1].scrollIntoView({ behavior: glide() }); });
     }
     container.addEventListener("scroll", light, { passive: true });
     window.addEventListener("resize", light, { passive: true });
     light();
     if (window.location.hash) {
-      var to = document.querySelector(window.location.hash);
-      if (to) setTimeout(function () { to.scrollIntoView({ behavior: "smooth" }); }, 100);
+      var to = byHash(window.location.hash);
+      if (to) setTimeout(function () { to.scrollIntoView({ behavior: glide() }); }, 100);
     }
   }
 
@@ -251,6 +302,8 @@
 
   window.ds = window.ds || {};
   window.ds.icon = icon;
+  window.ds.esc = window.ds.esc || esc;
+  window.ds.h = window.ds.h || h;
   window.ds.json = json;
   window.ds.photo = photo;
   window.ds.images = images;

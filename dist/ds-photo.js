@@ -1,4 +1,4 @@
-/* ds 2.36.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.37.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* ds.viewer(items, {start, onChange, onClose, label, el, from}): the photo viewer of src/viewer.css, opened on
    items[start]. An item is {src, srcset, sizes, alt, caption, thumb, el}, a plain address, or a function that returns one
    (or a promise of one), called when the photo is first needed: Selecta asks its server for a signed address then.
@@ -17,6 +17,8 @@
    items, data-viewer-label the viewer. Nothing here is written inline, so a page served with script-src 'self' works. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.viewer) return;
   var WORDS = {
     fr: { label: "Photos", close: "Fermer", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
     en: { label: "Photos", close: "Close", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
@@ -349,6 +351,8 @@
    grid, it gives the same one. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.photogrid) return;
   var WORDS = {
     fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
     en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }

@@ -1,4 +1,4 @@
-/* ds 2.36.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.37.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -285,7 +285,7 @@
    ds.when(t), ds.ago(t) and ds.soon(t) say a time in words, in Paris's time; ds.date(t, style) writes a date;
    ds.number(n) and ds.money(n) write figures; ds.api(method, url, body) asks the app's server; ds.jobs(holder, jobs)
    draws the syncs of a settings page; ds.busy runs the header's loading wheel; ds.trouble(key, {…}) tells a source that
-   failed, once, with « Réessayer »; ds.h and ds.ico build nodes; ds.compact writes a short figure; ds.avatar a logo with its
+   failed, once, with « Réessayer »; ds.h and ds.ico build nodes, ds.esc makes a text harmless in HTML; ds.compact writes a short figure; ds.avatar a logo with its
    initial; ds.fold keeps foldable sections as left; ds.route and ds.seek follow the address after #. Rows that open, forms
    that ask before deleting and the messages left after a redirect work by themselves (see below).
    Their own words follow the page's language, <html lang>: English for "en…", French otherwise. */
@@ -297,27 +297,51 @@
           never: "jamais", today: "aujourd'hui", yesterday: "hier", tomorrow: "demain", on: "le ", at: " à ", now: "à l’instant",
           ago: function (x) { return "il y a " + x; }, soon: "dans un instant", in: function (x) { return "dans " + x; },
           journal: "Journal", run: "Lancer", runNow: " maintenant", started: "Lancé", running: "En cours", allLogs: "Tout sur Render ↗",
-          live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…",
+          live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé",
           nothing: "Rien d’écrit depuis le démarrage du serveur.", journalOf: function (x) { return "Journal : " + x; },
           retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour" },
     en: { close: "Close", cancel: "Cancel", confirm: "Confirm", openFilters: "Open the filters", closeFilters: "Close the filters",
           never: "never", today: "today", yesterday: "yesterday", tomorrow: "tomorrow", on: "on ", at: " at ", now: "just now",
           ago: function (x) { return x + " ago"; }, soon: "in a moment", in: function (x) { return "in " + x; },
           journal: "Log", run: "Run", runNow: " now", started: "Started", running: "Running", allLogs: "All on Render ↗",
-          live: "Live, running now", lastRuns: "Last runs", loading: "Loading…",
+          live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done",
           nothing: "Nothing written since the server started.", journalOf: function (x) { return "Log: " + x; },
           retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date" }
   };
   // read when a message or a window opens, so that a page that changes its language is followed
   function words() { return english() ? WORDS.en : WORDS.fr; }
-  var stack = null, live = [];
+  var stack = null, live = [], said = {};
+  // the bubbles' place, made once the page is there, with two lines read aloud that stay in it from the start: a
+  // screen reader follows a region that was already on the page, not always one added with its words
   function holder() {
     if (!stack) {
       stack = document.createElement("div");
       stack.className = "toasts";
+      said.polite = document.createElement("div");
+      said.polite.className = "visually-hidden";
+      said.polite.setAttribute("role", "status");
+      said.polite.setAttribute("aria-live", "polite");
+      said.alert = document.createElement("div");
+      said.alert.className = "visually-hidden";
+      said.alert.setAttribute("role", "alert");
+      said.alert.setAttribute("aria-live", "assertive");
+      stack.append(said.polite, said.alert);
       document.body.appendChild(stack);
     }
     return stack;
+  }
+  // what a bubble says goes to the line read aloud: emptied first, so that the same words are read again
+  function say(text, alert) {
+    holder();
+    var region = alert ? said.alert : said.polite;
+    region.textContent = "";
+    setTimeout(function () { region.textContent = text; }, 50);
+  }
+  // the longest of an element's transitions, in milliseconds (0 when it has none, or when motion is reduced)
+  function lasts(el) {
+    return Math.max.apply(null, getComputedStyle(el).transitionDuration.split(",").map(function (v) {
+      return (parseFloat(v) || 0) * (/ms\s*$/.test(v) ? 1 : 1000);
+    }));
   }
   function toast(opts) {
     opts = opts || {};
@@ -327,9 +351,11 @@
     el.innerHTML = '<span class="mark" aria-hidden="true"></span><span class="txt"></span>' +
       '<button type="button" class="act" hidden></button><button type="button" class="x" aria-label="' + words().close + '">×</button>';
     el.querySelector(".x").onclick = function () { t.close(); };
-    // the countdown waits while the pointer or a finger is on the message
+    // the countdown waits while the pointer, a finger or the keyboard is on the message
     el.addEventListener("pointerenter", function () { clearTimeout(t.timer); });
-    el.addEventListener("pointerleave", function () { t.arm(); });
+    el.addEventListener("pointerleave", function () { if (!el.contains(document.activeElement)) t.arm(); });
+    el.addEventListener("focusin", function () { clearTimeout(t.timer); });
+    el.addEventListener("focusout", function (e) { if (!el.contains(e.relatedTarget) && !el.matches(":hover")) t.arm(); });
     t.arm = function () {
       clearTimeout(t.timer);
       if (t.life) t.timer = setTimeout(t.close, t.life);
@@ -337,8 +363,10 @@
     t.update = function (o) {
       var type = o.type || "good", act = el.querySelector(".act");
       el.className = "toast is-" + type;
-      el.setAttribute("role", type === "bad" ? "alert" : "status");
       el.querySelector(".txt").textContent = o.text || "";
+      // read aloud by the lines that stay on the page; a message that went wrong at once
+      if (o.text && o.text !== el._said) say(o.text, type === "bad");
+      el._said = o.text;
       t.text = o.text;
       act.hidden = !o.action;
       if (o.action) {
@@ -355,7 +383,8 @@
       clearTimeout(t.timer);
       live.splice(live.indexOf(t), 1);
       el.classList.add("out");
-      setTimeout(function () { el.remove(); }, 200);
+      // taken away once its fade is over, however long the theme makes it
+      setTimeout(function () { el.remove(); }, lasts(el) + 20);
     };
     holder().appendChild(el);
     live.push(t);
@@ -367,18 +396,21 @@
   // system and answers with a promise:
   // false when cancelled, true when confirmed, or the typed text when the window has a field (value).
   // A dangerous answer (danger) starts on « Annuler » (Cancel), so Enter never deletes by mistake.
+  var DIALOG_FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  var dialogs = 0;
   function confirm(opts) {
     opts = opts || {};
     return new Promise(function (done) {
-      var veil = document.createElement("div"), field = opts.value != null;
+      var veil = document.createElement("div"), field = opts.value != null, n = ++dialogs;
       veil.className = "dialog-veil";
-      veil.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-t"><h2 class="dialog-t" id="dialog-t"></h2>' +
-        '<p class="dialog-x"></p>' + (field ? '<input class="dialog-in" type="text">' : "") +
+      veil.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-t-' + n + '"><h2 class="dialog-t" id="dialog-t-' + n + '"></h2>' +
+        '<p class="dialog-x" id="dialog-x-' + n + '"></p>' + (field ? '<input class="dialog-in" type="text" aria-labelledby="dialog-t-' + n + '">' : "") +
         '<div class="dialog-b"><button type="button" class="btn dialog-no">' + words().cancel + '</button><button type="button" class="btn dialog-ok"></button></div></div>';
       var ok = veil.querySelector(".dialog-ok"), no = veil.querySelector(".dialog-no"), input = veil.querySelector(".dialog-in"), text = veil.querySelector(".dialog-x");
       veil.querySelector(".dialog-t").textContent = opts.title || "";
       text.textContent = opts.text || "";
       text.hidden = !opts.text;
+      if (opts.text) veil.firstChild.setAttribute("aria-describedby", text.id);
       ok.textContent = opts.ok || words().confirm;
       ok.classList.add(opts.danger ? "is-danger" : "is-save");
       if (input) {
@@ -389,9 +421,10 @@
         if (opts.autocomplete) input.setAttribute("autocomplete", opts.autocomplete);
         if (opts.maxlength) input.maxLength = opts.maxlength;
       }
-      var before = document.activeElement;
+      var before = document.activeElement, box = veil.firstChild, stilled = [];
       function end(answer) {
         document.removeEventListener("keydown", key, true);
+        stilled.forEach(function (x) { x.inert = false; });
         veil.remove();
         if (before && before.focus) before.focus();
         done(answer);
@@ -399,11 +432,24 @@
       function key(e) {
         if (e.key === "Escape") { e.preventDefault(); end(false); }
         else if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
+        else if (e.key === "Tab") {
+          // Tab goes round inside the window, never to the page behind it
+          var list = [].filter.call(box.querySelectorAll(DIALOG_FOCUSABLE), function (x) { return x.getClientRects().length > 0; });
+          if (!list.length) return;
+          var first = list[0], last = list[list.length - 1], at = document.activeElement;
+          if (!box.contains(at)) { e.preventDefault(); (e.shiftKey ? last : first).focus(); }
+          else if (e.shiftKey && at === first) { e.preventDefault(); last.focus(); }
+          else if (!e.shiftKey && at === last) { e.preventDefault(); first.focus(); }
+        }
       }
       ok.onclick = function () { end(input ? input.value : true); };
       no.onclick = function () { end(false); };
       veil.addEventListener("click", function (e) { if (e.target === veil) end(false); });
       document.addEventListener("keydown", key, true);
+      // the page behind no longer answers, to a pointer, the keyboard or a screen reader; the bubbles still do
+      [].forEach.call(document.body.children, function (x) {
+        if (!x.inert && !x.classList.contains("toasts")) { x.inert = true; stilled.push(x); }
+      });
       document.body.appendChild(veil);
       if (input) { input.focus(); input.select(); } else (opts.danger ? no : ok).focus();
     });
@@ -512,6 +558,8 @@
      t: a Date, an ISO text, or a number of milliseconds (or of seconds, below 10^12). The days are Paris's days. */
   var TZ = "Europe/Paris";
   function date(t) { return t instanceof Date ? t : new Date(typeof t === "number" && t < 1e12 ? t * 1000 : t); }
+  // a date that cannot be read is written « — », as a missing figure is, instead of stopping the page
+  function unreadable(t) { return isNaN(date(t).getTime()); }
   function dayKey(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
   function clock(d) {
     var parts = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
@@ -528,11 +576,13 @@
   }
   function when(t) {
     if (!t) return words().never;
+    if (unreadable(t)) return "—";
     var d = date(t);
     return day(d) + words().at + clock(d);
   }
   function ago(t) {
     if (!t) return words().never;
+    if (unreadable(t)) return "—";
     var w = words(), s = (Date.now() - date(t)) / 1000;
     if (s < 60) return w.now;
     if (s < 3600) return w.ago(Math.round(s / 60) + " min");
@@ -541,6 +591,7 @@
   }
   function soon(t) {
     if (!t) return words().never;
+    if (unreadable(t)) return "—";
     var w = words(), s = (date(t) - Date.now()) / 1000;
     if (s < 60) return w.soon;
     if (s < 3600) return w.in(Math.round(s / 60) + " min");
@@ -558,6 +609,7 @@
     var bare = typeof t === "string" && /^\d{4}-\d{2}(-\d{2})?$/.test(t);
     if (bare) { d = new Date(t.length === 7 ? t + "-15T12:00:00Z" : t + "T12:00:00Z"); opts.timeZone = "UTC"; }
     else { d = date(t); opts.timeZone = TZ; }
+    if (isNaN(d.getTime())) return "—";
     var text = new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", opts).format(d);
     return english() || opts.day !== "numeric" ? text : text.replace(/(^|\s)1 (?=\D)/, "$11er ");
   }
@@ -754,14 +806,16 @@
      It never goes back, and waits at 99% for a loading longer than foreseen. done() runs on to 100% in a moment, then
      shows a green tick that fades, and remembers how long it took; done(false) just stops. say(word) shows a word in
      place of the share (Studio's « calcul… » once every read is in, while the page draws), until done(). While a first
-     loading covers the page, its share (#boot-pc) is the same. */
+     loading covers the page, its share (#boot-pc) is the same. The share and the word are only seen: screen readers hear
+     the words of start() once, then « Chargement terminé » from done(), not every step of the share. */
   var STEP = 50;
   var bz = { shown: 0, speed: 0, work: 0, arrive: 0, known: false, tick: null, end: null, start: 0, key: null, expected: 3000, top: null, word: false };
   function busyTop() { return bz.top || document.querySelector("header.top"); }
   function busyText(text) {
     var top = busyTop(), pc = top && top.querySelector(".busy .pc"), boot = document.getElementById("boot-pc");
-    if (pc) pc.textContent = text;
-    if (boot) boot.textContent = text;
+    // seen, not read aloud: the share changes every 50ms inside a region screen readers follow
+    if (pc) { pc.setAttribute("aria-hidden", "true"); pc.textContent = text; }
+    if (boot) { boot.setAttribute("aria-hidden", "true"); boot.textContent = text; }
   }
   function busyTimes() { try { return JSON.parse(localStorage.getItem("ds-busy-ms") || "{}"); } catch (e) { return {}; } }
   // one step of the share: the speed that reaches 99% at the end foreseen (arrive), taken gently (a tenth of the change
@@ -821,6 +875,9 @@
           // the tick's animation starts again even when it played a moment ago
           void top.offsetWidth;
           top.classList.add("loading-done");
+          // the one word screen readers hear at the end, once the region shows again with its tick
+          var bt = top.querySelector(".busy .bt");
+          if (bt) bt.textContent = words().loaded;
           bz.end = setTimeout(function () { top.classList.remove("loading-done"); }, 2000);
         }, 100);
       }, STEP);
@@ -878,6 +935,10 @@
      would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become text.
      ds.ico(name) is an icon of the sprite. Studio drew its whole page so; ds's own parts can too. */
   var SVGNS = "http://www.w3.org/2000/svg";
+  // ds.esc(text): a text that goes into HTML written as a string, its & < > " and ' made harmless
+  function esc(text) {
+    return String(text == null ? "" : text).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; });
+  }
   function h(tag, attrs, kids) {
     var node = document.createElement(tag);
     if (attrs) for (var k in attrs) {
@@ -950,6 +1011,12 @@
     if (under()) FIT.forEach(function (c) { h.classList.remove(c); });
   }
   var fitting = 0;
+  // a change that touches a title: inside one, or bringing one
+  function titled(m) {
+    var at = m.target.nodeType === 1 ? m.target : m.target.parentElement;
+    if (at && at.closest && at.closest(".ct")) return true;
+    return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".ct") || !!n.querySelector(".ct")); });
+  }
   function fitTitles() {
     if (fitting) return;
     fitting = requestAnimationFrame(function () {
@@ -1080,11 +1147,15 @@
   }
   function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
   onReady(function () {
+    holder();
     fold(); arrivals(); cameBack(); fitTitles();
     window.addEventListener("resize", fitTitles, { passive: true });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
-    // a page that draws its cards again: their titles are fitted once it is done
-    new MutationObserver(fitTitles).observe(document.body, { childList: true, subtree: true });
+    // a page that draws its cards again, or changes what a title holds: their titles are fitted once it is done; a
+    // change anywhere else (a loading's share, a chart's bubble, a journal) measures nothing
+    new MutationObserver(function (changes) {
+      if (changes.some(titled)) fitTitles();
+    }).observe(document.body, { childList: true, subtree: true });
   });
 
   window.ds = window.ds || {};
@@ -1111,6 +1182,7 @@
   window.ds.busy = busy;
   window.ds.trouble = trouble;
   window.ds.h = h;
+  window.ds.esc = esc;
   window.ds.ico = ico;
   window.ds.compact = compact;
   window.ds.avatar = avatar;
@@ -2753,6 +2825,8 @@
    items, data-viewer-label the viewer. Nothing here is written inline, so a page served with script-src 'self' works. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.viewer) return;
   var WORDS = {
     fr: { label: "Photos", close: "Fermer", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
     en: { label: "Photos", close: "Close", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
@@ -3085,6 +3159,8 @@
    grid, it gives the same one. */
 (function () {
   "use strict";
+  // loaded once: a page with both ds.js and ds-photo.js keeps the first, so that nothing is wired twice
+  if (window.ds && window.ds.photogrid) return;
   var WORDS = {
     fr: { size: "Taille des photos", columns: function (n) { return n + (n > 1 ? " colonnes" : " colonne"); } },
     en: { size: "Photo size", columns: function (n) { return n + (n > 1 ? " columns" : " column"); } }

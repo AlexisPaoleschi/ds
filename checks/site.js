@@ -1,7 +1,8 @@
 // The site kit in a real browser (dist/ds-site.css, dist/ds-site.js, dist/icons.svg): the bar built from <div id="nav">,
 // hidden over the hero and shown past it, its phone menu (the button, Escape, the veil, a link), a link to a part of the
 // page landing just below the bar, the way back built with its icon from the sprite file, the loader taken away, the
-// galleries opened in the viewer, every icon the kit and the site name present in the sprite file; and the kit's
+// galleries opened in the viewer (with a click, or Enter), the hidden bar and the closed menu out of Tab's reach, ds.h and
+// ds.esc, every icon the kit and the site name present in the sprite file; and the kit's
 // stylesheets, which name a token for every colour.
 // usage: node checks/site.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
@@ -63,6 +64,17 @@ function stylesheets() {
   assert(/\/dist\/icons\.svg#i-arrow-left$/.test(built.back) && built.backText.trim() === 'Events', 'the way back is built with the sprite file\'s arrow');
   assert(/<use href="[^"]*\/dist\/icons\.svg#i-mail"><\/use>/.test(built.icon) && /class="ico x"/.test(built.icon), 'ds.icon names the sprite file beside the script');
   assert(built.land, 'without window.dsLandscapeWarning the page scrolls held sideways (landscape-warning-disabled)');
+  // what a page writes from a Gist: escaped, or built as nodes, never run
+  const safe = await phone.evaluate(() => {
+    window.ran = 0;
+    const p = ds.h('p', { class: 'x', text: '<img src=x onerror="window.ran++">' }, [ds.h('b', { text: 'b' }), ' & c', null]);
+    document.body.append(p);
+    const out = [ds.esc(`<a href="x">Tom & 'Jerry'</a>`), p.innerHTML, p.querySelectorAll('img').length];
+    p.remove(); return out;
+  });
+  await phone.waitForTimeout(100);
+  assert(safe[0] === '&lt;a href=&quot;x&quot;&gt;Tom &amp; &#39;Jerry&#39;&lt;/a&gt;' && safe[2] === 0 && await phone.evaluate(() => window.ran === 0)
+    && /^&lt;img src=x onerror="window\.ran\+\+"&gt;<b>b<\/b> &amp; c$/.test(safe[1]), 'ds.esc and ds.h in the site kit write a Gist\'s text as text, never as HTML ' + JSON.stringify(safe));
   assert(!built.visible, 'the bar is hidden over the hero');
 
   const read = await phone.evaluate(async () => { const [a, b] = await Promise.all([ds.json('/data.json'), ds.json('/data.json')]); return [a === b, a.events.lyon.soldOut]; });
@@ -70,6 +82,24 @@ function stylesheets() {
   const waited = await phone.evaluate(async () => { const loader = document.querySelector('.page-loader'); let early;
     const slow = new Promise(r => setTimeout(() => { early = loader.classList.contains('hidden'); r(); }, 150)); await ds.ready(slow); return [early, loader.classList.contains('hidden')]; });
   assert(waited[0] === false && waited[1] === true, 'ds.ready takes the loader away once what the page waits for has come');
+  // hidden, the bar and the closed menu are out of Tab's reach, and no longer hidden from screen readers for good
+  const reach = [];
+  for (let i = 0; i < 10; i++) {
+    await phone.keyboard.press('Tab');
+    // the bar slides away in .3s when Tab goes back up to the top: on screen meanwhile, it is still reachable
+    await phone.waitForTimeout(450);
+    reach.push(await phone.evaluate(() => { const a = document.activeElement, bar = a.closest('.sticky-nav'), menu = a.closest('.mobile-menu');
+      return bar && !bar.classList.contains('visible') ? 'hidden bar' : menu && !menu.classList.contains('active') ? 'closed menu' : 'ok'; }));
+  }
+  await phone.evaluate(() => { document.activeElement.blur(); scrollTo(0, 0); });
+  await phone.waitForTimeout(450);
+  const marks = await phone.evaluate(() => ({ nav: document.querySelector('.sticky-nav').getAttribute('aria-hidden'), menu: document.querySelector('.mobile-menu').getAttribute('aria-hidden'),
+    vis: [getComputedStyle(document.querySelector('.sticky-nav')).visibility, getComputedStyle(document.querySelector('.mobile-menu')).visibility],
+    toggle: ['type', 'aria-expanded', 'aria-controls'].map(x => document.querySelector('.mobile-menu-toggle').getAttribute(x)) }));
+  assert(reach.every(x => x === 'ok') && marks.nav === null && marks.menu === null && marks.vis.join() === 'hidden,hidden' && marks.toggle.join() === 'button,false,site-menu',
+    'hidden, the bar and the closed menu are out of Tab\'s reach; the menu\'s button says it is closed ' + JSON.stringify([reach.filter(x => x !== 'ok'), marks]));
+  await phone.evaluate(() => { document.activeElement.blur(); scrollTo(0, 0); });
+  await phone.waitForTimeout(300);
 
   await phone.evaluate(() => scrollTo(0, document.querySelector('.hero').offsetHeight + 200));
   await phone.waitForTimeout(200);
@@ -79,9 +109,14 @@ function stylesheets() {
   await phone.waitForTimeout(200);
   const open = await phone.evaluate(() => ['.mobile-menu', '.mobile-menu-overlay', '.mobile-menu-toggle'].every(s => document.querySelector(s).classList.contains('active')) && document.body.style.overflow === 'hidden');
   assert(open, 'the button opens the menu, its veil, and holds the page still');
+  const opened = await phone.evaluate(() => ({ expanded: document.querySelector('.mobile-menu-toggle').getAttribute('aria-expanded'),
+    focus: document.activeElement.className, vis: getComputedStyle(document.querySelector('.mobile-menu')).visibility }));
+  assert(opened.expanded === 'true' && opened.focus === 'mobile-menu-link' && opened.vis === 'visible', 'opened, the menu says so and takes the keyboard to its first link ' + JSON.stringify(opened));
   await phone.keyboard.press('Escape');
   await phone.waitForTimeout(200);
   assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('active') && document.body.style.overflow === ''), 'Escape closes the menu');
+  const shut = await phone.evaluate(() => ({ expanded: document.querySelector('.mobile-menu-toggle').getAttribute('aria-expanded'), back: document.activeElement.classList.contains('mobile-menu-toggle') }));
+  assert(shut.expanded === 'false' && shut.back, 'Escape takes the keyboard back to the menu\'s button, which says it is closed ' + JSON.stringify(shut));
   await phone.waitForTimeout(700);
   await phone.click('.mobile-menu-toggle');
   await phone.waitForTimeout(200);
@@ -104,6 +139,30 @@ function stylesheets() {
   const viewer = await phone.evaluate(() => { const v = document.querySelector('.viewer'); return v && getComputedStyle(v).display !== 'none' && (v.querySelector('.viewer-count') || {}).textContent; });
   assert(viewer && /2\s*\/\s*2/.test(viewer), 'a gallery opens in the viewer on its photo (' + viewer + ')');
   await phone.keyboard.press('Escape');
+  await phone.waitForTimeout(500);
+
+  // a gallery with a photo-less item still works, and its photos open with the keyboard
+  const venue = phone.locator('.gallery-grid .gallery-item').nth(1);
+  await venue.scrollIntoViewIfNeeded();
+  const wired = await phone.evaluate(() => [...document.querySelectorAll('.gallery-grid .gallery-item')].map(g => [g.getAttribute('role'), g.tabIndex, g.getAttribute('aria-label')]));
+  await venue.focus();
+  await phone.keyboard.press('Enter');
+  await phone.waitForTimeout(800);
+  const byKey = await phone.evaluate(() => { const v = document.querySelector('.viewer'); return v && getComputedStyle(v).display !== 'none' && (v.querySelector('.viewer-count') || {}).textContent; });
+  assert(wired[0][0] === null && wired[1][0] === 'button' && wired[1][1] === 0 && wired[1][2] === 'Open Hall' && byKey && /1\s*\/\s*2/.test(byKey),
+    'a gallery photo is a button the keyboard opens with Enter; an item without a photo is left out ' + JSON.stringify([wired, byKey]));
+  await phone.keyboard.press('Escape');
+  await phone.waitForTimeout(500);
+
+  // a link to an id a selector cannot read (#2026) lands below the bar; with less motion, at once
+  await phone.emulateMedia({ reducedMotion: 'reduce' });
+  await phone.evaluate(() => scrollTo(0, document.querySelector('.hero').offsetHeight + 200));
+  await phone.waitForTimeout(300);
+  await phone.evaluate(() => document.getElementById('to2026').click());
+  await phone.waitForTimeout(60);
+  const venueTop = await phone.evaluate(() => ({ top: Math.round(document.getElementById('2026').getBoundingClientRect().top), bar: document.querySelector('.sticky-nav').offsetHeight }));
+  await phone.emulateMedia({ reducedMotion: 'no-preference' });
+  assert(Math.abs(venueTop.top - (venueTop.bar - 1)) <= 2, 'a link to #2026 lands just below the bar, at once when the device asks for less motion ' + JSON.stringify(venueTop));
 
   const arrow = await phone.evaluate(() => { const i = document.querySelector('.schedule-list .ico'), b = i.getBBox(), r = i.getBoundingClientRect(); return [b.width > 0, Math.round(r.width), getComputedStyle(i).position]; });
   assert(arrow[0] && arrow[1] === 14 && arrow[2] === 'absolute', 'a schedule line opens with the sprite\'s arrow, 14px, drawn from the file');
