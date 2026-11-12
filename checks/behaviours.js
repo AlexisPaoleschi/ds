@@ -8,7 +8,7 @@ const http = require('http'), fs = require('fs'), path = require('path');
 const root = path.join(__dirname, '..');
 const types = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/javascript', '.woff2': 'font/woff2' };
 // the server of a settings page, as far as the checks need it: a job's lines, an error, an ended session
-let served = 0, flaky = 0;
+let served = 0, flaky = 0, app502 = 0, etagSeen = [];
 const server = http.createServer((req, res) => {
   const json = (code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
   if (req.url.startsWith('/api/jobs/banks/logs')) {
@@ -22,9 +22,21 @@ const server = http.createServer((req, res) => {
   if (req.url === '/api/studio-refused') return json(400, { error: { code: 'tool_error', message: 'Notion a répondu 502' } });
   if (req.url === '/api/echo') return json(200, { header: req.headers['x-test'] || null });
   // a server restarting answers 503 once, then comes back; a Spring page's token; an ended session
-  if (req.url === '/api/flaky') { flaky += 1; return flaky === 1 ? json(503, {}) : json(200, { ok: flaky }); }
+  // the platform's own page while the app restarts (not JSON); the app's own error, JSON, is not a restart
+  if (req.url === '/api/flaky') { flaky += 1; if (flaky === 1) { res.writeHead(503, { 'Content-Type': 'text/html' }); return res.end('<html>Service Unavailable</html>'); } return json(200, { ok: flaky }); }
+  if (req.url === '/api/app-502') { app502 += 1; return json(502, { error: { code: 'tool_error', message: 'Notion ne répond pas' } }); }
+  // a form's fields or a file go as they are; what the server says of a refusal is kept whole
+  if (req.url === '/api/upload') { let n = 0; req.on('data', c => { n += c.length; }); req.on('end', () => json(200, { type: (req.headers['content-type'] || '').split(';')[0], bytes: n })); return; }
+  if (req.url === '/api/locked') return json(409, { reason: 'locked', message: 'La sélection est terminée' });
   if (req.url === '/api/csrf') return json(200, { token: req.headers['x-xsrf-token'] || null });
   if (req.url === '/api/ended') return json(401, {});
+  // Studio's bases: an ETag with "no-cache", an unchanged answer back as a 304
+  if (req.url.startsWith('/api/etag')) {
+    etagSeen.push(req.headers['if-none-match'] || null);
+    const head = { ETag: 'W/"v1"', 'Cache-Control': 'private, no-cache' };
+    if (req.headers['if-none-match'] === 'W/"v1"') { res.writeHead(304, head); return res.end(); }
+    res.writeHead(200, Object.assign({ 'Content-Type': 'application/json' }, head)); return res.end(JSON.stringify({ v: 1 }));
+  }
   const file = path.join(root, decodeURIComponent(req.url.split('?')[0]));
   if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) { res.writeHead(404); return res.end(); }
   res.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
@@ -201,6 +213,40 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   assert(calls.flaky === 2 && calls.waited >= 2900 && calls.csrf === 'jeton-42' && calls.csrfGet === null && calls.code === 'tool_error' && calls.status === 400
     && calls.msg === 'Notion a répondu 502', 'ds.api : un nouvel essai pendant un redémarrage, le jeton de Spring, err.status et err.code ' + JSON.stringify(calls));
+  // ds 2.40: the apps' calls (Studio's own 502, Selecta's uploads and refusals, Bank's figures)
+  const calls240 = await p.evaluate(async () => {
+    const out = {};
+    const t0 = Date.now();
+    try { await ds.api('GET', '/api/app-502'); } catch (e) { out.app = [e.code, e.status, e.message, Date.now() - t0 < 1500]; }
+    const fd = new FormData(); fd.append('file', new Blob(['0123456789'], { type: 'image/jpeg' }), 'a.jpg');
+    out.form = (await ds.api('POST', '/api/upload', fd)).type;
+    const steps = [];
+    const up = await ds.api('POST', '/api/upload', new Blob(['x'.repeat(200000)]), { progress: (a, b) => steps.push([a, b]) });
+    out.progress = [up.bytes, steps.length > 0, steps.length ? steps[steps.length - 1][0] === steps[steps.length - 1][1] : false];
+    out.params = (await ds.api('POST', '/api/upload', new URLSearchParams({ a: 1 }))).type;
+    out.json = (await ds.api('POST', '/api/upload', { a: 1 })).type;
+    try { await ds.api('POST', '/api/locked', null, { keepalive: true }); } catch (e) { out.locked = [e.status, e.code, e.message, e.body && e.body.reason]; }
+    out.figures = [ds.number(12.5, { min: 0, max: 2 }), ds.number(12.25, { min: 0, max: 2 }), ds.number(-3, { signed: true }), ds.number(3, { signed: true }),
+      ds.money(1.23456, { min: 2, max: 4 }), ds.money(1.2, { min: 2, max: 4 }), ds.money(2499.6, { decimals: 0 }), ds.percent(0.1234, { decimals: 2, signed: true }),
+      ds.percent(-0.05), ds.percent(0.5), ds.time('2026-11-09T08:05:00Z'), ds.time('2026-11-09T08:05:00Z', { pad: true }), ds.time(''), ds.time('nope'),
+      ds.day.hour(new Date('2026-11-09T22:30:00Z'))];
+    return out;
+  });
+  console.log('     ', JSON.stringify(calls240));
+  assert(JSON.stringify(calls240.app) === JSON.stringify(['tool_error', 502, 'Notion ne répond pas', true]) && calls240.form === 'multipart/form-data'
+    && calls240.progress[0] === 200000 && calls240.progress[1] && calls240.progress[2] && calls240.params === 'application/x-www-form-urlencoded'
+    && calls240.json === 'application/json' && JSON.stringify(calls240.locked) === JSON.stringify([409, 'locked', 'La sélection est terminée', 'locked']),
+    'ds.api : l’erreur JSON d’une appli n’est pas un redémarrage, un formulaire et un fichier tels quels, l’envoi suivi, le refus gardé entier');
+  assert(JSON.stringify(calls240.figures) === JSON.stringify(['12,5', '12,25', '−3', '+3', '1,2346€', '1,20€', '2\u00a0500€', '+12,34\u00a0%', '−5\u00a0%', '50\u00a0%',
+    '9h05', '09h05', '', '—', 23]), 'ds.number et ds.money avec {min, max, signed}, ds.percent, ds.time, ds.day.hour');
+  // ds 2.40.1: {cache: "default"} lets an unchanged read come back as a 304; without it, nothing is kept
+  const etag = await p.evaluate(async () => {
+    const a = [(await ds.api('GET', '/api/etag?a')).v, (await ds.api('GET', '/api/etag?a')).v];
+    const b = [(await ds.api('GET', '/api/etag?b', null, { cache: 'default' })).v, (await ds.api('GET', '/api/etag?b', null, { cache: 'default' })).v];
+    return a.concat(b);
+  });
+  assert(JSON.stringify(etag) === '[1,1,1,1]' && JSON.stringify(etagSeen) === JSON.stringify([null, null, null, 'W/"v1"']),
+    'ds.api {cache: "default"} : une lecture inchangée revient en 304 avec son ETag, sans l’option rien n’est gardé ' + JSON.stringify(etagSeen));
   // a window that asks for a code received by SMS
   const code = await p.evaluate(() => { ds.confirm({ title: 'Code reçu par SMS', value: '', inputmode: 'numeric', autocomplete: 'one-time-code', maxlength: 6 });
     const i = document.querySelector('.dialog-in'), out = [i.inputMode, i.getAttribute('autocomplete'), i.maxLength]; document.querySelector('.dialog-no').click(); return out; });
@@ -542,6 +588,71 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(layers.sheetTab && layers.windowTop && layers.windowTab && layers.order.join(',') === 'window,sheet' && layers.empty,
     'les couches : Échap ferme la fenêtre posée sur la fiche, puis la fiche ; Tab reste dans chacune ' + JSON.stringify(layers));
 
+  // ds 2.40: a card folded by its title, a tile that opens, figures that fit, the tag, the header's square buttons,
+  // tabs that are links or radio buttons, the tables' sort menu
+  await p.setViewportSize({ width: 1280, height: 900 });
+  const pieces = await p.evaluate(async () => {
+    const out = {}, cs = (el, k) => getComputedStyle(el)[k], token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+    const probe = c => { const d = document.createElement('i'); d.style.color = c; document.body.append(d); const v = getComputedStyle(d).color; d.remove(); return v; };
+    const box = document.createElement('div'); document.body.append(box);
+    box.innerHTML = '<section class="card" id="fc"><h2 class="ct">Ce qui rapporte <label class="pill"><span class="pv">30 jours</span><select><option>30 jours</option></select></label></h2><p>Dedans</p></section>';
+    const card = box.querySelector('#fc'), head = card.querySelector('.ct');
+    localStorage.removeItem('ds-fold:test-card');
+    const f = ds.foldCard(card, 'test-card');
+    out.fold = [head.getAttribute('role'), head.tabIndex, head.getAttribute('aria-expanded'), f === ds.foldCard(card, 'test-card')];
+    head.click();
+    out.fold.push(card.classList.contains('is-folded'), cs(card.querySelector('p'), 'display'), localStorage.getItem('ds-fold:test-card'));
+    card.querySelector('select').dispatchEvent(new MouseEvent('click', { bubbles: true }));
+    out.fold.push(card.classList.contains('is-folded'));
+    head.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
+    out.fold.push(card.classList.contains('is-folded'), head.getAttribute('aria-expanded'));
+    head.click();
+    const again = document.createElement('section'); again.className = 'card'; again.innerHTML = '<h2 class="ct">Encore</h2><p>x</p>'; box.append(again);
+    ds.foldCard(again, 'test-card');
+    out.fold.push(again.classList.contains('is-folded'));
+    // a tile that opens, figures that fit with 11px at the least
+    box.insertAdjacentHTML('beforeend', '<dl class="tiles is-compact is-cols is-shrink" id="tl" style="--tile-cols: 3; width: 300px">' +
+      '<div class="tile is-link"><dt><a class="row-link" href="#tuile">Placements</a></dt><dd>48 210,55€</dd></div>' +
+      '<div class="tile"><dt>Sorties</dt><dd>−12 345 678 901,90€</dd></div><div class="tile"><dt>Entrées</dt><dd>3€</dd></div></dl>');
+    await new Promise(r => setTimeout(r, 100));
+    const tl = box.querySelector('#tl'), dds = tl.querySelectorAll('dd');
+    out.tiles = [cs(tl, 'gridTemplateColumns').split(' ').length, dds[1].style.fontSize, cs(dds[1], 'whiteSpace'), dds[2].style.fontSize, cs(tl.querySelector('.tile'), 'cursor')];
+    tl.querySelector('.tile.is-link dd').click();
+    out.tiles.push(location.hash);
+    history.replaceState(null, '', location.pathname);
+    // the tag
+    box.insertAdjacentHTML('beforeend', '<span class="tag" id="t1">bientôt</span><span class="tag is-good" id="t2">+3 %</span><span class="tag" id="t3" style="--a: var(--c-bleu)">Revolut</span>');
+    const ink = c => probe('color-mix(in oklab, ' + c + ' var(--tint-ink), var(--ink))');
+    out.tag = [cs(box.querySelector('#t1'), 'color') === ink('var(--accent)'), cs(box.querySelector('#t2'), 'color') === ink('var(--good)'),
+      cs(box.querySelector('#t3'), 'color') === ink('var(--c-bleu)'), cs(box.querySelector('#t1'), 'fontSize'), cs(box.querySelector('#t1'), 'borderTopWidth')];
+    // the header's square buttons: the panel's ground, a faint icon, 34px
+    box.insertAdjacentHTML('beforeend', '<header class="top"><button class="btn is-icon newver" id="hb" type="button"><svg class="ico"><use href="#i-reload"/></svg><i class="newver-pip"></i></button></header>');
+    const hb = box.querySelector('#hb');
+    out.head = [cs(hb, 'backgroundColor') === probe('var(--panel)'), cs(hb, 'color') === probe('var(--faint)'), hb.getBoundingClientRect().width, hb.getBoundingClientRect().height];
+    hb.classList.add('is-on');
+    out.head.push(cs(hb, 'color') === probe('var(--accent-text)'), cs(hb.querySelector('.newver-pip'), 'display'));
+    // tabs that are links and radio buttons
+    box.insertAdjacentHTML('beforeend', '<nav class="tabs" id="tn"><a href="#" aria-current="page">FR</a><a href="#">EN</a></nav>' +
+      '<div class="tabs is-icons" id="tr"><label><input type="radio" class="visually-hidden" name="lay" checked><svg class="ico"><use href="#i-gallery"/></svg></label><label><input type="radio" class="visually-hidden" name="lay"><svg class="ico"><use href="#i-layout"/></svg></label></div>');
+    const on = probe('var(--accent-text)'), tn = box.querySelectorAll('#tn a'), tr = box.querySelectorAll('#tr label');
+    out.tabs = [cs(tn[0], 'color') === on, cs(tn[1], 'color') === on, cs(tr[0], 'color') === on, cs(tr[1], 'color') === on];
+    tr[1].click();
+    out.tabs.push(cs(tr[1], 'color') === on, cs(tr[0], 'color') === on);
+    // the tables' sort menu, a pill, hidden on a computer wherever the pill's rule comes
+    box.insertAdjacentHTML('beforeend', '<label class="pill tbl-sortmenu" id="sm"><span class="pv">Date</span><select><option>Date</option></select></label>');
+    out.sortmenu = cs(box.querySelector('#sm'), 'display');
+    box.remove();
+    return out;
+  });
+  console.log('     ', JSON.stringify(pieces));
+  assert(JSON.stringify(pieces.fold) === JSON.stringify(['button', 0, 'true', true, true, 'none', '0', true, false, 'true', true]),
+    'ds.foldCard : le titre plie la carte, au clavier aussi, ce qu’il contient n’y touche pas, l’appareil s’en souvient');
+  assert(pieces.tiles[0] === 3 && pieces.tiles[1] === '11px' && pieces.tiles[2] === 'normal' && pieces.tiles[3] === '' && pieces.tiles[4] === 'pointer' && pieces.tiles[5] === '#tuile',
+    'les cases : leur nombre de colonnes, un chiffre trop long rapetisse jusqu’à 11 px puis passe à la ligne, une case qui s’ouvre');
+  assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '11px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
+  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 34, 34, true, 'block']), 'les boutons carrés de l’en-tête : discrets, 34 px, l’or d’une nouvelle version');
+  assert(JSON.stringify(pieces.tabs) === JSON.stringify([true, false, true, false, true, false]), 'des onglets en liens et en boutons radio');
+  assert(pieces.sortmenu === 'none', 'le menu de tri d’un tableau reste caché sur un ordinateur, après la règle des pastilles');
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

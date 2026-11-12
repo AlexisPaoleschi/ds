@@ -2,7 +2,8 @@
 // hidden over the hero and shown past it, its phone menu (the button, Escape, the veil, a link), a link to a part of the
 // page landing just below the bar, the way back built with its icon from the sprite file, the loader taken away, the
 // galleries opened in the viewer (with a click, or Enter), the hidden bar and the closed menu out of Tab's reach, ds.h and
-// ds.esc, every icon the kit and the site name present in the sprite file; and the kit's
+// ds.esc, every icon the kit and the site name present in the sprite file, a newsletter's form (ds.newsletter: the address
+// checked, the button busy while it sends, the server's words under the field); and the kit's
 // stylesheets, which name a token for every colour.
 // usage: node checks/site.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
@@ -13,6 +14,16 @@ const photo = n => `<svg xmlns="http://www.w3.org/2000/svg" width="600" height="
 const hits = { json: 0 };
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
+  // the newsletter's endpoint: it answers after a moment, {ok, message}, from what the form sent
+  if (url.pathname === '/subscribe') {
+    let body = ''; req.on('data', c => { body += c; });
+    req.on('end', () => setTimeout(() => {
+      const f = new URLSearchParams(body), ok = f.get('email') === 'lea@example.com' && f.get('email_address_check') === '';
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok, message: ok ? 'You are on the list.' : 'This address was refused.' }));
+    }, 600));
+    return;
+  }
   if (url.pathname === '/data.json') { hits.json++; res.writeHead(200, { 'Content-Type': 'application/json' }); return res.end('{"events": {"lyon": {"soldOut": true}}}'); }
   const m = url.pathname.match(/^\/photo\/(\d+)\.svg$/);
   if (m) { res.writeHead(200, { 'Content-Type': 'image/svg+xml' }); return res.end(photo(+m[1])); }
@@ -188,6 +199,29 @@ function stylesheets() {
   await side.goto(base + '/checks/site.html', { waitUntil: 'networkidle' });
   const prompt = await side.evaluate(() => { const w = document.querySelector('.landscape-warning'); return w && getComputedStyle(w).display === 'flex' && !!w.querySelector('use[href$="#i-reload"]'); });
   assert(prompt, 'window.dsLandscapeWarning puts the prompt over a phone held sideways');
+
+  // a newsletter's form: a wrong address said at once, then the button busy (turning, its colours kept) while it sends,
+  // and the server's words in gold, the form emptied
+  const nl = await browser.newPage({ viewport: { width: 1280, height: 800 } });
+  await nl.goto(base + '/checks/site.html', { waitUntil: 'networkidle' });
+  const news = await nl.evaluate(async () => {
+    document.body.insertAdjacentHTML('beforeend', '<form id="nl" novalidate><input type="email" required><input name="email_address_check" value="">' +
+      '<button class="btn is-save" type="submit">Subscribe</button><p class="field-note is-reserved" role="status"></p></form>');
+    const form = document.getElementById('nl'), input = form.querySelector('input'), button = form.querySelector('button'), note = form.querySelector('.field-note');
+    ds.newsletter(form, { url: '/subscribe' });
+    const out = {};
+    input.value = 'pas une adresse'; button.click();
+    out.invalid = [note.textContent, note.className.includes('is-bad'), document.activeElement === input];
+    input.value = 'lea@example.com'; button.click();
+    await new Promise(r => setTimeout(r, 200));
+    const after = getComputedStyle(button, '::after');
+    out.busy = [button.classList.contains('is-busy'), button.disabled, after.content !== 'none' && after.content !== '', note.textContent];
+    await new Promise(r => setTimeout(r, 900));
+    out.done = [button.classList.contains('is-busy'), button.disabled, note.textContent, note.className.includes('is-good'), input.value];
+    return out;
+  });
+  assert(JSON.stringify(news) === JSON.stringify({ invalid: ['Please enter a valid email address.', true, true], busy: [true, true, true, 'Signing you up…'],
+    done: [false, false, 'You are on the list.', true, ''] }), 'ds.newsletter : l’adresse vérifiée, le bouton occupé pendant l’envoi, les mots du serveur ' + JSON.stringify(news));
 
   await browser.close();
   server.close();

@@ -28,6 +28,9 @@
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
+  /* a card folded by its title (ds.foldCard): only the title stays */
+  .card.is-folded > :not(.ct) { display: none !important; }
+  .card.is-folded > .ct { margin-bottom: 0; }
 /* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */

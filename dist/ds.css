@@ -1,4 +1,4 @@
-/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -386,6 +386,11 @@
   .ico { width: var(--ico-m); height: var(--ico-m); flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-12); position: relative; }
   .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
+  /* the header's square buttons (reload the sources, the settings, the new version): .btn.is-icon, quieter than a button
+     of the page, on the panel's ground with a faint icon that turns gold on hover (its edge stays); a lit new version
+     (.newver.is-on, live.css) keeps its gold */
+  :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
+  :where(header.top) .btn.is-icon:not(.is-on):hover { color: var(--accent-text); border-color: var(--line); }
   header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
@@ -430,6 +435,7 @@
    header.top .brand { letter-spacing: var(--ls-caps); }
    header.top .tabs button { padding: var(--s-8) var(--s-8); letter-spacing: 0; }
    header.top .gear { width: 32px; height: 32px; }
+   header.top .btn.is-icon { width: 32px; min-height: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.loading-done .busy, header.top.loading-done .busy .okc { animation: none; }
@@ -471,6 +477,20 @@
   .spinner.is-medium { --spin-size: 28px; }
   .spinner.is-large { --spin-size: 60px; }
   .spinner.on-photo { --spin-ring: var(--overlay-white-light); }
+/* The tag: a short word in a small frame (Bank's « bientôt » and its trips, Studio's labels, a late source), in its
+   colour: --a, the gold unless the page gives one (a bank's, a network's: style="--a: var(--c-bleu)"), or a tone,
+   .tag.is-good, .is-bad, .is-mid. Its ground and its edge are that colour, lighter (--soft-mix, --line-mix), its word
+   too, darkened in vitrine so that it reads on white (--tint-ink, as a tile's label). A link
+   (a.tag) shows its edge in full on hover; an icon in it is the small one. */
+  .tag { --a: var(--accent); display: inline-flex; align-items: center; gap: var(--s-4); box-sizing: border-box; padding: var(--s-2) var(--s-6);
+    font: 600 var(--fs-11)/var(--lh-tight) var(--mono); letter-spacing: 0; text-transform: none; text-decoration: none; white-space: nowrap;
+    color: color-mix(in oklab, var(--a) var(--tint-ink), var(--ink)); background: color-mix(in srgb, var(--a) var(--soft-mix), transparent);
+    border: 1px solid color-mix(in srgb, var(--a) var(--line-mix), transparent); border-radius: var(--r-s); }
+  .tag.is-good { --a: var(--good); }
+  .tag.is-bad { --a: var(--bad); }
+  .tag.is-mid { --a: var(--mid); }
+  .tag .ico { width: var(--ico-s); height: var(--ico-s); }
+  @media (hover: hover) { a.tag:hover { border-color: var(--a); } }
 /* buttons: one height, one font, one corner; only the colours tell them apart.
    grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
 .btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-6); min-height: var(--btn-h); padding: 0 var(--btn-px);
@@ -515,6 +535,17 @@
   .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); cursor: pointer; }
   /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
   .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--tab-on-bg); color: var(--accent-text); }
+  /* a tab may also be a link (a choice of language: the page's own is aria-current) or a choice among radio buttons (a
+     setting: <label><input type="radio" class="visually-hidden">…</label>); .tabs.is-icons holds only icons, each tab
+     square around its icon, its name in aria-label and title */
+  .tabs > a, .tabs > label { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: var(--s-24);
+    padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); border-radius: var(--r-s); color: var(--faint); cursor: pointer; text-decoration: none;
+    font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .tabs > a[aria-current="page"], .tabs > a[aria-current="true"], .tabs > a.on, .tabs > label:has(input:checked) { background: var(--tab-on-bg); color: var(--accent-text); }
+  .tabs > label:has(input:focus-visible) { outline: var(--focus); outline-offset: var(--focus-offset); }
+  .tabs.is-icons > :is(button, a, label) { display: inline-grid; place-items: center; --tab-py: var(--s-4); --tab-px: var(--s-8); }
+  .tabs.is-icons .ico { display: block; }
+  @media (hover: hover) { .tabs > :is(a, label):not([aria-current="page"]):not([aria-current="true"]):not(:has(input:checked)):hover { color: var(--accent-text); } }
 /* a page's main views (Bank: Comptes, Opérations, Analyse, Voyages; Studio: Agenda, Analyse) in <div class="tabs is-bar">,
    each button holding <svg class="ico"> and <span class="tl">: in the header with their names on a computer; on a phone,
    a bar at the bottom within the thumb's reach, the icon above the name. A gold dot <i class="tabn"> says something waits
@@ -567,6 +598,9 @@
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
+  /* a card folded by its title (ds.foldCard): only the title stays */
+  .card.is-folded > :not(.ct) { display: none !important; }
+  .card.is-folded > .ct { margin-bottom: 0; }
 /* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */
@@ -733,6 +767,16 @@
   .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
   .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tiles .tile.up dd { color: var(--good); } .tiles .tile.down dd { color: var(--bad); }
+  /* a set number of columns (Bank's four sums, two by two on a phone): .tiles.is-cols, --tile-cols (4), and on a phone
+     --tile-cols-phone (2) */
+  .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols, 4), minmax(0, 1fr)); }
+  /* a tile that opens something (Bank's Placements): .tile.is-link holding its link, a.row-link, in its label so that
+     Tab reaches it; a click anywhere on the tile opens it (ds.js, as a row's) and its label turns gold on hover.
+     Figures that must show whole get smaller in .tiles.is-shrink (ds.fitFigures, ds.js). */
+  .tile.is-link { cursor: pointer; }
+  .tile.is-link a.row-link { color: inherit; text-decoration: none; }
+  .tile.is-link a.row-link:focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
+  @media (hover: hover) { .tile.is-link:hover dt { color: var(--accent-text); } }
   /* fitted (ds.minitiles: a median, an average at the top of a card): the tiles side by side, each as wide as the widest,
      no wider than the words; the figure's unit just after it, what it is taken over under it */
   .tiles.is-fit { grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 1fr; width: fit-content; max-width: 100%; margin: 0 0 var(--s-16); }
@@ -745,7 +789,8 @@
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
      the figure in gold above its label */
   /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
-  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: var(--s-20); }
+  [data-theme="vitrine"] .tiles.is-compact { gap: var(--s-20); }
+  [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
     background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
   [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
@@ -757,7 +802,9 @@
      that their figures stay side by side */
   .tiles.is-fit:has(> .tile:nth-child(4)) { grid-auto-flow: row; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
   .tiles.is-fit:has(> .tile:nth-child(4)) .tile dt { white-space: normal; }
-  [data-theme="vitrine"] .tiles.is-compact { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact { gap: var(--s-16); }
+  [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols-phone, 2), minmax(0, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
 }
 /* One bar per category, merchant or month (Bank: where the money goes, a category's subcategories): how much each one
@@ -766,6 +813,79 @@
   .meter { display: block; flex: 1 1 100%; height: 6px; overflow: hidden; border-radius: var(--r-s);
     background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); }
   .meter > i { display: block; height: 100%; border-radius: inherit; background: var(--n, var(--accent)); }
+/* The table of a list to read, sort and pick from (Bank's operations, Studio's people): <table class="tbl"> in a
+   .tbl-wrap, which scrolls sideways when the table is wider than the page. Figures are right-aligned (.is-num); the
+   column titles are buttons that sort (th > button.sort, ds.sortable), the one in use showing its way; a box per row
+   picks it (.tbl-ck, ds.selection). A row that opens something (a sheet) is .is-link.
+   On a phone, a table .is-cards turns each row into a small card: its box on the left, its name (.tbl-main) and its
+   figure (.tbl-end) on the first line, then its other cells one under the other, each named by its data-label. What
+   only a wide screen shows (.tbl-wide) goes, what only a phone shows (.tbl-phone, e.g. the date and the bank under the
+   name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
+  .tbl-wrap { overflow-x: auto; }
+  .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
+  .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: bottom; white-space: nowrap; color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* money in and money out, what is fresh and what is late */
+  .tbl .is-good { color: var(--good); }
+  .tbl .is-bad { color: var(--bad); }
+  .tbl .tbl-ck { width: 28px; }
+  .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
+  .tbl .tbl-phone { display: none; }
+  .tbl tbody tr.is-link { cursor: pointer; }
+  @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
+  .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
+  /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */
+  /* a finger finds it: its target reaches above and under the short line of capitals */
+  .tbl th .sort::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
+  .tbl th .sort { position: relative; display: inline-flex; align-items: center; gap: var(--s-4); margin: 0; padding: 0; background: none; border: 0; border-radius: var(--r-s); cursor: pointer;
+    color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; }
+  .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
+  /* the arrow is not read out: aria-sort says it */
+  .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent-text); }
+  .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent-text); }
+  /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
+  .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
+
+/* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
+   name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
+   picked. ds.selection runs it. Its buttons and menus are small ones, the row of a list's actions. */
+  .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
+    --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
+    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
+    margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
+  .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  [data-theme="vitrine"] .selbar-n { font-weight: 500; }
+
+@media (max-width: 768px) {
+  .tbl .tbl-wide { display: none; }
+  .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tbl-sortmenu, .pill.tbl-sortmenu { display: inline-flex; }
+  .tbl-wrap:has(> .tbl.is-cards) { overflow-x: visible; }
+  .tbl.is-cards, .tbl.is-cards tbody { display: block; }
+  .tbl.is-cards thead { display: none; }
+  .tbl.is-cards tr { display: grid; grid-template-columns: [ck-start] auto [ck-end main-start] minmax(0, 1fr) [main-end end-start] auto [end-end];
+    gap: var(--s-4) var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
+  .tbl.is-cards tr:not(:has(> .tbl-ck)) { grid-template-columns: [main-start] minmax(0, 1fr) [main-end end-start] auto [end-end]; }
+  .tbl.is-cards td { display: block; min-width: 0; padding: 0; border: 0; grid-column: main-start / end-end; }
+  .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; }
+  .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
+  .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
+  .tbl.is-cards td[colspan] { grid-column: 1 / -1; }
+  /* a cell named by its column: the name on the left, the value on the right */
+  .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
+  .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);
+    font: var(--label-weight) var(--tbl-th-size)/var(--lh-ui) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+  /* a card is lit whole, not cell by cell; in a .card, out to its edges (over its padding, --card-pad), so that the gold
+     takes the whole width of the screen's line */
+  .tbl.is-cards tbody tr > td, .tbl.is-cards tbody tr.is-selected > td { background: none; }
+  .tbl.is-cards tbody tr.is-selected { background: var(--accent-soft); }
+  .card .tbl.is-cards tbody tr.is-selected { box-shadow: calc(-1 * var(--card-pad)) 0 var(--accent-soft), var(--card-pad) 0 var(--accent-soft); }
+  /* what only a wide screen shows stays hidden in a card too */
+  .tbl.is-cards td.tbl-wide { display: none; }
+}
 /* The pieces of a public site, taken from alexispaoleschi.com: a badge, a section's head, the footer (the card's parts
    are in card.css).
    Selecta and the site use them; in atelier they take atelier's fonts and colours. */

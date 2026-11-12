@@ -1,11 +1,12 @@
-/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
    handler would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become
    text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
-   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options).
+   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
+   hour at Paris, 0 to 23, now when no date is given).
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
    (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
@@ -100,7 +101,8 @@
     at: at,
     add: add,
     weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
-    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); }
+    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
+    hour: function (d) { return +new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
   };
 
   // the layers over the page, the last one on top
@@ -164,7 +166,16 @@
    ds.screens(), once the screens are written: a page that scrolls by screens (.scroll-container of .scroll-section, the
    home page) gets a dot per screen in .scroll-dots (the first one may be in the page already), the dot of the screen shown lit, the dots shown once
    past the first screen, the hint (.scroll-hint) on the first screen when there are more, a dot or the hint going to its
-   screen, and an address with #screen going there. */
+   screen, and an address with #screen going there.
+   ds.newsletter(form, {url, fields, check, sending, done, input, honeypot, feedback, button}): a form that signs up to the
+   newsletter (the events' banner, the newsletter page), the one way for both. Its address is checked first (unless
+   check() says not this time), then sent to url (or what url() gives) as a form's fields: fields(), else the address and
+   the honeypot (email, email_address_check). Meanwhile its button is busy (.btn.is-busy: it turns, keeps its colours, and
+   a second click sends nothing) and the line under the field (.field-note) says sending (its words, or a function that
+   gives them and may change the page). Then the line says the server's own words ({ok, message}), in gold when it went
+   well, in red when not, or that the server could not be reached. done(answer, ok) follows (answer null when the server
+   could not be reached); without it, the form is emptied when it went well and the field takes the focus when not.
+   The form's parts, unless given: its input[type=email], input[name=email_address_check], .field-note, submit button. */
 (function () {
   "use strict";
   var _ = window.ds._, esc = window.ds.esc;
@@ -421,7 +432,67 @@
   });
 
   window.ds = window.ds || {};
+  var WORDS = _.table({
+    fr: { invalid: "Saisis une adresse e-mail valide.", sending: "Inscription en cours…",
+          offline: "Le serveur ne répond pas. Vérifie ta connexion et réessaie." },
+    en: { invalid: "Please enter a valid email address.", sending: "Signing you up…",
+          offline: "Could not reach the server. Please check your connection and try again." }
+  });
+  function newsletter(form, o) {
+    form = _.find(form);
+    if (!form) return null;
+    o = o || {};
+    var w = function () { return _.words(WORDS); };
+    var input = _.find(o.input) || form.querySelector('input[type="email"]');
+    var trap = _.find(o.honeypot) || form.querySelector('input[name="email_address_check"]');
+    var note = _.find(o.feedback) || form.querySelector(".field-note");
+    var button = _.find(o.button) || form.querySelector('button[type="submit"], button:not([type])');
+    function say(text, how) {
+      if (!note) return;
+      note.textContent = text || "";
+      note.classList.remove("is-good", "is-bad");
+      if (how) note.classList.add(how);
+    }
+    function busy(on) {
+      if (!button) return;
+      button.classList.toggle("is-busy", on);
+      button.disabled = on;
+      if (on) button.setAttribute("aria-busy", "true"); else button.removeAttribute("aria-busy");
+    }
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (button && button.classList.contains("is-busy")) return;
+      var checked = o.check ? o.check() !== false : true;
+      if (checked && input && (!input.value.trim() || !input.checkValidity())) {
+        say(w().invalid, "is-bad");
+        input.focus();
+        return;
+      }
+      var url = typeof o.url === "function" ? o.url() : o.url;
+      var fields = o.fields ? o.fields() : { email: input ? input.value.trim() : "", email_address_check: trap ? trap.value : "" };
+      busy(true);
+      say(typeof o.sending === "function" ? o.sending() : o.sending || w().sending, null);
+      // the endpoint decides both the words and whether it went well; an answer that is not JSON did not go well
+      fetch(url, { method: "POST", headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" }, body: new URLSearchParams(fields) })
+        .then(function (r) { return r.json(); })
+        .then(function (answer) {
+          var ok = !!answer && answer.ok === true;
+          say(answer && answer.message, ok ? "is-good" : "is-bad");
+          busy(false);
+          if (o.done) o.done(answer, ok);
+          else if (ok) form.reset();
+          else if (input) input.focus();
+        }, function () {
+          say(w().offline, "is-bad");
+          busy(false);
+          if (o.done) o.done(null, false);
+        });
+    });
+    return { form: form, say: say, busy: busy };
+  }
+
   window.ds.icon = icon;
+  window.ds.newsletter = newsletter;
   window.ds.json = json;
   window.ds.photo = photo;
   window.ds.images = images;

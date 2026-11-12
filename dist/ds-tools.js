@@ -1,4 +1,4 @@
-/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(name, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;

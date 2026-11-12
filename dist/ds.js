@@ -1,11 +1,12 @@
-/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
    handler would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become
    text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
-   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options).
+   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
+   hour at Paris, 0 to 23, now when no date is given).
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
    (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
@@ -100,7 +101,8 @@
     at: at,
     add: add,
     weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
-    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); }
+    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
+    hour: function (d) { return +new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
   };
 
   // the layers over the page, the last one on top
@@ -161,10 +163,12 @@
   var WORDS = _.table({
     fr: { confirm: "Confirmer",
           never: "jamais", today: "aujourd'hui", yesterday: "hier", tomorrow: "demain", on: "le ", at: " à ", now: "à l’instant",
-          ago: function (x) { return "il y a " + x; }, soon: "dans un instant", in: function (x) { return "dans " + x; } },
+          ago: function (x) { return "il y a " + x; }, soon: "dans un instant", in: function (x) { return "dans " + x; },
+          restart: "Le serveur redémarre (mise à jour en cours).", offline: "Le serveur ne répond pas : réessaie dans un instant." },
     en: { confirm: "Confirm",
           never: "never", today: "today", yesterday: "yesterday", tomorrow: "tomorrow", on: "on ", at: " at ", now: "just now",
-          ago: function (x) { return x + " ago"; }, soon: "in a moment", in: function (x) { return "in " + x; } }
+          ago: function (x) { return x + " ago"; }, soon: "in a moment", in: function (x) { return "in " + x; },
+          restart: "The server is restarting (an update is on its way).", offline: "The server does not answer: try again in a moment." }
   });
   // read when a message or a window opens, so that a page that changes its language is followed
   function words() { return _.words(WORDS); }
@@ -320,6 +324,14 @@
     var h = +parts.find(function (p) { return p.type === "hour"; }).value, m = parts.find(function (p) { return p.type === "minute"; }).value;
     return english() ? h + ":" + m : h + "h" + m;
   }
+  /* ds.time(t, {pad}): the time of day at Paris, « 9h05 » (« 9:05 » in English); pad writes « 09h05 ». « — » when t cannot
+     be read, "" when there is none. */
+  function time(t, o) {
+    if (t == null || t === "") return "";
+    if (unreadable(t)) return "—";
+    var text = clock(date(t));
+    return o && o.pad ? text.replace(/^(\d)(?=\D)/, "0$1") : text;
+  }
   function day(d) {
     var w = words(), k = dayKey(d), now = Date.now();
     if (k === dayKey(new Date(now))) return w.today;
@@ -370,33 +382,75 @@
 
   /* ds.number(n, decimals) and ds.money(n, {currency, signed, decimals}): French figures, the thousands set apart by a
      space the fonts draw (French uses a narrow one that Archivo and IBM Plex Mono do not); money: « −1 234,56€ », « +12€ »
-     with signed, « 12,00 USD » for another currency, « — » for no figure. */
-  function number(n, decimals) {
-    if (n == null || isNaN(n)) return "—";
-    var k = decimals || 0;
-    return new Intl.NumberFormat(english() ? "en-GB" : "fr-FR", { minimumFractionDigits: k, maximumFractionDigits: k })
+     with signed, « 12,00 USD » for another currency, « — » for no figure.
+     Both take {decimals} (as many always), or {min, max} (« 12,5 » and « 12,25 » with min 0 and max 2; Bank's unit prices
+     with min 2 and max 4), and {signed}: « + » before a gain, « − » (the minus sign, not a hyphen) before a loss.
+     ds.percent(ratio, {decimals, signed}): a share, « 12 % » for 0.12 (« 12% » in English), whole by default. */
+  function digits(o, k) {
+    if (typeof o === "number") return [o, o];
+    o = o || {};
+    if (o.decimals != null) return [o.decimals, o.decimals];
+    if (o.min != null || o.max != null) return [o.min || 0, Math.max(o.min || 0, o.max == null ? k : o.max)];
+    return [k, k];
+  }
+  function figure(n, d) {
+    return new Intl.NumberFormat(english() ? "en-GB" : "fr-FR", { minimumFractionDigits: d[0], maximumFractionDigits: d[1] })
       .format(n).replace(/[\u202f\u00a0]/g, "\u00a0");
+  }
+  function sign(n, o) { return n < 0 ? "−" : o && o.signed && n > 0 ? "+" : ""; }
+  function number(n, o) {
+    if (n == null || isNaN(n)) return "—";
+    var d = digits(o, 0);
+    // a sign written apart, so that a loss shows the minus sign; without signed, as the browser writes it
+    return o && typeof o === "object" ? sign(n, o) + figure(Math.abs(n), d) : figure(n, d);
   }
   function money(n, o) {
     if (n == null || isNaN(n)) return "—";
     o = o || {};
-    var cur = o.currency || "EUR", k = o.decimals == null ? 2 : o.decimals;
-    return (n < 0 ? "−" : o.signed && n > 0 ? "+" : "") + number(Math.abs(n), k) + (cur === "EUR" ? "€" : "\u00a0" + cur);
+    var cur = o.currency || "EUR";
+    return sign(n, o) + figure(Math.abs(n), digits(o, 2)) + (cur === "EUR" ? "€" : "\u00a0" + cur);
+  }
+  function percent(r, o) {
+    if (r == null || isNaN(r)) return "—";
+    o = o || {};
+    return sign(r, o) + figure(Math.abs(r * 100), digits(o, 0)) + (english() ? "%" : "\u00a0%");
   }
 
   /* ds.api(method, url, body): the app's server, as JSON. Its header against forged requests is the one its <html> names,
      data-api="X-Bank" (sent as X-Bank: 1). An ended session goes back to /login; an error says the server's own words. */
   /* ds.api(method, url, body, {retry}): besides the header named by <html data-api>, a Spring page's CSRF token
      (<meta name="_csrf"> under the header of <meta name="_csrf_header">) goes with everything but a GET. A GET that meets
-     the server restarting (502, 503, 504, or no answer at all) tries again every 3 s for a minute, as a deploy takes;
+     the server restarting (the platform's 502, 503 or 504, or no answer at all, below) tries again every 3 s for a minute, as a deploy takes;
      {retry: false} says no. An ended session (401, or a request sent on to a sign-in page, as Spring does) goes to the
      sign-in page, the page's address kept to come back to it after. An error says the server's own words (detail, or
      error.message) and carries err.status and err.code (the server's code, e.g. "tool_error"). */
+  /* ds.api(method, url, body, {retry, headers, keepalive, progress, cache}), as found by the apps:
+     body: an object goes as JSON; a form's fields (FormData, URLSearchParams) or a file (Blob) go as they are (Selecta's
+     uploads). headers: more of them. keepalive: the request outlives the page (a notice marked read as the page closes).
+     progress(loaded, total): told as an upload goes (sent then by XMLHttpRequest, which tells it; fetch does not).
+     cache: fetch's cache mode, "no-store" unless told; "default" lets a server that sends an ETag with "no-cache"
+     answer an unchanged read with a 304 of a few bytes (Studio's bases).
+     Only the platform's own page (Render's 502, 503 or 504, not JSON) or no answer at all is taken for a restart and
+     tried again; an error the app itself answers with, JSON, is the app's (Studio's 502 « tool_error »). When the tries
+     run out: err.code "restart" (the platform's page) or "offline" (no answer), with words that say so.
+     Every error carries err.status, err.code (the server's error.code, code or reason) and err.body (its JSON). */
   var AFTER_LOGIN = "ds-after-login";
   function wait(ms) { return new Promise(function (ok) { setTimeout(ok, ms); }); }
   function signIn(to) {
     _.write(AFTER_LOGIN, location.pathname + location.search + location.hash, true);
     location.href = to;
+  }
+  function failure(message, status, code, body) {
+    var e = new Error(message);
+    e.status = status; e.code = code || null; e.body = body == null ? null : body;
+    return e;
+  }
+  function serverWords(d) {
+    if (!d) return null;
+    var x = d.detail || (d.error && d.error.message) || d.message;
+    // FastAPI's list of what a request lacked
+    if (Array.isArray(x)) x = x.map(function (i) { return i && i.msg || ""; }).filter(Boolean).join(" ; ");
+    return typeof x === "string" && x ? x : null;
   }
   function api(method, url, body, o) {
     o = o || {};
@@ -404,30 +458,49 @@
     if (name) headers[name] = "1";
     var csrf = document.querySelector('meta[name="_csrf"]'), csrfHeader = document.querySelector('meta[name="_csrf_header"]');
     if (csrf && method !== "GET") headers[(csrfHeader && csrfHeader.content) || "X-CSRF-TOKEN"] = csrf.content;
-    if (body) headers["Content-Type"] = "application/json";
+    var raw = body != null && ((window.FormData && body instanceof FormData) || (window.Blob && body instanceof Blob) ||
+      (window.URLSearchParams && body instanceof URLSearchParams));
+    if (body != null && !raw) headers["Content-Type"] = "application/json";
+    Object.keys(o.headers || {}).forEach(function (k) { headers[k] = o.headers[k]; });
+    var data = body == null ? undefined : raw ? body : JSON.stringify(body);
     var left = method === "GET" && o.retry !== false ? 20 : 0;
+    // the answer as {status, ok, url, redirected, text}, by fetch, or by XMLHttpRequest when an upload is followed
+    function send() {
+      if (o.progress) return new Promise(function (ok, no) {
+        var x = new XMLHttpRequest();
+        x.open(method, url);
+        Object.keys(headers).forEach(function (k) { x.setRequestHeader(k, headers[k]); });
+        if (x.upload) x.upload.addEventListener("progress", function (e) { if (e.lengthComputable) o.progress(e.loaded, e.total); });
+        x.onload = function () {
+          var asked = new URL(url, location.href).href;
+          ok({ status: x.status, ok: x.status >= 200 && x.status < 300, url: x.responseURL, redirected: !!x.responseURL && x.responseURL !== asked, text: x.responseText });
+        };
+        x.onerror = function () { no(new TypeError("network")); };
+        x.send(data === undefined ? null : data);
+      });
+      return fetch(url, { method: method, credentials: "same-origin", cache: o.cache || "no-store", headers: headers, body: data, keepalive: !!o.keepalive })
+        .then(function (r) { return r.text().then(function (text) { return { status: r.status, ok: r.ok, url: r.url, redirected: r.redirected, text: text }; }); });
+    }
     function once() {
-      return fetch(url, { method: method, credentials: "same-origin", cache: "no-store", headers: headers, body: body ? JSON.stringify(body) : undefined })
-        .then(function (r) {
-          if (left > 0 && r.status >= 502 && r.status <= 504) { left -= 1; return wait(3000).then(once); }
-          if (r.status === 401 || (r.redirected && /\/(login|signin)\b/i.test(r.url))) {
-            signIn(r.redirected ? r.url : root.getAttribute("data-login") || "/login");
-            var gone = new Error("session"); gone.status = 401; gone.code = "session"; throw gone;
-          }
-          return r.json().catch(function () { return null; }).then(function (d) {
-            if (!r.ok) {
-              var e = new Error((d && (d.detail || (d.error && d.error.message))) || "erreur " + r.status);
-              e.status = r.status;
-              e.code = (d && ((d.error && d.error.code) || d.code)) || null;
-              throw e;
-            }
-            return d;
-          });
-        }, function (e) {
-          // no answer at all: the server is down a moment, or the network
+      return send().then(function (r) {
+        var d = null, json = true;
+        try { d = r.text ? JSON.parse(r.text) : null; } catch (e) { json = false; }
+        // the platform's page in place of the app's answer: the app is restarting
+        if (!json && r.status >= 502 && r.status <= 504) {
           if (left > 0) { left -= 1; return wait(3000).then(once); }
-          throw e;
-        });
+          throw failure(words().restart, r.status, "restart");
+        }
+        if (r.status === 401 || (r.redirected && /\/(login|signin)\b/i.test(r.url))) {
+          signIn(r.redirected ? r.url : root.getAttribute("data-login") || "/login");
+          throw failure("session", 401, "session");
+        }
+        if (!r.ok) throw failure(serverWords(d) || "erreur " + r.status, r.status, d && ((d.error && d.error.code) || d.code || d.reason), d);
+        return d;
+      }, function () {
+        // no answer at all: the server is down a moment, or the network
+        if (left > 0) { left -= 1; return wait(3000).then(once); }
+        throw failure(words().offline, 0, "offline");
+      });
     }
     return once();
   }
@@ -532,13 +605,90 @@
     _.write("ds-fold:" + d.getAttribute("data-fold"), d.open ? "1" : "0");
   }, true);
 
-  /* Whole rows that open: a row (tr.is-link, or any [data-row-link]) holding a link a.row-link, or a data-href, opens it on a
+  /* A card folded by its own title, as Studio's: ds.foldCard(card, key, {open}) makes the card's title (its .ct) a
+     button, reached with Tab and pressed with Enter or Space, that folds the card: folded, the card keeps only its title
+     (.card.is-folded) and the title's chevron turns (.ct.fold, card.css). Kept under ds-fold:<key>, as a details.fold
+     is; open says how a card the device knows nothing of starts (open, unless false). What acts inside the title (a
+     period's menu, a button, a link) acts and folds nothing. Returns {open(), close(), toggle(), isOpen()}, the same
+     one when called again on the same card (a page that draws its cards anew calls it on the new ones); ds.seek opens
+     a folded card around what it brings into view. */
+  function foldCard(card, key, o) {
+    card = _.find(card);
+    if (!card) return null;
+    if (card._dsFold) return card._dsFold;
+    var head = [].filter.call(card.children, function (c) { return c.classList.contains("ct"); })[0];
+    if (!head) return null;
+    o = o || {};
+    var kept = _.read("ds-fold:" + key), on = kept == null ? o.open !== false : kept === "1";
+    head.classList.add("fold");
+    head.setAttribute("role", "button");
+    head.setAttribute("tabindex", "0");
+    function set(v, keep) {
+      on = v;
+      card.classList.toggle("is-folded", !v);
+      head.setAttribute("aria-expanded", v ? "true" : "false");
+      if (keep) _.write("ds-fold:" + key, v ? "1" : "0");
+    }
+    // a click on what the title holds that acts is that control's, not the fold's
+    function own(e) { var x = e.target.closest && e.target.closest(INTERACTIVE); return !x || x === head; }
+    head.addEventListener("click", function (e) { if (own(e)) set(!on, true); });
+    head.addEventListener("keydown", function (e) {
+      if (e.target === head && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); set(!on, true); }
+    });
+    set(on, false);
+    card._dsFold = { open: function () { set(true, true); }, close: function () { set(false, true); }, toggle: function () { set(!on, true); },
+      isOpen: function () { return on; } };
+    return card._dsFold;
+  }
+
+  /* Figures that must show whole in narrow tiles (Bank's sums on a phone): in .tiles.is-shrink, or in a holder given to
+     ds.fitFigures(holder), a tile's figure (dd) too long for its tile gets smaller, a pixel at a time, down to ds's
+     smallest text (--fs-11, never below); still too long there, it goes on two lines rather than be cut. Again when the
+     tiles change width (a turned phone, a view shown) and whenever the page draws them anew. */
+  var least = null;
+  function floor() {
+    if (least == null) least = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fs-11")) || 11;
+    return least;
+  }
+  function fitFigure(dd) {
+    dd.style.fontSize = dd.style.whiteSpace = dd.style.overflowWrap = "";
+    if (!dd.clientWidth || dd.scrollWidth <= dd.clientWidth) return;
+    for (var size = parseFloat(getComputedStyle(dd).fontSize); size > floor() && dd.scrollWidth > dd.clientWidth; ) {
+      size = Math.max(floor(), size - 1);
+      dd.style.fontSize = size + "px";
+    }
+    if (dd.scrollWidth > dd.clientWidth) { dd.style.whiteSpace = "normal"; dd.style.overflowWrap = "anywhere"; }
+  }
+  var shrunk = new WeakMap();
+  var reshrink = window.ResizeObserver ? new ResizeObserver(function (entries) {
+    entries.forEach(function (e) {
+      var w = Math.round(e.contentRect.width);
+      if (shrunk.get(e.target) === w) return;
+      shrunk.set(e.target, w);
+      if (w) fitFigures(e.target);
+    });
+  }) : null;
+  function fitFigures(holder) {
+    holder = _.find(holder);
+    if (!holder) return;
+    if (reshrink && !shrunk.has(holder)) { shrunk.set(holder, -1); reshrink.observe(holder); }
+    holder.querySelectorAll(".tile dd").forEach(fitFigure);
+  }
+  // a change that brings tiles to fit, or draws anew the ones there
+  function shrinking(m) {
+    var at = m.target.nodeType === 1 ? m.target : m.target.parentElement;
+    if (at && at.closest && at.closest(".tiles.is-shrink")) return true;
+    return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".tiles.is-shrink") || !!n.querySelector(".tiles.is-shrink")); });
+  }
+  function fitAllFigures() { document.querySelectorAll(".tiles.is-shrink").forEach(fitFigures); }
+
+  /* Whole rows that open: a row (tr.is-link, a tile .tile.is-link, or any [data-row-link]) holding a link a.row-link, or a data-href, opens it on a
      click anywhere in it, but not on its own buttons, fields or links, not at the end of a text selection; Ctrl, ⌘ or the
      middle button open it in a new tab, as a link would. By delegation: rows drawn later work too. A row with neither link
      nor data-href is left to the page (Bank opens its sheet). On iPhone a stretched link does not cover a table row: hence this. */
   var INTERACTIVE = 'a, button, input, textarea, select, label, summary, details, [role="button"]';
   function rowHref(e) {
-    var row = e.target.closest && e.target.closest("tr.is-link, [data-row-link]");
+    var row = e.target.closest && e.target.closest("tr.is-link, .tile.is-link, [data-row-link]");
     if (!row || e.target.closest(INTERACTIVE)) return null;
     var sel = window.getSelection && window.getSelection();
     if (sel && !sel.isCollapsed) return null;
@@ -588,7 +738,10 @@
     var el = null;
     try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
     if (!el) return false;
-    for (var d = el.parentElement; d; d = d.parentElement) if (d.tagName === "DETAILS") d.open = true;
+    for (var d = el.parentElement; d; d = d.parentElement) {
+      if (d.tagName === "DETAILS") d.open = true;
+      else if (d._dsFold && !d._dsFold.isOpen()) d._dsFold.open();
+    }
     var still = _.reduced();
     el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
     el.classList.remove("is-lit");
@@ -640,13 +793,14 @@
   function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
   onReady(function () {
     holder();
-    fold(); arrivals(); cameBack(); fitTitles();
+    fold(); arrivals(); cameBack(); fitTitles(); fitAllFigures();
     window.addEventListener("resize", fitTitles, { passive: true });
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitTitles);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitTitles(); fitAllFigures(); });
     // a page that draws its cards again, or changes what a title holds: their titles are fitted once it is done; a
     // change anywhere else (a loading's share, a chart's bubble, a journal) measures nothing
     new MutationObserver(function (changes) {
       if (changes.some(titled)) fitTitles();
+      if (changes.some(shrinking)) fitAllFigures();
     }).observe(document.body, { childList: true, subtree: true });
   });
 
@@ -659,10 +813,14 @@
   window.ds.date = dateText;
   window.ds.number = number;
   window.ds.money = money;
+  window.ds.percent = percent;
+  window.ds.time = time;
   window.ds.api = api;
   window.ds.compact = compact;
   window.ds.avatar = avatar;
   window.ds.fold = fold;
+  window.ds.foldCard = foldCard;
+  window.ds.fitFigures = fitFigures;
   window.ds.fitTitles = fitTitles;
   window.ds.route = route;
   window.ds.seek = seek;

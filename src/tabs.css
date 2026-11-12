@@ -3,6 +3,17 @@
   .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); cursor: pointer; }
   /* the same tabs for every choice among a few views or periods: a selected tab, a pressed button or a chosen one */
   .tabs button[aria-selected="true"], .tabs button[aria-pressed="true"], .tabs button.on { background: var(--tab-on-bg); color: var(--accent-text); }
+  /* a tab may also be a link (a choice of language: the page's own is aria-current) or a choice among radio buttons (a
+     setting: <label><input type="radio" class="visually-hidden">…</label>); .tabs.is-icons holds only icons, each tab
+     square around its icon, its name in aria-label and title */
+  .tabs > a, .tabs > label { display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; min-height: var(--s-24);
+    padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); border-radius: var(--r-s); color: var(--faint); cursor: pointer; text-decoration: none;
+    font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .tabs > a[aria-current="page"], .tabs > a[aria-current="true"], .tabs > a.on, .tabs > label:has(input:checked) { background: var(--tab-on-bg); color: var(--accent-text); }
+  .tabs > label:has(input:focus-visible) { outline: var(--focus); outline-offset: var(--focus-offset); }
+  .tabs.is-icons > :is(button, a, label) { display: inline-grid; place-items: center; --tab-py: var(--s-4); --tab-px: var(--s-8); }
+  .tabs.is-icons .ico { display: block; }
+  @media (hover: hover) { .tabs > :is(a, label):not([aria-current="page"]):not([aria-current="true"]):not(:has(input:checked)):hover { color: var(--accent-text); } }
 /* a page's main views (Bank: Comptes, Opérations, Analyse, Voyages; Studio: Agenda, Analyse) in <div class="tabs is-bar">,
    each button holding <svg class="ico"> and <span class="tl">: in the header with their names on a computer; on a phone,
    a bar at the bottom within the thumb's reach, the icon above the name. A gold dot <i class="tabn"> says something waits

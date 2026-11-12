@@ -1,5 +1,21 @@
 # Changelog
 
+## 2.40.0 · 12 novembre 2026
+
+Ce que les migrations des applis vont prendre (points 35 à 47 de l’étude), pour qu’elles se fassent sans toucher ds. Rien ne change dans Bank, Studio et Selecta tant qu’elles ne s’en servent pas ; sur le site, le bouton de la newsletter tourne pendant l’envoi au lieu de pâlir.
+
+- `ds.api` couvre ce que les applis écrivaient à la main : un objet part en JSON, un formulaire (`FormData`, `URLSearchParams`) ou un fichier tels quels, avec le jeton CSRF d’une page Spring (les envois de photos de Selecta) ; `{progress}` suit un envoi, `{keepalive}` le fait survivre à la page, `{headers}` en ajoute. Seule la page de la plateforme pendant un déploiement (502, 503 ou 504 qui n’est pas du JSON) ou l’absence de réponse est prise pour un redémarrage et réessayée : l’erreur JSON d’une appli (le 502 « tool_error » de Studio) est la sienne, tout de suite. Quand les essais s’épuisent, `err.code` dit `restart` ou `offline`, avec des mots. Une erreur garde aussi `err.body`, et son `reason` comme code (Selecta). `{cache}` donne le mode de cache de la lecture (`no-store` par défaut) : avec `default`, une base que le serveur sert avec son ETag et `no-cache` revient en 304 de quelques octets quand elle n’a pas changé (Studio).
+- Les chiffres : `ds.number` et `ds.money` prennent `{decimals}`, `{min, max}` (« 12,5 », les prix unitaires de Bank de 2 à 4 décimales) et `{signed}` (« + », et le vrai signe moins) ; `ds.percent(part, {decimals, signed})` écrit « 12 % » ; `ds.time(t, {pad})` l’heure de Paris, « 9h05 » ou « 09h05 » ; `ds.day.hour()` l’heure qu’il est à Paris.
+- L’étiquette, `.tag` : un mot court dans un petit cadre, dans sa couleur (`--a`, l’or par défaut) ou un ton (`is-good`, `is-bad`, `is-mid`), pour les sept étiquettes refaites dans Bank et Studio. Selecta prendra `.badge`.
+- Les boutons carrés de l’en-tête : `.btn.is-icon` dans `header.top` a l’allure du `.gear` de Bank et Studio (le fond du panneau, une icône discrète qui passe à l’or), 32px sur un petit téléphone ; une nouvelle version (`.newver.is-on`) garde son or.
+- Les cases : un nombre de colonnes fixe (`.tiles.is-cols`, `--tile-cols`, `--tile-cols-phone`), une case qui s’ouvre (`.tile.is-link` et son `a.row-link`, comme une ligne), des chiffres qui rapetissent pour se lire en entier jusqu’à 11px, jamais en dessous (`.tiles.is-shrink`, `ds.fitFigures`).
+- `ds.foldCard(card, key, {open})` : le titre d’une carte la plie (au clic, à Entrée ou Espace), sans que ce qu’il contient qui agit n’y touche ; l’appareil s’en souvient sous `ds-fold:<key>`, comme d’un `details.fold` ; `ds.seek` rouvre une carte pliée.
+- Les onglets prennent aussi des liens (`aria-current`, la langue de Selecta), des boutons radio dans un `<label>` (un réglage) et des icônes seules (`.tabs.is-icons`), pour les deux contrôles segmentés de Selecta.
+- Les tableaux reviennent dans `ds.css`, pour les listes de Selecta ; le menu de tri reste caché sur un ordinateur, la règle qui le cache pesant plus que celle des pilules. Leurs comportements (`ds.sortable`, `ds.selection`) restent dans `ds-tools.js`.
+- Le site : `ds.newsletter(form, {url, fields, check, sending, done})` dans le kit, une seule façon pour le bandeau des événements et la page newsletter : l’adresse vérifiée, le bouton occupé (`.btn.is-busy`) qui tourne pendant l’envoi, les mots du serveur sous le champ.
+- La page vitrine montre l’étiquette, les cases (colonnes, case qui s’ouvre, chiffre qui rapetisse), les onglets en liens, en boutons radio et en icônes, la carte qui se plie par son titre et les boutons carrés de l’en-tête.
+- Nouvelles vérifications : `ds.api` (l’erreur JSON d’une appli n’est pas un redémarrage, un formulaire et un fichier tels quels, l’envoi suivi, le refus gardé entier, une lecture inchangée en 304 avec `{cache: "default"}`), les nouveaux formats, `ds.foldCard`, les cases, l’étiquette, les boutons de l’en-tête, les onglets, le menu de tri caché, les tableaux dans `ds.css`, et `ds.newsletter`.
+
 ## 2.39.0 · 12 novembre 2026
 
 Des fichiers par appli, et les derniers réglages d’aspect de l’étude (26, 27, 32, 33 et 34). À l’écran : les flèches du calendrier et du choix de dates, quelques grands titres du site, l’espacement des titres réduits sur téléphone, l’accueil sur un écran de 1300px.

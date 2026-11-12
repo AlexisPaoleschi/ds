@@ -1,11 +1,12 @@
-/* ds 2.39.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.40.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
    handler would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become
    text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
-   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options).
+   today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
+   hour at Paris, 0 to 23, now when no date is given).
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
    (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
@@ -100,7 +101,8 @@
     at: at,
     add: add,
     weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
-    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); }
+    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
+    hour: function (d) { return +new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
   };
 
   // the layers over the page, the last one on top

@@ -30,7 +30,8 @@
   /* the arrow is not read out: aria-sort says it */
   .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent-text); }
   .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent-text); }
-  .tbl-sortmenu { display: none; }
+  /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
+  .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
 
 /* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
    name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
@@ -46,7 +47,7 @@
 @media (max-width: 768px) {
   .tbl .tbl-wide { display: none; }
   .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .tbl-sortmenu { display: inline-flex; }
+  .tbl-sortmenu, .pill.tbl-sortmenu { display: inline-flex; }
   .tbl-wrap:has(> .tbl.is-cards) { overflow-x: visible; }
   .tbl.is-cards, .tbl.is-cards tbody { display: block; }
   .tbl.is-cards thead { display: none; }

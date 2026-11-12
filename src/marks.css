@@ -26,3 +26,17 @@
   .spinner.is-medium { --spin-size: 28px; }
   .spinner.is-large { --spin-size: 60px; }
   .spinner.on-photo { --spin-ring: var(--overlay-white-light); }
+/* The tag: a short word in a small frame (Bank's « bientôt » and its trips, Studio's labels, a late source), in its
+   colour: --a, the gold unless the page gives one (a bank's, a network's: style="--a: var(--c-bleu)"), or a tone,
+   .tag.is-good, .is-bad, .is-mid. Its ground and its edge are that colour, lighter (--soft-mix, --line-mix), its word
+   too, darkened in vitrine so that it reads on white (--tint-ink, as a tile's label). A link
+   (a.tag) shows its edge in full on hover; an icon in it is the small one. */
+  .tag { --a: var(--accent); display: inline-flex; align-items: center; gap: var(--s-4); box-sizing: border-box; padding: var(--s-2) var(--s-6);
+    font: 600 var(--fs-11)/var(--lh-tight) var(--mono); letter-spacing: 0; text-transform: none; text-decoration: none; white-space: nowrap;
+    color: color-mix(in oklab, var(--a) var(--tint-ink), var(--ink)); background: color-mix(in srgb, var(--a) var(--soft-mix), transparent);
+    border: 1px solid color-mix(in srgb, var(--a) var(--line-mix), transparent); border-radius: var(--r-s); }
+  .tag.is-good { --a: var(--good); }
+  .tag.is-bad { --a: var(--bad); }
+  .tag.is-mid { --a: var(--mid); }
+  .tag .ico { width: var(--ico-s); height: var(--ico-s); }
+  @media (hover: hover) { a.tag:hover { border-color: var(--a); } }

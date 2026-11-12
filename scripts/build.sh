@@ -6,21 +6,22 @@ cd "$(dirname "$0")/.."
 version=$(cat VERSION)
 # the stylesheets by role, in this order: the foundation (fonts, tokens, fields, the page), the small marks (swatch, pip,
 # spinner), the controls, the surfaces, the data, the public pieces, the pages; the chosen gold closes the list, so
-# that it wins over the controls' hover
+# that it wins over the controls' hover; the tables are in ds.css, for Selecta's lists too (their behaviours, sorting and
+# picking rows, stay in ds-tools.js)
 foundation="src/fonts.css src/tokens.css src/base.css src/page.css"
 marks="src/marks.css"
 controls="src/buttons.css src/tabs.css"
 surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/viewer.css"
-data="src/tiles.css src/meter.css"
+data="src/tiles.css src/meter.css src/table.css"
 public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css"
 pages="src/doc.css"
 states="src/chosen.css"
 # the tools: what only Bank and Studio draw (pickers and periods, the date picker, moving by the grip, the new version,
-# the sheet, the filters' panel, rows, the sources' state, figures, charts, tables, the calendar, the settings page), in
+# the sheet, the filters' panel, rows, the sources' state, figures, charts, the calendar, the settings page), in
 # ds-tools.css after ds.css, in the same order by role; the chosen gold closes it too, over its controls' hover
 tools_controls="src/pick.css src/period.css src/periodpick.css src/datepick.css src/reorder.css src/live.css"
 tools_surfaces="src/sheet.css src/panel.css"
-tools_data="src/rows.css src/status.css src/figures.css src/chart.css src/table.css src/calendar.css"
+tools_data="src/rows.css src/status.css src/figures.css src/chart.css src/calendar.css"
 tools_pages="src/settings.css"
 # the scripts: the core every bundle starts with, then the shared behaviours; the tools' behaviours and components in
 # ds-tools.js, after ds.js (no core of their own: they need ds.js, which has it); the photos in ds-photo.js
