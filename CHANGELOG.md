@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.36.0 · 12 novembre 2026
+
+- `ds.chart.donut` : avec `open(key, holder)`, la part choisie ouvre son détail juste sous sa ligne de la légende (holder, vide, que la page remplit tout de suite ou plus tard), et le referme quand on la laisse ou qu’on en choisit une autre. Bank y ouvre les sous-catégories et les opérations d’une catégorie, sous la catégorie elle-même.
+
 ## 2.35.1 · 12 novembre 2026
 
 - Sur téléphone, sous un en-tête de période stable, le choix des dates avait la largeur du titre (« Toutes les dates », 180 px environ) : ses boutons se serraient sur trois lignes et ses onglets se chevauchaient. Il reprend la largeur de la carte (jusqu’à 480 px).

@@ -249,6 +249,10 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const dc = await p.evaluate(() => { const d = document.querySelector('#donut .chart-donut');
     return [JSON.stringify(slices), d.classList.contains('has-on'), d.querySelector('.chart-donut-slice.is-on').getAttribute('aria-pressed'), d.querySelector('.chart-donut-row.is-on').textContent,
       d.querySelector('.chart-donut-c').textContent, getComputedStyle(d.querySelectorAll('.chart-donut-slice')[0]).opacity, d.querySelectorAll('.chart-donut-slice')[1].getAttribute('tabindex')]; });
+  // what the chosen one opens, right under its row
+  const op = await p.evaluate(() => { const o = document.querySelectorAll('#donut .chart-donut-open');
+    return [o.length, o[0] && o[0].textContent, o[0] && o[0].previousElementSibling.querySelector('.chart-donut-row').classList.contains('is-on')]; });
+  assert(same(op, [1, 'détail courses', true]), 'le donut ouvre ce que la part choisie montre, juste sous sa ligne ' + JSON.stringify(op));
   await p.locator('#donut .chart-donut-slice').nth(1).focus();
   await p.keyboard.press('ArrowRight');
   const kf = await p.evaluate(() => document.activeElement === document.querySelectorAll('#donut .chart-donut-slice')[2]);
@@ -257,6 +261,8 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   const kw = await p.evaluate(() => document.activeElement === document.querySelectorAll('#donut .chart-donut-slice')[4]);
   await p.locator('#donut .chart-donut-row', { hasText: 'Loisirs' }).click();
   await p.waitForTimeout(400);
+  const shut = await p.evaluate(() => document.querySelectorAll('#donut .chart-donut-open').length);
+  assert(shut === 0, 'la part laissée, ce qu’elle ouvrait disparaît ' + shut);
   const dz = await p.evaluate(() => { const d = document.querySelector('#donut .chart-donut');
     return [JSON.stringify(slices), d.classList.contains('has-on'), d.querySelectorAll('.is-on').length, d.querySelector('.chart-donut-c').textContent, getComputedStyle(d.querySelectorAll('.chart-donut-slice')[0]).opacity]; });
   assert(same(dc, ['["courses"]', true, 'true', 'Courses24%412,30€', '412,30€Courses', '0.35', '0']) && kf && kw

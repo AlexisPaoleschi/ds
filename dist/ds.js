@@ -1,4 +1,4 @@
-/* ds 2.35.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 2.36.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script puts the sprite at the top of the page, so a page keeps writing #i-name and
@@ -2048,7 +2048,9 @@
      label, value, color, note, tone}] (nothing at or under 0 is drawn; note: a word under the name, in red with tone
      "bad", in green with "good"); center: the word under the total (« dépensés »), or
      {value, label}; pick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
-     another tap lets it go (pick(null)); the slices are one stop of the keyboard, the arrows go round them. */
+     another tap lets it go (pick(null)); the slices are one stop of the keyboard, the arrows go round them;
+     open(key, holder): what the chosen one opens, right under its row of the legend (holder, empty, for the page to
+     fill, then or later), gone when it is let go or another is chosen. */
 (function () {
   "use strict";
   var SVG = "http://www.w3.org/2000/svg";
@@ -2432,6 +2434,17 @@
       slices.forEach(function (p, k) { p.setAttribute("tabindex", k === i ? "0" : "-1"); });
       if (focus) slices[i].focus();
     }
+    // what the chosen one opens, under its row
+    var opened = null;
+    function openUnder(at) {
+      if (opened) { opened.remove(); opened = null; }
+      if (!o.open || at < 0) return;
+      var holder = el("div", "chart-donut-more");
+      opened = el("li", "chart-donut-open");
+      opened.append(holder);
+      items[at].parentNode.after(opened);
+      o.open(keys[at], holder);
+    }
     // a tap chooses a slice, another tap on it lets it go; the hole says the chosen one, else the total
     function choose(i, user) {
       var k = i == null ? null : keys[i];
@@ -2443,6 +2456,7 @@
       big.textContent = at >= 0 ? format(all[at].value) : c.value != null ? String(c.value) : format(total);
       word.textContent = at >= 0 ? all[at].label : c.label || "";
       word.hidden = !word.textContent;
+      openUnder(at);
       if (user) { rove(i, false); o.pick(on); }
     }
     mid.setAttribute("aria-live", "polite");

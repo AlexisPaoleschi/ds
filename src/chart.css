@@ -147,6 +147,8 @@
   .chart-donut-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: baseline; gap: var(--s-10); width: 100%; box-sizing: border-box; margin: 0;
     padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); text-align: left; }
   button.chart-donut-row { cursor: pointer; }
+  /* what the chosen row opens, under it, the row's line over it */
+  .chart-donut-open { min-width: 0; padding: var(--s-4) 0 var(--s-16); }
   .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
   /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
   .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }

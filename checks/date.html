@@ -48,7 +48,8 @@
     window.rows = [{ key: "logement", label: "Logement", value: 850, color: "--c-violet" }, { key: "courses", label: "Courses", value: 412.3, color: "--c-vert" },
       { key: "loisirs", label: "Loisirs", value: 236.8, color: "--c-corail" }, { key: "deplacements", label: "Déplacements", value: 164.3, color: "--c-bleu" },
       { key: "soins", label: "Soins", value: 25, color: "--c-turquoise" }, { key: "rien", label: "Rien", value: 0, color: "--c-rose" }];
-    window.donut = ds.chart.donut(document.getElementById("donut"), rows, { format: n => ds.money(n), center: "dépensés", pick: k => slices.push(k) });
+    window.donut = ds.chart.donut(document.getElementById("donut"), rows, { format: n => ds.money(n), center: "dépensés", pick: k => slices.push(k),
+      open: (k, holder) => { holder.textContent = "détail " + k; } });
     window.donutPlain = ds.chart.donut(document.getElementById("donut-plain"), rows.slice(0, 2), { center: { value: "12", label: "catégories" } });
     window.donutNone = ds.chart.donut(document.getElementById("donut-none"), [{ label: "Rien", value: 0 }]);
 
