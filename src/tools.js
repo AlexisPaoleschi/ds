@@ -11,12 +11,14 @@
           journal: "Journal", run: "Lancer", runNow: " maintenant", started: "Lancé", running: "En cours", allLogs: "Tout sur Render ↗",
           live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé",
           nothing: "Rien d’écrit depuis le démarrage du serveur.", journalOf: function (x) { return "Journal : " + x; },
-          retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour" },
+          retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour",
+          jobGood: "dernier passage réussi", jobBad: "dernier passage en erreur", jobRun: "en cours", jobNone: "pas encore passé" },
     en: { openFilters: "Open the filters", closeFilters: "Close the filters",
           journal: "Log", run: "Run", runNow: " now", started: "Started", running: "Running", allLogs: "All on Render ↗",
           live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done",
           nothing: "Nothing written since the server started.", journalOf: function (x) { return "Log: " + x; },
-          retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date" }
+          retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date",
+          jobGood: "last run fine", jobBad: "last run failed", jobRun: "running", jobNone: "not run yet" }
   });
   // read when a word is shown, so that a page that changes its language is followed
   function words() { return _.words(WORDS); }
@@ -213,8 +215,10 @@
         live.firstChild.setAttribute("aria-hidden", "true");
         panel = el("div", "logbox", [el("div", "loghead", [live, link]), lines]);
       }
+      // its dot says the job's state in its colour; a screen reader hears it in words
       var mark = tag("i", "sync-dot" + dot);
-      mark.setAttribute("aria-hidden", "true");
+      mark.setAttribute("role", "img");
+      mark.setAttribute("aria-label", j.state === "run" ? w.jobRun : j.state === true ? w.jobGood : j.state === false ? w.jobBad : w.jobNone);
       var block = el("div", "job", [
         el("div", "name", [mark, j.label]),
         tag("div", "when", j.when || ""),

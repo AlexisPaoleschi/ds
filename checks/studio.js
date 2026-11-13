@@ -148,7 +148,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     y: [...document.querySelectorAll('#line .chart-line-y span')].map(s => s.textContent), x: [...document.querySelectorAll('#line .chart-line-x span')].map(s => s.textContent),
     stroke: getComputedStyle(document.querySelector('#line polyline')).stroke, label: line.getAttribute('aria-label'), none: lineNone === null && !document.getElementById('line-none').children.length }));
   assert(ln.points === 30 && ln.rules === 2 && JSON.stringify(ln.y) === '["1 258","1 200"]' && JSON.stringify(ln.x) === '["1er oct.","30 oct."]' && ln.stroke === 'rgb(73, 143, 238)'
-    && ln.label === '1 200 (1er oct.) → 1 258 (30 oct.)' && ln.none, 'la courbe : un point par jour, le plus haut et le plus bas, le premier et le dernier jour, la couleur de la série ' + JSON.stringify(ln.y));
+    && /^Courbe du 1er oct\. au 30 oct\. : de 1 200 à 1 258, au plus haut [\d ]+, au plus bas [\d ]+\.$/.test(ln.label) && ln.none, 'la courbe : un point par jour, le plus haut et le plus bas, le premier et le dernier jour, la couleur de la série, et la phrase lue ' + JSON.stringify([ln.y, ln.label]));
   // tall: its ground filled, the dashed level and its name, a dot on each day given, its middle day; the bubble follows the pointer
   const pr = await p.evaluate(() => ({ tall: price.classList.contains('is-tall'), area: !!document.querySelector('#price .chart-area'), ref: document.querySelector('#price .chart-ref-l').textContent,
     marks: document.querySelectorAll('#price .chart-mark').length, x: [...document.querySelectorAll('#price .chart-line-x span')].map(s => s.textContent),
@@ -163,6 +163,15 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(pr.tall && pr.area && pr.ref === 'prix de revient 6,05€' && pr.marks === 2 && JSON.stringify(pr.x) === '["1er oct.","15 oct.","30 oct."]' && pr.height === 180 && pr.hidden
     && tip.shown && tip.text === '30 oct. · 6,29€' && tip.inside && gone,
     'la courbe haute : son fond, son niveau en pointillé et son nom, un point par achat, son jour du milieu ; la bulle suit le pointeur, dans la courbe ' + JSON.stringify([pr, tip]));
+  // floor: the scale goes down to 0, the level (Bank's margin) above it at its true height
+  const fl = await p.evaluate(() => {
+    const h = document.createElement('div'); h.style.maxWidth = '600px'; document.body.appendChild(h);
+    ds.chart.line(h, [{ x: '2026-11-01', v: 1000 }, { x: '2026-11-02', v: 400 }, { x: '2026-11-03', v: 800 }], { tall: true, floor: 0, ref: { v: 100, label: 'marge 100' }, format: v => v + ' €' });
+    const out = { y: [...h.querySelectorAll('.chart-line-y span')].map(s => s.textContent), ref: parseFloat(h.querySelector('.chart-ref-l').style.top) };
+    h.remove();
+    return out;
+  });
+  assert(JSON.stringify(fl.y) === '["1000 €","0 €"]' && fl.ref > 80 && fl.ref < 95, 'floor : l’échelle descend jusqu’à 0, la marge posée à sa vraie hauteur au-dessus ' + JSON.stringify(fl));
   // what is foreseen: the curve solid up to today, dashed after, on a paler ground; today a rule with its name
   const ah = await p.evaluate(() => {
     const lines = [...document.querySelectorAll('#ahead polyline')], rule = document.querySelector('#ahead .chart-now');

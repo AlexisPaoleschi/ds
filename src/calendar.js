@@ -15,7 +15,8 @@
    span ({from, to}, its first and last days: what runs over several days, given on each of them)}.
    In the month, what runs over several days is one bar in its colour across them, at the same height in every cell it
    crosses, its title on its first day and on each Monday it goes on to, as Google's agenda draws a stay or a trip.
-   On a phone, a cell shows a dot per item, three at most, then « +N ».
+   On a phone, a cell shows a dot per item, three at most, then « +N ». The views are one stop of the keyboard, as in
+   the date picker: ← and → (Home, End) go from one to the next.
    Returns {draw(), set({view, value}), go(step), today(), state()}: state() is {view, value, from, to}, the days shown
    (to excluded), what a page reads to load them; onChange receives it after each move, then the page calls draw()
    once it has what those days hold. ds.calendar.row(item) and ds.calendar.mark(item) build a default row and a mark,
@@ -157,6 +158,17 @@
       b.dataset.view = v;
       b.addEventListener("click", function () { if (st.view !== v) { st.view = v; changed(); } });
       tabs.append(b);
+    });
+    // the views are one stop of the keyboard, like the date picker's: ← and → (Home, End) go to the next one and show it
+    tabs.addEventListener("keydown", function (e) {
+      var i = VIEWS.indexOf(st.view), n = VIEWS.length;
+      var to = { ArrowLeft: i - 1, ArrowRight: i + 1, Home: 0, End: n - 1 }[e.key];
+      if (to == null || e.altKey || e.ctrlKey || e.metaKey) return;
+      e.preventDefault();
+      var v = VIEWS[(to + n) % n];
+      if (st.view !== v) { st.view = v; changed(); }
+      var b = tabs.querySelector('[data-view="' + v + '"]');
+      if (b) b.focus();
     });
     // the arrows are the sprite's chevrons (ds-icons.js)
     var prev = el("button", "btn is-icon", window.ds.ico("chevron-left")), now = el("button", "btn", w.today), next = el("button", "btn is-icon", window.ds.ico("chevron-right"));
@@ -302,7 +314,7 @@
     }
     function paint() {
       h3.replaceChildren.apply(h3, titleText());
-      [].forEach.call(tabs.children, function (b) { b.setAttribute("aria-selected", b.dataset.view === st.view ? "true" : "false"); });
+      [].forEach.call(tabs.children, function (b) { var on = b.dataset.view === st.view; b.setAttribute("aria-selected", on ? "true" : "false"); b.tabIndex = on ? 0 : -1; });
       // the month picker follows the day while it is shut; open, it keeps what one is looking at
       if (pop.hidden) jump.set(window.ds.datePick.of("month", st.day));
       body.dataset.view = st.view;

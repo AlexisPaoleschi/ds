@@ -6,6 +6,7 @@
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
    today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
    hour at Paris, 0 to 23, now when no date is given).
+   On an iPhone or an iPad, the page's viewport gets maximum-scale=1 so that touching a field never zooms (pinching still does).
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
    (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
@@ -18,6 +19,15 @@
   if (window.ds && window.ds._) return;
   var ds = window.ds = window.ds || {};
   var SVGNS = "http://www.w3.org/2000/svg", TZ = "Europe/Paris";
+
+  // An iPhone or an iPad zooms the page into a field whose text is under 16px, and stays zoomed when the field is left.
+  // maximum-scale=1 on the viewport stops that, and iOS still lets the fingers pinch to zoom (it ignores the limit for
+  // them); Android does not, so only iOS gets it. An iPad that says it is a Mac is told by its touch screen.
+  (function () {
+    var m = document.querySelector('meta[name="viewport"]'), ua = navigator.userAgent || "", platform = navigator.platform || "";
+    var ios = /iPhone|iPad|iPod/.test(ua) || (/Mac/.test(platform) && navigator.maxTouchPoints > 1);
+    if (ios && m && !/maximum-scale/.test(m.content)) m.content = m.content + ", maximum-scale=1";
+  })();
 
   // the page's language, read each time, so that a page that changes it is followed
   function english() { return /^en\b/i.test(document.documentElement.lang || ""); }

@@ -1,10 +1,11 @@
 /* Charts, taken from Studio's analysis. Each one draws into holder (its content replaced) and returns its element; with
    holder null it only returns it, for a page that builds its own tree. The colour of a series is a token, given as its
    name (color: "--c-bleu") and set as --n on the chart; the lines, labels and grounds come from the theme.
-   ds.chart.line(holder, points, {color, formatDay, format, tall, area, ref, marks, hover, now, nowLabel}): a curve, its highest and lowest
+   ds.chart.line(holder, points, {color, formatDay, format, tall, area, ref, floor, marks, hover, now, nowLabel}): a curve, its highest and lowest
      values on its right, its first and last days under it. points: [{x: "2026-11-09", v: 1240}]; formatDay(x) and format(v)
      write them (a short date and a figure by default). Tall, a chart of its own (a share's price): taller, its middle
-     day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); marks:
+     day under it too; area fills its ground; ref: {v, label} a dashed level with its name (a cost price); floor: the
+     lowest value the scale goes down to (0 for a balance), the level then at its true height above it; marks:
      [{x, label}] a dot on each day given (purchases), its label on hover; hover: the day and value under the pointer or
      the finger, with a cursor; now: the day that is today, when the curve goes on with what is foreseen: from it the
      curve is dashed and its ground paler, a thin rule stands on it, nowLabel over it (« aujourd’hui »).
@@ -31,15 +32,30 @@
      {value, label}; onPick(key) makes the slices and the rows buttons: a tap chooses one, which the hole then says,
      another tap lets it go (onPick(null)); value: the one chosen to start with; the slices are one stop of the keyboard, the arrows go round them;
      open(key, holder): what the chosen one opens, right under its row of the legend (holder, empty, for the page to
-     fill, then or later), gone when it is let go or another is chosen. */
+     fill, then or later), gone when it is let go or another is chosen.
+   Each chart but the split (whose legend says it all in words) also tells a screen reader what it shows, in a sentence
+   of its figures (its highest and lowest, its first and last, its total and shares), not shown on screen; summary
+   (words, or a function given those words) says it otherwise. */
 (function () {
   "use strict";
   var SVG = "http://www.w3.org/2000/svg";
   var _ = window.ds._, day = window.ds.day, english = _.english, el = _.el, tone = _.tone;
   var at = day.at, addDays = day.add, weekStart = day.weekStart, parisToday = day.today;
   var WORDS = _.table({
-    fr: { none: "rien", one: "1", many: function (n) { return n + " et plus"; }, live: "en cours" },
-    en: { none: "none", one: "1", many: function (n) { return n + " or more"; }, live: "running" }
+    fr: { none: "rien", one: "1", many: function (n) { return n + " et plus"; }, live: "en cours",
+          line: function (a) { return "Courbe du " + a.from + " au " + a.to + " : de " + a.first + " à " + a.last + ", au plus haut " + a.hi + ", au plus bas " + a.lo + "."; },
+          bars: function (a) { return a.n + " barres, de " + a.from + " à " + a.to + " : la plus haute " + a.hi + " (" + a.hiAt + "), la plus basse " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", moyenne " + a.avg : "") + "."; },
+          pairs: function (a) { return a.n + " périodes, de " + a.from + " à " + a.to + " : " + a.sums + "."; },
+          heat: function (a) { return "Du " + a.from + " au " + a.to + " : " + a.days + " jours avec au moins " + a.one + (a.many ? ", dont " + a.many + " avec " + a.two + " et plus" : "") + (a.best ? " ; le plus chargé, le " + a.best + " (" + a.bestN + ")" : "") + "."; },
+          spark: function (a) { return a.n + " valeurs, de " + a.lo + " à " + a.hi + ", la dernière " + a.last + "."; },
+          donut: function (a) { return "Total " + a.total + " en " + a.n + " parts : " + a.parts + "."; } },
+    en: { none: "none", one: "1", many: function (n) { return n + " or more"; }, live: "running",
+          line: function (a) { return "Curve from " + a.from + " to " + a.to + ": from " + a.first + " to " + a.last + ", highest " + a.hi + ", lowest " + a.lo + "."; },
+          bars: function (a) { return a.n + " bars, from " + a.from + " to " + a.to + ": highest " + a.hi + " (" + a.hiAt + "), lowest " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", average " + a.avg : "") + "."; },
+          pairs: function (a) { return a.n + " periods, from " + a.from + " to " + a.to + ": " + a.sums + "."; },
+          heat: function (a) { return "From " + a.from + " to " + a.to + ": " + a.days + " days with at least " + a.one + (a.many ? ", " + a.many + " of them with " + a.two + " or more" : "") + (a.best ? "; the busiest, " + a.best + " (" + a.bestN + ")" : "") + "."; },
+          spark: function (a) { return a.n + " values, from " + a.lo + " to " + a.hi + ", the last " + a.last + "."; },
+          donut: function (a) { return "Total " + a.total + " in " + a.n + " parts: " + a.parts + "."; } }
   });
   function words() { return _.words(WORDS); }
   function svg(name, attrs) {
@@ -56,6 +72,13 @@
     if (a < 1000) return num(Math.round(v));
     return (a < 10000 ? window.ds.number(Math.round(v / 100) / 10, Math.round(v / 100) % 10 ? 1 : 0) : num(Math.round(v / 1000))) + "k";
   }
+  // what a screen reader hears of a chart: the sentence of its figures, or the page's own words (summary)
+  function summed(e, text, o, role) {
+    var said = typeof o.summary === "function" ? o.summary(text) : o.summary != null ? String(o.summary) : text;
+    if (role) e.setAttribute("role", role);
+    e.setAttribute("aria-label", said);
+    return e;
+  }
   function monthShort(m) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
 
   /* the curve: drawn in a 100 × 30 box stretched to the chart's width (100 × 60 when tall), its lines kept thin whatever
@@ -70,6 +93,8 @@
     var value = o.format || num;
     var ref = o.ref && typeof o.ref.v === "number" ? o.ref : null;
     var vals = pts.map(function (p) { return p.v; }), all = ref ? vals.concat([ref.v]) : vals;
+    // the scale goes down to the floor when one is given, whatever the lowest value
+    if (typeof o.floor === "number") all = all.concat([o.floor]);
     var lo = Math.min.apply(null, all), hi = Math.max.apply(null, all), span = hi - lo || 1;
     var H = o.tall ? 60 : 30, top = 2, bot = H - 2;
     function X(i) { return i / (pts.length - 1) * 100; }
@@ -92,9 +117,8 @@
     var first = pts[0], last = pts[pts.length - 1];
     var box = paint(el("div", "chart-line" + (o.tall ? " is-tall" : "") + (o.hover ? " is-hover" : "")), o.color), plot = el("div", "chart-line-plot");
     var ys = el("div", "chart-line-y"), xs = el("div", "chart-line-x");
-    box.setAttribute("role", "img");
-    box.setAttribute("aria-label", value(first.v) + " (" + label(first.x) + ") → " + value(last.v) + " (" + label(last.x) + ")");
-    box.title = o.hover ? "" : box.getAttribute("aria-label");
+    summed(box, words().line({ from: label(first.x), to: label(last.x), first: value(first.v), last: value(last.v), hi: value(Math.max.apply(null, vals)), lo: value(Math.min.apply(null, vals)) }), o, "img");
+    box.title = o.hover ? "" : value(first.v) + " (" + label(first.x) + ") → " + value(last.v) + " (" + label(last.x) + ")";
     plot.append(s);
     // what lies over the curve, placed in shares of its box: the level's name, the dots, the cursor and its bubble
     function at(e, i, v) { e.style.left = X(i) + "%"; e.style.top = (Y(v) / H * 100) + "%"; return e; }
@@ -259,6 +283,16 @@
       });
       box.append(legend);
     }
+    // in words, for a screen reader: the highest and the lowest, or what each series adds up to
+    var named = rows.map(function (r) { return r.label != null ? String(r.label) : /^\d{4}-\d{2}$/.test(r.key || "") ? monthShort(r.key) + " " + r.key.slice(0, 4) : String(r.key); });
+    var told;
+    if (pairs) told = words().pairs({ n: n, from: named[0], to: named[n - 1], sums: pairs.map(function (q) { return q.label + " " + say(rows.reduce(function (t, r) { return t + (r[q.key] || 0); }, 0)); }).join(", ") });
+    else {
+      var hiI = 0, loI = 0;
+      rows.forEach(function (r, i) { if ((r.value || 0) > (rows[hiI].value || 0)) hiI = i; if ((r.value || 0) < (rows[loI].value || 0)) loI = i; });
+      told = words().bars({ n: n, from: named[0], to: named[n - 1], hi: say(rows[hiI].value || 0), hiAt: named[hiI], lo: say(rows[loI].value || 0), loAt: named[loI], avg: avg != null ? say(avg) : "" });
+    }
+    summed(box, told, o, o.onPick ? "group" : "img");
     return put(holder, box);
   }
 
@@ -304,6 +338,16 @@
     ["", "is-1", "is-2"].forEach(function (cls, i) { var s = el("span"), k = el("i", "heat-day " + cls); s.append(k, lg[i]); legend.append(s); });
     if (o.note) legend.append(el("span", "chart-heat-note", o.note));
     box.append(scroll, legend);
+    // in words, for a screen reader: the days that had something, and the busiest
+    var first = addDays(lastWeek, -7 * (53 * blocks - 1)), start = from && from > first ? from : first, seen = 0, many = 0, best = null;
+    Object.keys(counts).forEach(function (k) {
+      var c = counts[k] || 0;
+      if (k < start || k > to || c < steps[0]) return;
+      seen += 1;
+      if (c >= steps[1]) many += 1;
+      if (!best || c > counts[best] || (c === counts[best] && k > best)) best = k;
+    });
+    summed(box, w.heat({ from: window.ds.date(start), to: window.ds.date(to), days: seen, one: steps[0], many: many, two: steps[1], best: best ? window.ds.date(best) : "", bestN: best ? num(counts[best]) : "" }), o, "img");
     // opened on the latest weeks when the year is wider than the screen
     requestAnimationFrame(function () { scroll.scrollLeft = scroll.scrollWidth; });
     return put(holder, box);
@@ -313,7 +357,9 @@
     o = o || {};
     values = values || [];
     var top = o.top || Math.max.apply(null, values.concat([1])), box = paint(el("span", "chart-spark"), o.color);
-    box.setAttribute("aria-hidden", "true");
+    var told = o.tip || num;
+    if (values.length) summed(box, words().spark({ n: values.length, lo: told(Math.min.apply(null, values)), hi: told(Math.max.apply(null, values)), last: told(values[values.length - 1]) }), o, "img");
+    else box.setAttribute("aria-hidden", "true");
     values.forEach(function (v) {
       var b = el("i");
       // the smallest still shows
@@ -432,6 +478,8 @@
     }
     mid.setAttribute("aria-live", "polite");
     mid.append(big, word);
+    // in words, for a screen reader: the total and each share
+    summed(box, words().donut({ total: format(total), n: all.length, parts: all.map(function (x) { return x.label + " " + Math.round(x.value / total * 100) + " % (" + format(x.value) + ")"; }).join(", ") }), o, "group");
     ring.append(s, mid);
     box.append(ring, legend);
     choose(null, false);

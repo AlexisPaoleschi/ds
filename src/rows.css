@@ -3,7 +3,7 @@
   ul.rows { list-style: none; margin: 0; padding: 0; }
   /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
      settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
-  ul.rows li, .rank li, .facts > div, :where(body.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
+  ul.rows li, .rank li, .facts > div, :where(.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
   ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
   ul.rows li:first-child { border-top: none; padding-top: 0; }
   .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }

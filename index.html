@@ -14,6 +14,7 @@
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
 <script src="demos/date.js" defer></script>
+<script src="demos/tools.js" defer></script>
 <style>
   /* the page itself: every token and component of the design system, in both themes side by side */
   body { margin: 0; background: var(--bg); color: var(--ink); font: 400 var(--fs-15)/var(--lh-text) var(--body); }
@@ -61,6 +62,10 @@
   .demo .dialog { width: 100%; }
   /* the main views' bar shown in place on a phone, where a real page puts it at the bottom */
   .demo header.top .tabs.is-bar, .demo .tabs.is-bar { position: static; transform: none; }
+  /* in place, on a narrow phone the bar takes a row of its own under the brand and the header's buttons, and the
+     passing messages the column's width: a real page puts both at the foot of the screen */
+  @media (max-width: 480px) { .demo header.top { flex-wrap: wrap; } .demo header.top .tabs.is-bar { order: 1; width: 100%; } }
+  .demo .toasts { width: auto; }
   .demo .grid4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); margin-top: var(--s-8); }
   .rules ul { margin: 0; padding-left: var(--s-20); }
   .rules li { margin: var(--s-4) 0; color: var(--dim); }
@@ -161,8 +166,8 @@
     </div>
     <dl class="tiles is-compact" style="align-self: start"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile is-good"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile is-bad"><dt>Sorties</dt><dd>−1 263,08€</dd></div></dl>
     <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="tile-unit">membres</span></dd><span class="tile-delta is-good">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-rose)"><dt><i></i>Katline</dt><dd>860<span class="tile-unit">membres</span></dd><span class="tile-delta is-bad">−1,1% sur 30 jours</span></div></dl>
-    <div class="side-layout is-open">
-      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer">×</button></div>
+    <div class="side-layout is-open" data-drawer="demo-side">
+      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer" data-drawer-close="demo-side">×</button></div>
         <div class="filters">
           <div class="fgroup"><span class="fhead">Comptes<button type="button" class="filter-all">Tout</button></span>
             <span class="frow"><button type="button" class="chip" aria-pressed="true"><i class="swatch" style="--n:var(--c-ciel)"></i>Revolut</button><button type="button" class="filter-only" aria-label="Seulement Revolut" title="Seulement Revolut"><svg class="ico" aria-hidden="true"><use href="#i-eye"/></svg></button></span>
@@ -171,14 +176,41 @@
           <div class="fgroup"><span class="fhead">Sens</span><span class="frow"><button type="button" class="chip" aria-pressed="true">Entrées</button></span><span class="frow"><button type="button" class="chip" aria-pressed="true">Sorties</button></span></div>
         </div>
       </aside>
-      <div class="card"><h3 class="ct">Listes <button class="edgetab" aria-expanded="true" type="button" style="margin-left:auto"><span class="edgetab-label">Filtres</span><i class="filter-pip"></i></button></h3>
+      <div class="card"><h3 class="ct">Listes <button class="edgetab" aria-expanded="true" type="button" style="margin-left:auto" data-drawer-toggle="demo-side"><span class="edgetab-label">Filtres</span><i class="filter-pip"></i></button></h3>
         <h4 class="sect">15 août 2026</h4>
         <ul class="rows"><li><span class="row-date">15/08</span><span class="row-title">Magasins U</span><span class="who" style="--n:var(--c-ciel)">REVOLUT</span><span class="row-value">−119,89€</span></li><li><span class="row-date">16/08</span><span class="row-title">Remboursement</span><span class="row-value" style="color:var(--good)">+25,00€</span></li></ul>
         <p class="empty-note">Aucune opération pour ces filtres.</p>
         <h4 class="sect">Les petites marques</h4>
         <div class="row"><i class="swatch" style="--n:var(--c-ciel)"></i><i class="swatch is-open" style="--n:var(--c-rose)"></i><i class="pip"></i><i class="spinner"></i></div>
       </div>
+      <div class="scrim"></div>
     </div>
+    <div class="card"><h3 class="ct">Le tiroir des filtres · ds.drawer</h3>
+      <p class="note">Les filtres ci-dessus sont un vrai tiroir : l’onglet « Filtres » et leur croix les ouvrent et les ferment, et l’appareil s’en souvient. Sur un téléphone, le tiroir couvre la page : Échap le ferme, Tab reste dedans, puis revient à l’onglet.</p>
+    </div>
+    <div class="card"><h3 class="ct">L’état des sources · ds.status</h3><footer data-tools="status"></footer></div>
+    <div class="card"><h3 class="ct">Les synchros · ds.jobs</h3><div class="settings" data-tools="jobs"></div></div>
+    <div class="card"><h3 class="ct">L’adresse · ds.route et ds.seek</h3>
+      <p class="note">Ce que la page lit après le # (un lien), puis ce que ds.route.go y écrit sans faire sauter la page : <code data-tools="route">—</code></p>
+      <div class="row"><a class="btn" href="#analyse/patreon-alexis?compte=hb">Aller à l’analyse</a><button class="btn" type="button" data-tools-go="">Revenir</button><button class="btn is-act" type="button" data-tools-seek>Retrouver l’agenda</button></div>
+    </div>
+    <div class="card"><h3 class="ct">Le flux en direct · ds.stream</h3>
+      <div class="row"><button class="btn is-act" type="button" data-tools="stream">Suivre le serveur</button></div>
+      <ul class="rows" data-tools="streamed"></ul>
+    </div>
+    <div class="card"><h3 class="ct">Une tête de période stable · .periodhead.is-steady</h3>
+      <div class="periodhead is-steady" data-tools="steady">
+        <div class="periodleft"><button class="periodtitle" type="button"><h3>Mai <span class="periodtitle-year">2026</span></h3><span class="caret">▾</span></button></div>
+        <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent">‹</button><button class="btn is-icon" type="button" aria-label="Suivant">›</button></div>
+      </div>
+      <div class="periodhead is-steady" data-tools="steady">
+        <div class="periodleft"><button class="periodtitle" type="button"><h3>2026</h3><span class="caret">▾</span></button></div>
+        <div class="periodnav"><button class="btn is-icon is-off" type="button" aria-label="Précédent">‹</button><button class="btn is-icon is-off" type="button" aria-label="Suivant">›</button></div>
+      </div>
+      <p class="note">Les flèches gardent leur place quand elles ne mènent nulle part : choisir une période ne fait rien bouger sous le titre (les opérations de Bank).</p>
+    </div>
+    <div class="card"><h3 class="ct">Dire une date, un chiffre · ds.date, ds.when, ds.money…</h3><ul class="rows" data-tools="formats"></ul></div>
+    <div class="card"><h3 class="ct">Avatar · ds.avatar</h3><div class="row" data-tools="avatars"></div></div>
     <!-- Bank's components: the B demos go here -->
     <div class="card" data-b="ops"><h3 class="ct">Opérations : trier, choisir, ouvrir <label class="pill is-filter"><span class="pill-value"></span><select aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option><option value="bourso">BoursoBank</option><option value="fortuneo">Fortuneo</option></select></label></h3>
       <div class="pills" style="margin-bottom: var(--s-10)"><label class="pill tbl-sortmenu"><span class="pill-value"></span><select data-b="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option><option value="categorie|1">Par catégorie</option><option value="compte|1">Par compte</option></select></label></div>
@@ -331,6 +363,8 @@
     sec.dataset.theme = id;
     // each column's radio buttons are a group of their own
     node.querySelectorAll('input[name="demo-lay"]').forEach(i => { i.name = "demo-lay-" + id; });
+    // each column's drawer is a drawer of its own
+    for (const a of ["data-drawer", "data-drawer-toggle", "data-drawer-close"]) node.querySelectorAll("[" + a + "]").forEach(e => e.setAttribute(a, e.getAttribute(a) + "-" + id));
     node.querySelector(".t-name span").textContent = name;
     node.querySelector(".t-name small").textContent = what;
     for (const t of node.querySelector("[data-swatches]").dataset.swatches.split(" "))

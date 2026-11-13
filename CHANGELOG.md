@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.1.0 · 12 novembre 2026
+
+Les derniers points de l’étude (52, 53 et 54) : des vérifications au clavier et sur téléphone, une page vitrine qui montre tout ce que ds sait faire, des graphiques, un agenda et des synchros lisibles sans la couleur. Rien ne change à l’écran dans les applis.
+
+- Au clavier : `checks/access.js` passe par chaque fenêtre et chaque menu avec Tab, Maj+Tab, Entrée, Espace, Échap et les flèches, le focus revenant où il était : `ds.confirm`, la fiche, la visionneuse, le tiroir du téléphone, le choix de dates, le choix de période, le sélecteur, l’action d’une bulle, le menu du site et ses galeries.
+- Sur téléphone : `checks/showcase.js` vérifie qu’à 375px ni `index.html` ni `site.html` ne débordent, dans les deux thèmes, et qu’aucun bouton, champ ou menu n’est coupé. La vitrine débordait de 8px : l’en-tête de démonstration y garde la barre des vues (posée dans l’en-tête au lieu du bas de l’écran) à côté de ses deux boutons, qui sortaient de la colonne ; sur un petit téléphone, la barre y passe désormais sur sa propre ligne, et les bulles prennent la largeur de la colonne.
+- La vitrine montre, chacun avec sa vérification : le tiroir des filtres (`ds.drawer`, les filtres déjà là devenus un vrai tiroir), l’état des sources (`ds.status`), les synchros et leur journal (`ds.jobs`), l’adresse après # (`ds.route`, `ds.route.go`, `ds.seek`), le direct du serveur (`ds.stream`), la tête de période stable (`.periodhead.is-steady`), les formats (`ds.date`, `ds.time`, `ds.when`, `ds.ago`, `ds.soon`, `ds.number`, `ds.money`, `ds.percent`, `ds.compact`, `ds.today`) et les avatars (`ds.avatar`) ; la pilule (`ds.pills`) est vérifiée.
+- Lisible sans la couleur : chaque graphique (la courbe, les barres, les barres en paires, la carte de chaleur, les petites barres, le donut) dit à un lecteur d’écran ses chiffres en une phrase (le plus haut, le plus bas, le premier, le dernier, le total, les parts), sans rien changer à l’écran ; `summary` la remplace par les mots de la page. Une synchro dit son état en mots (« dernier passage réussi », « en erreur », « en cours », « pas encore passé »), plus seulement par la couleur de sa pastille. Les vues de l’agenda (Mois, Semaine, Liste) suivent ← → Début Fin comme les onglets du choix de dates, en un seul arrêt de Tab.
+- La page de réglages est rangée sous `.settings` plutôt que `body.settings` (sans poids ajouté, comme avant), pour que la vitrine puisse y montrer ses synchros.
+- `ds.chart.line` prend `floor` : l’échelle descend jusqu’à cette valeur (0 pour un solde), et le niveau `ref` (la marge de Bank) se pose à sa vraie hauteur au-dessus, au lieu d’être le bas de la courbe.
+- Sur iPhone et iPad, toucher un champ ne zoome plus la page : le noyau commun ajoute `maximum-scale=1` à la balise viewport, sur iOS seulement (iOS laisse toujours zoomer en pinçant ; Android, lui, ne le laisserait plus). Vérifié pour une page d’appli et pour le site.
+
 ## 3.0.0 · 12 novembre 2026
 
 Les noms et les appels, une seule façon partout (points 48 à 51 de l’étude). Rien ne change à l’écran : la page vitrine est la même au pixel près. Pas d’alias : chaque appli renomme ses classes et ses appels dans le commit où elle prend 3.0.0, avec `MIGRATION-3.md`.
