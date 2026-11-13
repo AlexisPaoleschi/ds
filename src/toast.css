@@ -13,7 +13,9 @@
   .toast .txt { flex: 1 1 auto; min-width: 0; }
   .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
   .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls); text-transform: var(--act-case); }
-  .toast .toast-close { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
+  /* its cross: the sprite's, in the middle of a square */
+  .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
+  .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }
   .toast .act:hover, .toast .toast-close:hover { color: var(--ink); }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }

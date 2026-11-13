@@ -46,6 +46,9 @@
   .bar { height: 10px; background: var(--accent); border-radius: var(--r-s); }
   .boxes { display: flex; gap: var(--s-12); flex-wrap: wrap; }
   .boxes div { width: 76px; height: 48px; background: var(--panel-2); border: 1px solid var(--line-2); display: grid; place-items: center; font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--dim); }
+  /* the sheet's name, and its square pencil beside it */
+  .demo-sheet-head { display: flex; align-items: center; gap: var(--s-8); }
+  .demo-sheet-head .sheet-t { min-width: 0; }
   /* the panel and the picker, shown in place instead of over the page */
   .demo .side-layout.is-open { grid-template-columns: 230px minmax(0, 1fr); }
   /* on a phone the panel's demo stacks, as a real drawer would leave the page: side by side it made the column wider
@@ -167,7 +170,7 @@
     <dl class="tiles is-compact" style="align-self: start"><div class="tile"><dt>Opérations</dt><dd>128</dd></div><div class="tile is-good"><dt>Entrées</dt><dd>+3 225,00€</dd></div><div class="tile is-bad"><dt>Sorties</dt><dd>−1 263,08€</dd></div></dl>
     <dl class="tiles"><div class="tile" style="--n:var(--c-bleu)"><dt><i></i>Patreon</dt><dd>1 240<span class="tile-unit">membres</span></dd><span class="tile-delta is-good">+3,2% sur 30 jours</span></div><div class="tile" style="--n:var(--c-rose)"><dt><i></i>Katline</dt><dd>860<span class="tile-unit">membres</span></dd><span class="tile-delta is-bad">−1,1% sur 30 jours</span></div></dl>
     <div class="side-layout is-open" data-drawer="demo-side">
-      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer" data-drawer-close="demo-side">×</button></div>
+      <aside class="side"><div class="sidehead">Filtres<button type="button" aria-label="Fermer" data-drawer-close="demo-side"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
         <div class="filters">
           <div class="fgroup"><span class="fhead">Comptes<button type="button" class="filter-all">Tout</button></span>
             <span class="frow"><button type="button" class="chip" aria-pressed="true"><i class="swatch" style="--n:var(--c-ciel)"></i>Revolut</button><button type="button" class="filter-only" aria-label="Seulement Revolut" title="Seulement Revolut"><svg class="ico" aria-hidden="true"><use href="#i-eye"/></svg></button></span>
@@ -226,11 +229,11 @@
           <tr class="is-link" data-key="op6"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td class="tbl-wide" data-value="2026-08-01"><span class="row-date">01/08/26</span></td><td class="tbl-main">Salaire<span class="tbl-phone">01/08 · <span class="tint" style="--n: var(--c-vert)">Fortuneo</span> · Revenus › Salaire</span></td><td class="tbl-wide"><span class="who" style="--n: var(--c-vert)">Fortuneo</span></td><td class="tbl-wide">Revenus › Salaire</td><td class="tbl-end is-num is-good" data-value="3200">+3&nbsp;200,00€</td></tr>
         </tbody>
       </table></div>
-      <div class="sheet" data-b="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-close" type="button" aria-label="Fermer">×</button><div data-b="sheetbody"></div></div></div>
+      <div class="sheet" data-b="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-close" type="button" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div data-b="sheetbody"></div></div></div>
     </div>
     <div class="card"><h3 class="ct">Fiche d’une opération <button class="btn is-act" type="button" data-b="opensheet" style="margin-left: auto">Ouvrir la fiche</button></h3>
       <div class="sheet-panel" role="group" aria-label="Exemple de fiche">
-        <button class="sheet-close" type="button" aria-label="Fermer" tabindex="-1">×</button>
+        <button class="sheet-close" type="button" aria-label="Fermer" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button>
         <p class="sheet-sub">samedi 15 août 2026</p>
         <h4 class="sheet-t">Magasins U</h4>
         <p class="sheet-fig">−119,89€<small>−135,10 CHF</small></p>
@@ -348,9 +351,9 @@
     <div class="msg is-good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
     <div class="msg is-bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
     <div class="toasts">
-      <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="toast-close" aria-label="Fermer">×</button></div>
-      <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="toast-close" aria-label="Fermer">×</button></div>
-      <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="toast-close" aria-label="Fermer">×</button></div>
+      <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
+      <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
     </div>
     <div class="dialog" role="dialog" aria-label="Exemple de fenêtre"><h2 class="dialog-t">Supprimer le voyage « Vendée 2026 » ?</h2><p class="dialog-text">Ses opérations restent, sans voyage.</p><div class="dialog-b"><button type="button" class="btn dialog-no">Annuler</button><button type="button" class="btn dialog-ok is-danger">Supprimer</button></div></div>
   </section>

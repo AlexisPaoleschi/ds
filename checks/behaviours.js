@@ -247,6 +247,49 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   assert(JSON.stringify(etag) === '[1,1,1,1]' && JSON.stringify(etagSeen) === JSON.stringify([null, null, null, 'W/"v1"']),
     'ds.api {cache: "default"} : une lecture inchangée revient en 304 avec son ETag, sans l’option rien n’est gardé ' + JSON.stringify(etagSeen));
+  // a button with only an icon is square in both themes, small or not, its icon in the middle; the crosses of a sheet,
+  // a drawer and a bubble are the sprite's, in the middle of their square
+  const iconButtons = await p.evaluate(() => {
+    const out = [], holder = document.createElement('div');
+    holder.innerHTML = ['atelier', 'vitrine'].map(t => `<div data-theme="${t}" class="sq">` +
+      `<button class="btn is-icon" type="button" aria-label="a"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg></button>` +
+      `<button class="btn is-icon is-small" type="button" aria-label="b"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg></button>` +
+      `<div class="sheet-panel"><button class="sheet-close" type="button" aria-label="c"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>` +
+      `<div class="sidehead">Filtres<button type="button" aria-label="d"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div></div>`).join('');
+    document.body.appendChild(holder);
+    const t = ds.toast({ type: 'good', text: 'Carré', duration: 0 });
+    holder.querySelectorAll('.sq button').forEach(b => out.push(b));
+    out.push(t.el.querySelector('.toast-close'));
+    const r = out.map(b => { const a = b.getBoundingClientRect(), i = b.querySelector('svg').getBoundingClientRect();
+      return { w: a.width, h: a.height, dx: Math.abs(a.left + a.width / 2 - i.left - i.width / 2), dy: Math.abs(a.top + a.height / 2 - i.top - i.height / 2), text: b.textContent.trim() }; });
+    t.close(); holder.remove();
+    return r;
+  });
+  assert(iconButtons.every(s => Math.abs(s.w - s.h) < 0.5 && s.w > 0 && s.dx < 0.6 && s.dy < 0.6 && !s.text),
+    'un bouton fait d’une icône est carré dans les deux thèmes (petit ou non), son icône au milieu ; les croix sont celles des icônes ' + JSON.stringify(iconButtons));
+  const atelier = iconButtons.slice(0, 4).map(s => s.w);
+  assert(atelier[0] === 32 && atelier[2] === 32 && atelier[3] === 32 && atelier[1] === 28,
+    'Atelier : une seule taille de bouton icône (32), 28 pour le petit ' + JSON.stringify(atelier));
+  // the window's box: the answer says it, and still false when cancelled
+  const boxed = await p.evaluate(async () => {
+    const a = ds.confirm({ title: 'Nom', value: 'Le G5', check: { label: 'Seulement cette opération' } });
+    const label = document.querySelector('.dialog-check').textContent; document.querySelector('.dialog-check input').click(); document.querySelector('.dialog-ok').click();
+    const b = ds.confirm({ title: 'Nom', value: 'Le G5', check: { label: 'Seulement cette opération' } }); document.querySelector('.dialog-no').click();
+    const c = ds.confirm({ title: 'Sûr ?', check: { label: 'Toujours', checked: true } }); document.querySelector('.dialog-ok').click();
+    return [label, await a, await b, await c];
+  });
+  assert(JSON.stringify(boxed) === '["Seulement cette opération",{"value":"Le G5","checked":true},false,{"value":true,"checked":true}]',
+    'ds.confirm {check} : une case sous le champ, la réponse la dit ' + JSON.stringify(boxed));
+  // the picker's box, at its foot: its state goes with the choice
+  const picked = await p.evaluate(() => {
+    const h = document.createElement('div'), got = []; document.body.appendChild(h);
+    const pk = ds.picker(h, [{ value: 'a', label: 'Bar' }, { value: 'b', label: 'Restaurant' }], { check: { label: 'Seulement cette opération' }, onPick: (x, how) => got.push([x.value, how.checked]) });
+    h.querySelector('.picker-opt').click(); h.querySelector('.picker-check input').click(); h.querySelectorAll('.picker-opt')[1].click();
+    const last = h.lastElementChild.classList.contains('picker-check'); h.remove();
+    return { got, last, checked: pk.checked() };
+  });
+  assert(JSON.stringify(picked) === '{"got":[["a",false],["b",true]],"last":true,"checked":true}',
+    'ds.picker {check} : une case au pied de la liste, son état suit le choix ' + JSON.stringify(picked));
   // a window that asks for a code received by SMS
   const code = await p.evaluate(() => { ds.confirm({ title: 'Code reçu par SMS', value: '', inputmode: 'numeric', autocomplete: 'one-time-code', maxlength: 6 });
     const i = document.querySelector('.dialog-in'), out = [i.inputMode, i.getAttribute('autocomplete'), i.maxLength]; document.querySelector('.dialog-no').click(); return out; });
@@ -650,7 +693,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(pieces.tiles[0] === 3 && pieces.tiles[1] === '11px' && pieces.tiles[2] === 'normal' && pieces.tiles[3] === '' && pieces.tiles[4] === 'pointer' && pieces.tiles[5] === '#tuile',
     'les cases : leur nombre de colonnes, un chiffre trop long rapetisse jusqu’à 11 px puis passe à la ligne, une case qui s’ouvre');
   assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '11px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
-  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 34, 34, true, 'block']), 'les boutons carrés de l’en-tête : discrets, 34 px, l’or d’une nouvelle version');
+  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 32, 32, true, 'block']), 'les boutons carrés de l’en-tête : discrets, 32 px comme tout bouton fait d’une icône, l’or d’une nouvelle version');
   assert(JSON.stringify(pieces.tabs) === JSON.stringify([true, false, true, false, true, false]), 'des onglets en liens et en boutons radio');
   assert(pieces.sortmenu === 'none', 'le menu de tri d’un tableau reste caché sur un ordinateur, après la règle des pastilles');
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));

@@ -5,6 +5,9 @@
   .dialog-t { margin: 0; font: var(--head-weight) var(--dialog-t-size)/var(--head-lh) var(--title-font); color: var(--ink); }
   .dialog-text { margin: 0; font: var(--text-weight) var(--dialog-x-size)/var(--text-lh) var(--body); color: var(--dim); }
   .dialog-in { width: 100%; box-sizing: border-box; }
+  /* a box under the field or the text (ds.confirm's check): what the answer is for */
+  .dialog-check { display: flex; align-items: center; gap: var(--s-8); color: var(--dim); font: var(--text-weight) var(--fs-14)/var(--lh-ui) var(--body); cursor: pointer; }
+  .dialog-check input { margin: 0; flex: none; }
   /* the buttons keep their height, and go under one another when the line is too short for both */
   .dialog-b { --btn-px: var(--dialog-btn-px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s-8); margin-top: var(--s-4); }
 @media (max-width: 480px) {

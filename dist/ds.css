@@ -1,4 +1,4 @@
-/* ds 3.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -169,6 +169,8 @@
   --btn-bg: var(--panel-2); --btn-shadow: none; --btn-lift: 0px;
   /* the small button: a row's actions, a way back */
   --btn-s-h: 28px; --btn-s-px: var(--s-10); --btn-s-size: var(--fs-12); --btn-s-ls: 0;
+  /* a button with only an icon (reload, settings, a pencil, a cross): one size everywhere, square */
+  --btn-icon-h: 32px;
   /* the large one (.is-large): a public site's call to act, on its hero or a section; a tool's is its usual button */
   --btn-l-h: var(--btn-h); --btn-l-px: var(--btn-px); --btn-l-ls: var(--btn-ls);
   /* fields */
@@ -272,6 +274,8 @@
   --btn-bg: var(--overlay-white-strong); --btn-shadow: var(--shadow-card); --btn-lift: calc(-1 * var(--s-2));
   /* the small one is the site's way back (« ← Events ») */
   --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-167);
+  /* a button with only an icon: as high as the others */
+  --btn-icon-h: var(--btn-h);
   /* the action of a passing message, in the buttons' capitals */
   --act-ls: var(--ls-caps); --act-case: uppercase;
   /* fields: 16px, the least that keeps an iPhone from zooming in on them; roomy, a soft gold edge;
@@ -435,7 +439,6 @@
    header.top .brand { letter-spacing: var(--ls-caps); }
    header.top .tabs button { padding: var(--s-8) var(--s-8); letter-spacing: 0; }
    header.top .gear { width: 32px; height: 32px; }
-   header.top .btn.is-icon { width: 32px; min-height: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok { animation: none; }
@@ -503,13 +506,15 @@
 .btn.is-danger:hover { border-color: var(--bad); }
 .btn:disabled:not(.is-busy) { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
 .btn:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
-/* a square button with only an icon (reload, settings) */
-.btn.is-icon { width: var(--btn-h); padding: 0; }
+/* a button with only an icon (reload, settings, a pencil, a cross): square, one size in a theme (--btn-icon-h), its
+   icon in the middle; the small one (.is-small) as high as the small buttons, square too */
+.btn.is-icon { flex: none; width: var(--btn-icon-h); height: var(--btn-icon-h); min-height: 0; padding: 0; }
 
 /* a large button: a public site's call to act (« Book now » on its hero); in a tool, the usual button */
 .btn.is-large { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
 /* a small button: a row's actions, a way back */
 .btn.is-small { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
+.btn.is-icon.is-small { width: var(--btn-s-h); height: var(--btn-s-h); min-height: 0; padding: 0; }
 /* vitrine: the buttons of alexispaoleschi.com. White with a soft gold edge; gold letters and a gold edge to act,
    filled gold to save, red to delete. On hover they fill with their colour and rise. */
 [data-theme="vitrine"] .btn { color: var(--ink); transition: all var(--t-fast) ease; }
@@ -668,7 +673,9 @@
   .toast .txt { flex: 1 1 auto; min-width: 0; }
   .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
   .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls); text-transform: var(--act-case); }
-  .toast .toast-close { color: var(--faint); font: 400 var(--fs-17)/var(--lh-tight) var(--body); }
+  /* its cross: the sprite's, in the middle of a square */
+  .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
+  .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }
   .toast .act:hover, .toast .toast-close:hover { color: var(--ink); }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }
@@ -684,6 +691,9 @@
   .dialog-t { margin: 0; font: var(--head-weight) var(--dialog-t-size)/var(--head-lh) var(--title-font); color: var(--ink); }
   .dialog-text { margin: 0; font: var(--text-weight) var(--dialog-x-size)/var(--text-lh) var(--body); color: var(--dim); }
   .dialog-in { width: 100%; box-sizing: border-box; }
+  /* a box under the field or the text (ds.confirm's check): what the answer is for */
+  .dialog-check { display: flex; align-items: center; gap: var(--s-8); color: var(--dim); font: var(--text-weight) var(--fs-14)/var(--lh-ui) var(--body); cursor: pointer; }
+  .dialog-check input { margin: 0; flex: none; }
   /* the buttons keep their height, and go under one another when the line is too short for both */
   .dialog-b { --btn-px: var(--dialog-btn-px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--s-8); margin-top: var(--s-4); }
 @media (max-width: 480px) {

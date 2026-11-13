@@ -38,15 +38,22 @@
       var cells = tr.cells, name = cells[2].firstChild.textContent, amount = cells[5].textContent, good = cells[5].classList.contains("is-good");
       var day = ds.date(cells[1].getAttribute("data-value"), "weekday") + " 2026";
       sheetEl.querySelector('[data-b="sheetbody"]').innerHTML =
-        '<p class="sheet-sub">' + esc(day) + '</p><h2 class="sheet-t" id="' + title + '">' + esc(name) + '</h2>' +
+        // its name, and beside it a square pencil that names it, the window holding the box
+        '<p class="sheet-sub">' + esc(day) + '</p><div class="demo-sheet-head"><h2 class="sheet-t" id="' + title + '">' + esc(name) + '</h2>' +
+        '<button class="btn is-icon" type="button" data-b="rename" aria-label="Renommer « ' + esc(name) + ' »"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg></button></div>' +
         '<p class="sheet-fig' + (good ? " is-good" : "") + '">' + esc(amount) + '</p><dl class="facts">' +
         '<div><dt>Catégorie</dt><dd>' + esc(cells[4].textContent) + '</dd></div>' +
         '<div><dt>Compte</dt><dd>' + cells[3].innerHTML + '</dd></div>' +
         '<div><dt>Libellé de la banque</dt><dd class="is-mono">CB ' + esc(name.toUpperCase()) + '</dd></div>' +
         '<div><dt>Note</dt><dd><textarea rows="2" placeholder="Une note sur cette opération" aria-label="Note"></textarea></dd></div></dl>' +
-        '<div class="sheet-acts"><button class="btn is-act" type="button">Renommer</button><button class="btn is-save" type="button" data-sheet-close>Enregistrer</button>' +
+        '<div class="sheet-acts"><button class="btn is-save" type="button" data-sheet-close>Enregistrer</button>' +
         '<button class="btn" type="button" data-sheet-close>Historique</button></div>';
       sheet.open(from);
+      sheetEl.querySelector('[data-b="rename"]').onclick = function () {
+        ds.confirm({ title: "Nom", text: "Vide : nom automatique.", value: name, ok: "Enregistrer", check: { label: "Seulement cette opération" } }).then(function (a) {
+          if (a) ds.toast({ type: "good", text: "Nom enregistré · " + (a.checked ? "cette opération" : "tout le marchand") });
+        });
+      };
     }
     table.addEventListener("click", function (e) {
       var tr = e.target.closest("tbody tr");
@@ -59,7 +66,9 @@
     CATS.forEach(function (c) { c[2].forEach(function (s) { items.push({ value: c[0] + "|" + s[0], label: s[0], group: c[0], keywords: c[0], color: c[1], icon: s[1] }); }); });
     ds.picker(col.querySelector('[data-b="cats"]'), items, { value: "Loisirs|Restaurant", placeholder: "Chercher une catégorie…", limit: 8,
       first: ["Loisirs|Restaurant", "Loisirs|Bar", "Courses|Supermarché", "Déplacements|Train"],
-      onPick: function (x) { ds.toast({ type: "good", text: x.group + " › " + x.label + " pour Tik Tak", action: { label: "Annuler", run: function () {} } }); } });
+      // its box at the foot: for this operation alone, or for its whole merchant
+      check: { label: "Seulement cette opération" },
+      onPick: function (x, how) { ds.toast({ type: "good", text: x.group + " › " + x.label + (how.checked ? " pour cette opération" : " pour Tik Tak"), action: { label: "Annuler", run: function () {} } }); } });
     var banks = ds.picker(col.querySelector('[data-b="banks"]'), null, { placeholder: "Chercher une banque…", first: POPULAR, limit: 8,
       opener: col.querySelector('[data-b="addbank"]'), empty: "Aucune banque ne correspond.",
       onPick: function (x) { ds.toast({ type: "info", text: (x.sub ? "Renouveler " : "Connecter ") + x.label + "…" }); } });

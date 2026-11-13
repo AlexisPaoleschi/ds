@@ -1,4 +1,4 @@
-/* ds 3.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
@@ -29,6 +29,10 @@
   .picker-q { width: 100%; box-sizing: border-box; }
   .picker .picker-q { background: var(--panel); }
   .picker-list { display: grid; max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+  /* its box, under the choices (ds.picker's check): what a choice is for, always in sight under a long list */
+  .picker-check { display: flex; align-items: center; gap: var(--s-8); margin-top: var(--s-4); padding: var(--s-10) var(--s-6) var(--s-2);
+    border-top: 1px solid var(--line); color: var(--dim); font: 400 var(--fs-14)/var(--lh-ui) var(--body); cursor: pointer; }
+  .picker-check input { margin: 0; flex: none; }
   .picker-g { margin: var(--s-12) var(--s-6) var(--s-4); color: var(--faint);
     font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
   .picker-g:first-child { margin-top: var(--s-6); }
@@ -174,7 +178,9 @@
 /* The sheet: one thing shown in full over the page, to read it and act on it (Bank: an operation, its category, its
    note, its trip). On a computer a window in the middle of the screen, as Bank's always was; on a phone it rises from
    the bottom, within the thumb's reach. Not the small window of .dialog, which asks one question, nor the photo viewer. Its markup: <div class="sheet" hidden> (the veil) around <div class="sheet-panel"
-   role="dialog" aria-modal="true">, with its .sheet-close; ds.sheet opens and closes it.
+   role="dialog" aria-modal="true">, with its .sheet-close (<button class="sheet-close" aria-label="Fermer"> holding the sprite's
+   cross, <svg class="ico"><use href="#i-close"/></svg>, never the letter ×, which sits off the middle); ds.sheet opens and
+   closes it.
    A .sheet-panel on its own, outside a .sheet, sits in the page (the showcase shows it so). */
   .sheet { position: fixed; inset: 0; z-index: var(--z-sheet); display: flex; align-items: center; justify-content: center; padding: var(--s-20);
     background: var(--veil); animation: sheet-veil var(--t-mid) ease-out; }
@@ -185,9 +191,9 @@
   /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
      the title wraps beside it */
   .sheet-close { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
-    display: grid; place-items: center; width: 32px; height: 32px; padding: 0;
+    display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); box-sizing: border-box; padding: 0;
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
-    background: var(--panel-2); color: var(--dim); font: 400 var(--fs-22)/var(--lh-tight) var(--body); cursor: pointer; }
+    background: var(--panel-2); color: var(--dim); cursor: pointer; }
   .sheet-close:hover { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
@@ -247,7 +253,10 @@
   .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
   .side-layout.is-open .side { display: block; }
   .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
-  .sidehead button { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); background: none; border: none; color: var(--faint); font-size: var(--fs-22); line-height: var(--lh-tight); cursor: pointer; padding: 0 var(--s-2); }
+  /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
+     icon button, its edges let into the head's room so that the head keeps its height */
+  .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
+    background: none; border: none; color: var(--faint); cursor: pointer; padding: 0; }
   .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
   .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
   .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }
@@ -626,7 +635,7 @@
   .cal-head .periodnav { align-items: stretch; }
   .cal-head .periodnav .btn { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
   /* the arrows, the sprite's chevrons, in square buttons */
-  .cal-head .periodnav .btn.is-icon { width: var(--btn-s-h); padding: 0; }
+  .cal-head .periodnav .btn.is-icon { width: auto; height: auto; aspect-ratio: 1; padding: 0; }
   .cal-arrows { display: flex; gap: var(--s-6); }
   /* the month picker under the title is ds.datePick on months (datepick.css): it floats there as every picker under a
      period's title does */

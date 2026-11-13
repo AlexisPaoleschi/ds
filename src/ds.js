@@ -66,7 +66,9 @@
     for (var i = 0; i < live.length; i++) if (live[i].text === opts.text) return live[i].update(opts);
     var el = document.createElement("div"), t = { el: el, text: opts.text, life: 0, timer: null, gone: false };
     el.innerHTML = '<span class="mark" aria-hidden="true"></span><span class="txt"></span>' +
-      '<button type="button" class="act" hidden></button><button type="button" class="toast-close" aria-label="' + words().close + '">×</button>';
+      '<button type="button" class="act" hidden></button><button type="button" class="toast-close" aria-label="' + words().close + '"></button>';
+    // the sprite's cross, in the middle of its square, as every cross of the design system
+    el.querySelector(".toast-close").appendChild(window.ds.ico("close"));
     el.querySelector(".toast-close").onclick = function () { t.close(); };
     // the countdown waits while the pointer, a finger or the keyboard is on the message
     el.addEventListener("pointerenter", function () { clearTimeout(t.timer); });
@@ -109,9 +111,11 @@
     while (live.length > 3) live[0].close();
     return t.update(opts);
   }
-  // ds.confirm({title, text, ok, danger, value, placeholder, inputmode, autocomplete, maxlength}) asks in a window of the design
-  // system and answers with a promise:
+  // ds.confirm({title, text, ok, danger, value, placeholder, inputmode, autocomplete, maxlength, check}) asks in a window of
+  // the design system and answers with a promise:
   // false when cancelled, true when confirmed, or the typed text when the window has a field (value).
+  // check: a box under the field, or under the text ({label, checked}, Bank's « Seulement cette opération »); the answer
+  // is then {value, checked}, value being the typed text (or true), and still false when cancelled.
   // A dangerous answer (danger) starts on « Annuler » (Cancel), so Enter never deletes by mistake.
   var dialogs = 0;
   function confirm(opts) {
@@ -121,8 +125,13 @@
       veil.className = "dialog-veil";
       veil.innerHTML = '<div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dialog-t-' + n + '"><h2 class="dialog-t" id="dialog-t-' + n + '"></h2>' +
         '<p class="dialog-text" id="dialog-text-' + n + '"></p>' + (field ? '<input class="dialog-in" type="text" aria-labelledby="dialog-t-' + n + '">' : "") +
+        (opts.check ? '<label class="dialog-check"><input type="checkbox"><span></span></label>' : "") +
         '<div class="dialog-b"><button type="button" class="btn dialog-no">' + words().cancel + '</button><button type="button" class="btn dialog-ok"></button></div></div>';
       var ok = veil.querySelector(".dialog-ok"), no = veil.querySelector(".dialog-no"), input = veil.querySelector(".dialog-in"), text = veil.querySelector(".dialog-text");
+      var check = veil.querySelector(".dialog-check input");
+      if (check) { check.nextSibling.textContent = opts.check.label || ""; check.checked = !!opts.check.checked; }
+      // the answer, with the box when there is one
+      function said(v) { return check && v !== false ? { value: v, checked: check.checked } : v; }
       veil.querySelector(".dialog-t").textContent = opts.title || "";
       text.textContent = opts.text || "";
       text.hidden = !opts.text;
@@ -150,9 +159,9 @@
       }
       // Enter in its field answers with the text
       function key(e) {
-        if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(input.value); }
+        if (e.key === "Enter" && input && document.activeElement === input) { e.preventDefault(); end(said(input.value)); }
       }
-      ok.onclick = function () { end(input ? input.value : true); };
+      ok.onclick = function () { end(said(input ? input.value : true)); };
       no.onclick = function () { end(false); };
       veil.addEventListener("click", function (e) { if (e.target === veil) end(false); });
       document.addEventListener("keydown", key, true);

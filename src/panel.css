@@ -13,7 +13,10 @@
   .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
   .side-layout.is-open .side { display: block; }
   .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
-  .sidehead button { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); background: none; border: none; color: var(--faint); font-size: var(--fs-22); line-height: var(--lh-tight); cursor: pointer; padding: 0 var(--s-2); }
+  /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
+     icon button, its edges let into the head's room so that the head keeps its height */
+  .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
+    background: none; border: none; color: var(--faint); cursor: pointer; padding: 0; }
   .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
   .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
   .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }

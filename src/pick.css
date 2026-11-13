@@ -28,6 +28,10 @@
   .picker-q { width: 100%; box-sizing: border-box; }
   .picker .picker-q { background: var(--panel); }
   .picker-list { display: grid; max-height: 320px; overflow-y: auto; overscroll-behavior: contain; }
+  /* its box, under the choices (ds.picker's check): what a choice is for, always in sight under a long list */
+  .picker-check { display: flex; align-items: center; gap: var(--s-8); margin-top: var(--s-4); padding: var(--s-10) var(--s-6) var(--s-2);
+    border-top: 1px solid var(--line); color: var(--dim); font: 400 var(--fs-14)/var(--lh-ui) var(--body); cursor: pointer; }
+  .picker-check input { margin: 0; flex: none; }
   .picker-g { margin: var(--s-12) var(--s-6) var(--s-4); color: var(--faint);
     font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
   .picker-g:first-child { margin-top: var(--s-6); }

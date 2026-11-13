@@ -152,6 +152,8 @@
   --btn-bg: var(--panel-2); --btn-shadow: none; --btn-lift: 0px;
   /* the small button: a row's actions, a way back */
   --btn-s-h: 28px; --btn-s-px: var(--s-10); --btn-s-size: var(--fs-12); --btn-s-ls: 0;
+  /* a button with only an icon (reload, settings, a pencil, a cross): one size everywhere, square */
+  --btn-icon-h: 32px;
   /* the large one (.is-large): a public site's call to act, on its hero or a section; a tool's is its usual button */
   --btn-l-h: var(--btn-h); --btn-l-px: var(--btn-px); --btn-l-ls: var(--btn-ls);
   /* fields */
@@ -255,6 +257,8 @@
   --btn-bg: var(--overlay-white-strong); --btn-shadow: var(--shadow-card); --btn-lift: calc(-1 * var(--s-2));
   /* the small one is the site's way back (« ← Events ») */
   --btn-s-h: 34px; --btn-s-px: var(--s-20); --btn-s-size: var(--fs-12); --btn-s-ls: var(--ls-167);
+  /* a button with only an icon: as high as the others */
+  --btn-icon-h: var(--btn-h);
   /* the action of a passing message, in the buttons' capitals */
   --act-ls: var(--ls-caps); --act-case: uppercase;
   /* fields: 16px, the least that keeps an iPhone from zooming in on them; roomy, a soft gold edge;

@@ -96,15 +96,16 @@ function widths() {
       site: Math.round(document.querySelector('#site use').getBBox().width),
       cal: drawn('#cal .cal-arrows .btn.is-icon use'), dp: drawn('#dp .dp-step use'),
       text: [...document.querySelectorAll('#cal .cal-arrows .btn.is-icon, #dp .dp-step')].map(x => x.textContent.trim()).join(''),
-      // as wide as before, the small buttons' height
-      square: [...document.querySelectorAll('#cal .cal-arrows .btn.is-icon')].map(x => Math.round(x.getBoundingClientRect().width) === parseFloat(getComputedStyle(x).getPropertyValue('--btn-s-h'))),
+      // square, as high as the views beside them
+      square: [...document.querySelectorAll('#cal .cal-arrows .btn.is-icon')].map(x => { const r = x.getBoundingClientRect(), row = x.closest('.periodnav').getBoundingClientRect();
+        return Math.abs(r.width - r.height) < 0.5 && Math.abs(r.height - row.height) < 0.5; }),
       fns: ['calendar', 'chart', 'sheet', 'drawer', 'busy', 'datePick', 'picker', 'sortable'].filter(n => typeof ds[n] === 'function' || (ds[n] && typeof ds[n] === 'object')).length };
   });
   assert(tools.symbols === 214 && tools.wallet > 0 && tools.fns === 8, 'une page de Bank : les 214 icônes mises dans la page par ds-icons.js, dessinées ; les outils de ds-tools.js ' + JSON.stringify([tools.symbols, tools.wallet, tools.fns]));
   assert(tools.site > 0, 'le fichier icons.svg, sans script, comme sur le site : l’icône est dessinée');
   assert(tools.cal.map(x => x.href).join() === '#i-chevron-left,#i-chevron-right' && tools.dp.map(x => x.href).join() === '#i-chevron-left,#i-chevron-right'
       && tools.cal.concat(tools.dp).every(x => x.w > 0) && !tools.text && tools.square.every(Boolean),
-    'les flèches du calendrier et du choix de dates sont les chevrons de la planche, dessinés, dans des boutons aussi larges qu’avant ' + JSON.stringify(tools));
+    'les flèches du calendrier et du choix de dates sont les chevrons de la planche, dessinés, dans des boutons carrés aussi hauts que la ligne ' + JSON.stringify(tools));
 
   assert(!errors.length, 'aucune erreur dans les pages ' + errors.join(' | '));
   await b.close();

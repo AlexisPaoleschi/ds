@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.2.0 · 13 novembre 2026
+
+Les boutons faits d’une seule icône, carrés partout, et une case pour dire à quoi sert un choix.
+
+- Un bouton fait d’une seule icône (`.btn.is-icon`) est carré, toujours : sa hauteur suit sa largeur, en petit (`.is-small`) aussi, où il était plus large que haut (34 × 28 pour le crayon de Bank). Une seule taille en Atelier, `--btn-icon-h` (32px), sur téléphone comme sur ordinateur : l’en-tête passait de 32 à 34 sur ordinateur, il reste à 32. En Vitrine, il garde la hauteur des boutons. Les flèches de l’agenda sont aussi hautes que la ligne et aussi larges, au lieu d’être plus hautes que larges.
+- Les croix sont celles des icônes, au milieu de leur carré : la fiche (`.sheet-close`), le tiroir des filtres (`.sidehead`) et la bulle (`ds.toast`, qui la dessine elle-même) ne portent plus la lettre « × », qui tombait à côté du milieu. Une page écrit `<svg class="ico"><use href="#i-close"/></svg>` dans le bouton. La croix de la fiche prend la taille d’un bouton icône.
+- `ds.confirm({…, check: {label, checked}})` : une case sous le champ ou le texte ; la réponse devient `{value, checked}`, toujours `false` quand on annule.
+- `ds.picker(holder, items, {…, check: {label, checked}})` : une case au pied de la liste, toujours visible sous une longue liste ; `onPick(item, {checked})` reçoit son état, `checked()` le lit.
+- La vitrine montre le crayon carré de la fiche, la case dans la fenêtre du nom et au pied de la liste des catégories. `checks/behaviours.js` vérifie que chaque bouton icône est carré dans les deux thèmes, son icône au milieu à moins d’un demi-pixel, et les deux cases.
+
 ## 3.1.0 · 12 novembre 2026
 
 Les derniers points de l’étude (52, 53 et 54) : des vérifications au clavier et sur téléphone, une page vitrine qui montre tout ce que ds sait faire, des graphiques, un agenda et des synchros lisibles sans la couleur. Rien ne change à l’écran dans les applis.

@@ -1,4 +1,4 @@
-/* ds 3.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -1580,16 +1580,17 @@
    ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu’s choice in its .pill-value,
    and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
    every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
-   ds.picker(holder, items, {value, first, limit, placeholder, label, empty, onPick, opener}) draws a search picker in
-   holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
+   ds.picker(holder, items, {value, first, limit, placeholder, label, empty, onPick, opener, check}) draws a search picker
+   in holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
      items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
      cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
      are read (« Chargement… »); value: the current choice, in gold; first: the values shown before anything is typed
      (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
-     matches; onPick(item) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the search
-     taking the focus. ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
-     Returns {open(), close(), toggle(), set(items, options), draw(), input}; set takes the list once read, and may change
-     the options with it (first, empty…). */
+     matches; onPick(item, {checked}) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the
+     search taking the focus; check: a box at its foot ({label, checked}, Bank's « Seulement cette opération »), its state
+     given to onPick (checked) and read by checked(). ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
+     Returns {open(), close(), toggle(), set(items, options), draw(), checked(), input}; set takes the list once read, and
+     may change the options with it (first, empty…). */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find, tag = _.el;
@@ -1645,6 +1646,17 @@
     list.setAttribute("role", "listbox");
     holder.replaceChildren(input, list);
     p.input = input;
+    // its box, under the choices: what a choice is for
+    var box = null;
+    if (o.check) {
+      var foot = tag("label", "picker-check");
+      box = tag("input");
+      box.type = "checkbox";
+      box.checked = !!o.check.checked;
+      foot.append(box, tag("span", "", o.check.label || ""));
+      holder.appendChild(foot);
+    }
+    p.checked = function () { return !!(box && box.checked); };
 
     function matches() {
       var items = p.items || [], q = fold(input.value.trim()), limit = o.limit || 12;
@@ -1706,7 +1718,7 @@
     }
     function pick(x) {
       o.value = x.value;
-      if (o.onPick) o.onPick(x);
+      if (o.onPick) o.onPick(x, { checked: p.checked() });
       if (x.href) return;
       p.draw();
     }
