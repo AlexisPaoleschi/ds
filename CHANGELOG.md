@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.3.0 · 13 novembre 2026
+
+- Kit du site : le nom d’un lieu trop long pour une ligne de téléphone à côté de son code (« Dakar-Blaise Diagne Airport DSS ») se donne en deux formes dans `.location-dest-name` : `.is-long`, le nom entier, à partir de 481px, et `.is-short` (« Dakar Airport ») sur un téléphone ; le code reste sur la même ligne. `checks/site.js` le vérifie à 390 et à 1280px.
+
 ## 3.2.0 · 13 novembre 2026
 
 Les boutons faits d’une seule icône, carrés partout, et une case pour dire à quoi sert un choix.

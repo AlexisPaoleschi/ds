@@ -223,6 +223,16 @@ function stylesheets() {
   assert(JSON.stringify(news) === JSON.stringify({ invalid: ['Please enter a valid email address.', true, true], busy: [true, true, true, 'Signing you up…'],
     done: [false, false, 'You are on the list.', true, ''] }), 'ds.newsletter : l’adresse vérifiée, le bouton occupé pendant l’envoi, les mots du serveur ' + JSON.stringify(news));
 
+  // an airport's name: its whole form from 481px, its short one on a phone, its code beside it on the same line
+  const airport = async page => page.evaluate(() => { const n = document.querySelector('#airport .location-dest-name'), k = n.querySelector('.location-dest-code');
+    const shown = [...n.querySelectorAll('.is-long, .is-short')].filter(x => x.getClientRects().length).map(x => x.textContent);
+    const a = n.getClientRects(), kr = k.getBoundingClientRect(); return [shown, a.length === 1 && Math.abs((a[0].top + a[0].bottom) / 2 - (kr.top + kr.bottom) / 2) < 6]; });
+  const wide = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+  await wide.goto(base + '/checks/site.html');
+  const onPhone = await airport(phone), onWide = await airport(wide);
+  assert(JSON.stringify(onPhone[0]) === '["Dakar Airport"]' && onPhone[1] && JSON.stringify(onWide[0]) === '["Dakar-Blaise Diagne Airport"]' && onWide[1],
+    'le nom d’un aéroport : entier dès 481px, court sur un téléphone, son code sur la même ligne ' + JSON.stringify([onPhone, onWide]));
+
   await browser.close();
   server.close();
 })();

@@ -1,4 +1,4 @@
-/* ds 3.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -300,6 +300,13 @@
   .location-dest-icon { flex-shrink: 0; width: 32px; height: 32px; color: var(--accent); stroke-width: 1; }
   .location-dest-info { display: flex; flex: 1; flex-direction: column; gap: var(--s-4); }
   .location-dest-name { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-031); color: var(--ink); }
+  /* a name too long for a phone's line beside its code (« Dakar-Blaise Diagne Airport »): its whole form (.is-long) from
+     481px, a short one (.is-short, « Dakar Airport ») on a phone, the code beside it either way */
+  .location-dest-name .is-short { display: none; }
+  @media (max-width: 480px) {
+    .location-dest-name .is-long { display: none; }
+    .location-dest-name .is-short { display: inline; }
+  }
   /* the airport's IATA code beside its name: what one types to book a flight */
   .location-dest-code { display: inline-block; margin-left: var(--s-8); padding: calc(var(--s-2) / 2) var(--s-6); border: 1px solid var(--line);
     font-size: var(--fs-12); font-weight: 500; letter-spacing: var(--ls-125); line-height: var(--lh-relaxed); color: var(--accent);
