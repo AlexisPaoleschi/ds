@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.1 · 13 novembre 2026
+
+Un seul survol pour tous les boutons de l’Atelier, et des boutons d’en-tête qui se grisent.
+
+- Au survol et à l’appui (`:active`, sur téléphone aussi pendant qu’on touche), chaque bouton de l’Atelier a son icône ou son texte et son bord en or, comme `.btn` : les boutons carrés de l’en-tête, dont le bord restait gris, le bouton d’un message (`.msg .act`, qui passait au gris), les boutons du choix de période (`.periodpop`), la croix de la fiche, la ligne « plus tôt » de l’agenda et l’onglet du tiroir. La croix et l’action d’une bulle et la croix du tiroir, qui n’ont pas de bord, prennent un bord doré tracé à l’intérieur. `is-act`, `is-save` et `is-danger` gardent leur ton, à l’appui comme au survol. La Vitrine ne change pas.
+- Un bouton carré de l’en-tête qui n’a rien à faire (`disabled`, comme l’annulation et le rétablissement de Bank quand il n’y a rien à annuler ou à rétablir) reste à sa place mais se grise nettement (`--o-off`), au lieu d’avoir l’air d’un bouton actif, et ne s’allume pas. La vitrine en montre un dans l’en-tête de démonstration.
+- `checks/behaviours.js` vérifie, à la souris et au clavier, l’or du survol et de l’appui sur chacun, et le bouton d’en-tête grisé qui ne bouge pas.
+
 ## 3.3.0 · 13 novembre 2026
 
 - Kit du site : le nom d’un lieu trop long pour une ligne de téléphone à côté de son code (« Dakar-Blaise Diagne Airport DSS ») se donne en deux formes dans `.location-dest-name` : `.is-long`, le nom entier, à partir de 481px, et `.is-short` (« Dakar Airport ») sur un téléphone ; le code reste sur la même ligne. `checks/site.js` le vérifie à 390 et à 1280px.

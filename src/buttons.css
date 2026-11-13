@@ -3,13 +3,15 @@
 .btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-6); min-height: var(--btn-h); padding: 0 var(--btn-px);
   font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--btn-ls); text-transform: var(--btn-case); white-space: nowrap; text-decoration: none;
   border: 1px solid var(--line); border-radius: var(--r-m); background: var(--btn-bg); box-shadow: var(--btn-shadow); color: var(--dim); cursor: pointer; }
-.btn:hover { color: var(--accent-text); border-color: var(--accent-line); }
+/* under the pointer and while pressed, the same for every button of the Atelier: its text or its icon and its edge in gold
+   (the header's square ones too); a button with nothing to do (disabled) does not move */
+.btn:hover, .btn:active:where(:not([data-theme="vitrine"] *)) { color: var(--accent-text); border-color: var(--accent-line); }
 /* .btn.is-act takes the chosen gold (chosen.css) */
-.btn.is-act:hover { border-color: var(--accent-strong); }
+.btn.is-act:is(:hover, :active) { border-color: var(--accent-strong); }
 .btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
-.btn.is-save:hover { filter: brightness(1.08); }
+.btn.is-save:is(:hover, :active) { filter: brightness(1.08); }
 .btn.is-danger { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
-.btn.is-danger:hover { border-color: var(--bad); }
+.btn.is-danger:is(:hover, :active) { border-color: var(--bad); }
 .btn:disabled:not(.is-busy) { color: var(--faint); background: none; border-color: var(--line); cursor: default; filter: none; }
 .btn:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
 /* a button with only an icon (reload, settings, a pencil, a cross): square, one size in a theme (--btn-icon-h), its

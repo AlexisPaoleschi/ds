@@ -17,7 +17,7 @@
     display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); box-sizing: border-box; padding: 0;
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); cursor: pointer; }
-  .sheet-close:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .sheet-close:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }

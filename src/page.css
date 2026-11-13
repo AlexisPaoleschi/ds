@@ -8,10 +8,11 @@
   header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-12); position: relative; }
   .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
   /* the header's square buttons (reload the sources, the settings, the new version): .btn.is-icon, quieter than a button
-     of the page, on the panel's ground with a faint icon that turns gold on hover (its edge stays); a lit new version
-     (.newver.is-on, live.css) keeps its gold */
+     of the page, on the panel's ground with a faint icon; under the pointer and pressed, its icon and its edge in gold like
+     every button; a lit new version (.newver.is-on, live.css) keeps its gold. One with nothing to do (disabled: Bank's
+     undo and redo) stays in its place, greyed further (--o-off), and does not light up */
   :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
-  :where(header.top) .btn.is-icon:not(.is-on):hover { color: var(--accent-text); border-color: var(--line); }
+  :where(header.top) .btn.is-icon:disabled { opacity: var(--o-off); }
   header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */

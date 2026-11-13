@@ -66,7 +66,7 @@
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
     color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
-  .cal-prev:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
   /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
   .cal-head .periodnav { align-items: stretch; }

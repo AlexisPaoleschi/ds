@@ -16,7 +16,8 @@
   /* its cross: the sprite's, in the middle of a square */
   .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
   .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }
-  .toast .act:hover, .toast .toast-close:hover { color: var(--ink); }
+  /* under the pointer and pressed, like every button: gold, and a gold edge drawn inside (they have no border) */
+  .toast .act:is(:hover, :active), .toast .toast-close:is(:hover, :active) { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }
 @media (max-width: 768px) {

@@ -1,4 +1,4 @@
-/* ds 3.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.3.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
@@ -89,7 +89,7 @@
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
   .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: 500 var(--fs-13)/var(--lh-tight) var(--body); padding: var(--s-8) var(--s-10); }
-  .periodpop button:not(:where(.tabs button)):hover { border-color: var(--line-2); color: var(--ink); }
+  .periodpop button:not(:where(.tabs button)):is(:hover, :active) { border-color: var(--accent-line); color: var(--accent-text); }
   /* the tabs inside the picker are tabs, only a little tighter */
   .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; --tab-py: var(--s-6); --tab-px: var(--s-10); }
 @media (max-width: 768px) {
@@ -194,7 +194,7 @@
     display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); box-sizing: border-box; padding: 0;
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); cursor: pointer; }
-  .sheet-close:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .sheet-close:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }
@@ -244,7 +244,7 @@
   /* each source's square is the design system's .swatch (marks.css), hollow (.is-open) when off */
   .filter-pip { position: absolute; top: var(--s-4); right: var(--s-4); }
   button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
-  button.edgetab:hover, button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
+  button.edgetab:is(:hover, :active), button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
   button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
   button.edgetab .filter-pip { position: static; }
   .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
@@ -256,7 +256,9 @@
   /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
      icon button, its edges let into the head's room so that the head keeps its height */
   .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
-    background: none; border: none; color: var(--faint); cursor: pointer; padding: 0; }
+    background: none; border: none; border-radius: var(--r-m); color: var(--faint); cursor: pointer; padding: 0; }
+  /* the drawer's cross, under the pointer and pressed: gold, a gold edge drawn inside, like every button */
+  .sidehead button:is(:hover, :active) { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); }
   .side .filters { display: grid; grid-template-columns: minmax(0, 1fr); margin: 0; gap: var(--s-16); }
   .side .fgroup { flex-direction: column; align-items: stretch; gap: var(--s-2); }
   .side .fhead { min-width: 0; margin: 0 0 var(--s-6) var(--s-8); }
@@ -629,7 +631,7 @@
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
     color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
-  .cal-prev:hover { color: var(--accent-text); border-color: var(--accent-line); }
+  .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
   /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
   .cal-head .periodnav { align-items: stretch; }

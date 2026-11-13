@@ -674,6 +674,9 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     out.head = [cs(hb, 'backgroundColor') === probe('var(--panel)'), cs(hb, 'color') === probe('var(--faint)'), hb.getBoundingClientRect().width, hb.getBoundingClientRect().height];
     hb.classList.add('is-on');
     out.head.push(cs(hb, 'color') === probe('var(--accent-text)'), cs(hb.querySelector('.newver-pip'), 'display'));
+    // one with nothing to do (disabled): greyed further, at --o-off
+    box.insertAdjacentHTML('beforeend', '<header class="top"><button class="btn is-icon" id="hd" type="button" disabled><svg class="ico"><use href="#i-undo"/></svg></button></header>');
+    out.head.push(parseFloat(cs(box.querySelector('#hd'), 'opacity')) === parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--o-off')));
     // tabs that are links and radio buttons
     box.insertAdjacentHTML('beforeend', '<nav class="tabs" id="tn"><a href="#" aria-current="page">FR</a><a href="#">EN</a></nav>' +
       '<div class="tabs is-icons" id="tr"><label><input type="radio" class="visually-hidden" name="lay" checked><svg class="ico"><use href="#i-gallery"/></svg></label><label><input type="radio" class="visually-hidden" name="lay"><svg class="ico"><use href="#i-layout"/></svg></label></div>');
@@ -693,7 +696,42 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(pieces.tiles[0] === 3 && pieces.tiles[1] === '11px' && pieces.tiles[2] === 'normal' && pieces.tiles[3] === '' && pieces.tiles[4] === 'pointer' && pieces.tiles[5] === '#tuile',
     'les cases : leur nombre de colonnes, un chiffre trop long rapetisse jusqu’à 11 px puis passe à la ligne, une case qui s’ouvre');
   assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '11px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
-  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 32, 32, true, 'block']), 'les boutons carrés de l’en-tête : discrets, 32 px comme tout bouton fait d’une icône, l’or d’une nouvelle version');
+  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 32, 32, true, 'block', true]), 'les boutons carrés de l’en-tête : discrets, 32 px comme tout bouton fait d’une icône, l’or d’une nouvelle version, grisés quand ils n’ont rien à faire');
+  // under the pointer and pressed, every button of the Atelier has its icon or its text and its edge in gold: a button, the
+  // header's square ones, a message's; the crosses with no border (the bubble's, the drawer's) get a gold edge drawn inside;
+  // a header button with nothing to do does not move
+  await p.evaluate(() => document.body.insertAdjacentHTML('afterbegin', '<div id="lit" data-theme="atelier">' +
+    '<header class="top"><button class="btn is-icon" id="dead" type="button" disabled><svg class="ico"><use href="#i-undo"/></svg></button><button class="btn is-icon" id="live" type="button"><svg class="ico"><use href="#i-redo"/></svg></button></header>' +
+    '<button class="btn" id="plain" type="button">Voir</button><div class="msg"><span>Texte</span><button class="act" id="msgact" type="button">Réessayer</button></div>' +
+    '<div class="sidehead">Filtres<button type="button" id="sidex" aria-label="Fermer"><svg class="ico"><use href="#i-close"/></svg></button></div></div>'));
+  const gold = await p.evaluate(() => { const i = document.createElement('i'); document.body.appendChild(i);
+    const read = v => { i.style.color = v; return getComputedStyle(i).color; }; const out = [read('var(--accent-text)'), read('var(--accent-line)')]; i.remove(); return out; });
+  const look = id => p.$eval('#' + id, b => { const s = getComputedStyle(b); return [s.color, s.borderTopColor, s.boxShadow]; });
+  const isGold = (s, inset) => s[0] === gold[0] && (inset ? s[2].includes(gold[1]) : s[1] === gold[1]);
+  const lit = {};
+  for (const [id, inset] of [['live', false], ['plain', false], ['msgact', false], ['sidex', true]]) {
+    await p.mouse.move(1, 1);
+    const rest = await look(id);
+    await p.hover('#' + id);
+    const hovered = await look(id);
+    await p.mouse.move(1, 1);
+    await p.focus('#' + id);
+    await p.keyboard.down(' ');
+    const pressed = await look(id);
+    await p.keyboard.up(' ');
+    lit[id] = [!isGold(rest, inset), isGold(hovered, inset), isGold(pressed, inset)];
+  }
+  const deadBefore = await look('dead');
+  await p.hover('#dead', { force: true });
+  lit.dead = JSON.stringify(await look('dead')) === JSON.stringify(deadBefore);
+  await p.evaluate(() => document.getElementById('lit').remove());
+  const toastLit = await p.evaluate(() => { const t = ds.toast({ type: 'good', text: 'Or', action: { label: 'Annuler', run() {} }, duration: 0 }); return true; });
+  await p.hover('.toast .toast-close');
+  lit.toast = isGold(await p.$eval('.toast .toast-close', b => { const s = getComputedStyle(b); return [s.color, s.borderTopColor, s.boxShadow]; }), true);
+  await p.evaluate(() => document.querySelectorAll('.toast .toast-close').forEach(b => b.click()));
+  console.log('     ', JSON.stringify(lit));
+  assert(Object.entries(lit).every(([k, v]) => k === 'dead' || k === 'toast' ? v === true : v.every(Boolean)) && toastLit,
+    'au survol et à l’appui, chaque bouton de l’Atelier a son icône ou son texte et son bord en or (en-tête, message, croix du tiroir et de la bulle) ; un bouton de l’en-tête sans rien à faire ne bouge pas ' + JSON.stringify(lit));
   assert(JSON.stringify(pieces.tabs) === JSON.stringify([true, false, true, false, true, false]), 'des onglets en liens et en boutons radio');
   assert(pieces.sortmenu === 'none', 'le menu de tri d’un tableau reste caché sur un ordinateur, après la règle des pastilles');
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));

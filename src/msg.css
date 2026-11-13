@@ -10,7 +10,8 @@
   .msg .txt small { display: block; margin-top: var(--s-4); font-size: var(--fs-12); color: var(--faint); }
   .msg .txt small.det { font-family: var(--mono); font-size: var(--fs-11); overflow-wrap: anywhere; }
   .msg .act { align-items: center; align-self: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--ink); cursor: pointer; display: inline-flex; flex: none; font: var(--btn-weight) var(--fs-12)/var(--lh-tight) var(--body); gap: var(--s-6); padding: var(--s-6) var(--s-10); white-space: nowrap; text-decoration: none; }
-  .msg .act:hover { border-color: var(--faint); }
+  .msg .act:not(:disabled):is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
+  .msg .act:not(:disabled):is(:hover, :active) .ico { color: inherit; }
   .msg .act .ico { color: var(--dim); margin: 0; width: 13px; height: 13px; }
   .msg .act:disabled { opacity: var(--o-muted); cursor: default; }
   .msg .act .spin { --spin-size: 11px; }
