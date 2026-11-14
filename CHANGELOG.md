@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.4.0 · 14 novembre 2026
+
+La barre de choix de plusieurs lignes, plus claire sur téléphone.
+
+- `.selbar` : le nombre de lignes choisies et une croix pour tout lâcher (`.selbar-x`, `data-sel-clear`) sur la première ligne, puis les actions dans `.selbar-acts`, toutes du même rang, aucune en or (Bank avait son « Renommer » doré à côté du menu des catégories : on croyait devoir le toucher pour changer la catégorie). Sur téléphone, les actions partagent la deuxième ligne, aussi larges ; sur ordinateur, tout tient sur une ligne. « Annuler » en toutes lettres laisse la place à la croix.
+- `.btn.is-select` : un bouton qui ouvre une liste (une catégorie, un voyage), `<label class="btn is-select">` avec ses mots, son icône et le `<select>` natif posé dessus, invisible, qui s’ouvre où l’on touche (la roue d’un iPhone) ; le menu porte le nom lu à voix haute.
+- La vitrine montre la nouvelle barre (catégorie, nom, voyage) ; `checks/bank.js` vérifie sa mise en page à 390 et à 1280px, et que chaque menu couvre tout son bouton.
+
 ## 3.3.1 · 13 novembre 2026
 
 Un seul survol pour tous les boutons de l’Atelier, et des boutons d’en-tête qui se grisent.

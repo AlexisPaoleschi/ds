@@ -95,6 +95,21 @@ function stylesheets() {
   const s2 = await p.evaluate(() => ({ keys: sel.keys().sort().join(','), n: document.querySelector('.selbar-n').textContent }));
   assert(s1.bar && s1.n === '1 opération choisie' && s1.lit && s1.half && s2.keys === 'b,c,d' && s2.n === '3 opérations choisies',
     'une case choisit sa ligne et montre la barre ; Maj-clic choisit toutes celles d’entre deux');
+  // the bar's layout: on a phone the count and its cross on one line, the three actions on the next, as wide as each
+  // other, none in gold, each list's menu over its whole button; on a computer all on one line
+  const layout = async w => { await p.setViewportSize({ width: w, height: 900 }); return p.evaluate(() => {
+    const b = document.getElementById('bar'), r = el => el.getBoundingClientRect();
+    const n = r(b.querySelector('.selbar-n')), x = r(b.querySelector('.selbar-x')), acts = [...b.querySelectorAll('.selbar-acts > *')].map(r);
+    const covers = [...b.querySelectorAll('.btn.is-select')].every(l => { const a = r(l), m = r(l.querySelector('select')); return Math.abs(a.width - m.width) <= 2.5 && Math.abs(a.height - m.height) <= 2.5; });
+    return { sameLine: Math.abs(n.top + n.height / 2 - (x.top + x.height / 2)) < 4, below: acts.every(a => a.top >= n.bottom - 1), oneRow: acts.every(a => Math.abs(a.top - acts[0].top) < 1),
+      widths: acts.map(a => Math.round(a.width)), allOneLine: acts.every(a => Math.abs(a.top + a.height / 2 - (x.top + x.height / 2)) < 4), covers,
+      overflow: b.scrollWidth > b.clientWidth + 1, gold: !!b.querySelector('.selbar-acts .is-act') };
+  }); };
+  const barPhone = await layout(390), barWide = await layout(1280);
+  console.log('     ', JSON.stringify({ barPhone, barWide }));
+  assert(barPhone.sameLine && barPhone.below && barPhone.oneRow && Math.max(...barPhone.widths) - Math.min(...barPhone.widths) <= 1 && barPhone.covers && !barPhone.overflow && !barPhone.gold,
+    'la barre de choix sur téléphone : le nombre et sa croix sur une ligne, les trois actions dessous, aussi larges, aucune en or, chaque liste sur tout son bouton');
+  assert(barWide.allOneLine && barWide.covers && !barWide.overflow, 'la barre de choix sur ordinateur : tout sur une ligne');
   await p.click('.sel-all');
   const s3 = await p.evaluate(() => ({ n: sel.keys().length, all: document.querySelector('.sel-all').checked }));
   await p.click('#bar [data-sel-clear]');

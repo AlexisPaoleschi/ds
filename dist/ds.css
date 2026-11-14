@@ -1,4 +1,4 @@
-/* ds 3.3.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -518,6 +518,12 @@
 /* a small button: a row's actions, a way back */
 .btn.is-small { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
 .btn.is-icon.is-small { width: var(--btn-s-h); height: var(--btn-s-h); min-height: 0; padding: 0; }
+/* a button that opens a list (a category, a trip): <label class="btn is-select">, its words and its icon, and the native
+   menu laid over it, invisible, so that a tap anywhere on it opens the device's own list (a wheel on an iPhone); the
+   menu carries the name read aloud (aria-label), the button its look and its gold under the pointer */
+.btn.is-select { position: relative; overflow: hidden; }
+.btn.is-select select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.btn.is-select:focus-within:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
 /* vitrine: the buttons of alexispaoleschi.com. White with a soft gold edge; gold letters and a gold edge to act,
    filled gold to save, red to delete. On hover they fill with their colour and rise. */
 [data-theme="vitrine"] .btn { color: var(--ink); transition: all var(--t-fast) ease; }
@@ -864,15 +870,34 @@
   /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
   .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
 
-/* The bar of a multiple choice: how many rows are picked, then what to do with all of them at once (a category, a
-   name), and « Annuler » ([data-sel-clear]). It stays at the top while the list scrolls; hidden while nothing is
-   picked. ds.selection runs it. Its buttons and menus are small ones, the row of a list's actions. */
+/* The bar of a multiple choice: how many rows are picked and a cross that drops them all (.selbar-x, [data-sel-clear]),
+   then what to do with all of them at once in .selbar-acts (a category, a name, a trip): buttons of one rank, none in
+   gold since none is the way to go, a list being a button holding its menu (.btn.is-select). On a phone the count and
+   the cross make the first line and the actions share the second, as wide as each other; on a computer all is on one
+   line. It stays at the top while the list scrolls; hidden while nothing is picked. ds.selection runs it. Its buttons
+   are small ones, the row of a list's actions. */
   .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
     --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
     position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
     margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
   .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
   .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
+  .selbar-x { order: 2; }
+  /* a phone: the actions on their own line, as wide as each other, a little less padding; on a small one, their words
+     alone, so that three fit side by side */
+  @media (max-width: 768px) {
+    .selbar-acts { flex: 1 1 100%; order: 0; }
+    .selbar-x { order: 0; }
+    .selbar-acts > * { flex: 1 1 0; min-width: 0; }
+    .selbar-acts > .btn { padding-left: var(--s-6); padding-right: var(--s-6); }
+  }
+  @media (max-width: 480px) {
+    .selbar-acts .ico { display: none; }
+    .selbar-acts > .btn { padding-left: var(--s-4); padding-right: var(--s-4); }
+    /* the Vitrine's capitals, spaced out, keep a narrower spacing there */
+    [data-theme="vitrine"] .selbar-acts > .btn { letter-spacing: var(--ls-031); }
+  }
   [data-theme="vitrine"] .selbar-n { font-weight: 500; }
 
 @media (max-width: 768px) {
