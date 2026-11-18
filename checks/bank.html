@@ -4,7 +4,7 @@
 <div class="wrap">
 <section class="card" id="ops-card"><h2 class="ct">Opérations <label class="pill is-filter" id="pill"><span class="pill-value"></span><select id="pill-sel" aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option></select></label></h2>
   <div class="pills"><label class="pill tbl-sortmenu" id="sortpill"><span class="pill-value"></span><select id="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option></select></label></div>
-  <div class="selbar" id="bar" hidden><span class="selbar-n"></span><button class="btn is-icon is-small selbar-x" type="button" data-sel-clear aria-label="Annuler le choix" title="Annuler le choix"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="selbar-acts"><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-tag"/></svg><span>Catégorie</span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select></label><button class="btn" type="button" data-b="bulkname"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Renommer</button><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span>Voyage</span><select data-b="bulktrip" aria-label="Voyage des opérations choisies"><option value="">Voyage…</option><option>Naples</option><option>Nouveau voyage…</option></select></label></div></div>
+  <div class="selbar" id="bar" hidden><span class="selbar-n"></span><button class="btn is-icon selbar-x" type="button" data-sel-clear aria-label="Annuler le choix" title="Annuler le choix"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="selbar-acts"><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-tag"/></svg><span>Catégorie</span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select></label><button class="btn" type="button" data-b="bulkname"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Renommer</button><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span>Voyage</span><select data-b="bulktrip" aria-label="Voyage des opérations choisies"><option value="">Voyage…</option><option>Naples</option><option>Nouveau voyage…</option></select></label></div></div>
   <div class="tbl-wrap"><table class="tbl is-cards" id="ops">
     <thead><tr><th class="tbl-ck"><input type="checkbox" class="sel-all" aria-label="Tout choisir"></th><th class="tbl-wide"><button class="sort" type="button" data-sort="date">Date</button></th><th><button class="sort" type="button" data-sort="nom">Opération</button></th><th data-label="Note"><button class="sort" type="button" data-sort="note">Note</button></th><th class="is-num"><button class="sort" type="button" data-sort="montant">Montant</button></th></tr></thead>
     <tbody>
@@ -16,6 +16,9 @@
     </tbody>
   </table></div>
   <div id="people"></div>
+</section>
+<section class="card" id="grp-card"><h2 class="ct">Par jour</h2>
+  <table class="tbl" id="grp"><tbody><tr><td class="tbl-ck"><input type="checkbox" class="sel-group" aria-label="Choisir les opérations du lundi"></td><td colspan="2">Lundi</td></tr><tr data-key="g1"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td>Proxi</td><td class="is-num">−10,00€</td></tr><tr data-key="g2"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td>Boulangerie</td><td class="is-num">−10,00€</td></tr><tr><td class="tbl-ck"><input type="checkbox" class="sel-group" aria-label="Choisir les opérations du mardi"></td><td colspan="2">Mardi</td></tr><tr data-key="g3"><td class="tbl-ck"><input type="checkbox" class="sel-box" aria-label="Choisir"></td><td>Pharmacie</td><td class="is-num">−10,00€</td></tr></tbody></table>
 </section>
 <section class="card">
   <button class="btn" type="button" id="open">Ouvrir la fiche</button>
@@ -53,6 +56,7 @@
     window.log = [];
     window.side = ds.drawer('[data-drawer="check-side"]');
     window.sort = ds.sortable("#ops", { by: "date", up: false, menu: "#sortmenu" });
+    window.gsel = ds.selection("#grp-card", {});
     window.sel = ds.selection("#ops-card", { count: n => n + (n > 1 ? " opérations choisies" : " opération choisie"), onPick: k => log.push("sel:" + k.join(",")) });
     window.sheet = ds.sheet("#sheet", { onClose: () => log.push("closed") });
     document.getElementById("open").onclick = e => sheet.open();

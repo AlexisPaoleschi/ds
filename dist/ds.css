@@ -1,4 +1,4 @@
-/* ds 4.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -392,6 +392,10 @@
     background: none; color: var(--dim); cursor: pointer; transition: color var(--t-fast) ease; }
   .search-field > .search-clear:hover, .search-field > .search-clear:active, .search-field > .search-clear:focus-visible { color: var(--accent); }
   .search-field > input:placeholder-shown ~ .search-clear { display: none; }
+
+/* a live thing's beat (a sync under way, a client looking at a gallery now): its mark fades and comes back. In ds.css,
+   which every app loads, so that a page without the tools can use it (4.0.1) */
+@keyframes pulse { 50% { opacity: .35; } }
 /* The page of an app (Bank, Studio): its reset, its header and the loading in it, the first loading over the page, the
    page's width and margins, the room of the phone's tab bar, words for screen readers only. */
   * { box-sizing: border-box; }

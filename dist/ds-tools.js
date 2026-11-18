@@ -1,4 +1,4 @@
-/* ds 4.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -452,7 +452,9 @@
    last box; the box .sel-all picks every row shown, half-ticked when some are. A picked row is .is-selected. bar: the
    .selbar (else the one in holder), shown while something is picked, its .selbar-n saying how many (count(n), in
    words), its .selbar-sum what they add up to (sum(keys), a text the page gives: « −128,40 € »), its [data-sel-clear]
-   dropping all. The choice is kept by key, so a list drawn again keeps it: call paint().
+   dropping all. A group's head (a day's row in a list by day) may hold a box .sel-group: it picks, or drops, the rows
+   under it up to the next head, half-ticked when some are (4.1.0). The choice is kept by key, so a list drawn again
+   keeps it: call paint().
    Returns {keys(), has(key), set(key, on), clear(), paint()}; onPick(keys) after each change. */
 (function () {
   "use strict";
@@ -577,6 +579,14 @@
     function bar() { return find(sel.o.bar) || holder.querySelector(".selbar"); }
     function rows() { return [].filter.call(holder.querySelectorAll("[data-key]"), function (r) { return r.querySelector(".sel-box"); }); }
     function changed() { sel.paint(); if (sel.o.onPick) sel.o.onPick(sel.keys()); }
+    // a group's rows: those after its head, up to the next head
+    function groupRows(box) {
+      var head = box.closest("tr, li, [data-sel-head]"), out = [];
+      for (var r = head && head.nextElementSibling; r && !r.querySelector(".sel-group"); r = r.nextElementSibling) {
+        if (r.hasAttribute("data-key") && r.querySelector(".sel-box")) out.push(r);
+      }
+      return out;
+    }
     sel.keys = function () { return Array.from(sel.picked); };
     sel.has = function (key) { return sel.picked.has(String(key)); };
     sel.set = function (key, on) { if (on) sel.picked.add(String(key)); else sel.picked.delete(String(key)); changed(); return sel; };
@@ -591,6 +601,11 @@
       });
       var all = holder.querySelector(".sel-all");
       if (all) { all.checked = list.length > 0 && shown === list.length; all.indeterminate = shown > 0 && shown < list.length; }
+      [].forEach.call(holder.querySelectorAll(".sel-group"), function (g) {
+        var rs = groupRows(g), n = rs.filter(function (r) { return sel.picked.has(r.getAttribute("data-key")); }).length;
+        g.checked = rs.length > 0 && n === rs.length;
+        g.indeterminate = n > 0 && n < rs.length;
+      });
       var b = bar(), n = sel.picked.size;
       if (b) {
         b.hidden = !n;
@@ -612,8 +627,11 @@
       changed();
     });
     holder.addEventListener("change", function (e) {
-      if (!e.target.classList || !e.target.classList.contains("sel-all")) return;
-      rows().forEach(function (r) { if (e.target.checked) sel.picked.add(r.getAttribute("data-key")); else sel.picked.delete(r.getAttribute("data-key")); });
+      var cl = e.target.classList;
+      if (!cl || !(cl.contains("sel-all") || cl.contains("sel-group"))) return;
+      (cl.contains("sel-all") ? rows() : groupRows(e.target)).forEach(function (r) {
+        if (e.target.checked) sel.picked.add(r.getAttribute("data-key")); else sel.picked.delete(r.getAttribute("data-key"));
+      });
       changed();
     });
     // « Annuler » in the bar, wherever the bar is

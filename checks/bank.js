@@ -110,6 +110,18 @@ function stylesheets() {
   assert(barPhone.sameLine && barPhone.below && barPhone.oneRow && Math.max(...barPhone.widths) - Math.min(...barPhone.widths) <= 1 && barPhone.covers && !barPhone.overflow && !barPhone.gold,
     'la barre de choix sur téléphone : le nombre et sa croix sur une ligne, les trois actions dessous, aussi larges, aucune en or, chaque liste sur tout son bouton');
   assert(barWide.allOneLine && barWide.covers && !barWide.overflow, 'la barre de choix sur ordinateur : tout sur une ligne');
+  // a group's head (a day in a list by day): its box picks the rows under it, half-ticked when some are (4.1.0)
+  await p.click('#grp tr[data-key="g1"] .sel-box');
+  const heads = () => p.evaluate(() => [...document.querySelectorAll('#grp .sel-group')].map(g => g.indeterminate ? 'half' : g.checked ? 'on' : 'off').join(',') + '|' + gsel.keys().sort().join(','));
+  const gh1 = await heads();
+  await p.click('#grp .sel-group >> nth=0');
+  const gh2 = await heads();
+  await p.click('#grp .sel-group >> nth=1');
+  const gh3 = await heads();
+  await p.click('#grp .sel-group >> nth=0');
+  const gh4 = await heads();
+  assert(gh1 === 'half,off|g1' && gh2 === 'on,off|g1,g2' && gh3 === 'on,on|g1,g2,g3' && gh4 === 'off,on|g3',
+    'la case d’un jour choisit ses lignes jusqu’au jour suivant, à moitié cochée quand une partie l’est ' + [gh1, gh2, gh3, gh4].join(' '));
   await p.click('.sel-all');
   const s3 = await p.evaluate(() => ({ n: sel.keys().length, all: document.querySelector('.sel-all').checked }));
   await p.click('#bar [data-sel-clear]');

@@ -36,3 +36,7 @@
     background: none; color: var(--dim); cursor: pointer; transition: color var(--t-fast) ease; }
   .search-field > .search-clear:hover, .search-field > .search-clear:active, .search-field > .search-clear:focus-visible { color: var(--accent); }
   .search-field > input:placeholder-shown ~ .search-clear { display: none; }
+
+/* a live thing's beat (a sync under way, a client looking at a gallery now): its mark fades and comes back. In ds.css,
+   which every app loads, so that a page without the tools can use it (4.0.1) */
+@keyframes pulse { 50% { opacity: .35; } }

@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.1.0 · 18 novembre 2026
+
+Choisir d'un clic toutes les lignes d'un groupe.
+
+- `ds.selection` : la ligne d'en-tête d'un groupe (un jour, dans une liste par jour) peut porter une case `.sel-group`. Elle choisit, ou laisse, toutes les lignes qui la suivent jusqu'à l'en-tête suivant, et se montre à moitié cochée quand une partie seulement l'est.
+
+## 4.0.1 · 18 novembre 2026
+
+Le battement d'une chose en cours, pour toutes les applis.
+
+- `@keyframes pulse` passe des outils (`ds-tools.css`) au socle (`ds.css`), que toutes les applis chargent : le point « en direct » d'une galerie de Selecta, qui ne charge pas les outils, n'avait aucun battement.
+
 ## 4.0.0 · 18 novembre 2026
 
 Une seule taille de bouton, partout.

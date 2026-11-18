@@ -24,7 +24,6 @@
   :where(.settings) .sync-dot.is-good { background: var(--good); }
   :where(.settings) .sync-dot.is-bad { background: var(--bad); }
   :where(.settings) .sync-dot.is-running { animation: pulse 1.2s ease-in-out infinite; background: var(--accent); }
-  @keyframes pulse { 50% { opacity: .35; } }
   :where(.settings) .job .when { color: var(--dim); font-size: var(--fs-13); }
   :where(.settings) .job .job-sum { color: var(--faint); font-size: var(--fs-13); }
   :where(.settings) .job .job-sum.is-bad { color: var(--bad); }
