@@ -152,11 +152,11 @@
     </div>
     <div class="card"><h3 class="ct">Boutons <button class="btn is-act" type="button" style="margin-left:auto">Nouveau voyage</button></h3>
       <div class="row"><a class="btn" href="#">Voir les opérations</a><button class="btn is-act" type="button">Modifier</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn is-danger" type="button">Supprimer</button><button class="btn" type="button" disabled>Indisponible</button><a class="btn is-save is-large" href="#">Réserver</a></div>
-      <div class="row"><a class="btn is-pill is-small" href="#"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>Opérations</a><button class="btn is-pill is-small" type="button"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Modifier</button><button class="btn is-pill is-small is-danger" type="button"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Supprimer</button></div>
+      <div class="row"><a class="btn is-pill" href="#"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>Opérations</a><button class="btn is-pill" type="button"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Modifier</button><button class="btn is-pill is-danger" type="button"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Supprimer</button></div>
     </div>
     <div class="card is-ruled"><h3 class="ct">Pour un site</h3>
       <div class="row"><span class="badge">Réservations ouvertes</span><span class="badge is-bad">Complet</span><span class="badge is-soft">Bientôt</span></div>
-      <div class="row" style="margin-top: var(--s-10)"><a class="btn is-small" href="#">← Événements</a><button class="btn is-act is-small" type="button">Instagram</button><button class="btn is-danger is-small" type="button">Retirer</button></div>
+      <div class="row" style="margin-top: var(--s-10)"><a class="btn" href="#">← Événements</a><button class="btn is-act" type="button">Instagram</button><button class="btn is-danger" type="button">Retirer</button></div>
       <header class="section-head" style="margin-top: var(--s-24)"><h2>Tarifs</h2><p class="section-sub">Une expérience tout compris</p></header>
       <footer class="site-footer"><p>© 2026 Alexis Paoleschi</p><nav><a href="#">alexispaoleschi.com</a></nav></footer>
     </div>
@@ -228,7 +228,7 @@
     <!-- Bank's components: the B demos go here -->
     <div class="card" data-b="ops"><h3 class="ct">Opérations : trier, choisir, ouvrir <label class="pill is-filter"><span class="pill-value"></span><select aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option><option value="bourso">BoursoBank</option><option value="fortuneo">Fortuneo</option></select></label></h3>
       <div class="pills" style="margin-bottom: var(--s-10)"><label class="pill tbl-sortmenu"><span class="pill-value"></span><select data-b="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option><option value="categorie|1">Par catégorie</option><option value="compte|1">Par compte</option></select></label></div>
-      <div class="selbar" hidden><span class="selbar-n"></span><span class="selbar-sum"></span><button class="btn is-icon is-small selbar-x" type="button" data-sel-clear aria-label="Annuler le choix" title="Annuler le choix"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="selbar-acts"><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-tag"/></svg><span>Catégorie</span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select></label><button class="btn" type="button" data-b="bulkname"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Renommer</button><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span>Voyage</span><select data-b="bulktrip" aria-label="Voyage des opérations choisies"><option value="">Voyage…</option><option>Naples</option><option>Nouveau voyage…</option></select></label></div></div>
+      <div class="selbar" hidden><span class="selbar-n"></span><span class="selbar-sum"></span><button class="btn is-icon selbar-x" type="button" data-sel-clear aria-label="Annuler le choix" title="Annuler le choix"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="selbar-acts"><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-tag"/></svg><span>Catégorie</span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select></label><button class="btn" type="button" data-b="bulkname"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Renommer</button><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span>Voyage</span><select data-b="bulktrip" aria-label="Voyage des opérations choisies"><option value="">Voyage…</option><option>Naples</option><option>Nouveau voyage…</option></select></label></div></div>
       <div class="tbl-wrap"><table class="tbl is-cards">
         <thead><tr><th class="tbl-ck"><input type="checkbox" class="sel-all" aria-label="Tout choisir"></th><th class="tbl-wide"><button class="sort" type="button" data-sort="date">Date</button></th><th><button class="sort" type="button" data-sort="nom">Opération</button></th><th class="tbl-wide"><button class="sort" type="button" data-sort="compte">Compte</button></th><th class="tbl-wide"><button class="sort" type="button" data-sort="categorie">Catégorie</button></th><th class="is-num"><button class="sort" type="button" data-sort="montant">Montant</button></th></tr></thead>
         <tbody>
@@ -308,7 +308,7 @@
       <h3 class="card-title" style="margin-top: var(--s-12)">Claire &amp; Hugo</h3>
       <p class="row-place" style="margin: 0">Le lien retour, en haut d’une page ou d’une carte : la flèche de la planche, puis le nom de la page d’avant. Sur une photo, il devient le bouton du site (<code>.on-photo</code>).</p>
     </div>
-    <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act is-small" type="button" data-photo="open" style="margin-left: auto">Ouvrir</button></h3>
+    <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act" type="button" data-photo="open" style="margin-left: auto">Ouvrir</button></h3>
       <p class="row-place" style="margin: 0">La croix, le voile ou Échap la ferment ; les flèches, ← → ou le doigt tournent les photos, tirée vers le bas elle se ferme. Les deux voisines se chargent d’avance ; la quatrième se fait attendre, pour voir la roue.</p>
       <p class="row-place" style="margin: var(--s-8) 0 0; color: var(--accent-text)" data-photo="seen">Aucune photo montrée.</p>
     </div>
@@ -324,7 +324,7 @@
           <button class="periodtitle" type="button" data-date="title"><span data-date="label"></span><span class="caret" aria-hidden="true">▾</span></button>
           <div data-date="pop"></div>
         </div>
-        <div class="periodnav"><button class="btn is-small" type="button" data-date="prev" aria-label="Période précédente">‹</button><button class="btn is-small" type="button" data-date="next" aria-label="Période suivante">›</button></div>
+        <div class="periodnav"><button class="btn" type="button" data-date="prev" aria-label="Période précédente">‹</button><button class="btn" type="button" data-date="next" aria-label="Période suivante">›</button></div>
       </div>
       <p class="row-place" style="margin: 0">Le titre ouvre le choix : une période rapide, ou un jour, un mois, une année, deux dates ; les flèches avancent d’autant. <span data-date="read"></span></p>
     </div>
@@ -356,7 +356,7 @@
     <div class="card"><h3 class="ct">Ce qui rapporte · Patreon Alexis</h3><div data-studio="earned"></div></div>
     <div class="card"><h3 class="ct">Stories · Instagram</h3><div data-studio="stories"></div></div>
     <div class="card"><h3 class="ct">Nouvelle version et copie sur l’appareil</h3>
-      <div class="row"><button class="btn is-icon" type="button" data-studio="version"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button><button class="btn is-small" type="button" data-studio="version-new">Annoncer une nouvelle version</button></div>
+      <div class="row"><button class="btn is-icon" type="button" data-studio="version"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button><button class="btn" type="button" data-studio="version-new">Annoncer une nouvelle version</button></div>
       <ul class="rows" data-studio="keep" style="margin-top: var(--s-14)"></ul>
     </div>
     <div class="msg is-good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>

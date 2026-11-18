@@ -39,8 +39,7 @@
    holding its menu (.btn.is-select). On a phone the count, the total and the cross make the first line and the pills
    share the second, as wide as each other, icons kept; on a computer all is on one line. It stays at the top while the
    list scrolls; hidden while nothing is picked. ds.selection runs it. */
-  .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
-    --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
+  .selbar { --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
     position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8) var(--s-10);
     margin-bottom: var(--s-10); padding: var(--s-10) var(--s-12); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); }
   .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
@@ -63,6 +62,8 @@
     .selbar-acts > .btn { gap: var(--s-4); padding-left: var(--s-4); padding-right: var(--s-4); }
     /* the Vitrine's capitals, spaced out, keep a narrower spacing there */
     [data-theme="vitrine"] .selbar-acts > .btn { letter-spacing: var(--ls-031); }
+    /* the site's capitals are wider: a pill that cannot keep its word goes to the next line rather than being cut */
+    [data-theme="vitrine"] .selbar-acts > * { min-width: max-content; }
   }
   [data-theme="vitrine"] .selbar-n { font-weight: 500; }
 

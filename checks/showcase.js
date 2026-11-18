@@ -42,7 +42,7 @@ function look() {
     return layers.reverse().reduce((acc, l) => acc ? over(l, acc) : l, null); };
   const out = {};
   for (const col of document.querySelectorAll('.theme')) {
-    const R = out[col.dataset.theme] = { faint: [], small: [], controls: [], cut: [] };
+    const R = out[col.dataset.theme] = { faint: [], small: [], controls: [], cut: [], fonts: [], square: [] };
     // a word in the site's gold, or on it in white, keeps it: a choice made knowing it reads less on white (2.2:1), left out
     const gold = px(getComputedStyle(col).getPropertyValue('--accent').trim()), onGold = bg => bg && [0, 1, 2].every(i => Math.abs(bg[i] - gold[i]) <= 2);
     const golds = ['--accent', '--accent-strong'].map(t => px(getComputedStyle(col).getPropertyValue(t).trim())), inGold = fg => golds.some(g => [0, 1, 2].every(i => Math.abs(fg[i] - g[i]) <= 2));
@@ -61,9 +61,13 @@ function look() {
           const large = size >= 24 || (size >= 18.66 && +c.fontWeight >= 700);
           if (ratio < (large ? 3 : 4.5)) R.faint.push([own.slice(0, 24), Math.round(ratio * 100) / 100]); }
       }
-      // a field or a menu of the page and the usual buttons: one height (the small bars, a calendar's head, keep their small ones)
-      if (el.matches('.btn:not(.is-small):not(.is-large):not(.is-icon), input:not([type=checkbox]):not([type=radio]):not([type=range]), select')
-        && !el.closest('.pill, .selbar, .topbar, .hero-acts, .datepick, .picker, .side, header.top, .cal-head')) R.controls.push(Math.round(r.height));
+      // every field, menu and button: one height, the selection bar's and the side panel's too (4.0.0: no small button
+      // any more); only the site's large call to act (.is-large) and a field inside a menu stand apart
+      if (el.matches('.btn:not(.is-large), .pill, input:not([type=checkbox]):not([type=radio]):not([type=range]), select:not(.pill select):not(.is-select select)')
+        && !el.closest('.hero-acts, .cal-head, .search-field, .topbar.is-site')) R.controls.push(Math.round(r.height));
+      // and one font for the buttons and the menus; a button of one icon, square
+      if (el.matches('.btn:not(.is-large), .pill') && !el.closest('.topbar.is-site')) R.fonts.push(`${c.fontSize} ${c.fontWeight}`);
+      if (el.matches('.btn.is-icon') && Math.abs(r.width - r.height) > 1 && !el.closest('.cal-head')) R.square.push(Math.round(r.width) + 'x' + Math.round(r.height));
       if (el.matches('.sheet-acts .btn, .dialog-b .btn') && el.scrollWidth > el.clientWidth + 1) R.cut.push(own);
     }
     const bar = col.querySelector('.topbar.is-site'), brand = bar.querySelector('.topbar-brand').getBoundingClientRect(), act = bar.querySelector('.btn').getBoundingClientRect();
@@ -160,6 +164,9 @@ async function tools(b, base) {
       assert(!R.faint.length, `${name}, ${theme} : chaque mot se lit sur ce qui est dessous ` + JSON.stringify(R.faint.slice(0, 6)));
       assert(!R.small.length, `${name}, ${theme} : aucun texte sous 11px ` + JSON.stringify(R.small.slice(0, 6)));
       assert(heights.length === 1 && heights[0] === (theme === 'vitrine' ? 45 : 34), `${name}, ${theme} : champs, menus et boutons à la même hauteur ` + JSON.stringify(heights));
+      const fonts = [...new Set(R.fonts)];
+      assert(fonts.length === 1, `${name}, ${theme} : boutons et menus dans une seule taille de texte ` + JSON.stringify(fonts));
+      assert(!R.square.length, `${name}, ${theme} : un bouton d'icône est carré ` + JSON.stringify(R.square.slice(0, 6)));
       assert(R.bar, `${name}, ${theme} : la barre du site garde son nom, ses liens et son bouton à part`);
       assert(!R.cut.length, `${name}, ${theme} : aucun bouton de fiche ou de fenêtre coupé ` + JSON.stringify(R.cut));
     }

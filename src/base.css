@@ -29,10 +29,10 @@
    phone too, where the browser drew none, and empties the field (ds.js tells the page, as typing would). The browser's
    own cross goes. The field needs a placeholder: an empty field is one that shows it, whoever emptied it. */
   .search-field { position: relative; display: block; min-width: 0; }
-  .search-field > input { width: 100%; padding-right: calc(var(--field-px) + var(--btn-s-h)); }
+  .search-field > input { width: 100%; padding-right: calc(var(--field-px) + var(--field-btn-h)); }
   .search-field > input::-webkit-search-cancel-button, .search-field > input::-webkit-search-decoration { -webkit-appearance: none; appearance: none; }
   .search-field > .search-clear { position: absolute; top: 0; bottom: 0; right: var(--s-4); display: flex; align-items: center; justify-content: center;
-    width: var(--btn-s-h); height: var(--btn-s-h); margin: auto 0; padding: 0; border: 0; border-radius: var(--r-m);
+    width: var(--field-btn-h); height: var(--field-btn-h); margin: auto 0; padding: 0; border: 0; border-radius: var(--r-m);
     background: none; color: var(--dim); cursor: pointer; transition: color var(--t-fast) ease; }
   .search-field > .search-clear:hover, .search-field > .search-clear:active, .search-field > .search-clear:focus-visible { color: var(--accent); }
   .search-field > input:placeholder-shown ~ .search-clear { display: none; }

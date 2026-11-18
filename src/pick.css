@@ -3,11 +3,11 @@
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
    A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
    (.ct) it sits on the right. */
-  .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
-    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; padding: var(--pill-py) var(--pill-px);
+  .pill { --pill-size: var(--btn-size); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
+    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; min-height: var(--btn-h); padding: var(--pill-py) var(--pill-px);
     border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
-    font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
-  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
+    font: var(--btn-weight) var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
+  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
   .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill .pill-value::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */

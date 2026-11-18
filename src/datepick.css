@@ -12,7 +12,7 @@
   .dp-quick + .dp-tabs { margin-top: var(--s-2); }
   /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
-  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; }
+  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-icon-h); height: var(--btn-icon-h); padding: 0; }
   .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title::first-letter { text-transform: uppercase; }
   /* the grid: four columns of months or years, seven of days under their initials */

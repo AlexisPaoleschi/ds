@@ -68,11 +68,10 @@
     color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
   .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
-  /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
+  /* the arrows and « Aujourd’hui » take the height of the views beside them, buttons like the others */
   .cal-head .periodnav { align-items: stretch; }
-  .cal-head .periodnav .btn { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
   /* the arrows, the sprite's chevrons, in square buttons */
-  .cal-head .periodnav .btn.is-icon { width: auto; height: auto; aspect-ratio: 1; padding: 0; }
+  .cal-head .periodnav .btn.is-icon { width: var(--btn-icon-h); height: auto; padding: 0; }
   .cal-arrows { display: flex; gap: var(--s-6); }
   /* the month picker under the title is ds.datePick on months (datepick.css): it floats there as every picker under a
      period's title does */

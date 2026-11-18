@@ -268,8 +268,8 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(iconButtons.every(s => Math.abs(s.w - s.h) < 0.5 && s.w > 0 && s.dx < 0.6 && s.dy < 0.6 && !s.text),
     'un bouton fait d’une icône est carré dans les deux thèmes (petit ou non), son icône au milieu ; les croix sont celles des icônes ' + JSON.stringify(iconButtons));
   const atelier = iconButtons.slice(0, 4).map(s => s.w);
-  assert(atelier[0] === 32 && atelier[2] === 32 && atelier[3] === 32 && atelier[1] === 28,
-    'Atelier : une seule taille de bouton icône (32), 28 pour le petit ' + JSON.stringify(atelier));
+  assert(atelier.every(w => w === 34),
+    'Atelier : une seule taille de bouton icône, celle de tout bouton (34) ' + JSON.stringify(atelier));
   // the window's box: the answer says it, and still false when cancelled
   const boxed = await p.evaluate(async () => {
     const a = ds.confirm({ title: 'Nom', value: 'Le G5', check: { label: 'Seulement cette opération' } });
@@ -696,7 +696,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(pieces.tiles[0] === 3 && pieces.tiles[1] === '11px' && pieces.tiles[2] === 'normal' && pieces.tiles[3] === '' && pieces.tiles[4] === 'pointer' && pieces.tiles[5] === '#tuile',
     'les cases : leur nombre de colonnes, un chiffre trop long rapetisse jusqu’à 11 px puis passe à la ligne, une case qui s’ouvre');
   assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '11px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
-  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 32, 32, true, 'block', true]), 'les boutons carrés de l’en-tête : discrets, 32 px comme tout bouton fait d’une icône, l’or d’une nouvelle version, grisés quand ils n’ont rien à faire');
+  assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 34, 34, true, 'block', true]), 'les boutons carrés de l’en-tête : discrets, 34 px comme tout bouton fait d’une icône, l’or d’une nouvelle version, grisés quand ils n’ont rien à faire');
   // under the pointer and pressed, every button of the Atelier has its icon or its text and its edge in gold: a button, the
   // header's square ones, a message's; the crosses with no border (the bubble's, the drawer's) get a gold edge drawn inside;
   // a header button with nothing to do does not move

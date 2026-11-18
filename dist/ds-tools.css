@@ -1,14 +1,14 @@
-/* ds 3.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
    A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
    (.ct) it sits on the right. */
-  .pill { --pill-size: var(--fs-13); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
-    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; padding: var(--pill-py) var(--pill-px);
+  .pill { --pill-size: var(--btn-size); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
+    position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; min-height: var(--btn-h); padding: var(--pill-py) var(--pill-px);
     border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
-    font: 500 var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
-  [data-theme="vitrine"] .pill { --pill-size: var(--fs-14); --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
+    font: var(--btn-weight) var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
+  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
   .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill .pill-value::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
@@ -121,7 +121,7 @@
   .dp-quick + .dp-tabs { margin-top: var(--s-2); }
   /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
-  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-s-h); height: var(--btn-s-h); padding: 0; }
+  .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-icon-h); height: var(--btn-icon-h); padding: 0; }
   .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title::first-letter { text-transform: uppercase; }
   /* the grid: four columns of months or years, seven of days under their initials */
@@ -645,11 +645,10 @@
     color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
   .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
-  /* the arrows and « Aujourd’hui » take the height of the views beside them, in the small buttons' letters, in both themes */
+  /* the arrows and « Aujourd’hui » take the height of the views beside them, buttons like the others */
   .cal-head .periodnav { align-items: stretch; }
-  .cal-head .periodnav .btn { min-height: var(--btn-s-h); padding: 0 var(--btn-s-px); font-size: var(--btn-s-size); letter-spacing: var(--btn-s-ls); }
   /* the arrows, the sprite's chevrons, in square buttons */
-  .cal-head .periodnav .btn.is-icon { width: auto; height: auto; aspect-ratio: 1; padding: 0; }
+  .cal-head .periodnav .btn.is-icon { width: var(--btn-icon-h); height: auto; padding: 0; }
   .cal-arrows { display: flex; gap: var(--s-6); }
   /* the month picker under the title is ds.datePick on months (datepick.css): it floats there as every picker under a
      period's title does */

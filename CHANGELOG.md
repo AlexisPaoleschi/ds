@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.0.0 · 18 novembre 2026
+
+Une seule taille de bouton, partout.
+
+- `.btn.is-small` disparaît, avec ses jetons `--btn-s-h`, `--btn-s-px`, `--btn-s-size` et `--btn-s-ls` : chaque bouton d’un thème a la hauteur d’un champ et une seule taille de texte (Atelier : 34px, 13px en 600 ; Vitrine : 45px, 14px). La barre de sélection, les flèches du calendrier et du choix de dates prennent ces boutons-là. Seuls le grand bouton du site (`.is-large`) et le bouton de sa barre du haut gardent leur taille d’appel.
+- Un bouton d’icône (`.is-icon`) est un carré aussi haut que les autres boutons : 34px en Atelier au lieu de 32. La pastille d’un menu (`.pill`) a la hauteur et le texte d’un bouton.
+- La croix d’un champ de recherche garde sa petite taille, qui fait partie du champ : `--field-btn-h`.
+- Une icône posée avant les mots se rapproche du bord de ce qu’elle a de vide dans son dessin : l’écart paraît le même à gauche et à droite (« × Proxi »).
+- La vitrine vérifie que champs, menus et boutons ont une seule hauteur, que boutons et menus ont une seule taille de texte et qu’un bouton d’icône est carré, dans les deux thèmes, sur ordinateur et sur téléphone.
+
 ## 3.7.0 · 18 novembre 2026
 
 Des pastilles aux coins de tous les boutons.
