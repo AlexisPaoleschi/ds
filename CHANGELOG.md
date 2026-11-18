@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.0 · 18 novembre 2026
+
+Une barre de sélection plus lisible, des boutons en pastilles et des sous-lignes qu’on déplie dans les filtres.
+
+- `.selbar` : les actions deviennent des pastilles dorées (le fond or léger de `--accent-soft`, le texte et l’icône en or), toutes du même rang, et gardent leur icône sur un petit téléphone. Après le nombre de lignes choisies, leur total (`.selbar-sum`), que la page donne à `ds.selection` par `sum(keys)` (« −128,40 € ») ; vide, il ne prend pas de place.
+- `.btn.is-pill` : le même bouton en pastille, pour une rangée d’actions du même rang hors de la barre (les boutons d’un voyage ouvert : Opérations, Modifier, Supprimer) ; `.is-pill.is-danger` sur le fond rouge léger. Ronds dans l’Atelier (`--r-pill`), carrés dans la Vitrine comme ses autres coins.
+- Le panneau des filtres (`.side`) : une ligne qui a des lignes sous elle (une catégorie et ses sous-catégories) prend un chevron après son nom (`.filter-more`, `aria-expanded`), qui montre ou cache le `.fsub` qui la suit, en retrait, en plus petit. Fermé par défaut, pour que le panneau reste court ; `ds.js` l’ouvre et le ferme, la page garde l’état quand elle redessine le panneau.
+- La vitrine montre la barre avec son total, les pastilles d’un voyage et une catégorie dépliée.
+
 ## 3.5.0 · 18 novembre 2026
 
 Un champ de recherche qui s’efface d’un geste.

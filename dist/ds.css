@@ -1,4 +1,4 @@
-/* ds 3.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -139,7 +139,7 @@
   --tint-ink: 100%;
   --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
-  --r-s: 4px; --r-m: 6px; --r-l: 8px;
+  --r-s: 4px; --r-m: 6px; --r-l: 8px; --r-pill: 999px;
   /* durations, and the shadows: menus, then sheets and drawers; the public sites' soft ones have none here */
   --t-fast: .15s; --t-mid: .3s; --t-slow: .4s;
   --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
@@ -252,7 +252,7 @@
   --tint-ink: 55%;
   --display: var(--font-gilda); --body: var(--font-urbanist); --mono: var(--font-plex-mono);
   /* square corners */
-  --r-s: 0; --r-m: 0; --r-l: 0;
+  --r-s: 0; --r-m: 0; --r-l: 0; --r-pill: 0;
   /* the site's soft shadows: a bar or a table (the lightest), a card at rest, then anything raised (on hover, a passing
      message, a window) */
   --shadow-soft: var(--photo-shadow); --shadow-card: var(--photo-shadow-up); --shadow-pop: 0 8px 24px color-mix(in srgb, var(--black) 10%, transparent); --shadow-sheet: var(--shadow-pop);
@@ -523,6 +523,14 @@
 /* a button with only an icon (reload, settings, a pencil, a cross): square, one size in a theme (--btn-icon-h), its
    icon in the middle; the small one (.is-small) as high as the small buttons, square too */
 .btn.is-icon { flex: none; width: var(--btn-icon-h); height: var(--btn-icon-h); min-height: 0; padding: 0; }
+
+/* a pill (.is-pill): one of several actions of the same rank, on its gold tint with its icon (the selection bar's
+   actions, the buttons of an open trip); .is-pill.is-danger on the red tint. Round in the Atelier, square in the Vitrine */
+.btn.is-pill, .selbar-acts > .btn { border-radius: var(--r-pill); color: var(--accent-text); background: var(--accent-soft); border-color: transparent; box-shadow: none; }
+.btn.is-pill:is(:hover, :active), .selbar-acts > .btn:is(:hover, :active) { border-color: var(--accent-line); }
+.btn.is-pill.is-danger { color: var(--bad); background: var(--bad-soft); }
+.btn.is-pill.is-danger:is(:hover, :active) { border-color: var(--bad-line); }
+.btn.is-pill .ico, .selbar-acts > .btn .ico { color: inherit; }
 
 /* a large button: a public site's call to act (« Book now » on its hero); in a tool, the usual button */
 .btn.is-large { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
@@ -881,22 +889,24 @@
   /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
   .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
 
-/* The bar of a multiple choice: how many rows are picked and a cross that drops them all (.selbar-x, [data-sel-clear]),
-   then what to do with all of them at once in .selbar-acts (a category, a name, a trip): buttons of one rank, none in
-   gold since none is the way to go, a list being a button holding its menu (.btn.is-select). On a phone the count and
-   the cross make the first line and the actions share the second, as wide as each other; on a computer all is on one
-   line. It stays at the top while the list scrolls; hidden while nothing is picked. ds.selection runs it. Its buttons
-   are small ones, the row of a list's actions. */
+/* The bar of a multiple choice: how many rows are picked (.selbar-n), what they add up to (.selbar-sum, given by the
+   page) and a cross that drops them all (.selbar-x, [data-sel-clear]); then what to do with all of them at once in
+   .selbar-acts (a category, a name, a trip): pills of one rank on the gold tint, each with its icon, a list being a pill
+   holding its menu (.btn.is-select). On a phone the count, the total and the cross make the first line and the pills
+   share the second, as wide as each other, icons kept; on a computer all is on one line. It stays at the top while the
+   list scrolls; hidden while nothing is picked. ds.selection runs it. */
   .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
     --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
-    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
-    margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
+    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8) var(--s-10);
+    margin-bottom: var(--s-10); padding: var(--s-10) var(--s-12); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); }
   .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-n:has(+ .selbar-sum:not(:empty)) { margin-right: 0; }
+  .selbar-sum { margin-right: auto; color: var(--dim); font: 500 var(--fs-13)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-sum:empty { display: none; }
   .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
   .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
   .selbar-x { order: 2; }
-  /* a phone: the actions on their own line, as wide as each other, a little less padding; on a small one, their words
-     alone, so that three fit side by side */
+  /* a phone: the pills on their own line, as wide as each other, a little less padding */
   @media (max-width: 768px) {
     .selbar-acts { flex: 1 1 100%; order: 0; }
     .selbar-x { order: 0; }
@@ -904,8 +914,7 @@
     .selbar-acts > .btn { padding-left: var(--s-6); padding-right: var(--s-6); }
   }
   @media (max-width: 480px) {
-    .selbar-acts .ico { display: none; }
-    .selbar-acts > .btn { padding-left: var(--s-4); padding-right: var(--s-4); }
+    .selbar-acts > .btn { gap: var(--s-4); padding-left: var(--s-4); padding-right: var(--s-4); }
     /* the Vitrine's capitals, spaced out, keep a narrower spacing there */
     [data-theme="vitrine"] .selbar-acts > .btn { letter-spacing: var(--ls-031); }
   }

@@ -1,4 +1,4 @@
-/* ds 3.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -740,6 +740,16 @@
     field.value = "";
     field.dispatchEvent(new Event("input", { bubbles: true }));
     field.focus();
+  });
+  /* The chevron of a panel's line with lines under it (.side .frow > .filter-more): it shows or hides the .fsub that
+     follows its line, and says so (aria-expanded). A page that draws its panel again keeps the state itself: its own
+     click handler, on the panel, runs first and reads aria-expanded before it turns */
+  document.addEventListener("click", function (e) {
+    var more = e.target.closest && e.target.closest(".side .frow > .filter-more");
+    if (!more) return;
+    var sub = more.parentNode.nextElementSibling, open = more.getAttribute("aria-expanded") !== "true";
+    more.setAttribute("aria-expanded", String(open));
+    if (sub && sub.classList.contains("fsub")) sub.hidden = !open;
   });
   document.addEventListener("auxclick", function (e) {
     if (e.button !== 1) return;

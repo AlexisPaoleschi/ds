@@ -1,4 +1,4 @@
-/* ds 3.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
@@ -295,6 +295,18 @@
   .side button.filter-all { position: relative; padding-block: 0; }
   .side button.filter-all::before { content: ""; position: absolute; inset: calc(-1 * var(--s-8)) calc(-1 * var(--s-4)); }
   .side .frow { display: flex; align-items: center; }
+  /* a line with lines under it (a category's subcategories): a chevron after it (.filter-more, aria-expanded, named
+     « Sous-catégories de … ») shows or hides them in the .fsub that follows it, indented, in smaller letters; shown only
+     when asked, so that the panel stays short */
+  .side button.filter-more { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); background: none; border: 0;
+    border-radius: var(--r-s); color: var(--faint); cursor: pointer; }
+  .side button.filter-more .ico { width: 13px; height: 13px; transition: transform var(--t-fast) ease; }
+  .side button.filter-more[aria-expanded="true"] { color: var(--accent-text); }
+  .side button.filter-more[aria-expanded="true"] .ico { transform: rotate(90deg); }
+  .side button.filter-more:hover, .side button.filter-more:focus-visible { color: var(--accent-text); }
+  .side .fsub { display: grid; margin: 0 0 var(--s-6) var(--s-20); padding-left: var(--s-8); border-left: 1px solid var(--line); }
+  .side .fsub[hidden] { display: none; }
+  .side .fsub button.chip[aria-pressed] { font-size: var(--fs-12); }
   .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }

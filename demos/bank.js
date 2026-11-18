@@ -20,7 +20,12 @@
     var ops = col.querySelector('[data-b="ops"]'), table = ops.querySelector("table.tbl");
     // the table: sorted by its titles, or by the pill on a phone; a box per row, the bar over the list
     ds.sortable(table, { by: "date", up: false, menu: ops.querySelector('[data-b="sortmenu"]') });
-    var sel = ds.selection(ops, { count: function (k) { return k + (k > 1 ? " opérations choisies" : " opération choisie"); } });
+    var sel = ds.selection(ops, { count: function (k) { return k + (k > 1 ? " opérations choisies" : " opération choisie"); },
+      // what the rows picked add up to, from their amounts
+      sum: function (keys) {
+        var total = keys.reduce(function (a, k) { var td = ops.querySelector('[data-key="' + k + '"] td.is-num'); return a + (td ? +td.getAttribute("data-value") : 0); }, 0);
+        return ds.money(total, { signed: true });
+      } });
     sel.set("op1", true);
     ops.querySelector('[data-b="bulkcat"]').addEventListener("change", function (e) {
       if (!e.target.value) return;

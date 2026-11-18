@@ -1,4 +1,4 @@
-/* ds 3.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -447,11 +447,12 @@
      names in French order, empty cells last whichever the way.
    Returns {by, up, set(by, up)}; called again on the same table it gives the same, so a page that draws its table anew
    (Studio) calls it again on the new one and finds its choice under key.
-   ds.selection(holder, {bar, count, onPick}) picks rows: each row of holder with a data-key and its box
+   ds.selection(holder, {bar, count, sum, onPick}) picks rows: each row of holder with a data-key and its box
    <input type="checkbox" class="sel-box">; a click on a box picks or drops its row, a shift-click the rows since the
    last box; the box .sel-all picks every row shown, half-ticked when some are. A picked row is .is-selected. bar: the
    .selbar (else the one in holder), shown while something is picked, its .selbar-n saying how many (count(n), in
-   words), its [data-sel-clear] dropping all. The choice is kept by key, so a list drawn again keeps it: call paint().
+   words), its .selbar-sum what they add up to (sum(keys), a text the page gives: « −128,40 € »), its [data-sel-clear]
+   dropping all. The choice is kept by key, so a list drawn again keeps it: call paint().
    Returns {keys(), has(key), set(key, on), clear(), paint()}; onPick(keys) after each change. */
 (function () {
   "use strict";
@@ -593,8 +594,9 @@
       var b = bar(), n = sel.picked.size;
       if (b) {
         b.hidden = !n;
-        var count = b.querySelector(".selbar-n");
+        var count = b.querySelector(".selbar-n"), sum = b.querySelector(".selbar-sum");
         if (count) count.textContent = (sel.o.count || words().picked)(n);
+        if (sum) sum.textContent = n && sel.o.sum ? sel.o.sum(sel.keys()) || "" : "";
       }
       return sel;
     };

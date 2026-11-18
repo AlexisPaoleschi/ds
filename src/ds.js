@@ -582,6 +582,16 @@
     field.dispatchEvent(new Event("input", { bubbles: true }));
     field.focus();
   });
+  /* The chevron of a panel's line with lines under it (.side .frow > .filter-more): it shows or hides the .fsub that
+     follows its line, and says so (aria-expanded). A page that draws its panel again keeps the state itself: its own
+     click handler, on the panel, runs first and reads aria-expanded before it turns */
+  document.addEventListener("click", function (e) {
+    var more = e.target.closest && e.target.closest(".side .frow > .filter-more");
+    if (!more) return;
+    var sub = more.parentNode.nextElementSibling, open = more.getAttribute("aria-expanded") !== "true";
+    more.setAttribute("aria-expanded", String(open));
+    if (sub && sub.classList.contains("fsub")) sub.hidden = !open;
+  });
   document.addEventListener("auxclick", function (e) {
     if (e.button !== 1) return;
     var r = rowHref(e);

@@ -33,22 +33,24 @@
   /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
   .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
 
-/* The bar of a multiple choice: how many rows are picked and a cross that drops them all (.selbar-x, [data-sel-clear]),
-   then what to do with all of them at once in .selbar-acts (a category, a name, a trip): buttons of one rank, none in
-   gold since none is the way to go, a list being a button holding its menu (.btn.is-select). On a phone the count and
-   the cross make the first line and the actions share the second, as wide as each other; on a computer all is on one
-   line. It stays at the top while the list scrolls; hidden while nothing is picked. ds.selection runs it. Its buttons
-   are small ones, the row of a list's actions. */
+/* The bar of a multiple choice: how many rows are picked (.selbar-n), what they add up to (.selbar-sum, given by the
+   page) and a cross that drops them all (.selbar-x, [data-sel-clear]); then what to do with all of them at once in
+   .selbar-acts (a category, a name, a trip): pills of one rank on the gold tint, each with its icon, a list being a pill
+   holding its menu (.btn.is-select). On a phone the count, the total and the cross make the first line and the pills
+   share the second, as wide as each other, icons kept; on a computer all is on one line. It stays at the top while the
+   list scrolls; hidden while nothing is picked. ds.selection runs it. */
   .selbar { --control-h: var(--btn-s-h); --btn-h: var(--btn-s-h); --btn-px: var(--selbar-btn-px); --btn-size: var(--btn-s-size); --btn-ls: var(--btn-s-ls);
     --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
-    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8);
-    margin-bottom: var(--s-10); padding: var(--s-10); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-m); box-shadow: var(--shadow-pop); }
+    position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8) var(--s-10);
+    margin-bottom: var(--s-10); padding: var(--s-10) var(--s-12); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); }
   .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-n:has(+ .selbar-sum:not(:empty)) { margin-right: 0; }
+  .selbar-sum { margin-right: auto; color: var(--dim); font: 500 var(--fs-13)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-sum:empty { display: none; }
   .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
   .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
   .selbar-x { order: 2; }
-  /* a phone: the actions on their own line, as wide as each other, a little less padding; on a small one, their words
-     alone, so that three fit side by side */
+  /* a phone: the pills on their own line, as wide as each other, a little less padding */
   @media (max-width: 768px) {
     .selbar-acts { flex: 1 1 100%; order: 0; }
     .selbar-x { order: 0; }
@@ -56,8 +58,7 @@
     .selbar-acts > .btn { padding-left: var(--s-6); padding-right: var(--s-6); }
   }
   @media (max-width: 480px) {
-    .selbar-acts .ico { display: none; }
-    .selbar-acts > .btn { padding-left: var(--s-4); padding-right: var(--s-4); }
+    .selbar-acts > .btn { gap: var(--s-4); padding-left: var(--s-4); padding-right: var(--s-4); }
     /* the Vitrine's capitals, spaced out, keep a narrower spacing there */
     [data-theme="vitrine"] .selbar-acts > .btn { letter-spacing: var(--ls-031); }
   }
