@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.7.0 · 18 novembre 2026
+
+Des pastilles aux coins de tous les boutons.
+
+- `.btn.is-pill` et les actions de `.selbar` gardent leur fond or léger et leur icône, mais prennent les coins de tous les boutons (`--r-m`) au lieu d’être toutes rondes : rien d’autre n’est rond dans les applis. Le jeton `--r-pill` disparaît.
+- `.selbar` sur un téléphone : plus rien n’est coupé net. Quand la place manque vraiment, le mot d’une liste finit par « … ». La vitrine donne à ses cartes, sur téléphone, la largeur qu’elles ont dans une appli : « Renommer » y était coupé depuis 3.6.0, la barre posée dans un cadre de plus que dans Bank.
+- La pastille sert aussi aux actions d’un compte dans les Réglages (Renommer, Masquer, Supprimer), à celles de la fiche d’une opération (Retirer, Délier, Lier) et aux filtres posés au-dessus d’une liste, et les liens « Aller à » des Réglages (`.jump`) la prennent avec une icône chacun.
+
 ## 3.6.0 · 18 novembre 2026
 
 Une barre de sélection plus lisible, des boutons en pastilles et des sous-lignes qu’on déplie dans les filtres.

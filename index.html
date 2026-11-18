@@ -29,6 +29,9 @@
     /* each part of one theme in line with the same part of the other: both columns share the page's rows (subgrid), the
        shorter one keeping some room below it; --rows is the count of parts, set by the script that builds them */
     grid-row: span var(--rows, 1); grid-template-rows: subgrid; row-gap: var(--s-16); }
+  /* a phone: the page's gutter and the theme's frame as thin as an app's, so that a card shown here is as wide as in an
+     app (the selection bar's three pills fit as they do in Bank) */
+  @media (max-width: 480px) { .page { padding-inline: var(--s-16); } .theme { padding: var(--s-8) 0; border-inline: 0; } }
   .icons-g { margin: var(--s-16) 0 var(--s-8); font: 600 var(--fs-12)/var(--lh-tight) var(--body); color: var(--accent-text); }
   .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s-10) var(--s-8); }
   .icons div { display: flex; align-items: center; gap: var(--s-8); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--dim); }

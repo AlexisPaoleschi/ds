@@ -122,7 +122,7 @@
   --tint-ink: 100%;
   --display: var(--font-archivo); --body: var(--font-plex); --mono: var(--font-plex-mono);
   /* corners: small (badges, boxes to tick), medium (buttons, fields, tiles), large (cards, panels, sheets) */
-  --r-s: 4px; --r-m: 6px; --r-l: 8px; --r-pill: 999px;
+  --r-s: 4px; --r-m: 6px; --r-l: 8px;
   /* durations, and the shadows: menus, then sheets and drawers; the public sites' soft ones have none here */
   --t-fast: .15s; --t-mid: .3s; --t-slow: .4s;
   --shadow-pop: 0 6px 24px color-mix(in srgb, var(--black) 35%, transparent);
@@ -235,7 +235,7 @@
   --tint-ink: 55%;
   --display: var(--font-gilda); --body: var(--font-urbanist); --mono: var(--font-plex-mono);
   /* square corners */
-  --r-s: 0; --r-m: 0; --r-l: 0; --r-pill: 0;
+  --r-s: 0; --r-m: 0; --r-l: 0;
   /* the site's soft shadows: a bar or a table (the lightest), a card at rest, then anything raised (on hover, a passing
      message, a window) */
   --shadow-soft: var(--photo-shadow); --shadow-card: var(--photo-shadow-up); --shadow-pop: 0 8px 24px color-mix(in srgb, var(--black) 10%, transparent); --shadow-sheet: var(--shadow-pop);

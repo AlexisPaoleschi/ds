@@ -56,6 +56,8 @@
     .selbar-x { order: 0; }
     .selbar-acts > * { flex: 1 1 0; min-width: 0; }
     .selbar-acts > .btn { padding-left: var(--s-6); padding-right: var(--s-6); }
+    /* never cut: on a phone too narrow, a list's word ends with « … » (3.7.0) */
+    .selbar-acts > .btn > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
   }
   @media (max-width: 480px) {
     .selbar-acts > .btn { gap: var(--s-4); padding-left: var(--s-4); padding-right: var(--s-4); }
