@@ -1,4 +1,4 @@
-/* ds 3.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 3.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -729,6 +729,17 @@
     if (!r || !r.href) return;
     if (e.metaKey || e.ctrlKey) { window.open(r.href, "_blank", "noopener"); return; }
     if (r.link) r.link.click(); else location.href = r.href;
+  });
+  /* The cross of a search field (.search-field > .search-clear): it empties the field, tells the page as typing would
+     (an « input » event), and gives the field its focus back */
+  document.addEventListener("click", function (e) {
+    var x = e.target.closest && e.target.closest(".search-field > .search-clear");
+    var field = x && x.parentNode.querySelector("input");
+    if (!field) return;
+    e.preventDefault();
+    field.value = "";
+    field.dispatchEvent(new Event("input", { bubbles: true }));
+    field.focus();
   });
   document.addEventListener("auxclick", function (e) {
     if (e.button !== 1) return;

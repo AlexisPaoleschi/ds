@@ -17,8 +17,8 @@
   "use strict";
   var _ = window.ds._, find = _.find, tag = _.el;
   var WORDS = _.table({
-    fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…" },
-    en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…" }
+    fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…", clear: "Effacer" },
+    en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…", clear: "Clear" }
   });
   function words() { return _.words(WORDS); }
 
@@ -66,7 +66,13 @@
     input.setAttribute("aria-controls", id);
     list.id = id;
     list.setAttribute("role", "listbox");
-    holder.replaceChildren(input, list);
+    // the field with its cross (.search-field): emptied in one tap, the whole list is back
+    var field = tag("span", "search-field"), clear = tag("button", "search-clear");
+    clear.type = "button";
+    clear.setAttribute("aria-label", w.clear);
+    clear.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>';
+    field.append(input, clear);
+    holder.replaceChildren(field, list);
     p.input = input;
     // its box, under the choices: what a choice is for
     var box = null;

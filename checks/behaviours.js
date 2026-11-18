@@ -734,6 +734,21 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     'au survol et à l’appui, chaque bouton de l’Atelier a son icône ou son texte et son bord en or (en-tête, message, croix du tiroir et de la bulle) ; un bouton de l’en-tête sans rien à faire ne bouge pas ' + JSON.stringify(lit));
   assert(JSON.stringify(pieces.tabs) === JSON.stringify([true, false, true, false, true, false]), 'des onglets en liens et en boutons radio');
   assert(pieces.sortmenu === 'none', 'le menu de tri d’un tableau reste caché sur un ordinateur, après la règle des pastilles');
+  // a search field's cross: shown once something is typed, it empties the field, tells the page (« input ») and gives
+  // the focus back; gone again when the page empties the field itself
+  await p.evaluate(() => document.body.insertAdjacentHTML('afterbegin', '<span class="search-field" id="sf"><input type="search" placeholder="Chercher" value="Alexis">' +
+    '<button type="button" class="search-clear" aria-label="Effacer"><svg class="ico"><use href="#i-close"/></svg></button></span>'));
+  await p.evaluate(() => { window.__typed = 0; document.querySelector('#sf input').addEventListener('input', () => window.__typed++); });
+  const clear = { shown: await p.isVisible('#sf .search-clear') };
+  await p.click('#sf .search-clear');
+  Object.assign(clear, await p.evaluate(() => { const f = document.querySelector('#sf input'); return { emptied: f.value === '', told: window.__typed === 1, focus: document.activeElement === f }; }));
+  clear.hidden = !(await p.isVisible('#sf .search-clear'));
+  await p.fill('#sf input', 'Bou');
+  clear.back = await p.isVisible('#sf .search-clear');
+  await p.evaluate(() => { document.querySelector('#sf input').value = ''; });
+  clear.goneByCode = !(await p.isVisible('#sf .search-clear'));
+  await p.evaluate(() => document.getElementById('sf').remove());
+  assert(Object.values(clear).every(Boolean), 'la croix d’un champ de recherche : visible quand il y a du texte, elle le vide, prévient la page et rend le focus ; cachée quand la page vide le champ ' + JSON.stringify(clear));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

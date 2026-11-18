@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.0 · 18 novembre 2026
+
+Un champ de recherche qui s’efface d’un geste.
+
+- `.search-field` : un champ de recherche et sa croix (`<span class="search-field"><input type="search" placeholder="…"><button type="button" class="search-clear" aria-label="Effacer"><svg class="ico"><use href="#i-close"/></svg></button></span>`). La croix n’apparaît que quand le champ n’est pas vide, sur téléphone aussi, où le navigateur n’en dessinait pas ; elle suit le champ même quand la page le vide elle-même (le champ doit avoir un texte d’exemple). Un appui le vide, prévient la page comme une frappe (un évènement `input`) et lui rend le focus. La croix du navigateur, qui n’apparaissait que sur ordinateur, disparaît.
+- `ds.picker` : son champ a la même croix ; un appui rend toute la liste.
+- La vitrine montre le champ avec sa croix, sous les autres champs.
+
 ## 3.4.0 · 14 novembre 2026
 
 La barre de choix de plusieurs lignes, plus claire sur téléphone.
