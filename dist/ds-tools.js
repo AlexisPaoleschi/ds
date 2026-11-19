@@ -1,4 +1,4 @@
-/* ds 4.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -1921,6 +1921,9 @@
      choice: quick is the quick period taken (or equal to it), label the words for a title. onDraw(holder) after each
      drawing, for a page that marks it. opener: the button that opens it, in the period head's popover (period.css),
      closed again by a choice, Escape or a tap elsewhere; without one, the picker stays in the page (.is-inline).
+   The head's month or year is a button that zooms out (4.2.0): a month of days gives way to the twelve months of its
+   year, the months to the years; a tap on one zooms back in, so a day three years back is three taps away instead of
+   thirty-six arrows. Escape zooms back in before it closes anything.
    Two dates take two taps, the first day then the last (the same one twice for a single day); while the last is sought
    the days between follow the pointer. The arrows of the keyboard move through a grid, Page Up and Page Down by its head's
    step (with Shift, by a year), Home and End to a row's ends, Enter or Space take; Escape forgets a first day, then
@@ -1939,11 +1942,13 @@
     fr: { day: "Jour", month: "Mois", year: "Année", range: "Dates", all: "Toutes les dates", pick: "Choisir la période", modes: "Choisir par",
           prev: { day: "Mois précédent", month: "Année précédente", year: "Années précédentes" },
           next: { day: "Mois suivant", month: "Année suivante", year: "Années suivantes" },
+          zoom: { day: "Choisir le mois et l’année", month: "Choisir l’année" },
           first: "Choisissez le premier jour, puis le dernier.", last: function (d) { return "Du " + d + " : choisissez le dernier jour."; },
           since: function (d) { return "depuis le " + d; }, until: function (d) { return "jusqu’au " + d; } },
     en: { day: "Day", month: "Month", year: "Year", range: "Dates", all: "All dates", pick: "Choose the period", modes: "Choose by",
           prev: { day: "Previous month", month: "Previous year", year: "Earlier years" },
           next: { day: "Next month", month: "Next year", year: "Later years" },
+          zoom: { day: "Choose the month and the year", month: "Choose the year" },
           first: "Pick the first day, then the last.", last: function (d) { return "From " + d + ": pick the last day."; },
           since: function (d) { return "since " + d; }, until: function (d) { return "until " + d; } }
   });
@@ -2033,7 +2038,7 @@
     var lo = years[0] + "-01-01", hi = years[1] + "-12-31";
     if (o.min && o.min > lo) lo = o.min;
     if (o.max && o.max < hi) hi = o.max;
-    var st = { value: norm(o.value), mode: null, view: null, focus: null, anchor: null, hover: null };
+    var st = { value: norm(o.value), mode: null, view: null, focus: null, anchor: null, hover: null, zoom: null };
     var p = { el: holder };
 
     holder.classList.add("periodpop", "datepick");
@@ -2045,6 +2050,11 @@
     function clampDay(k) { return k < lo ? lo : k > hi ? hi : k; }
     // what a grid's cells are: days for a day or two dates, else months or years
     function unit() { return st.mode === "range" ? "day" : st.mode; }
+    // what the grid shows: the unit chosen, or while the head's title zooms out, the months or the years to go through
+    function shown() { return st.zoom || unit(); }
+    // the wider view the title opens: the months over the days, the years over the months (none over the years, or
+    // when every day offered is in one year)
+    function wider(u) { return u === "day" ? "month" : u === "month" && lo.slice(0, 4) !== hi.slice(0, 4) ? "year" : null; }
     function unitKey(u, day) { return u === "day" ? day : u === "month" ? day.slice(0, 7) : day.slice(0, 4); }
     function span(u, k) { return u === "day" ? { from: k, to: k } : of(u, u === "month" ? k + "-01" : k + "-01-01"); }
     function enabled(u, k) { var s = span(u, k); return s.to >= lo && s.from <= hi; }
@@ -2054,7 +2064,7 @@
       var v = st.value;
       st.mode = modes.indexOf(v.mode) >= 0 ? v.mode : modes.indexOf("month") >= 0 ? "month" : modes[0];
       st.view = clampDay(v.mode === "range" ? v.to || v.from : v.from || today());
-      st.focus = null; st.anchor = null; st.hover = null;
+      st.focus = null; st.anchor = null; st.hover = null; st.zoom = null;
     }
     function matchQuick() {
       var v = st.value;
@@ -2074,7 +2084,7 @@
       return { from: Math.max(y0, end - PAGE + 1), to: end };
     }
     function cells() {
-      var u = unit(), out = [], i;
+      var u = shown(), out = [], i;
       if (u === "day") { var ym = st.view.slice(0, 7), n = monthLen(ym); for (i = 1; i <= n; i++) out.push(ym + "-" + pad(i)); }
       else if (u === "month") { for (i = 1; i <= 12; i++) out.push(st.view.slice(0, 4) + "-" + pad(i)); }
       else { var pg = yearPage(); for (i = pg.from; i <= pg.to; i++) out.push(String(i)); }
@@ -2082,30 +2092,34 @@
     }
     function chosen(u, k) {
       var v = st.value;
+      // zoomed out: the month or the year that holds the period chosen (its first day)
+      if (st.zoom) return !!v.from && unitKey(u, v.from) === k;
       if (st.mode === "range") return st.anchor ? k === st.anchor : !!(v.from && v.to) && (k === v.from || k === v.to);
       return v.mode === st.mode && unitKey(u, v.from) === k;
     }
     // the days between two dates: those of the period, or while the last day is sought, those up to the pointer
     function between(k) {
-      if (st.mode !== "range") return false;
+      if (st.mode !== "range" || st.zoom) return false;
       var a = st.anchor ? st.anchor : st.value.from, b = st.anchor ? st.hover : st.value.to;
       if (!a || !b) return false;
       if (b < a) { var x = a; a = b; b = x; }
       return k > a && k < b;
     }
     function defaultFocus(list) {
-      var u = unit(), ok = list.filter(function (k) { return enabled(u, k); });
-      var sel = ok.filter(function (k) { return chosen(u, k); })[0], t = unitKey(u, today());
+      var u = shown(), ok = list.filter(function (k) { return enabled(u, k); });
+      var sel = ok.filter(function (k) { return chosen(u, k); })[0], t = unitKey(u, today()), here = st.zoom ? unitKey(u, st.view) : null;
+      // zoomed out, the month or the year the grid came from
+      if (here && ok.indexOf(here) >= 0) return here;
       return sel || (ok.indexOf(t) >= 0 ? t : ok[0] || null);
     }
     function pageAt(d) {
-      var u = unit(), y = +st.view.slice(0, 4);
+      var u = shown(), y = +st.view.slice(0, 4);
       if (u === "day") return clampDay(addMonths(st.view.slice(0, 7), d) + "-01");
       if (u === "month") return clampDay((y + d) + "-" + st.view.slice(5, 7) + "-01");
       return clampDay((y + PAGE * d) + "-01-01");
     }
     function canPage(d) {
-      var u = unit();
+      var u = shown();
       if (u === "day") { var ym = addMonths(st.view.slice(0, 7), d); return enabled("month", ym); }
       if (u === "month") return enabled("year", String(+st.view.slice(0, 4) + d));
       var pg = yearPage();
@@ -2118,7 +2132,7 @@
       draw(d < 0 ? "prev" : "next");
     }
     function headText() {
-      var u = unit();
+      var u = shown();
       if (u === "day") return date(st.view.slice(0, 7), "month");
       if (u === "month") return st.view.slice(0, 4);
       var pg = yearPage();
@@ -2127,10 +2141,25 @@
 
     function setMode(m) {
       if (st.mode === m) return;
-      st.mode = m; st.focus = null; st.anchor = null; st.hover = null;
+      st.mode = m; st.focus = null; st.anchor = null; st.hover = null; st.zoom = null;
       draw("t-" + m);
     }
+    // the title zooms out to the months or the years; a month or a year taken there zooms back in, down to the unit
+    function zoomOut() {
+      var w = wider(shown());
+      if (!w) return;
+      st.zoom = w; st.focus = null;
+      draw("cell", "is-zoom-out");
+    }
+    function zoomIn(k) {
+      var u = shown();
+      st.view = clampDay(u === "year" ? k + "-" + st.view.slice(5, 7) + "-01" : k + "-01");
+      st.zoom = u === "year" && unit() === "day" ? "month" : null;
+      st.focus = null;
+      draw("cell", "is-zoom-in");
+    }
     function choose(k) {
+      if (st.zoom) return zoomIn(k);
       var u = unit();
       if (st.mode !== "range") return pick(of(st.mode, u === "day" ? k : u === "month" ? k + "-01" : k + "-01-01"));
       // two dates: the first tap keeps a day, the second closes the span (in either order)
@@ -2176,15 +2205,21 @@
       return box;
     }
     function headRow() {
-      var w = words(), u = unit(), h = el("div", "dp-head"), prev = btn("dp-step", window.ds.ico("chevron-left"), "prev"), next = btn("dp-step", window.ds.ico("chevron-right"), "next"), mid;
+      var w = words(), u = shown(), h = el("div", "dp-head"), prev = btn("dp-step", window.ds.ico("chevron-left"), "prev"), next = btn("dp-step", window.ds.ico("chevron-right"), "next"), mid;
       prev.setAttribute("aria-label", w.prev[u]);
       next.setAttribute("aria-label", w.next[u]);
       prev.disabled = !canPage(-1);
       next.disabled = !canPage(1);
       prev.addEventListener("click", function () { page(-1); });
       next.addEventListener("click", function () { page(1); });
-      // the month, the year or the years, written between the arrows, as Bank had it: the arrows go a step at a time
-      mid = el("span", "dp-title", headText());
+      // the month, the year or the years, written between the arrows: the arrows go a step at a time, the title itself
+      // zooms out when there is a wider view (the months of the year, the years)
+      if (wider(u)) {
+        mid = btn("dp-title is-zoom", null, "zoom");
+        mid.append(el("span", null, headText()), window.ds.ico("chevron-down"));
+        mid.setAttribute("aria-label", headText() + " · " + w.zoom[u]);
+        mid.addEventListener("click", zoomOut);
+      } else mid = el("span", "dp-title", headText());
       h.append(prev, mid, next);
       return h;
     }
@@ -2200,8 +2235,8 @@
       b.addEventListener("click", function () { choose(k); });
       return b;
     }
-    function gridBox() {
-      var u = unit(), list = cells(), g = el("div", "dp-grid is-" + u + "s");
+    function gridBox(anim) {
+      var u = shown(), list = cells(), g = el("div", "dp-grid is-" + u + "s" + (anim ? " " + anim : ""));
       g.id = id + "-grid";
       g.setAttribute("role", "group");
       g.setAttribute("aria-label", headText());
@@ -2219,13 +2254,13 @@
       list.forEach(function (k) { g.append(cell(u, k, focusKey)); });
       return g;
     }
-    function draw(focus) {
+    function draw(focus, anim) {
       var act = document.activeElement, had = act && holder.contains(act) && act.getAttribute ? act.getAttribute("data-dp") : null;
       if (!st.mode) reset();
       var kids = [];
       if (quick.length) kids.push(quickRow());
       if (modes.length > 1) kids.push(tabRow());
-      kids.push(headRow(), gridBox());
+      kids.push(headRow(), gridBox(anim));
       if (st.mode === "range") kids.push(el("p", "dp-hint", st.anchor ? words().last(dayText(st.anchor)) : words().first));
       holder.replaceChildren.apply(holder, kids);
       // the focus stays on what had it, or goes where the keys sent it
@@ -2269,6 +2304,7 @@
       if (e.key === "Escape") {
         // first the day kept for two dates; then the popover, the top layer, closes (inline, Escape goes on to what holds it)
         if (st.anchor) { e.preventDefault(); st.anchor = null; st.hover = null; draw(); }
+        else if (st.zoom) { e.preventDefault(); st.zoom = null; st.focus = null; draw("cell", "is-zoom-in"); }
         return;
       }
       var dp = e.target.getAttribute && e.target.getAttribute("data-dp");
@@ -2280,7 +2316,7 @@
         return;
       }
       if (dp.slice(0, 2) !== "c:" || e.altKey || e.ctrlKey || e.metaKey) return;
-      var u = unit(), k = moved(u, dp.slice(2), e);
+      var u = shown(), k = moved(u, dp.slice(2), e);
       if (k == null) return;
       e.preventDefault();
       k = clampUnit(u, k);

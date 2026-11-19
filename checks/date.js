@@ -102,6 +102,55 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   assert(y0.tab === 'Jour' && same(y0.on, ['5']) && y0.focus === '2026-11-05' && y1.years === '2017 2018 2019 2020 2021 2022 2023 2024 2025 2026' && y1.head === '2017 – 2026' && same(y1.arrows, [true, true])
     && same(y2, { from: '2024-01-01', to: '2024-12-31', mode: 'year', quick: null, label: '2024' }), 'les années : de 2017 à aujourd’hui, une année est prise');
 
+  // the head's title zooms out: from a month of days to the twelve months of its year, then to the years; a year and a
+  // month taken there zoom back in, and a day three years back is four taps away; Escape zooms back in before closing
+  await p.evaluate(() => dp.set({ from: '2026-11-05', to: '2026-11-05' }));
+  await p.locator('#title').click();
+  const z = async () => p.evaluate(() => { const box = document.getElementById('pop'), t = box.querySelector('.dp-title');
+    return { head: t.textContent, button: t.tagName === 'BUTTON', label: t.getAttribute('aria-label'), cells: [...box.querySelectorAll('.dp-grid button')].map(x => x.textContent).join(' '),
+      on: [...box.querySelectorAll('.dp-grid button[aria-pressed="true"]')].map(x => x.textContent), grid: box.querySelector('.dp-grid').className, focus: document.activeElement.dataset.key || document.activeElement.getAttribute('data-dp'),
+      tab: (box.querySelector('.dp-tabs [aria-selected="true"]') || {}).textContent, hidden: box.hidden }; });
+  const z0 = await z();
+  await p.locator(pop + ' .dp-title').click();
+  const z1 = await z();
+  await p.locator(pop + ' .dp-title').click();
+  const z2 = await z();
+  await cell('2023').click();
+  const z3 = await z();
+  await cell('mars').click();
+  const z4 = await z();
+  await cell('14').click();
+  const z5 = await last();
+  await p.locator('#title').click();
+  await p.locator(pop + ' .dp-title').click();
+  await p.keyboard.press('Escape');
+  const z6 = await z();
+  await p.keyboard.press('Escape');
+  const z7 = await z();
+  console.log('      ' + JSON.stringify([z0, z1, z2, z3, z4]));
+  assert(z0.button && z0.head === 'novembre 2026' && z0.label === 'novembre 2026 · Choisir le mois et l’année' && z0.tab === 'Jour'
+    && z1.button && z1.head === '2026' && z1.label === '2026 · Choisir l’année' && z1.cells.split(' ').length === 12 && same(z1.on, ['nov.']) && z1.focus === '2026-11' && /is-months is-zoom-out/.test(z1.grid) && z1.tab === 'Jour'
+    && !z2.button && z2.head === '2017 – 2026' && z2.cells === '2017 2018 2019 2020 2021 2022 2023 2024 2025 2026' && same(z2.on, ['2026']) && z2.focus === '2026' && /is-years/.test(z2.grid)
+    && z3.button && z3.head === '2023' && z3.cells.split(' ').length === 12 && same(z3.on, []) && /is-months is-zoom-in/.test(z3.grid)
+    && z4.button && z4.head === 'mars 2023' && z4.cells.split(' ').length === 31 && /is-days is-zoom-in/.test(z4.grid)
+    && same(z5, { from: '2023-03-14', to: '2023-03-14', mode: 'day', quick: null, label: 'mardi 14 mars 2023' })
+    && !z6.hidden && z6.head === 'mars 2023' && /is-days/.test(z6.grid) && z7.hidden,
+    'le titre recule : du mois aux douze mois de l’année, puis aux années ; une année et un mois y ramènent, un jour de 2023 en quatre touches ; Échap revient aux jours avant de fermer ' + JSON.stringify([z5, z6.head]));
+
+  // the months' head zooms out to the years too; one year offered has nothing wider
+  await p.evaluate(() => dp.set({ from: '2026-11-01', to: '2026-11-30' }));
+  await p.locator('#title').click();
+  await p.locator(pop + ' .dp-title').click();
+  const zm = await z();
+  await cell('2019').click();
+  const zm2 = await z();
+  await p.keyboard.press('Escape');
+  const one = await p.evaluate(() => { const h = document.createElement('div'); document.body.append(h);
+    const x = ds.datePick(h, { modes: ['day', 'month'], min: '2026-01-01', max: '2026-11-09', today: '2026-11-09', value: { from: '2026-11-01', to: '2026-11-30' } });
+    const r = [h.querySelector('.dp-title').tagName, h.querySelector('.dp-title').textContent]; h.remove(); return r; });
+  assert(zm.head === '2017 – 2026' && zm.tab === 'Mois' && zm2.head === '2019' && zm2.button && zm2.cells.split(' ').length === 12 && /is-months is-zoom-in/.test(zm2.grid) && same(one, ['SPAN', '2026']),
+    'les mois : leur année ouvre les années, une année ramène à ses mois ; une seule année offerte, rien de plus large ' + JSON.stringify(one));
+
   // two dates in two taps, in either order; the days between follow the pointer
   await p.evaluate(() => dp.set({ from: '2026-11-09', to: '2026-11-09' }));
   await p.locator('#title').click();

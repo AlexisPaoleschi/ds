@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.2.0 · 19 novembre 2026
+
+Un jour loin en arrière, en quelques touches.
+
+- `ds.datePick` : le mois écrit entre les flèches est un bouton. Il recule d'un cran : les douze mois de l'année, puis les années. Une année puis un mois choisis là ramènent aux jours : un jour de 2023 est à quatre touches au lieu de trente-six flèches. Les mois (l'onglet « Mois », le saut de mois du calendrier) reculent de même vers les années. La grille qui remplace l'autre grandit ou rétrécit un court instant (`--t-fast`, rien quand le système demande moins de mouvement).
+- Au clavier, Échap revient aux jours avant de fermer le choix.
+
 ## 4.1.0 · 18 novembre 2026
 
 Choisir d'un clic toutes les lignes d'un groupe.
