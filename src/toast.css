@@ -1,0 +1,27 @@
+/* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
+   ds.js puts it on the page (ds.toast). */
+  .toasts { position: fixed; z-index: var(--z-toast); right: max(var(--s-16), var(--safe-right)); bottom: max(var(--s-16), var(--safe-bottom));
+    display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-8); pointer-events: none; }
+  .toast { pointer-events: auto; display: flex; align-items: center; gap: var(--s-10); box-sizing: border-box; max-width: min(400px, calc(100vw - 32px));
+    padding: var(--toast-py) var(--toast-pr) var(--toast-py) var(--toast-pl); background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-l);
+    box-shadow: var(--shadow-pop); color: var(--ink); font: var(--toast-weight) var(--note-size)/var(--lh-ui) var(--body); animation: toast-in var(--t-mid) ease-out; }
+  .toast.is-leaving { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
+  .toast .mark { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .toast.is-good .mark { background: var(--good); }
+  .toast.is-bad .mark { background: var(--bad); }
+  .toast.is-busy .mark { --spin-size: 12px; }
+  .toast .txt { flex: 1 1 auto; min-width: 0; }
+  .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
+  .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls); text-transform: var(--act-case); }
+  /* its cross: the sprite's, in the middle of a square */
+  .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
+  .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }
+  /* under the pointer and pressed, like every button: gold, and a gold edge drawn inside (they have no border) */
+  .toast .act:is(:hover, :active), .toast .toast-close:is(:hover, :active) { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); }
+  @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
+  @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }
+@media (max-width: 768px) {
+    /* as wide as the tab bar under them, and centred like it */
+    .toasts { left: 0; right: 0; margin-inline: auto; width: var(--tabbar-w); align-items: stretch; bottom: calc(var(--safe-bottom) + var(--s-48) + var(--s-48)); }
+    .toast { max-width: none; }
+}
