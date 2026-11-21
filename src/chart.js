@@ -79,7 +79,7 @@
     e.setAttribute("aria-label", said);
     return e;
   }
-  function monthShort(m) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
+  function monthShort(m) { return _.intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", { timeZone: "UTC", month: "short" }).format(at(m + "-15")).replace(".", ""); }
 
   /* the curve: drawn in a 100 × 30 box stretched to the chart's width (100 × 60 when tall), its lines kept thin whatever
      the stretch. Tall, it is a chart of its own: its middle day under it as well, its ground filled with area; ref draws
@@ -307,7 +307,7 @@
       var year = el("div", "chart-heat-year"), dow = el("div", "chart-heat-dow"), main = el("div", "chart-heat-main");
       var mos = el("div", "chart-heat-months"), days = el("div", "chart-heat-days"), below = o.below ? el("div", "chart-heat-below") : null;
       ["", 1, "", 3, "", 5, "", 7].forEach(function (d) {
-        dow.append(el("span", "", d ? new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: "UTC", weekday: "short" }).format(at(addDays("2026-11-08", d))).replace(".", "") : ""));
+        dow.append(el("span", "", d ? _.intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", { timeZone: "UTC", weekday: "short" }).format(at(addDays("2026-11-08", d))).replace(".", "") : ""));
       });
       if (below) dow.append(el("span"));
       for (var k = 52; k >= 0; k--) {

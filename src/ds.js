@@ -184,7 +184,7 @@
   function unreadable(t) { return isNaN(date(t).getTime()); }
   var dayKey = window.ds.day.key;
   function clock(d) {
-    var parts = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
+    var parts = _.intl("DateTimeFormat", "fr-FR", { timeZone: TZ, hour: "numeric", minute: "2-digit", hourCycle: "h23" }).formatToParts(d);
     var h = +parts.find(function (p) { return p.type === "hour"; }).value, m = parts.find(function (p) { return p.type === "minute"; }).value;
     return english() ? h + ":" + m : h + "h" + m;
   }
@@ -201,7 +201,7 @@
     if (k === dayKey(new Date(now))) return w.today;
     if (k === dayKey(new Date(now - 864e5))) return w.yesterday;
     if (k === dayKey(new Date(now + 864e5))) return w.tomorrow;
-    var text = new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", { timeZone: TZ, day: "numeric", month: "short" }).format(d);
+    var text = _.intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", { timeZone: TZ, day: "numeric", month: "short" }).format(d);
     return w.on + (english() ? text : text.replace(/^1 /, "1er "));
   }
   function when(t) {
@@ -240,7 +240,7 @@
     if (bare) { d = new Date(t.length === 7 ? t + "-15T12:00:00Z" : t + "T12:00:00Z"); opts.timeZone = "UTC"; }
     else { d = date(t); opts.timeZone = TZ; }
     if (isNaN(d.getTime())) return "—";
-    var text = new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", opts).format(d);
+    var text = _.intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", opts).format(d);
     return english() || opts.day !== "numeric" ? text : text.replace(/(^|\s)1 (?=\D)/, "$11er ");
   }
 
@@ -258,7 +258,7 @@
     return [k, k];
   }
   function figure(n, d) {
-    return new Intl.NumberFormat(english() ? "en-GB" : "fr-FR", { minimumFractionDigits: d[0], maximumFractionDigits: d[1] })
+    return _.intl("NumberFormat", english() ? "en-GB" : "fr-FR", { minimumFractionDigits: d[0], maximumFractionDigits: d[1] })
       .format(n).replace(/[\u202f\u00a0]/g, "\u00a0");
   }
   function sign(n, o) { return n < 0 ? "−" : o && o.signed && n > 0 ? "+" : ""; }
@@ -386,7 +386,7 @@
   function compact(n) {
     if (n == null || isNaN(n)) return "";
     var a = Math.abs(n), lang = english() ? "en-GB" : "fr-FR";
-    function f(x, d) { return new Intl.NumberFormat(lang, { maximumFractionDigits: d }).format(x).replace(/ /g, " "); }
+    function f(x, d) { return _.intl("NumberFormat", lang, { maximumFractionDigits: d }).format(x).replace(/ /g, " "); }
     if (a < 10000) return number(n, 0);
     if (a < 100000) return f(n / 1000, 1) + "k";
     if (a < 1000000) return f(n / 1000, 0) + "k";
@@ -519,14 +519,17 @@
     if (least == null) least = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fs-11")) || 11;
     return least;
   }
-  function fitFigure(dd) {
-    dd.style.fontSize = dd.style.whiteSpace = dd.style.overflowWrap = "";
-    if (!dd.clientWidth || dd.scrollWidth <= dd.clientWidth) return;
-    for (var size = parseFloat(getComputedStyle(dd).fontSize); size > floor() && dd.scrollWidth > dd.clientWidth; ) {
-      size = Math.max(floor(), size - 1);
-      dd.style.fontSize = size + "px";
-    }
-    if (dd.scrollWidth > dd.clientWidth) { dd.style.whiteSpace = "normal"; dd.style.overflowWrap = "anywhere"; }
+  // a figure too long for its tile: the largest of the sizes a pixel apart under its own (down to the smallest text) at
+  // which it holds, found in a few steps, halving the choice each time, instead of trying each one and measuring the page
+  // after each; still too long at the smallest, it goes on two lines
+  function shrinkFigure(dd) {
+    var size = parseFloat(getComputedStyle(dd).fontSize), least = floor(), steps = Math.ceil(size - least);
+    var at = function (k) { return Math.max(least, size - k); };
+    var fits = function (k) { dd.style.fontSize = at(k) + "px"; return dd.scrollWidth <= dd.clientWidth; };
+    if (steps < 1 || !fits(steps)) { dd.style.fontSize = least + "px"; dd.style.whiteSpace = "normal"; dd.style.overflowWrap = "anywhere"; return; }
+    var lo = 1, hi = steps;
+    while (lo < hi) { var mid = (lo + hi) >> 1; if (fits(mid)) hi = mid; else lo = mid + 1; }
+    dd.style.fontSize = at(lo) + "px";
   }
   var shrunk = new WeakMap();
   var reshrink = window.ResizeObserver ? new ResizeObserver(function (entries) {
@@ -541,13 +544,27 @@
     holder = _.find(holder);
     if (!holder) return;
     if (reshrink && !shrunk.has(holder)) { shrunk.set(holder, -1); reshrink.observe(holder); }
-    holder.querySelectorAll(".tile dd").forEach(fitFigure);
+    // hidden (another view, a folded card): fitted when it shows, the watcher seeing its width come
+    if (!holder.getClientRects().length) return;
+    var list = holder.querySelectorAll(".tile dd");
+    // every figure back to its own size first, then every width read at once: the page is measured once, not once a figure
+    list.forEach(function (dd) { dd.style.fontSize = dd.style.whiteSpace = dd.style.overflowWrap = ""; });
+    [].filter.call(list, function (dd) { return dd.clientWidth && dd.scrollWidth > dd.clientWidth; }).forEach(shrinkFigure);
   }
-  // a change that brings tiles to fit, or draws anew the ones there
-  function shrinking(m) {
-    var at = m.target.nodeType === 1 ? m.target : m.target.parentElement;
-    if (at && at.closest && at.closest(".tiles.is-shrink")) return true;
-    return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".tiles.is-shrink") || !!n.querySelector(".tiles.is-shrink")); });
+  // the tiles a change brings, or draws anew: only those are fitted again (21 November 2026: every tile of every view
+  // was, each time Bank drew its three figures over the operations)
+  function shrinking(changes) {
+    var found = new Set();
+    changes.forEach(function (m) {
+      var at = m.target.nodeType === 1 ? m.target : m.target.parentElement, holder = at && at.closest && at.closest(".tiles.is-shrink");
+      if (holder) found.add(holder);
+      [].forEach.call(m.addedNodes, function (n) {
+        if (n.nodeType !== 1) return;
+        if (n.matches(".tiles.is-shrink")) found.add(n);
+        n.querySelectorAll(".tiles.is-shrink").forEach(function (x) { found.add(x); });
+      });
+    });
+    return found;
   }
   function fitAllFigures() { document.querySelectorAll(".tiles.is-shrink").forEach(fitFigures); }
 
@@ -690,7 +707,7 @@
     // change anywhere else (a loading's share, a chart's bubble, a journal) measures nothing
     new MutationObserver(function (changes) {
       if (changes.some(titled)) fitTitles();
-      if (changes.some(shrinking)) fitAllFigures();
+      shrinking(changes).forEach(fitFigures);
     }).observe(document.body, { childList: true, subtree: true });
   });
 

@@ -749,6 +749,32 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   clear.goneByCode = !(await p.isVisible('#sf .search-clear'));
   await p.evaluate(() => document.getElementById('sf').remove());
   assert(Object.values(clear).every(Boolean), 'la croix d’un champ de recherche : visible quand il y a du texte, elle le vide, prévient la page et rend le focus ; cachée quand la page vide le champ ' + JSON.stringify(clear));
+  // 4.2.1: a date's or a figure's formatter is made once, not at each date (Bank's Opérations tab made 386 each time it
+  // opened); drawing one set of tiles again fits those tiles only, not every set in the page
+  const quick = await p.evaluate(async () => {
+    let made = 0;
+    const D = Intl.DateTimeFormat, N = Intl.NumberFormat;
+    Intl.DateTimeFormat = function (...a) { made++; return new D(...a); };
+    Intl.NumberFormat = function (...a) { made++; return new N(...a); };
+    for (let i = 0; i < 300; i++) {
+      ds.date('2026-11-' + String(1 + i % 28).padStart(2, '0'), 'short'); ds.money(i * 1.5, { signed: true }); ds.day.today(); ds.when(Date.now() - i * 6e4);
+    }
+    Intl.DateTimeFormat = D; Intl.NumberFormat = N;
+    const box = document.createElement('div'); document.body.append(box);
+    box.innerHTML = '<dl class="tiles is-compact is-cols is-shrink" id="ta" style="--tile-cols: 1; width: 120px"><div class="tile"><dt>A</dt><dd>−12 345 678,90€</dd></div></dl>' +
+      '<dl class="tiles is-compact is-cols is-shrink" id="tb" style="--tile-cols: 1; width: 120px"><div class="tile"><dt>B</dt><dd>−98 765 432,10€</dd></div></dl>';
+    await new Promise(r => setTimeout(r, 100));
+    const other = box.querySelector('#tb dd'), first = other.style.fontSize;
+    // a mark on the other set: fitted again, it would lose it
+    other.style.fontSize = '13px';
+    box.querySelector('#ta').innerHTML = '<div class="tile"><dt>A</dt><dd>−11 111 111,11€</dd></div>';
+    await new Promise(r => setTimeout(r, 100));
+    const out = { made, first, left: other.style.fontSize, fitted: box.querySelector('#ta dd').style.fontSize };
+    box.remove();
+    return out;
+  });
+  assert(quick.made <= 6 && quick.first !== '' && quick.left === '13px' && quick.fitted !== '',
+    'un format de date ou de chiffre se fait une fois, pas à chaque date ; redessiner des cases n’ajuste que celles-là ' + JSON.stringify(quick));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

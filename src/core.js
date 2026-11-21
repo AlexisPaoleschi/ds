@@ -10,7 +10,8 @@
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
    (the device's storage, which may refuse), reduced() (less motion asked), ms(text) (a duration token in ms), tone(c)
-   (a colour given as a token's name, "--c-bleu", or as a value), and the layers: what covers the page (a window, a sheet,
+   (a colour given as a token's name, "--c-bleu", or as a value), intl(kind, locale, options) (an Intl formatter, made
+   once for those options: intl("NumberFormat", "fr-FR", {…}).format(n)), and the layers: what covers the page (a window, a sheet,
    the photo viewer, the phone's drawer, a date picker's popover, the site's phone menu) is opened with layer({el, close,
    trap, loose}) (el: the element, or a function that finds it) and closed with unlayer(layer). Escape closes the top layer only; Tab goes round inside it when it traps
    (trap: false for a popover; loose: only while the focus is inside, as in a sheet whose picker floats outside it). */
@@ -100,8 +101,17 @@
   }
   function tone(c) { return /^--/.test(c) ? "var(" + c + ")" : c; }
 
+  // a date's or a figure's formatter (Intl.DateTimeFormat, Intl.NumberFormat), made once for each language and options
+  // and kept: making one costs far more than using it (Safari above all), and a list of operations writes hundreds of
+  // dates and amounts (21 November 2026: 386 made each time Bank's Opérations tab was opened)
+  var formatters = {};
+  function intl(kind, locale, options) {
+    var k = kind + "|" + locale + "|" + JSON.stringify(options || {});
+    return formatters[k] || (formatters[k] = new Intl[kind](locale, options));
+  }
+
   // Paris's days
-  function key(d) { return new Intl.DateTimeFormat("en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
+  function key(d) { return intl("DateTimeFormat", "en-CA", { timeZone: TZ, year: "numeric", month: "2-digit", day: "2-digit" }).format(d); }
   function at(k) { return new Date(k + "T12:00:00Z"); }
   function add(k, n) { var d = at(k); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); }
   var day = {
@@ -110,8 +120,8 @@
     at: at,
     add: add,
     weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
-    format: function (k, o) { return new Intl.DateTimeFormat(english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
-    hour: function (d) { return +new Intl.DateTimeFormat("en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
+    format: function (k, o) { return intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
+    hour: function (d) { return +intl("DateTimeFormat", "en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
   };
 
   // the layers over the page, the last one on top
@@ -149,7 +159,7 @@
   function today() { return day.today(); }
 
   ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
-    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top };
+    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top, intl: intl };
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
