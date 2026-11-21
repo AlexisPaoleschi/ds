@@ -1,5 +1,16 @@
 # Changelog
 
+## 4.3.0 · 21 novembre 2026
+
+Des pièces que Bank et Studio dessinaient chacune de leur côté, maintenant dans le design system. Rien ne change dans Selecta ni sur le site.
+
+- La page d’une appli (Atelier) laisse elle-même la place de l’encoche et de la barre du bas d’un téléphone, et un saut vers une ancre s’arrête sous l’encoche : Bank et Studio l’écrivaient sur leur racine. Les sites publics (Vitrine) gardent leur barre du haut et leur pied de page.
+- Une icône avant le titre d’une carte ou d’une section (`.ct > .ico`, `h4.sect > .ico`) : en or, de la taille de ses capitales.
+- Ce qui agit sur la ligne d’un titre (un bouton, les flèches d’un mois, des onglets), `.ct-tools` : à droite, dans les mots d’un contrôle plutôt que dans les capitales du titre.
+- Les lignes : la deuxième ligne sous le titre d’une ligne (`.row-title small`), petite et pâle ; une ligne faite (`li.is-done`, une tâche cochée, une facture payée), pâlie comme une ligne faite de l’agenda ; une ligne qui ouvre quelque chose (`li.is-link`, ou un titre `a.row-title`), son titre en or sous le pointeur.
+- Une ligne de tableau atteinte avec Tab (`tabindex="0"`) a l’anneau de focus en dedans, le long des lignes du tableau.
+- La vitrine montre l’icône d’un titre, le bouton sur la ligne d’un titre, la deuxième ligne, la ligne faite et la ligne qui s’ouvre.
+
 ## 4.2.1 · 21 novembre 2026
 
 Des listes qui s'ouvrent plus vite, sur téléphone surtout.

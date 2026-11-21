@@ -1,4 +1,4 @@
-/* ds 4.2.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -463,6 +463,9 @@
 }
   /* the page: one width for every app, the margins clear of the phone's edges */
   .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
+/* an app's page keeps clear of the phone's notch and of its home bar: its root takes their room, and a jump to an anchor
+   stops under the notch; the public sites (Vitrine) draw their own top bar and footer around them */
+  :root:not([data-theme="vitrine"]) { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); scroll-padding-top: var(--safe-top); }
 /* the tools keep the scroll bar's room, so that the page never shifts sideways when a list grows longer than the screen;
    the public sites (Vitrine) do not have this bar's room to keep */
   :root:not([data-theme="vitrine"]) { scrollbar-gutter: stable; }
@@ -620,6 +623,11 @@
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
+  /* an icon before a card's or a section's title, in gold, the size of its capitals */
+  .ct > .ico, h4.sect > .ico { color: var(--accent-text); height: var(--ico-s); width: var(--ico-s); }
+  /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
+     control rather than the title's capitals; on a narrow line it goes under the title */
+  .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
   /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
   .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
   .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }
@@ -883,6 +891,8 @@
   .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
   .tbl .tbl-phone { display: none; }
   .tbl tbody tr.is-link { cursor: pointer; }
+  /* a row reached with Tab (one that opens a sheet, tabindex="0"): the focus ring inside it, along the table's lines */
+  .tbl tbody tr:focus-visible { outline: var(--focus); outline-offset: calc(-1 * var(--focus-offset)); }
   @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
   .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
   /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */

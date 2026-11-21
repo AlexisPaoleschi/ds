@@ -1,5 +1,5 @@
-/* Lists of rows: rows split by a hairline, a row's title, place, date and figure, a word in a palette colour, a person's
-   tag, the late badge (.late-tag), an empty list (.empty-note). */
+/* Lists of rows: rows split by a hairline, a row's title and its second line, place, date and figure, a row done, a row
+   that opens, a word in a palette colour, a person's tag, the late badge (.late-tag), an empty list (.empty-note). */
   ul.rows { list-style: none; margin: 0; padding: 0; }
   /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
      settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
@@ -8,6 +8,13 @@
   ul.rows li:first-child { border-top: none; padding-top: 0; }
   .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
   .row-place { font-size: var(--fs-13); color: var(--faint); }
+  /* a row's second line, under its title: a detail, smaller and faint */
+  .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
+  /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
+  ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
+  /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
+  ul.rows li.is-link { cursor: pointer; }
+  @media (hover: hover) { a.row-title:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
   /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
   .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }

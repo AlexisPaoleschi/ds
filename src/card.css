@@ -11,6 +11,11 @@
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
+  /* an icon before a card's or a section's title, in gold, the size of its capitals */
+  .ct > .ico, h4.sect > .ico { color: var(--accent-text); height: var(--ico-s); width: var(--ico-s); }
+  /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
+     control rather than the title's capitals; on a narrow line it goes under the title */
+  .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
   /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
   .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
   .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }

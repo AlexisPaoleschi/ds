@@ -19,6 +19,8 @@
   .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
   .tbl .tbl-phone { display: none; }
   .tbl tbody tr.is-link { cursor: pointer; }
+  /* a row reached with Tab (one that opens a sheet, tabindex="0"): the focus ring inside it, along the table's lines */
+  .tbl tbody tr:focus-visible { outline: var(--focus); outline-offset: calc(-1 * var(--focus-offset)); }
   @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
   .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
   /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */

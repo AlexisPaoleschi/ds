@@ -65,6 +65,9 @@
 }
   /* the page: one width for every app, the margins clear of the phone's edges */
   .wrap { display: grid; gap: var(--s-14); margin: 0 auto; max-width: var(--page-max); padding-block: var(--s-24) var(--s-60); padding-left: max(var(--s-16), var(--safe-left)); padding-right: max(var(--s-16), var(--safe-right)); }
+/* an app's page keeps clear of the phone's notch and of its home bar: its root takes their room, and a jump to an anchor
+   stops under the notch; the public sites (Vitrine) draw their own top bar and footer around them */
+  :root:not([data-theme="vitrine"]) { padding-top: var(--safe-top); padding-bottom: var(--safe-bottom); scroll-padding-top: var(--safe-top); }
 /* the tools keep the scroll bar's room, so that the page never shifts sideways when a list grows longer than the screen;
    the public sites (Vitrine) do not have this bar's room to keep */
   :root:not([data-theme="vitrine"]) { scrollbar-gutter: stable; }
