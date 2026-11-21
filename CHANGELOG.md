@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.5.0 · 21 novembre 2026
+
+Une liste vide, pour toutes les applis.
+
+- `.empty-note` passe des outils (`ds-tools.css`) au socle (`ds.css`) : Selecta et le site peuvent s’en servir.
+- `.empty-note.is-box`, une case vide encadrée de tirets, quand elle tient la place de tout un bloc (aucune galerie pour l’instant, une carte qui se charge) : Studio et Selecta dessinaient chacun la leur.
+- La vitrine montre une liste vide, simple et encadrée.
+
 ## 4.4.0 · 21 novembre 2026
 
 D’autres pièces que Bank et Studio dessinaient eux-mêmes.
