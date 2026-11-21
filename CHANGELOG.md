@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.2.1 · 21 novembre 2026
+
+Des listes qui s'ouvrent plus vite, sur téléphone surtout.
+
+- Une date ou un chiffre écrits par `ds.date`, `ds.money`, `ds.number`, `ds.when`, `ds.day`, les graphiques et les journaux prennent un outil de mise en forme fait une fois pour leur langue et leur style, puis gardé : en faire un coûte bien plus que s'en servir, sur Safari surtout. L'onglet Opérations de Bank en faisait 386 à chaque ouverture, il en fait quelques-uns une fois pour toutes. Les modules s'en servent par `ds._.intl(type, langue, options)`.
+- Les cases dont le chiffre rapetisse (`.tiles.is-shrink`) : quand une page redessine les siennes, seules celles-là sont mesurées de nouveau, plus toutes celles de la page ; des cases cachées (une autre vue, une carte pliée) attendent de se montrer. Toutes les largeurs se lisent d'un coup avant de rien changer, et la bonne taille se trouve en quelques essais au lieu d'un essai par pixel. Le résultat est le même qu'avant, au pixel près.
+- `checks/behaviours.js` vérifie que 300 dates et montants ne font que quelques outils, et que redessiner des cases laisse les autres telles quelles.
+
 ## 4.2.0 · 19 novembre 2026
 
 Un jour loin en arrière, en quelques touches.

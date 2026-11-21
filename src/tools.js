@@ -134,7 +134,7 @@
   function lineEl(x) {
     var bad = /^(ERROR|ERREUR|CRITICAL)$/.test(x.level) || x.text.indexOf("✖") >= 0;
     var warn = !bad && (/^(WARNING|ATTENTION)$/.test(x.level) || x.text.indexOf("⚠") >= 0);
-    var at = new Intl.DateTimeFormat("fr-FR", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(date(x.t));
+    var at = _.intl("DateTimeFormat", "fr-FR", { timeZone: TZ, hour: "2-digit", minute: "2-digit", second: "2-digit" }).format(date(x.t));
     return el("div", "log-line" + (/^=====/.test(x.text) ? " banner" : "") + (bad ? " is-bad" : warn ? " is-mid" : ""), [tag("span", "log-time", at), tag("span", "log-text", x.text)]);
   }
   function fetchLogs(key) {
