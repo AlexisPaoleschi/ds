@@ -1,4 +1,4 @@
-/* ds 4.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
@@ -328,8 +328,9 @@
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
   @media (hover: none) { .side .frow button.filter-only { opacity: .8; } }
-/* Lists of rows: rows split by a hairline, a row's title and its second line, place, date and figure, a row done, a row
-   that opens, a word in a palette colour, a person's tag, the late badge (.late-tag), an empty list (.empty-note). */
+/* Lists of rows: rows split by a hairline, or drawn as small cards (.is-cards), a heading over a group of them
+   (.rows-head), a row's title and its second line, place, date and figure, a row done, a row that opens, a word in a
+   palette colour, a person's tag, the late badge (.late-tag), an empty list (.empty-note). */
   ul.rows { list-style: none; margin: 0; padding: 0; }
   /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
      settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
@@ -338,6 +339,15 @@
   ul.rows li:first-child { border-top: none; padding-top: 0; }
   .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
   .row-place { font-size: var(--fs-13); color: var(--faint); }
+  /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what
+     the group comes to on its right */
+  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--label-ls); padding: var(--s-24) 0 var(--s-2); text-transform: uppercase; }
+  ul.rows > li.rows-head:first-child { padding-top: var(--s-4); }
+  /* rows drawn as small cards (a trip, and what it is made of under it): each on the lighter ground, apart from the
+     next, its name and its figure a step larger */
+  ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
+  ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
+  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 700 var(--fs-15)/var(--lh-tight) var(--display); }
   /* a row's second line, under its title: a detail, smaller and faint */
   .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
   /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */

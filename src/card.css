@@ -11,6 +11,8 @@
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
   h4.sect:first-of-type { margin-top: 0; }
+  /* a short sentence under a block, quieter than the text: what a figure means, where it comes from */
+  .note { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); margin: var(--s-8) 0 0; }
   /* an icon before a card's or a section's title, in gold, the size of its capitals */
   .ct > .ico, h4.sect > .ico { color: var(--accent-text); height: var(--ico-s); width: var(--ico-s); }
   /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a

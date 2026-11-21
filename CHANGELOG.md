@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.4.0 · 21 novembre 2026
+
+D’autres pièces que Bank et Studio dessinaient eux-mêmes.
+
+- `.note`, une courte phrase sous un bloc, plus discrète que le texte : ce qu’un chiffre veut dire, d’où il vient. La vitrine l’employait déjà sans qu’elle soit dessinée.
+- Des lignes en petites cartes, `ul.rows.is-cards` (un voyage et ce qu’il contient) : chacune sur le fond plus clair, à part de la suivante, son nom et son chiffre d’un cran plus grands.
+- Un titre au-dessus d’un groupe de lignes, dans la liste, `li.rows-head` (une année au-dessus de ses voyages) : en petites capitales, sans le trait des lignes, ce que le groupe fait à sa droite.
+- La vitrine montre des lignes en cartes sous leur titre.
+
 ## 4.3.0 · 21 novembre 2026
 
 Des pièces que Bank et Studio dessinaient chacune de leur côté, maintenant dans le design system. Rien ne change dans Selecta ni sur le site.
