@@ -15,7 +15,8 @@
      start, so that a tab or a shorter list changes nothing around it; its head (.sheet-head: the line, the title, the
      tabs, the figures) stays, only its list (.sheet-list) scrolls under it, out to the window's edges:
      <div class="sheet is-list"><div class="sheet-panel"><button class="sheet-close">…<div class="sheet-head">…<div class="sheet-list">… */
-  .sheet.is-list > .sheet-panel { display: flex; flex-direction: column; width: min(var(--read-l), 100%); height: 86vh; height: 86dvh; overflow: hidden; }
+  .sheet.is-list > .sheet-panel { display: flex; flex-direction: column; width: min(var(--read-l), 100%);
+    height: min(var(--sheet-list-h), 86vh); height: min(var(--sheet-list-h), 86dvh); overflow: hidden; }
   .sheet.is-list > .sheet-panel > .sheet-close { position: absolute; top: var(--s-10); right: var(--s-10); margin: 0; }
   .sheet.is-list .sheet-head { flex: none; }
   .sheet.is-list .sheet-head > :is(.sheet-sub, .sheet-t) { margin-right: calc(var(--btn-icon-h) + var(--s-8)); }

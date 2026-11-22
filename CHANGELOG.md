@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.11.1 · 22 novembre 2026
+
+Une fenêtre qui montre une liste est moins haute sur un ordinateur.
+
+- `.sheet.is-list` fait 640 px de haut au plus (nouveau jeton `--sheet-list-h`), au lieu de 86 % de l’écran : sur un écran de 900 px, 640 au lieu de 774, la place de six posts sous le haut de la fenêtre dans Studio. Un écran plus petit garde 86 % de sa hauteur au plus ; un téléphone ne change pas (88 %).
+- `checks/showcase.js` vérifie les 640 px sur un ordinateur.
+
 ## 4.11.0 · 22 novembre 2026
 
 Une fenêtre qui montre une liste garde sa taille : changer d’onglet ne la fait plus grandir ni rétrécir.

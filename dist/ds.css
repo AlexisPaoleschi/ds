@@ -1,4 +1,4 @@
-/* ds 4.11.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.11.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -125,6 +125,8 @@
   --page-site: 1200px;
   /* reading widths: a short form or a band's words, a page of text, a page's introduction, a hero's words */
   --read-s: 560px; --read-m: 640px; --read-l: 720px; --read-xl: 900px;
+  /* a list in its window (.sheet.is-list): its height on a computer, at most 86% of the screen */
+  --sheet-list-h: 640px;
   /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
      as each other; read by fixed elements, so 100% is the screen's width */
   --tabbar-w: min(calc(100% - 40px), 420px);

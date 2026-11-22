@@ -124,7 +124,7 @@ async function tools(b, base) {
   const sk = await p.evaluate(c => { const a = document.querySelector('[data-anchor="agenda-atelier"]'), r = a.getBoundingClientRect(); return [r.top >= -2 && r.top < innerHeight / 2, a.classList.contains('is-lit')]; }, col);
   assert(ro[0] === '#analyse/patreon-alexis?compte=hb' && ro[1] === 'analyse / patreon-alexis · {"compte":"hb"}' && ro2 === '—' && sk.join() === 'true,true',
     'page vitrine, ds.route et ds.seek : un lien lu par ds.route, l’adresse vidée par ds.route.go ; l’agenda retrouvé et allumé ' + JSON.stringify([ro, ro2, sk]));
-  // a list in its window (.sheet.is-list, 4.11.0): as high from one network to the other, 720px wide on a computer, the
+  // a list in its window (.sheet.is-list, 4.11.0): as high from one network to the other, 720px wide and 640px high on a computer, the
   // whole width on a phone; its head stays while its list scrolls
   for (const [w, h] of [[1440, 900], [375, 812]]) {
     const q = w === 1440 ? p : await b.newPage({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true });
@@ -143,8 +143,8 @@ async function tools(b, base) {
     const a3 = await at();
     await q.keyboard.press('Escape');
     const ok = a1.rows === 24 && a1.tall && a2.scroll > 0 && a2.head === a1.head && a2.page === 0 && a3.rows === 1 && a3.h === a1.h && a3.w === a1.w
-      && (w === 1440 ? a1.w === 720 : a1.w === w);
-    assert(ok, `page vitrine, une liste dans sa fenêtre (${w}px) : même hauteur d’un réseau à l’autre, son haut reste quand sa liste défile, ${w === 1440 ? '720px de large' : 'toute la largeur'} ` + JSON.stringify([a1, a2, a3]));
+      && (w === 1440 ? a1.w === 720 && a1.h === 640 : a1.w === w);
+    assert(ok, `page vitrine, une liste dans sa fenêtre (${w}px) : même hauteur d’un réseau à l’autre, son haut reste quand sa liste défile, ${w === 1440 ? '720px de large, 640px de haut' : 'toute la largeur'} ` + JSON.stringify([a1, a2, a3]));
     if (q !== p) await q.close();
   }
   // the live feed: linked, an event received, then stopped
