@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.5.1 · 22 novembre 2026
+
+- En Vitrine, la roue d’un bouton qui travaille (`.btn.is-busy`) est centrée sur ses capitales : elle était 1,4 px trop bas, parce que des mots en capitales n’ont rien sous leur ligne de base. Rien ne change en Atelier.
+
 ## 4.5.0 · 21 novembre 2026
 
 Une liste vide, pour toutes les applis.

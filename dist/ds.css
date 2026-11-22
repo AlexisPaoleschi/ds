@@ -1,4 +1,4 @@
-/* ds 4.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.5.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -571,6 +571,10 @@
    click sends nothing; only a button that cannot be used takes the faded look above */
   .btn.is-busy { cursor: progress; opacity: var(--o-muted); }
   .btn.is-busy::after { content: ""; --spin-size: 13px; --spin-ring: currentColor; --spin-top: transparent; }
+/* in capitals (Vitrine), the words have nothing under their base line, so the wheel, centred on the line, sat lower than
+   the letters (1.4px at 14px, « est-ce que la petite icône est bien centrée ? », 22 November 2026): it goes up by what
+   the line keeps under the capitals, a tenth of their size, and its middle is theirs */
+  [data-theme="vitrine"] .btn.is-busy::after { translate: 0 -0.1em; }
 
 /* The tabs: one choice among a few views or periods; a page's main views as a bar at the bottom of a phone. */
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }

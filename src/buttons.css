@@ -58,4 +58,8 @@
    click sends nothing; only a button that cannot be used takes the faded look above */
   .btn.is-busy { cursor: progress; opacity: var(--o-muted); }
   .btn.is-busy::after { content: ""; --spin-size: 13px; --spin-ring: currentColor; --spin-top: transparent; }
+/* in capitals (Vitrine), the words have nothing under their base line, so the wheel, centred on the line, sat lower than
+   the letters (1.4px at 14px, « est-ce que la petite icône est bien centrée ? », 22 November 2026): it goes up by what
+   the line keeps under the capitals, a tenth of their size, and its middle is theirs */
+  [data-theme="vitrine"] .btn.is-busy::after { translate: 0 -0.1em; }
 
