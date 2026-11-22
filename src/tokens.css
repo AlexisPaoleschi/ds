@@ -335,6 +335,8 @@
   [data-theme="vitrine"] { --topbar-py: var(--s-16); --topbar-px: var(--s-24); --topbar-gap: var(--s-24); --topbar-btn-h: 47px; --topbar-btn-px: var(--s-24); }
 }
 @media (max-width: 768px) {
+  /* Atelier: a little less room inside a card on a phone, where the width is short (Bank's, 2026) */
+  :root { --card-pad: var(--s-14); }
   [data-theme="vitrine"] { --badge-size: var(--fs-11); --badge-py: 5px; --badge-px: var(--s-12);
     --section-size: var(--fs-36); --section-sub-size: var(--fs-15); --section-sub-ls: var(--ls-133);
     --footer-size: var(--fs-14); --footer-py: var(--s-24); --card-pad: var(--s-24); --card-title-size: var(--fs-24); }

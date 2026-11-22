@@ -1,4 +1,4 @@
-/* ds 4.12.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.13.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -352,6 +352,8 @@
   [data-theme="vitrine"] { --topbar-py: var(--s-16); --topbar-px: var(--s-24); --topbar-gap: var(--s-24); --topbar-btn-h: 47px; --topbar-btn-px: var(--s-24); }
 }
 @media (max-width: 768px) {
+  /* Atelier: a little less room inside a card on a phone, where the width is short (Bank's, 2026) */
+  :root { --card-pad: var(--s-14); }
   [data-theme="vitrine"] { --badge-size: var(--fs-11); --badge-py: 5px; --badge-px: var(--s-12);
     --section-size: var(--fs-36); --section-sub-size: var(--fs-15); --section-sub-ls: var(--ls-133);
     --footer-size: var(--fs-14); --footer-py: var(--s-24); --card-pad: var(--s-24); --card-title-size: var(--fs-24); }
@@ -658,6 +660,10 @@
   /* a card's label, and what acts on the card beside it; when both do not hold on the line, the action goes under it */
   .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
   h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
+  /* a section's title right above a list (Studio: « Du plus récent au plus ancien », Bank: a trip's ticked operations):
+     a line under it, its action on its right (a button); as high as that button, with one or not, so that its words sit
+     at the same place in every list; the list's first row then needs no line of its own */
+  h4.sect.is-ruled { justify-content: space-between; gap: var(--s-12); min-height: var(--control-h); margin: 0; padding-bottom: var(--s-8); border-bottom: 1px solid var(--line-2); }
   h4.sect:first-of-type { margin-top: 0; }
   /* an empty list or card says so (« Rien de prévu ce mois-là. »); in a dashed box when it stands for a whole block
      (.is-box: no gallery yet, a card still loading) */
@@ -695,6 +701,9 @@
   .ct.fold[aria-expanded="true"]:where(:not([data-theme="vitrine"] *))::after,
   details.fold[open] > summary.ct:where(:not([data-theme="vitrine"] *))::after { translate: 0 calc(-28% - 0.075em); }
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
+  /* a card's title that folds it keeps the height of a control, its tools (a period selector) shown or not: the gap down
+     to the card's content is the same in every card, and folding it moves nothing (Studio's) */
+  .ct.fold[aria-expanded] { min-height: var(--control-h); }
   /* sections that fold, one under the other (Bank's rules, by who made them): a line between them, room around each
      title: <div class="folds"><details class="fold">… */
   .folds > details.fold { border-top: 1px solid var(--line); }
@@ -705,6 +714,15 @@
   /* a card folded by its title (ds.foldCard): only the title stays */
   .card.is-folded > :not(.ct) { display: none !important; }
   .card.is-folded > .ct { margin-bottom: 0; }
+  /* folded, a little less room under its title than above it, over the card's thinner bottom line (Studio's) */
+  .card.is-folded { padding-bottom: var(--s-14); }
+/* a row of actions under a block (Bank: a trip's « Voir les opérations », « Modifier »): on one line while they hold,
+   then on two; on a narrow phone its buttons share the row, as wide as each other, their icons kept: <div class="acts"> */
+  .acts { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
+@media (max-width: 480px) {
+  .acts { gap: var(--s-6); }
+  .acts > .btn { flex: 1 1 0; min-width: 0; gap: var(--s-4); padding-inline: var(--s-4); }
+}
 /* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */

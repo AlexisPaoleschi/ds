@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.13.0 · 23 novembre 2026
+
+Des pièces que Bank et Studio dessinaient eux-mêmes passent dans le design system, et la ligne au-dessus d’une liste est la même partout.
+
+- Nouveau `h4.sect.is-ruled` : le petit titre de section, juste au-dessus d’une liste, avec un trait dessous et son action à sa droite. Studio l’avait recopié sous un autre nom (« Du plus récent au plus ancien », « Derniers posts ») ; le nouveau voyage de Bank y met ses opérations cochées et leur total, à la place d’une petite phrase. Les autres petits titres de Studio (« Payants par palier ») sont le `h4.sect` du design system, identique.
+- En Atelier, une carte a un peu moins de place à l’intérieur sur un téléphone : 14 px au lieu de 16 (`--card-pad`), comme Bank le faisait sur son accueil. Les cartes de Studio et des réglages de Bank y passent aussi.
+- Le titre d’une carte qui se plie (`.ct.fold`) garde la hauteur d’un contrôle (`--control-h`), qu’il porte un choix de période ou non : l’écart jusqu’au contenu est le même dans chaque carte, et la plier ne fait rien bouger. Pliée (`.card.is-folded`), elle garde 14 px sous son titre. C’était dans Studio, qui ne change pas.
+- Nouveau `.acts` : une rangée d’actions sous un bloc, sur une ligne tant qu’elles tiennent ; sur un petit téléphone (480 px), ses boutons se partagent la rangée, aussi larges les uns que les autres. Les liens d’un voyage de Bank l’utilisent, sans changer.
+- Page vitrine : la liste dans sa fenêtre a son titre de liste.
+
 ## 4.12.0 · 23 novembre 2026
 
 Toutes les fenêtres ont la même taille, et des onglets qui défilent sur le côté sont les mêmes partout.
