@@ -28,7 +28,7 @@
   .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: var(--page-site);
     margin: 0 auto; }
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
-  .signup-banner-icon { flex-shrink: 0; width: 40px; height: 40px; color: var(--accent); }
+  .signup-banner-icon { flex-shrink: 0; width: var(--picto-l); height: var(--picto-l); color: var(--accent); }
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--display);
     font-size: var(--fs-26); font-weight: 400; letter-spacing: var(--ls-096); text-transform: uppercase; color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
@@ -64,7 +64,7 @@
   @media (max-width: 480px) {
     .signup-banner { padding: var(--s-24) var(--s-16); }
     .signup-banner-text { gap: var(--s-14); }
-    .signup-banner-icon { width: 32px; height: 32px; }
+    .signup-banner-icon { width: var(--picto-m); height: var(--picto-m); }
     .signup-banner-title { font-size: var(--fs-22); letter-spacing: var(--ls-091); }
     .signup-banner-subtitle { font-size: var(--fs-14); }
     .signup-banner-field { flex-direction: column; gap: var(--s-12); }

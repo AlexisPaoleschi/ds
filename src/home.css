@@ -59,7 +59,7 @@
     .scroll-dot:hover { background: color-mix(in srgb, var(--accent) 20%, transparent); transform: scale(1.2); }
     .social-card:hover { color: var(--accent); transform: translateY(-2px); }
   }
-  .social-icon { width: 34px; height: 34px; flex-shrink: 0; filter: drop-shadow(var(--text-shadow-sm)); }
+  .social-icon { width: var(--picto-m); height: var(--picto-m); flex-shrink: 0; filter: drop-shadow(var(--text-shadow-sm)); }
   .social-label { font-family: var(--body); font-size: var(--fs-12); font-weight: 400; letter-spacing: var(--ls-125); text-transform: uppercase; }
   /* Scroll Hint */
   .scroll-hint { position: fixed; bottom: 0; left: 0; right: 0; z-index: var(--z-over); display: flex; flex-direction: row; align-items: center;
@@ -105,7 +105,7 @@
     .links-container { gap: var(--s-20); }
     .announcement { font-size: var(--fs-11); letter-spacing: var(--ls-136); }
     .button-icon { width: var(--ico-m); height: var(--ico-m); }
-    .social-icon { width: 30px; height: 30px; }
+    .social-icon { width: var(--picto-m); height: var(--picto-m); }
     .social-label { font-size: var(--fs-11); }
     .gallery-badge { top: 20px; left: 20px; }
     .gallery-title { font-size: var(--fs-42); letter-spacing: var(--ls-143); }
@@ -123,7 +123,7 @@
     .name { margin-bottom: var(--s-6); font-size: var(--fs-32); letter-spacing: var(--ls-125); }
     .links-container { gap: var(--s-16); }
     .link-item.with-spacing { margin-bottom: var(--s-8); }
-    .social-icon { width: 28px; height: 28px; }
+    .social-icon { width: var(--picto-s); height: var(--picto-s); }
     .social-card { min-width: 95px; padding: var(--s-12) var(--s-10); }
     .scroll-hint p { font-size: var(--fs-11); }
     .scroll-arrow { width: var(--ico-l); height: var(--ico-l); }
@@ -160,7 +160,7 @@
     .link-item:not(.with-spacing) { margin-top: var(--s-20); }
     .announcement { font-size: var(--fs-11); letter-spacing: var(--ls-136); }
     .social-card { min-width: 72px; padding: var(--s-8) var(--s-12); gap: calc(var(--s-10) / 2); }
-    .social-icon { width: 24px; height: 24px; }
+    .social-icon { width: var(--picto-s); height: var(--picto-s); }
     .social-label { font-size: var(--fs-11); }
     .scroll-hint { padding: 0 var(--s-20); }
     .scroll-hint p { font-size: var(--fs-11); }

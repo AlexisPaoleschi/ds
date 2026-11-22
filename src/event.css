@@ -56,7 +56,7 @@
   /* Features */
   .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s-24); margin-top: var(--s-48); }
   .feature-item { padding: 0 var(--s-20) var(--s-32); text-align: center; }
-  .feature-icon { width: 48px; height: 48px; margin-bottom: var(--s-16); color: var(--accent); stroke-width: 1; }
+  .feature-icon { width: var(--picto-l); height: var(--picto-l); margin-bottom: var(--s-16); color: var(--accent); stroke-width: 1; }
   .feature-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-22); font-weight: 400; letter-spacing: var(--ls-068);
     color: var(--ink); }
   .feature-text { font-family: var(--body); font-size: var(--fs-14); font-weight: 300; line-height: var(--lh-relaxed); color: var(--faint); }
@@ -80,7 +80,7 @@
     0% { transform: scale(1); opacity: 0.5; }
     100% { transform: scale(1.3); opacity: 0; }
   }
-  .location-pin-icon { width: 40px; height: 40px; color: var(--accent); stroke-width: 1; }
+  .location-pin-icon { width: var(--picto-l); height: var(--picto-l); color: var(--accent); stroke-width: 1; }
   .location-map-name { margin-bottom: var(--s-4); font-family: var(--display); font-size: var(--text-lg); font-weight: 400;
     letter-spacing: var(--ls-075); color: var(--ink); }
   .location-map-detail { font-family: var(--body); font-size: var(--fs-14); font-weight: 300; font-style: italic; line-height: var(--lh-relaxed);
@@ -95,7 +95,7 @@
   .location-destination { display: flex; align-items: center; gap: var(--s-16); padding: var(--s-16) var(--s-24); background: var(--white);
     border: 1px solid var(--line); transition: all var(--t-fast) ease; }
   .location-destination:hover { border-color: var(--accent); box-shadow: var(--shadow-card); transform: translateX(4px); }
-  .location-dest-icon { flex-shrink: 0; width: 32px; height: 32px; color: var(--accent); stroke-width: 1; }
+  .location-dest-icon { flex-shrink: 0; width: var(--picto-m); height: var(--picto-m); color: var(--accent); stroke-width: 1; }
   .location-dest-info { display: flex; flex: 1; flex-direction: column; gap: var(--s-4); }
   .location-dest-name { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-031); color: var(--ink); }
   /* a name too long for a phone's line beside its code (« Dakar-Blaise Diagne Airport »): its whole form (.is-long) from
@@ -113,7 +113,7 @@
     line-height: var(--lh-relaxed); color: var(--accent); }
   .location-transport-note { display: flex; align-items: center; gap: var(--s-12); margin-top: var(--s-32);
     padding: var(--s-20) var(--s-28); background: var(--accent-soft); border: 1px solid var(--line); }
-  .transport-note-icon { flex-shrink: 0; width: 24px; height: 24px; color: var(--accent); stroke-width: 1; }
+  .transport-note-icon { flex-shrink: 0; width: var(--picto-s); height: var(--picto-s); color: var(--accent); stroke-width: 1; }
   .location-transport-note span { font-family: var(--body); font-weight: 300; color: var(--dim); }
   /* Schedule */
   .schedule-container { margin: var(--s-48) 0; }
@@ -150,7 +150,7 @@
   .includes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s-16); margin-bottom: var(--s-32); }
   .include-item { display: flex; align-items: center; gap: var(--s-12); padding: var(--s-16); background: var(--accent-soft);
     border-left: 3px solid var(--accent); }
-  .include-icon { flex-shrink: 0; width: 24px; height: 24px; color: var(--accent); stroke-width: 1; }
+  .include-icon { flex-shrink: 0; width: var(--picto-s); height: var(--picto-s); color: var(--accent); stroke-width: 1; }
   .include-item span { font-weight: 400; text-align: left; color: var(--dim); }
   .pricing-note { margin: var(--s-40) 0; padding: var(--s-32); background: var(--accent-soft); border: 1px solid var(--line); }
   .pricing-note p { margin: 0; line-height: var(--lh-airy); color: var(--dim); }
@@ -165,7 +165,7 @@
   .contact-card { display: block; padding: var(--s-48) var(--s-40); text-align: center; text-decoration: none; background: var(--accent-soft);
     border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }
   .contact-card:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }
-  .contact-icon { width: 48px; height: 48px; margin-bottom: var(--s-20); color: var(--accent); stroke-width: 1; }
+  .contact-icon { width: var(--picto-l); height: var(--picto-l); margin-bottom: var(--s-20); color: var(--accent); stroke-width: 1; }
   .contact-title { margin-bottom: var(--s-20); font-family: var(--display); font-size: var(--text-xl); font-weight: 400; letter-spacing: var(--ls-083);
     color: var(--ink); }
   .contact-link { display: block; font-size: var(--fs-18); font-weight: 400; text-decoration: none; color: var(--accent);

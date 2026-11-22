@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.10.0 · 22 novembre 2026
+
+Les pictogrammes du site en trois tailles, comme les icônes en quatre : 24, 32 et 48 px.
+
+- Nouveaux jetons `--picto-s` (24 px), `--picto-m` (32 px) et `--picto-l` (48 px), pour ce qui est plus grand qu’une icône.
+- 48 px : un point fort et le contact d’un événement, l’épingle d’un lieu (40 avant), l’icône du bandeau d’inscription (40 avant ; 32 px sous 1024 px, comme avant).
+- 32 px : la destination d’un lieu ; les réseaux de l’accueil (34 avant, 30 sur tablette).
+- 24 px : le transport et ce qu’un voyage comprend ; les réseaux de l’accueil sur un téléphone (28 avant) et couché (24).
+- Seul le téléphone couché (80 px, l’avertissement du mode paysage) reste une illustration à part ; `checks/bundles.js` le nomme et refuse tout autre pictogramme en pixels.
+
 ## 4.9.1 · 22 novembre 2026
 
 Les icônes du kit du site que 4.9.0 n’avait pas vues (leur taille était écrite sur une classe à elles, pas sur `.ico`), et les dernières icônes à 1 px de leurs mots.

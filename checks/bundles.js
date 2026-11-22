@@ -38,22 +38,25 @@ function widths() {
 
 // the icons: four sizes and no other (--ico-s 12px, --ico-sm 14px, --ico-m 16px, --ico-l 20px, 4.9.0); no icon of ds
 // sized in pixels, a message's icon one of them too (the charts' pictures are not icons)
-const PICTOGRAMS = ['.feature-icon', '.location-pin-icon', '.location-dest-icon', '.transport-note-icon', '.include-icon', '.contact-icon', '.landscape-warning-icon', '.signup-banner-icon', '.social-icon'];
+// the one picture drawn with an icon that is neither an icon nor a pictogram: the phone held sideways, 80px
+const ILLUSTRATIONS = ['.landscape-warning-icon'];
 function iconSizes() {
   const wrong = [];
   const tokens = read('src/tokens.css');
   const scale = [...tokens.matchAll(/(--ico-[\w-]+)\s*:\s*([^;]+);/g)].map(m => m[1] + '=' + m[2].trim());
   if (scale.join() !== '--ico-s=12px,--ico-sm=14px,--ico-m=16px,--ico-l=20px') wrong.push('tokens: ' + scale.join(' '));
+  const pictos = [...tokens.matchAll(/(--picto-[\w-]+)\s*:\s*([^;]+);/g)].map(m => m[1] + '=' + m[2].trim());
+  if (pictos.join() !== '--picto-s=24px,--picto-m=32px,--picto-l=48px') wrong.push('tokens: ' + pictos.join(' '));
   for (const m of tokens.matchAll(/--msg-icon\s*:\s*([^;]+);/g)) if (!/^var\(--ico-[\w-]+\)$/.test(m[1].trim())) wrong.push('tokens: --msg-icon ' + m[1]);
   for (const f of fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.css'))) {
     const css = read('src/' + f).replace(/\/\*[\s\S]*?\*\//g, '');
     for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
       const sel = m[1].trim();
-      // an icon: .ico, an svg, or a class of its own named for one (.scroll-arrow, .social-banner-icon); the site's large
-      // pictograms (24px and more: a feature, a place, a contact) wait for a decision of their own
+      // an icon: .ico, an svg, or a class of its own named for one (.scroll-arrow, .social-banner-icon); the site's
+      // pictograms take --picto-* (24, 32, 48px, 4.10.0), the same check
       const last = sel.split(',').map(x => x.trim().split(/[\s>+~]+/).pop());
       const named = last.some(x => /\.[\w-]*(-icon|-arrow)\b/.test(x));
-      if ((!/(\.ico|svg)\b/.test(sel) && !named) || /chart-/.test(sel) || last.every(x => PICTOGRAMS.some(k => x.includes(k)))) continue;
+      if ((!/(\.ico|svg)\b/.test(sel) && !named) || /chart-/.test(sel) || last.every(x => ILLUSTRATIONS.some(k => x.includes(k)))) continue;
       for (const d of m[2].matchAll(/(?<![\w-])(width|height)\s*:\s*([^;]+)/g)) if (/\d(px|em|rem)\b/.test(d[2])) wrong.push(f + ': ' + sel + ' ' + d[1] + ': ' + d[2].trim());
     }
   }
@@ -63,7 +66,7 @@ function iconSizes() {
 (async () => {
   const wrong = widths();
   const sizes = iconSizes();
-  assert(!sizes.length, 'les icônes en quatre tailles seulement (12, 14, 16, 20px), jamais en pixels ' + sizes.join(' | '));
+  assert(!sizes.length, 'les icônes en quatre tailles seulement (12, 14, 16, 20px), les pictogrammes du site en trois (24, 32, 48px), jamais en pixels ' + sizes.join(' | '));
   assert(!wrong.length, 'les largeurs d’écran : 480, 768, 769, 1024 et 1280px partout, 956px couché dans le seul kit du site ' + wrong.join(' | '));
   // the bundles: the sprite out of ds.js, all of it in ds-icons.js and in icons.svg; the tools out of ds.css and ds.js
   const ids = t => [...t.matchAll(/<symbol id="(i-[\w-]+)"/g)].map(m => m[1]);
