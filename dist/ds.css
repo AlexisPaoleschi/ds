@@ -1,4 +1,4 @@
-/* ds 4.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -96,10 +96,12 @@
   --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-dialog: 55; --z-toast: 60;
   /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
   --t-loop: 2s;
-  /* how much shows of what is turned off (a day outside the month, a source switched off), and of what waits */
-  --o-off: .38; --o-muted: .75;
-  /* icons: small (a row's, a figure's unit), medium (a button's) */
-  --ico-s: 12px; --ico-m: 16px;
+  /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or
+     worked on (.is-busy: a row being saved, a photo being sent), and of what waits */
+  --o-off: .38; --o-busy: .5; --o-muted: .75;
+  /* icons: small (a row's, a figure's unit), between (beside a line of small text: a status, a profile's link), medium (a
+     button's) */
+  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px;
   /* the chevron of every list that opens (a menu, a pill, a search's button): the sprite's chevron-down (icons.js), 1px
      wide at 12px, as a mask that takes the colour of its ground; a native menu, which has no ::after, takes it as a
      picture in its theme's quiet grey (--chev-faint) */
@@ -167,6 +169,8 @@
   --note-size: var(--fs-13);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
+  /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
+  --row-lit: color-mix(in srgb, var(--ink) 3%, transparent);
   /* the height of a control: a field, a menu and a button side by side line up */
   --control-h: 34px;
   /* buttons: one height and one font for all of them */
@@ -243,7 +247,7 @@
 [data-theme="vitrine"] {
   color-scheme: light;
   /* the site's grounds: a cream page, white cards and fields, beige bands */
-  --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100);
+  --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100); --row-lit: var(--band);
   /* every line in the site's soft gold; the full gold to underline */
   --line: color-mix(in srgb, var(--gold-500) 20%, transparent); --line-2: var(--gold-500); --pop-line: var(--line);
   /* the site's two greys: 85% for what is read, 60% for what stays quiet */
@@ -392,6 +396,9 @@
   .field-note.is-bad { color: var(--bad); }
   .field-note.is-reserved { min-height: calc(var(--field-note-size) * var(--field-note-lh)); }
   :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
+/* Something being saved or worked on (.is-busy on a photo's tile, a cover, a row): its picture steps back while it lasts;
+   a button that works shows its wheel (buttons.css), a table's row steps back whole (table.css) */
+  :where(.is-busy) > :is(img, video) { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
 /* A search field and its cross (.search-field > input + .search-clear): the cross shows once something is typed, on a
    phone too, where the browser drew none, and empties the field (ds.js tells the page, as typing would). The browser's
    own cross goes. The field needs a placeholder: an empty field is one that shows it, whoever emptied it. */
@@ -642,6 +649,8 @@
   /* an empty list or card says so (« Rien de prévu ce mois-là. »); in a dashed box when it stands for a whole block
      (.is-box: no gallery yet, a card still loading) */
   .empty-note { color: var(--dim); margin: 0; }
+  /* in a list, as high as its rows */
+  li.empty-note { list-style: none; padding: var(--s-12) var(--s-2); }
   .empty-note.is-box { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--r-l); color: var(--faint); font-size: var(--fs-14); padding: var(--s-32) var(--s-16); text-align: center; }
   /* a short sentence under a block, quieter than the text: what a figure means, where it comes from */
   .note { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); margin: var(--s-8) 0 0; }
@@ -673,6 +682,11 @@
   .ct.fold[aria-expanded="true"]:where(:not([data-theme="vitrine"] *))::after,
   details.fold[open] > summary.ct:where(:not([data-theme="vitrine"] *))::after { translate: 0 calc(-28% - 0.075em); }
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
+  /* sections that fold, one under the other (Bank's rules, by who made them): a line between them, room around each
+     title: <div class="folds"><details class="fold">… */
+  .folds > details.fold { border-top: 1px solid var(--line); }
+  .folds > details.fold:first-child { border-top: none; }
+  .folds > details.fold > summary { padding-block: var(--s-12); }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
   /* a card folded by its title (ds.foldCard): only the title stays */
@@ -861,8 +875,6 @@
      Tab reaches it; a click anywhere on the tile opens it (ds.js, as a row's) and its label turns gold on hover.
      Figures that must show whole get smaller in .tiles.is-shrink (ds.fitFigures, ds.js). */
   .tile.is-link { cursor: pointer; }
-  .tile.is-link a.row-link { color: inherit; text-decoration: none; }
-  .tile.is-link a.row-link:focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
   @media (hover: hover) { .tile.is-link:hover dt { color: var(--accent-text); } }
   /* fitted (ds.minitiles: a median, an average at the top of a card): the tiles side by side, each as wide as the widest,
      no wider than the words; the figure's unit just after it, what it is taken over under it */
@@ -909,6 +921,12 @@
    only a wide screen shows (.tbl-wide) goes, what only a phone shows (.tbl-phone, e.g. the date and the bank under the
    name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
   .tbl-wrap { overflow-x: auto; }
+  /* a table in a card of its own (Selecta's lists): its frame and its shadow are a card's, its titles on the band, its
+     cells roomier, no line under its last row; on a phone, its rows' cards (.is-cards) stand on the page, without it */
+  .tbl-wrap.is-card { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); box-shadow: var(--card-shadow); }
+  .tbl-wrap.is-card .tbl :is(th, td) { padding: var(--s-12) var(--s-20); border-top: 0; border-bottom: 1px solid var(--line); }
+  .tbl-wrap.is-card .tbl th { background: var(--band); }
+  .tbl-wrap.is-card .tbl tbody tr:last-child > td { border-bottom: 0; }
   .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
@@ -922,11 +940,19 @@
      theirs, already right (below) */
   .tbl td.tbl-ck > input { display: block; }
   .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
+  /* in vitrine, a row's name keeps the weight of its text */
+  [data-theme="vitrine"] .tbl .tbl-main { font-weight: inherit; }
   .tbl .tbl-phone { display: none; }
   .tbl tbody tr.is-link { cursor: pointer; }
   /* a row reached with Tab (one that opens a sheet, tabindex="0"): the focus ring inside it, along the table's lines */
   .tbl tbody tr:focus-visible { outline: var(--focus); outline-offset: calc(-1 * var(--focus-offset)); }
-  @media (hover: hover) { .tbl tbody tr:hover > td { background: color-mix(in srgb, var(--ink) 3%, transparent); } }
+  @media (hover: hover) { .tbl tbody tr:hover > td { background: var(--row-lit); } }
+  /* a row being saved steps back whole until it is (--o-busy) */
+  .tbl tbody tr.is-busy > td { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
+  /* a row's link (a table's row, a tile, a row that opens): in the row's text, the whole row opening it (ds.js); Tab
+     reaches it */
+  a.row-link { color: inherit; text-decoration: none; }
+  a.row-link:focus-visible { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
   .tbl tbody tr.is-selected > td { background: var(--accent-soft); }
   /* a title that sorts: in ink while its column is the one in use, its way in a gold arrow (aria-sort on the th) */
   /* a finger finds it: its target reaches above and under the short line of capitals */
@@ -934,6 +960,10 @@
   .tbl th .sort { position: relative; display: inline-flex; align-items: center; gap: var(--s-4); margin: 0; padding: 0; background: none; border: 0; border-radius: var(--r-s); cursor: pointer;
     color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; }
   .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
+  /* the arrow's room is kept in every title, so that the columns do not move when another one sorts */
+  .tbl th .sort::after { content: "\00a0"; content: "\00a0" / ""; display: inline-block; min-width: 0.75em; }
+  /* over figures, the arrow goes before the title, whose words stay in line with the figures under it */
+  .tbl th.is-num .sort { flex-direction: row-reverse; }
   /* the arrow is not read out: aria-sort says it */
   .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent-text); }
   .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent-text); }
@@ -999,6 +1029,9 @@
   /* a card is lit whole, not cell by cell; in a .card, out to its edges (over its padding, --card-pad), so that the gold
      takes the whole width of the screen's line */
   .tbl.is-cards tbody tr > td, .tbl.is-cards tbody tr.is-selected > td { background: none; }
+  /* a table in a card of its own: its rows' cards stand on the page */
+  .tbl-wrap.is-card:has(> .tbl.is-cards) { background: none; border: 0; border-radius: 0; box-shadow: none; }
+  .tbl-wrap.is-card .tbl.is-cards :is(th, td) { padding: 0; border: 0; background: none; }
   .tbl.is-cards tbody tr.is-selected { background: var(--accent-soft); }
   .card .tbl.is-cards tbody tr.is-selected { box-shadow: calc(-1 * var(--card-pad)) 0 var(--accent-soft), var(--card-pad) 0 var(--accent-soft); }
   /* what only a wide screen shows stays hidden in a card too */

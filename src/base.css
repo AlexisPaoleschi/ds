@@ -30,6 +30,9 @@
   .field-note.is-bad { color: var(--bad); }
   .field-note.is-reserved { min-height: calc(var(--field-note-size) * var(--field-note-lh)); }
   :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
+/* Something being saved or worked on (.is-busy on a photo's tile, a cover, a row): its picture steps back while it lasts;
+   a button that works shows its wheel (buttons.css), a table's row steps back whole (table.css) */
+  :where(.is-busy) > :is(img, video) { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
 /* A search field and its cross (.search-field > input + .search-clear): the cross shows once something is typed, on a
    phone too, where the browser drew none, and empties the field (ds.js tells the page, as typing would). The browser's
    own cross goes. The field needs a placeholder: an empty field is one that shows it, whoever emptied it. */

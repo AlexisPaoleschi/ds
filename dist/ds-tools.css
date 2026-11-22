@@ -1,4 +1,4 @@
-/* ds 4.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
    field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
@@ -377,6 +377,13 @@
   ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
   ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
   ul.rows.is-cards > li:not(.rows-head) .row-value { font: 700 var(--fs-15)/var(--lh-tight) var(--display); }
+  /* rows under a row (a person's lessons under the person): a dashed line between them, less room, the title smaller
+     and quieter: <ul class="rows is-sub"> inside the row */
+  ul.rows.is-sub > li { --row-py: var(--s-4); border-top-style: dashed; gap: var(--s-4) var(--s-8); }
+  ul.rows.is-sub > li:first-child { border-top: none; padding-top: var(--s-4); }
+  ul.rows.is-sub .row-title { color: var(--dim); font-size: var(--fs-13); font-weight: 500; }
+  /* a row being saved steps back until it is (--o-busy), as a table's */
+  ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
   /* a row's second line, under its title: a detail, smaller and faint */
   .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
   /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
@@ -799,6 +806,8 @@
   :where(.settings) .conn:first-of-type { border-top: none; padding-top: var(--s-4); }
   :where(.settings) .conn .name { align-items: center; display: flex; font-weight: 600; gap: var(--s-8); }
   :where(.settings) .conn .det { color: var(--dim); font-size: var(--fs-13); grid-column: 1; overflow-wrap: anywhere; }
+  /* what failed, in red, as a job's summary */
+  :where(.settings) .conn .det.is-bad { color: var(--bad); }
   :where(.settings) .conn a { color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; }
   :where(.settings) .conn a:hover { text-decoration: underline; }
   :where(.settings) .mem { color: var(--faint); font: 400 var(--fs-12)/var(--lh-text) var(--mono); }

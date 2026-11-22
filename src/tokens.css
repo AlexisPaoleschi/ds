@@ -79,10 +79,12 @@
   --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-dialog: 55; --z-toast: 60;
   /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
   --t-loop: 2s;
-  /* how much shows of what is turned off (a day outside the month, a source switched off), and of what waits */
-  --o-off: .38; --o-muted: .75;
-  /* icons: small (a row's, a figure's unit), medium (a button's) */
-  --ico-s: 12px; --ico-m: 16px;
+  /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or
+     worked on (.is-busy: a row being saved, a photo being sent), and of what waits */
+  --o-off: .38; --o-busy: .5; --o-muted: .75;
+  /* icons: small (a row's, a figure's unit), between (beside a line of small text: a status, a profile's link), medium (a
+     button's) */
+  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px;
   /* the chevron of every list that opens (a menu, a pill, a search's button): the sprite's chevron-down (icons.js), 1px
      wide at 12px, as a mask that takes the colour of its ground; a native menu, which has no ::after, takes it as a
      picture in its theme's quiet grey (--chev-faint) */
@@ -150,6 +152,8 @@
   --note-size: var(--fs-13);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
+  /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
+  --row-lit: color-mix(in srgb, var(--ink) 3%, transparent);
   /* the height of a control: a field, a menu and a button side by side line up */
   --control-h: 34px;
   /* buttons: one height and one font for all of them */
@@ -226,7 +230,7 @@
 [data-theme="vitrine"] {
   color-scheme: light;
   /* the site's grounds: a cream page, white cards and fields, beige bands */
-  --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100);
+  --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100); --row-lit: var(--band);
   /* every line in the site's soft gold; the full gold to underline */
   --line: color-mix(in srgb, var(--gold-500) 20%, transparent); --line-2: var(--gold-500); --pop-line: var(--line);
   /* the site's two greys: 85% for what is read, 60% for what stays quiet */

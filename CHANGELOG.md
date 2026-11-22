@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.8.0 · 22 novembre 2026
+
+Ce que deux applis dessinaient chacune de leur côté, ou ce qui manquait à une pièce déjà là.
+
+- Ce qu’on enregistre ou qu’on travaille (`.is-busy`) passe en retrait avec un nouveau jeton, `--o-busy` (0,5) : la ligne d’un tableau (`.tbl tr.is-busy`) ou d’une liste (`ul.rows > li.is-busy`) en entier, la photo d’une tuile ou d’une couverture (`.is-busy > img`). Bank l’utilise pour la ligne qu’il enregistre, Selecta pour la photo qu’il envoie.
+- Le lien d’une ligne (`a.row-link`) garde le texte de sa ligne partout, plus seulement dans une tuile : dans un tableau, dans une liste.
+- Nouveau `.tbl-wrap.is-card` : un tableau dans une carte à lui (les listes de Selecta), avec le cadre et l’ombre d’une carte, ses titres sur le bandeau (`--band`), des cases plus aérées et sans trait sous la dernière ligne. Sur un téléphone, ses lignes deviennent des cartes posées sur la page, sans le cadre.
+- La ligne d’un tableau sous le pointeur prend `--row-lit` : la touche d’encre d’avant en Atelier, le bandeau en Vitrine. En Vitrine, le nom d’une ligne (`.tbl-main`) garde le poids de son texte.
+- Un titre qui trie garde la place de sa flèche, même quand ce n’est pas lui qui trie : les colonnes ne bougent plus quand on change de tri. Au-dessus de chiffres (`th.is-num`), la flèche passe devant le titre, qui reste aligné sur eux.
+- Nouveau `ul.rows.is-sub` : des lignes sous une ligne (les cours d’une personne dans Studio), séparées par un trait pointillé, plus serrées, leur titre plus petit et plus discret.
+- Une ligne vide dans une liste (`li.empty-note`) a la hauteur des lignes.
+- Nouveau `.folds` : des sections pliantes (`details.fold`) l’une sous l’autre, un trait entre elles et de la place autour de chaque titre (les règles de Bank, par qui les a faites).
+- Réglages : la ligne d’une connexion en échec (`.conn .det.is-bad`) est en rouge, comme le résumé d’une synchro.
+- Nouveau jeton d’icône `--ico-sm` (14 px), entre `--ico-s` (12 px) et `--ico-m` (16 px) : à côté d’une ligne de petit texte.
+
 ## 4.7.0 · 22 novembre 2026
 
 Un seul style pour toute liste qui s’ouvre : le cadre et le fond d’un champ, le chevron fin du sprite à droite.
