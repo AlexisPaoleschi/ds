@@ -7,7 +7,15 @@
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
   .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
-  .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  /* the chevron that says the title opens a picker: the sprite's chevron-down (<svg class="ico chev">), small and on the
+     title's middle; a « ▾ » in text, which no ds font draws, sat on the big title's base line, 3px low (icon audit,
+     22 November 2026) */
+  .periodtitle > .ico { align-self: center; width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
+  /* the middle of the title's line is not its capitals' middle: in Vitrine's capitals (Gilda) the chevron goes up by
+     0.075em of the title (2px at 28px); in Atelier, a month in small letters is fine, a year alone in figures on a phone
+     gets 0.06em (measured in Chromium, 22 November 2026) */
+  [data-theme="vitrine"] .periodtitle > .ico { translate: 0 -0.075em; }
   .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
   /* an arrow that leads nowhere is gone, and the row with it when both are */
   .periodnav .is-off { display: none; }
@@ -26,5 +34,6 @@
 @media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle { font-size: var(--fs-22); }
+    .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
 }

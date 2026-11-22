@@ -1,4 +1,4 @@
-/* ds 4.5.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
@@ -76,7 +76,15 @@
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
   .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
-  .periodtitle .caret, .periodtitle .chev { color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  /* the chevron that says the title opens a picker: the sprite's chevron-down (<svg class="ico chev">), small and on the
+     title's middle; a « ▾ » in text, which no ds font draws, sat on the big title's base line, 3px low (icon audit,
+     22 November 2026) */
+  .periodtitle > .ico { align-self: center; width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
+  /* the middle of the title's line is not its capitals' middle: in Vitrine's capitals (Gilda) the chevron goes up by
+     0.075em of the title (2px at 28px); in Atelier, a month in small letters is fine, a year alone in figures on a phone
+     gets 0.06em (measured in Chromium, 22 November 2026) */
+  [data-theme="vitrine"] .periodtitle > .ico { translate: 0 -0.075em; }
   .periodnav { display: flex; align-items: center; flex-wrap: wrap; gap: var(--s-6); }
   /* an arrow that leads nowhere is gone, and the row with it when both are */
   .periodnav .is-off { display: none; }
@@ -95,6 +103,7 @@
 @media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle { font-size: var(--fs-22); }
+    .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
 }
 /* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
@@ -130,6 +139,9 @@
     border-color: transparent; color: var(--ink); font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title.is-zoom > span { display: inline-block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .dp-title.is-zoom > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); color: var(--faint); transition: color var(--t-fast), transform var(--t-fast); }
+  /* Gilda's capitals stand higher than the middle of their line (1px at 14px): the chevron goes up to theirs (icon audit,
+     22 November 2026) */
+  [data-theme="vitrine"] .dp-title.is-zoom > .ico { translate: 0 -0.07em; }
   .datepick .dp-title.is-zoom:is(:hover, :active) { border-color: transparent; color: var(--accent-text); }
   .datepick .dp-title.is-zoom:is(:hover, :active) > .ico { color: var(--accent-text); transform: translateY(var(--s-2)); }
   /* the grid that replaces another one grows from the cell it came from or shrinks into its year: a short zoom */
@@ -215,8 +227,10 @@
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }
+  /* the sheet's name as large as its figure: at 22px, the square buttons beside it (rename, see) looked bigger than it
+     (« le bouton renommer est trop gros par rapport au texte », 22 November 2026) */
   .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
-    font: var(--title-weight) var(--fs-22)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    font: var(--title-weight) var(--fs-28)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
   .sheet-fig.is-good { color: var(--good); }
   .sheet-fig.is-bad { color: var(--bad); }
@@ -562,7 +576,7 @@
   .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
   /* on one baseline: the smaller figures would otherwise sit too high */
   .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
-  .chart-key { align-self: center; }
+  .chart-key, :is(.chart-split-legend, .chart-bars-legend) .swatch { align-self: center; }
   .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
   .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
 /* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on

@@ -21,6 +21,9 @@
     border-color: transparent; color: var(--ink); font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .dp-title.is-zoom > span { display: inline-block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .dp-title.is-zoom > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); color: var(--faint); transition: color var(--t-fast), transform var(--t-fast); }
+  /* Gilda's capitals stand higher than the middle of their line (1px at 14px): the chevron goes up to theirs (icon audit,
+     22 November 2026) */
+  [data-theme="vitrine"] .dp-title.is-zoom > .ico { translate: 0 -0.07em; }
   .datepick .dp-title.is-zoom:is(:hover, :active) { border-color: transparent; color: var(--accent-text); }
   .datepick .dp-title.is-zoom:is(:hover, :active) > .ico { color: var(--accent-text); transform: translateY(var(--s-2)); }
   /* the grid that replaces another one grows from the cell it came from or shrinks into its year: a short zoom */

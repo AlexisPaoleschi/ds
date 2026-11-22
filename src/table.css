@@ -8,7 +8,7 @@
    name) comes, and the column titles give way to a menu that sorts (.tbl-sortmenu, a pill). */
   .tbl-wrap { overflow-x: auto; }
   .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
-  .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: bottom; white-space: nowrap; color: var(--faint);
+  .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
   .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -16,6 +16,9 @@
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
   .tbl .tbl-ck { width: 28px; }
+  /* a row's box on its row's middle, not on the line of its own cell (icon audit, 22 November 2026); a phone's cards keep
+     theirs, already right (below) */
+  .tbl td.tbl-ck > input { display: block; }
   .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
   .tbl .tbl-phone { display: none; }
   .tbl tbody tr.is-link { cursor: pointer; }
@@ -32,6 +35,8 @@
   /* the arrow is not read out: aria-sort says it */
   .tbl th[aria-sort="descending"] .sort::after { content: "↓"; content: "↓" / ""; color: var(--accent-text); }
   .tbl th[aria-sort="ascending"] .sort::after { content: "↑"; content: "↑" / ""; color: var(--accent-text); }
+  /* Archivo's arrows stand on the base line, under the capitals' middle: up to it (icon audit, 22 November 2026) */
+  .tbl th:where(:not([data-theme="vitrine"] *)) .sort::after { translate: 0 -0.08em; }
   /* the menu is a .pill too: hidden by a rule that outweighs the pill's, wherever the pill comes in the cascade */
   .tbl-sortmenu, .pill.tbl-sortmenu { display: none; }
 
@@ -81,6 +86,7 @@
   .tbl.is-cards tr:not(:has(> .tbl-ck)) { grid-template-columns: [main-start] minmax(0, 1fr) [main-end end-start] auto [end-end]; }
   .tbl.is-cards td { display: block; min-width: 0; padding: 0; border: 0; grid-column: main-start / end-end; }
   .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; }
+  .tbl.is-cards td.tbl-ck > input { display: inline-block; }
   .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
   .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
   .tbl.is-cards td[colspan] { grid-column: 1 / -1; }

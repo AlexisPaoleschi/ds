@@ -9,13 +9,17 @@
      are read (« Chargement… »); value: the current choice, in gold; first: the values shown before anything is typed
      (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
      matches; onPick(item, {checked}) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the
-     search taking the focus; check: a box at its foot ({label, checked}, Bank's « Seulement cette opération »), its state
+     search taking the focus, and one such picker open at a time (opening one closes the other: a sheet with a
+     category's and a trip's would grow too tall); check: a box at its foot ({label, checked}, Bank's « Seulement cette opération »), its state
      given to onPick (checked) and read by checked(). ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
      Returns {open(), close(), toggle(), set(items, options), draw(), checked(), input}; set takes the list once read, and
      may change the options with it (first, empty…). */
 (function () {
   "use strict";
   var _ = window.ds._, find = _.find, tag = _.el;
+  // the picker with an opener open now: opening another closes it (« quand j'ouvre la recherche de la catégorie, ça
+  // ferme celle de voyage », 22 November 2026)
+  var shown = null;
   var WORDS = _.table({
     fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…", clear: "Effacer" },
     en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…", clear: "Clear" }
@@ -167,6 +171,8 @@
     });
     var opener = find(o.opener);
     p.open = function () {
+      if (opener && shown && shown !== p) shown.close();
+      if (opener) shown = p;
       holder.hidden = false;
       if (opener) opener.setAttribute("aria-expanded", "true");
       p.draw();
@@ -174,6 +180,7 @@
       return p;
     };
     p.close = function () {
+      if (shown === p) shown = null;
       holder.hidden = true;
       if (opener) opener.setAttribute("aria-expanded", "false");
       return p;

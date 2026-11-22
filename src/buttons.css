@@ -58,8 +58,9 @@
    click sends nothing; only a button that cannot be used takes the faded look above */
   .btn.is-busy { cursor: progress; opacity: var(--o-muted); }
   .btn.is-busy::after { content: ""; --spin-size: 13px; --spin-ring: currentColor; --spin-top: transparent; }
-/* in capitals (Vitrine), the words have nothing under their base line, so the wheel, centred on the line, sat lower than
-   the letters (1.4px at 14px, « est-ce que la petite icône est bien centrée ? », 22 November 2026): it goes up by what
-   the line keeps under the capitals, a tenth of their size, and its middle is theirs */
-  [data-theme="vitrine"] .btn.is-busy::after { translate: 0 -0.1em; }
+/* in capitals (Vitrine), the words have nothing under their base line, so an icon or the wheel, centred on the line, sat
+   lower than the letters (0.9px at 14px, « est-ce que la petite icône est bien centrée ? », 22 November 2026): they go
+   up by what the line keeps under the capitals' middle, 0.06em (4.5.1 lifted the wheel by 0.1em, 0.5px too high),
+   measured in Chromium on the showcase, Selecta's sign-in and the site */
+  [data-theme="vitrine"] .btn.is-busy::after, [data-theme="vitrine"] .btn:not(.is-icon) > .ico { translate: 0 -0.06em; }
 

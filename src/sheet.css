@@ -21,8 +21,10 @@
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
   .sheet-sub::first-letter { text-transform: uppercase; }
+  /* the sheet's name as large as its figure: at 22px, the square buttons beside it (rename, see) looked bigger than it
+     (« le bouton renommer est trop gros par rapport au texte », 22 November 2026) */
   .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
-    font: var(--title-weight) var(--fs-22)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    font: var(--title-weight) var(--fs-28)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
   .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
   .sheet-fig.is-good { color: var(--good); }
   .sheet-fig.is-bad { color: var(--bad); }

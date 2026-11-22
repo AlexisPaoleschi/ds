@@ -26,7 +26,8 @@
   .highlight-box { margin: var(--s-48) 0 0; padding: var(--s-32) var(--s-40); background: var(--accent-soft); border-left: 2px solid var(--accent); }
   .highlight-text { font-family: var(--body); font-weight: 400; letter-spacing: var(--ls-125); text-align: center; text-transform: uppercase;
     color: var(--accent); }
-  .highlight-separator { display: inline-block; font-weight: 300; color: var(--accent); }
+  /* a bullet sits on the small letters' middle: up to the capitals' (icon audit, 22 November 2026) */
+  .highlight-separator { display: inline-block; font-weight: 300; color: var(--accent); translate: 0 -0.05em; }
   .highlight-line { display: inline-block; }
   .highlight-list { display: none; flex-direction: column; gap: var(--s-12); margin: 0; padding: 0; list-style: none; }
   .highlight-list li { position: relative; padding: var(--s-8) 0; padding-left: var(--s-24); font-family: var(--body); font-size: var(--fs-15);
@@ -133,7 +134,8 @@
     color: var(--accent); }
   .info-list { list-style: none; padding-left: 0; }
   .info-list li { display: flex; align-items: flex-start; gap: var(--s-12); padding: var(--s-8) 0; color: var(--dim); }
-  .info-list li svg { flex-shrink: 0; width: 20px; height: 20px; margin-top: var(--s-2); color: var(--accent); stroke-width: 1; }
+  /* its icon on its first line's middle, as the lists above (icon audit, 22 November 2026) */
+  .info-list li svg { flex-shrink: 0; width: 20px; height: 20px; margin-top: calc((1lh - 20px) / 2); color: var(--accent); stroke-width: 1; }
   /* Pricing */
   .pricing-box { padding: var(--s-80) var(--s-48); text-align: center; }
   .pricing-header { margin-bottom: var(--s-48); }

@@ -19,6 +19,10 @@
   .note { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); margin: var(--s-8) 0 0; }
   /* an icon before a card's or a section's title, in gold, the size of its capitals */
   .ct > .ico, h4.sect > .ico { color: var(--accent-text); height: var(--ico-s); width: var(--ico-s); }
+  /* in Atelier, Archivo's capitals stand higher than the middle of their 13px line (0.9px): the icon and the swatch go up
+     to theirs; not on a title made smaller to fit (ct-fit-2, ct-fit-3), whose lines round the other way, nor in Vitrine,
+     whose capitals sit on the middle (icon audit, 22 November 2026) */
+  .ct:not(.ct-fit-2, .ct-fit-3) > :is(.ico, .swatch):where(:not([data-theme="vitrine"] *)) { translate: 0 -0.075em; }
   /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
      control rather than the title's capitals; on a narrow line it goes under the title */
   .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
@@ -34,8 +38,12 @@
   details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: var(--s-8); min-height: var(--s-24); }
   details.fold > summary::-webkit-details-marker { display: none; }
   details.fold > summary::after, .ct.fold[aria-expanded]::after { content: ""; flex: none; margin-left: auto; width: var(--s-6); height: var(--s-6); border-right: 1.5px solid var(--faint);
-    border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease; }
-  details.fold[open] > summary::after, .ct.fold[aria-expanded="true"]::after { transform: rotate(45deg); }
+    border-bottom: 1.5px solid var(--faint); transform: rotate(-45deg); transition: transform var(--t-fast) ease, translate var(--t-fast) ease; }
+  /* open, the square's two borders draw a V in its lower half (2.1px under its middle): it goes up by that much, and in an
+     Atelier card's title by its capitals' 0.075em too (icon audit, 22 November 2026) */
+  details.fold[open] > summary::after, .ct.fold[aria-expanded="true"]::after { transform: rotate(45deg); translate: 0 -28%; }
+  .ct.fold[aria-expanded="true"]:where(:not([data-theme="vitrine"] *))::after,
+  details.fold[open] > summary.ct:where(:not([data-theme="vitrine"] *))::after { translate: 0 calc(-28% - 0.075em); }
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }

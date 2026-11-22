@@ -138,7 +138,7 @@
     var title = el("button", "periodtitle"), h3 = el("h3"), pop = el("div", "cal-jump");
     title.type = "button";
     title.title = w.pick;
-    title.append(h3, el("span", "caret", "▾"));
+    title.append(h3, window.ds.ico("chevron-down", "caret"));
     var first = +today().slice(0, 4) - 10, last = +today().slice(0, 4) + 2;
     if (opts.years) { first = opts.years[0]; last = opts.years[1]; }
     left.append(title, pop);

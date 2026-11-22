@@ -120,7 +120,7 @@
   .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
   /* on one baseline: the smaller figures would otherwise sit too high */
   .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
-  .chart-key { align-self: center; }
+  .chart-key, :is(.chart-split-legend, .chart-bars-legend) .swatch { align-self: center; }
   .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
   .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
 /* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on

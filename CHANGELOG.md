@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.6.0 · 22 novembre 2026
+
+Les icônes au milieu de leurs mots, partout où l’audit du 22 novembre en a trouvé de travers (mesuré dans Chromium, à 375 et 1280 px, avant et après).
+
+- En Vitrine, l’icône d’un bouton est montée sur le milieu de ses capitales (elle était 0,9 px trop bas), et la roue d’un bouton qui travaille monte de 0,06em au lieu de 0,1em (4.5.1 la mettait 0,5 px trop haut).
+- En Atelier, l’icône et la pastille d’un titre de carte (`.ct`) sont sur le milieu de ses capitales (0,9 px trop bas), sauf sur un titre rapetissé pour tenir (`ct-fit-2`, `ct-fit-3`).
+- Le chevron d’une section pliante ouverte (`details.fold`, `.ct.fold`) est sur le milieu de son titre : son V était 2 à 3 px trop bas.
+- Le titre d’une période (`.periodtitle`) prend le chevron du sprite (`<svg class="ico caret"><use href="#i-chevron-down"/></svg>`), petit et au milieu du titre (monté de 0,075em en Vitrine, de 0,06em sur un téléphone en Atelier) ; `ds.calendar` le dessine. Un « ▾ » en texte, qu’aucune police de ds ne dessine, reste possible et se met lui aussi au milieu.
+- Tableaux : en Atelier, la flèche de tri est sur le milieu des capitales ; la case de l’en-tête est au milieu des titres (elle était en bas), celle d’une ligne au milieu de la ligne sur un ordinateur (les cartes d’un téléphone l’avaient déjà).
+- En Vitrine, le chevron du titre du calendrier (`.dp-title.is-zoom`) est sur le milieu de ses capitales.
+- La pastille d’une légende (`.chart-split-legend`, `.chart-bars-legend`) est au milieu des mots, plus sur leur ligne de base.
+- Le nom d’une fiche (`.sheet-t`) passe de 22 à 28 px, la taille de son montant : à côté de lui, ses boutons carrés (renommer, voir) paraissaient plus gros que lui.
+- `ds.picker` : une recherche qui s’ouvre par son bouton (`opener`) ferme celle qui était ouverte, une seule à la fois (dans la fiche de Bank, la catégorie et le voyage).
+- Pages d’événement : l’icône d’une ligne d’infos (`.info-list`) est au milieu de sa première ligne, et le point entre deux capitales (`.highlight-separator`) au milieu d’elles.
+
 ## 4.5.1 · 22 novembre 2026
 
 - En Vitrine, la roue d’un bouton qui travaille (`.btn.is-busy`) est centrée sur ses capitales : elle était 1,4 px trop bas, parce que des mots en capitales n’ont rien sous leur ligne de base. Rien ne change en Atelier.
