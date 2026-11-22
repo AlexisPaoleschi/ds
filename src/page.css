@@ -21,7 +21,7 @@
   header.top .busy .busy-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   header.top .busy .busy-share { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
   header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
-  header.top .busy .busy-ok svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
+  header.top .busy .busy-ok svg { fill: none; height: var(--ico-s); stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: var(--ico-s); }
   header.top.is-loaded .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
   header.top.is-loaded .busy .spin, header.top.is-loaded .busy .busy-share { display: none; }
   header.top.is-loaded .busy .busy-ok { display: inline-grid; animation: okpop .35s ease-out; }

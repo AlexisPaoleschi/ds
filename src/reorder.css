@@ -6,7 +6,7 @@
     /* the finger on a grip drags its item: it does not scroll the page */
     touch-action: none; user-select: none; -webkit-user-select: none; }
   .grip:hover { color: var(--ink); }
-  .grip .ico { width: 18px; height: 18px; }
+  .grip .ico { width: var(--ico-m); height: var(--ico-m); }
   /* the item being moved follows the pointer, above the others, which make room for it */
   [data-reorder] > .is-dragging { position: relative; z-index: var(--z-raise); background: var(--panel-2); box-shadow: var(--shadow-pop); cursor: grabbing; }
   [data-reorder] > .is-dragging .grip { color: var(--accent-text); cursor: grabbing; }

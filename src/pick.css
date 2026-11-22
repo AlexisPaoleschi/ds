@@ -60,7 +60,7 @@
   .picker-av { display: inline-grid; place-items: center; flex: none; width: 30px; height: 30px; border-radius: var(--r-m);
     color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent);
     font: var(--head-weight) var(--fs-14)/var(--lh-tight) var(--title-font); }
-  .picker-av .ico { width: 16px; height: 16px; }
+  .picker-av .ico { width: var(--ico-m); height: var(--ico-m); }
   /* a colour alone: the small square of the filters */
   .picker-av.is-dot { margin-inline: var(--s-4); }
   .picker-name { flex: 1; min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
@@ -76,7 +76,7 @@
   .add-btn:hover, .add-btn[aria-expanded="true"] { background: var(--accent-soft); border-color: var(--accent-line); }
   .add-plus { display: inline-grid; place-items: center; flex: none; width: 32px; height: 32px; border-radius: 50%;
     color: var(--accent-text); background: var(--accent-soft); border: 1px solid var(--accent-line); font: 600 var(--fs-22)/var(--lh-tight) var(--body); }
-  .add-plus .ico { width: 16px; height: 16px; }
+  .add-plus .ico { width: var(--ico-m); height: var(--ico-m); }
   .add-t { display: flex; flex-direction: column; gap: var(--s-2); min-width: 0; }
   .add-t b { font: var(--head-weight) var(--fs-14)/var(--head-lh) var(--title-font); }
   .add-t small { color: var(--dim); font-size: var(--fs-13); line-height: var(--lh-ui); }

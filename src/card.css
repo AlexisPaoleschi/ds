@@ -64,7 +64,7 @@
     letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
-  .card-meta svg { flex: none; width: 18px; height: 18px; color: var(--accent); }
+  .card-meta svg { flex: none; width: var(--ico-m); height: var(--ico-m); color: var(--accent); }
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
   .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }

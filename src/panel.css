@@ -29,7 +29,7 @@
   .fhead { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); min-width: 92px; }
   button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
   button.chip[aria-pressed]:hover { border-color: var(--line-2); }
-  button.chip[aria-pressed] .ico { color: var(--accent); width: 12px; height: 12px; margin-left: calc(-1 * var(--s-2)); }
+  button.chip[aria-pressed] .ico { color: var(--accent); width: var(--ico-s); height: var(--ico-s); margin-left: calc(-1 * var(--s-2)); }
   button.chip[aria-pressed="false"] { opacity: var(--o-off); }
   button.chip[aria-pressed="false"] .swatch { background: transparent; }
 @media (max-width: 768px) {
@@ -48,7 +48,7 @@
   .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
   .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
   .side button.filter-only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
-  .side button.filter-only .ico { width: 15px; height: 15px; }
+  .side button.filter-only .ico { width: var(--ico-m); height: var(--ico-m); }
   .side button.filter-all:hover, .side button.filter-only:hover, .side button.filter-all:focus-visible, .side button.filter-only:focus-visible { color: var(--accent-text); }
   /* « Tout » takes no height of its own: a group's head stays the same height whether it shows or not */
   .side .fhead { min-height: var(--s-14); }
@@ -60,7 +60,7 @@
      when asked, so that the panel stays short */
   .side button.filter-more { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); background: none; border: 0;
     border-radius: var(--r-s); color: var(--faint); cursor: pointer; }
-  .side button.filter-more .ico { width: 13px; height: 13px; transition: transform var(--t-fast) ease; }
+  .side button.filter-more .ico { width: var(--ico-sm); height: var(--ico-sm); transition: transform var(--t-fast) ease; }
   .side button.filter-more[aria-expanded="true"] { color: var(--accent-text); }
   .side button.filter-more[aria-expanded="true"] .ico { transform: rotate(90deg); }
   .side button.filter-more:hover, .side button.filter-more:focus-visible { color: var(--accent-text); }

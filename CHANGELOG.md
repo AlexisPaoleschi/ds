@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.9.0 · 22 novembre 2026
+
+Les icônes en quatre tailles, et aucune autre, dans ds comme dans les applis : 12, 14, 16 et 20 px. Jusqu’ici, ds n’en nommait que deux (12 et 16) et ses composants en écrivaient neuf autres en pixels (de 11 à 20).
+
+- Nouveau jeton `--ico-l` (20 px) : les onglets de la barre, les icônes de la barre du haut, les infos d’un événement. Avec `--ico-s` (12 px), `--ico-sm` (14 px, depuis 4.8.0) et `--ico-m` (16 px).
+- Chaque icône de ds passe sur la taille la plus proche : la coche du bandeau de 11 à 12, l’action d’un message, l’état des sources et le bouton « plus » des filtres de 13 à 14, le bouton « seulement » des filtres de 15 à 16, la poignée pour déplacer et l’icône d’une méta de carte de 18 à 16, les onglets de la barre de 19 à 20, les icônes de la barre du haut de 18 à 20.
+- L’icône d’un message durable (`--msg-icon`) prend la même échelle : 14 px en Atelier, 20 px en Vitrine (24 avant).
+- `checks/bundles.js` le vérifie : quatre tailles et pas une de plus, aucune icône en pixels.
+
 ## 4.8.0 · 22 novembre 2026
 
 Ce que deux applis dessinaient chacune de leur côté, ou ce qui manquait à une pièce déjà là.

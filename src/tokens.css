@@ -82,9 +82,10 @@
   /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or
      worked on (.is-busy: a row being saved, a photo being sent), and of what waits */
   --o-off: .38; --o-busy: .5; --o-muted: .75;
-  /* icons: small (a row's, a figure's unit), between (beside a line of small text: a status, a profile's link), medium (a
-     button's) */
-  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px;
+  /* icons, four sizes and no other, in ds and in every app: small (in a tag, a line of the smallest text, a figure's
+     unit), between (beside small text: a status, a message's action, a profile's link), medium (a button's, beside the
+     text), large (a bar's tabs and icons, an event's facts) */
+  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px; --ico-l: 20px;
   /* the chevron of every list that opens (a menu, a pill, a search's button): the sprite's chevron-down (icons.js), 1px
      wide at 12px, as a mask that takes the colour of its ground; a native menu, which has no ::after, takes it as a
      picture in its theme's quiet grey (--chev-faint) */
@@ -178,7 +179,7 @@
   --card-title-size: var(--fs-17); --card-title-ls: var(--title-ls); --card-gap: var(--s-8);
   --card-meta-size: var(--fs-12); --card-meta-weight: 500; --card-meta-ls: var(--ls-caps); --card-meta-lh: var(--lh-ui);
   /* a message: a sentence in a box, with its icon */
-  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: 14px; --msg-icon-top: var(--s-2);
+  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: var(--s-2);
   /* a passing message */
   --toast-weight: 500; --toast-py: var(--s-8); --toast-pl: var(--s-14); --toast-pr: var(--s-8);
   /* the smallest corner: a swatch, a small bar */
@@ -284,7 +285,7 @@
   --card-title-size: var(--fs-28); --card-title-ls: var(--ls-107); --card-gap: var(--s-16);
   --card-meta-size: var(--fs-14); --card-meta-weight: 400; --card-meta-ls: var(--ls-107); --card-meta-lh: 1.8;
   /* a message as the site's notes (« Transport… is included »): 16px light text, a 24px gold icon, 20 × 28px inside */
-  --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: 24px; --msg-icon-top: 0px;
+  --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: var(--ico-l); --msg-icon-top: 0px;
   /* a passing message with the room of the site's pieces, in its regular weight */
   --toast-weight: 400; --toast-py: var(--s-14); --toast-pl: var(--s-20); --toast-pr: var(--s-14);
   /* a window: 32px inside, its question as the site's box titles (24px), its text as running text */

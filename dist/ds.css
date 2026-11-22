@@ -1,4 +1,4 @@
-/* ds 4.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.9.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -99,9 +99,10 @@
   /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or
      worked on (.is-busy: a row being saved, a photo being sent), and of what waits */
   --o-off: .38; --o-busy: .5; --o-muted: .75;
-  /* icons: small (a row's, a figure's unit), between (beside a line of small text: a status, a profile's link), medium (a
-     button's) */
-  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px;
+  /* icons, four sizes and no other, in ds and in every app: small (in a tag, a line of the smallest text, a figure's
+     unit), between (beside small text: a status, a message's action, a profile's link), medium (a button's, beside the
+     text), large (a bar's tabs and icons, an event's facts) */
+  --ico-s: 12px; --ico-sm: 14px; --ico-m: 16px; --ico-l: 20px;
   /* the chevron of every list that opens (a menu, a pill, a search's button): the sprite's chevron-down (icons.js), 1px
      wide at 12px, as a mask that takes the colour of its ground; a native menu, which has no ::after, takes it as a
      picture in its theme's quiet grey (--chev-faint) */
@@ -195,7 +196,7 @@
   --card-title-size: var(--fs-17); --card-title-ls: var(--title-ls); --card-gap: var(--s-8);
   --card-meta-size: var(--fs-12); --card-meta-weight: 500; --card-meta-ls: var(--ls-caps); --card-meta-lh: var(--lh-ui);
   /* a message: a sentence in a box, with its icon */
-  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: 14px; --msg-icon-top: var(--s-2);
+  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: var(--s-2);
   /* a passing message */
   --toast-weight: 500; --toast-py: var(--s-8); --toast-pl: var(--s-14); --toast-pr: var(--s-8);
   /* the smallest corner: a swatch, a small bar */
@@ -301,7 +302,7 @@
   --card-title-size: var(--fs-28); --card-title-ls: var(--ls-107); --card-gap: var(--s-16);
   --card-meta-size: var(--fs-14); --card-meta-weight: 400; --card-meta-ls: var(--ls-107); --card-meta-lh: 1.8;
   /* a message as the site's notes (« Transport… is included »): 16px light text, a 24px gold icon, 20 × 28px inside */
-  --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: 24px; --msg-icon-top: 0px;
+  --msg-align: center; --msg-py: var(--s-20); --msg-px: var(--s-28); --msg-gap: var(--s-12); --msg-size: var(--text-size); --msg-icon: var(--ico-l); --msg-icon-top: 0px;
   /* a passing message with the room of the site's pieces, in its regular weight */
   --toast-weight: 400; --toast-py: var(--s-14); --toast-pl: var(--s-20); --toast-pr: var(--s-14);
   /* a window: 32px inside, its question as the site's box titles (24px), its text as running text */
@@ -437,7 +438,7 @@
   header.top .busy .busy-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   header.top .busy .busy-share { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
   header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
-  header.top .busy .busy-ok svg { fill: none; height: 11px; stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: 11px; }
+  header.top .busy .busy-ok svg { fill: none; height: var(--ico-s); stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: var(--ico-s); }
   header.top.is-loaded .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
   header.top.is-loaded .busy .spin, header.top.is-loaded .busy .busy-share { display: none; }
   header.top.is-loaded .busy .busy-ok { display: inline-grid; animation: okpop .35s ease-out; }
@@ -623,7 +624,7 @@
     width: var(--tabbar-w); height: 54px; justify-content: space-between; gap: var(--s-6); padding: var(--s-6); border: 1px solid var(--line); border-radius: var(--r-m);
     background: color-mix(in srgb, var(--panel) 84%, transparent); -webkit-backdrop-filter: blur(var(--blur-l)); backdrop-filter: blur(var(--blur-l)); box-shadow: var(--shadow-sheet); }
   header.top .tabs.is-bar button, .tabs.is-bar button { flex: 1; flex-direction: column; justify-content: center; gap: var(--s-2); height: 40px; padding: 0; border-radius: var(--r-m); }
-  .tabs.is-bar button .ico { display: block; width: 19px; height: 19px; }
+  .tabs.is-bar button .ico { display: block; width: var(--ico-l); height: var(--ico-l); }
   .tabs.is-bar button .tab-label { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
   .tabs.is-bar .tabn { position: absolute; top: var(--s-4); left: calc(50% + var(--s-8)); margin: 0; }
   /* five views or more (Bank, with its Placements): the bar, and the passing messages above it, take the screen's width
@@ -699,7 +700,7 @@
     letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
-  .card-meta svg { flex: none; width: 18px; height: 18px; color: var(--accent); }
+  .card-meta svg { flex: none; width: var(--ico-m); height: var(--ico-m); color: var(--accent); }
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */
   .card.has-cover { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
@@ -744,7 +745,7 @@
   .msg .act { align-items: center; align-self: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--ink); cursor: pointer; display: inline-flex; flex: none; font: var(--btn-weight) var(--fs-12)/var(--lh-tight) var(--body); gap: var(--s-6); padding: var(--s-6) var(--s-10); white-space: nowrap; text-decoration: none; }
   .msg .act:not(:disabled):is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .msg .act:not(:disabled):is(:hover, :active) .ico { color: inherit; }
-  .msg .act .ico { color: var(--dim); margin: 0; width: 13px; height: 13px; }
+  .msg .act .ico { color: var(--dim); margin: 0; width: var(--ico-sm); height: var(--ico-sm); }
   .msg .act:disabled { opacity: var(--o-muted); cursor: default; }
   .msg .act .spin { --spin-size: 11px; }
 /* The passing message: at the bottom right on a computer, above the tab bar on a phone; three at most, the newest at the bottom.
@@ -1171,7 +1172,7 @@
   .topbar-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--accent); transition: width var(--t-fast) ease; }
   .topbar-icon { position: relative; display: grid; place-items: center; min-width: var(--touch-target); min-height: var(--touch-target); padding: 0; color: var(--ink); background: none; border: 0; cursor: pointer;
     transition: color var(--t-fast) ease; }
-  .topbar-icon svg { width: 18px; height: 18px; }
+  .topbar-icon svg { width: var(--ico-l); height: var(--ico-l); }
   .topbar .btn { --btn-h: var(--topbar-btn-h); --btn-px: var(--topbar-btn-px); flex: none; }
   @media (hover: hover) {
     .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent-text); }
@@ -1188,7 +1189,7 @@
   .back-link { display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-6) 0; color: var(--faint); text-decoration: none;
     font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--back-ls); text-transform: uppercase; white-space: nowrap;
     transition: color var(--t-fast) ease, background-color var(--t-fast) ease, border-color var(--t-fast) ease, transform var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .back-link .ico { width: 16px; height: 16px; transition: transform var(--t-fast) ease; }
+  .back-link .ico { width: var(--ico-m); height: var(--ico-m); transition: transform var(--t-fast) ease; }
   @media (hover: hover) {
     .back-link:hover { color: var(--accent-text); }
     .back-link:hover .ico { transform: translateX(calc(-1 * var(--s-4))); }
@@ -1199,7 +1200,7 @@
     border-radius: var(--r-m); box-shadow: var(--photo-shadow); -webkit-backdrop-filter: blur(var(--blur-s)); backdrop-filter: blur(var(--blur-s)); }
   .back-link.on-photo:active { transform: none; }
   /* the site's arrow, a little bolder than the sprite's on its white pill */
-  .back-link.on-photo .ico { width: 14px; height: 14px; stroke-width: 2; }
+  .back-link.on-photo .ico { width: var(--ico-sm); height: var(--ico-sm); stroke-width: 2; }
   @media (hover: hover) {
     .back-link.on-photo:hover { color: var(--white); background: var(--accent); border-color: var(--accent); transform: translateY(calc(-1 * var(--s-2))); box-shadow: var(--photo-shadow-up); }
     .back-link.on-photo:hover .ico { transform: none; }
@@ -1233,7 +1234,7 @@
    <input type="range" class="zoom-slider">. Selecta's bar: a thin rail with round ends, a faint gold ground and a
    soft edge, under a gold thumb ringed with the page's colour. */
   .photogrid-zoom { display: inline-flex; align-items: center; gap: var(--s-8); color: var(--faint); cursor: pointer; }
-  .photogrid-zoom .ico { width: 16px; height: 16px; }
+  .photogrid-zoom .ico { width: var(--ico-m); height: var(--ico-m); }
   /* the rail's edge: Atelier's strong line; vitrine's strong line is the full gold, so it takes the soft one */
   /* written longer than the fields' rule of base.css, so that a range is never drawn as a field */
   input.zoom-slider[type=range]:not([type=checkbox]):not([type=radio]) { -webkit-appearance: none; appearance: none;

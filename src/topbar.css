@@ -19,7 +19,7 @@
   .topbar-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--accent); transition: width var(--t-fast) ease; }
   .topbar-icon { position: relative; display: grid; place-items: center; min-width: var(--touch-target); min-height: var(--touch-target); padding: 0; color: var(--ink); background: none; border: 0; cursor: pointer;
     transition: color var(--t-fast) ease; }
-  .topbar-icon svg { width: 18px; height: 18px; }
+  .topbar-icon svg { width: var(--ico-l); height: var(--ico-l); }
   .topbar .btn { --btn-h: var(--topbar-btn-h); --btn-px: var(--topbar-btn-px); flex: none; }
   @media (hover: hover) {
     .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent-text); }

@@ -26,7 +26,7 @@
     width: var(--tabbar-w); height: 54px; justify-content: space-between; gap: var(--s-6); padding: var(--s-6); border: 1px solid var(--line); border-radius: var(--r-m);
     background: color-mix(in srgb, var(--panel) 84%, transparent); -webkit-backdrop-filter: blur(var(--blur-l)); backdrop-filter: blur(var(--blur-l)); box-shadow: var(--shadow-sheet); }
   header.top .tabs.is-bar button, .tabs.is-bar button { flex: 1; flex-direction: column; justify-content: center; gap: var(--s-2); height: 40px; padding: 0; border-radius: var(--r-m); }
-  .tabs.is-bar button .ico { display: block; width: 19px; height: 19px; }
+  .tabs.is-bar button .ico { display: block; width: var(--ico-l); height: var(--ico-l); }
   .tabs.is-bar button .tab-label { display: block; font-size: var(--fs-11); letter-spacing: 0; line-height: var(--lh-tight); }
   .tabs.is-bar .tabn { position: absolute; top: var(--s-4); left: calc(50% + var(--s-8)); margin: 0; }
   /* five views or more (Bank, with its Placements): the bar, and the passing messages above it, take the screen's width

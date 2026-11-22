@@ -33,7 +33,7 @@
   .highlight-list li { position: relative; padding: var(--s-8) 0; padding-left: var(--s-24); font-family: var(--body); font-size: var(--fs-15);
     font-weight: 400; letter-spacing: var(--ls-100); text-transform: uppercase; color: var(--accent); }
   /* each line's arrow: the design system's icon (<svg class="ico"><use href="…icons-X.Y.Z.svg#i-arrow-right"/></svg>), on its first line */
-  :is(.highlight-list, .schedule-list) li > .ico { position: absolute; left: 0; top: calc(var(--s-8) + (1lh - 14px) / 2); width: 14px; height: 14px; color: var(--accent); }
+  :is(.highlight-list, .schedule-list) li > .ico { position: absolute; left: 0; top: calc(var(--s-8) + (1lh - 14px) / 2); width: var(--ico-sm); height: var(--ico-sm); color: var(--accent); }
   /* CTA */
   .cta-center { margin-top: var(--s-48); text-align: center; }
   /* Models */
@@ -135,7 +135,7 @@
   .info-list { list-style: none; padding-left: 0; }
   .info-list li { display: flex; align-items: flex-start; gap: var(--s-12); padding: var(--s-8) 0; color: var(--dim); }
   /* its icon on its first line's middle, as the lists above (icon audit, 22 November 2026) */
-  .info-list li svg { flex-shrink: 0; width: 20px; height: 20px; margin-top: calc((1lh - 20px) / 2); color: var(--accent); stroke-width: 1; }
+  .info-list li svg { flex-shrink: 0; width: var(--ico-l); height: var(--ico-l); margin-top: calc((1lh - 20px) / 2); color: var(--accent); stroke-width: 1; }
   /* Pricing */
   .pricing-box { padding: var(--s-80) var(--s-48); text-align: center; }
   .pricing-header { margin-bottom: var(--s-48); }
