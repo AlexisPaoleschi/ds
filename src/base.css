@@ -6,6 +6,11 @@
   input::placeholder, textarea::placeholder { color: var(--faint); }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */
   :where(input:not([type=checkbox], [type=radio], [type=range], [type=file], [type=color], [type=hidden], [type=image]), select:not([multiple], [size])) { box-sizing: border-box; height: var(--control-h); }
+/* a menu looks like every list that opens (a pill, a search's button, .combo): a field, the sprite's chevron on its
+   right instead of the browser's arrow, which each browser draws its own way (« un seul look pour la combo box »,
+   22 November 2026) */
+  select:where(:not([multiple], [size])) { appearance: none; padding-right: calc(var(--field-px) + var(--ico-s) + var(--s-8));
+    background-image: var(--chev-faint); background-repeat: no-repeat; background-position: right var(--field-px) center; background-size: var(--ico-s); }
 /* the boxes to tick: in the accent, the same size everywhere */
   input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
   /* under a finger, a little bigger */

@@ -74,6 +74,16 @@
       // its box at the foot: for this operation alone, or for its whole merchant
       check: { label: "Seulement cette opération" },
       onPick: function (x, how) { ds.toast({ type: "good", text: x.group + " › " + x.label + (how.checked ? " pour cette opération" : " pour Tik Tak"), action: { label: "Annuler", run: function () {} } }); } });
+    // the combo: a list whose choices are searched, saying its choice, the same look as a menu and a pill; one search
+    // open at a time
+    var combo = col.querySelector('[data-b="combo"]'), empty = col.querySelector('[data-b="combo-empty"]');
+    var trips = ds.picker(col.querySelector('[data-b="combopick"]'), [
+      { value: "1", label: "Lyon week-end", sub: "nov. 2026", group: "Autour de ces jours" },
+      { value: "2", label: "Rome", sub: "oct. 2026", group: "Tous les voyages" }, { value: "3", label: "Lisbonne", sub: "avr. 2025", group: "Tous les voyages" },
+      { value: "new", label: "Nouveau voyage…", group: "Autres choix" }], { placeholder: "Chercher un voyage…", limit: 8, opener: combo,
+      onPick: function (x) { trips.close(); combo.querySelector(".combo-value").textContent = x.label; } });
+    var unsorted = ds.picker(col.querySelector('[data-b="combopick-empty"]'), items, { placeholder: "Chercher une catégorie…", limit: 8, opener: empty,
+      onPick: function (x) { unsorted.close(); empty.classList.remove("is-empty"); empty.querySelector(".combo-value").textContent = x.group + " › " + x.label; } });
     var banks = ds.picker(col.querySelector('[data-b="banks"]'), null, { placeholder: "Chercher une banque…", first: POPULAR, limit: 8,
       opener: col.querySelector('[data-b="addbank"]'), empty: "Aucune banque ne correspond.",
       onPick: function (x) { ds.toast({ type: "info", text: (x.sub ? "Renouveler " : "Connecter ") + x.label + "…" }); } });

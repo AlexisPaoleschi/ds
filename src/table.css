@@ -53,7 +53,7 @@
   .selbar-n:has(+ .selbar-sum:not(:empty)) { margin-right: 0; }
   .selbar-sum { margin-right: auto; color: var(--dim); font: 500 var(--fs-13)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
   .selbar-sum:empty { display: none; }
-  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background-color: var(--panel); }
   .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
   .selbar-x { order: 2; }
   /* a phone: the pills on their own line, as wide as each other, a little less padding */

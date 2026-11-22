@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.7.0 · 22 novembre 2026
+
+Un seul style pour toute liste qui s’ouvre : le cadre et le fond d’un champ, le chevron fin du sprite à droite.
+
+- Un menu (`select`) perd la flèche que chaque navigateur dessine à sa façon : il prend le chevron du sprite (`--chev-faint`, dans le gris discret de chaque thème).
+- La pastille (`.pill`) prend le cadre et le fond d’un champ, son texte en encre, et le même chevron à la place du « ▾ » écrit ; allumée (`.is-on`), son chevron est doré.
+- Nouveau `.combo` : une liste dont on cherche les choix (`ds.picker` dessous, ouvert par lui), qui dit son choix, du même style. `.is-empty` quand rien n’est choisi (le « À classer » de Bank, en tirets dorés), `.is-compact` dans les lignes d’une liste serrée. Bank y passe sa catégorie et son voyage.
+- Le chevron du titre de période passe de 12 à 16 px : à côté d’un titre de 28 px, il se voyait à peine.
+- `--chev` : le chevron du sprite en masque, pour qui veut dessiner une liste qui s’ouvre.
+
 ## 4.6.0 · 22 novembre 2026
 
 Les icônes au milieu de leurs mots, partout où l’audit du 22 novembre en a trouvé de travers (mesuré dans Chromium, à 375 et 1280 px, avant et après).

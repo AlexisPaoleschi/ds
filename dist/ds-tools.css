@@ -1,24 +1,39 @@
-/* ds 4.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
-/* The pill: a short menu that says its choice (« 12 mois ▾ », « Récentes d’abord ▾ »). The real <select> lies over it,
+/* ds 4.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
+   field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
    <label class="pill"><span class="pv"></span><select>…</select></label>. ds.pills writes the choice in .pill-value.
    A filter in use is lit in gold (.is-on; on its own for a .pill.is-filter whose menu holds a value). In a card's title
    (.ct) it sits on the right. */
   .pill { --pill-size: var(--btn-size); --pill-py: var(--s-8); --pill-px: var(--s-12); --pill-ls: 0;
     position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; min-height: var(--btn-h); padding: var(--pill-py) var(--pill-px);
-    border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer;
+    gap: var(--s-8); border: 1px solid var(--field-line); border-radius: var(--r-m); color: var(--ink); background: var(--field-bg); cursor: pointer;
     font: var(--btn-weight) var(--pill-size)/var(--lh-tight) var(--body); letter-spacing: var(--pill-ls); text-transform: none; }
-  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); background: var(--field-bg); }
+  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); --pill-ls: var(--ls-036); }
   .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pill .pill-value::after { content: " ▾"; content: " ▾" / ""; color: var(--faint); font-size: var(--fs-11); }
+  .pill::after, .combo::after { content: ""; flex: none; width: var(--ico-s); height: var(--ico-s); background: var(--faint);
+    -webkit-mask: var(--chev) center / contain no-repeat; mask: var(--chev) center / contain no-repeat; }
   /* 16px, the least that keeps an iPhone from zooming in on the menu it opens */
   .pill select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font-size: var(--fs-16); }
-  @media (hover: hover) { .pill:hover { color: var(--ink); border-color: var(--line-2); } }
-  /* .pill.is-on takes the chosen gold (chosen.css) */
+  @media (hover: hover) { :is(.pill, .combo):hover { border-color: var(--line-2); } }
+  /* .pill.is-on takes the chosen gold (chosen.css), its chevron too */
+  .pill.is-on::after { background: currentColor; }
   /* the menu is unseen: the pill shows where the keyboard is */
   .pill:has(select:focus-visible):where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); }
   [data-theme="vitrine"] .pill:has(select:focus-visible) { border-color: var(--accent); box-shadow: var(--field-halo); }
   .pills { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6); }
+/* The combo: a list whose choices are searched (ds.picker under it, opened by it), saying its choice: the same look as a
+   menu and a pill. <button type="button" class="combo" aria-haspopup="listbox"><span class="combo-value">Loisirs ›
+   Restaurant</span></button>. Nothing chosen yet (Bank's « À classer »): .is-empty, in gold dashes. In a dense list's
+   rows (Bank's operations): .is-compact, smaller. */
+  .combo { display: inline-flex; align-items: center; gap: var(--s-8); max-width: 100%; min-width: 0; box-sizing: border-box; min-height: var(--control-h); padding: 0 var(--field-px);
+    font: var(--field-weight) var(--field-size)/var(--field-lh) var(--body); letter-spacing: var(--field-ls); text-align: left; text-transform: none;
+    color: var(--ink); background: var(--field-bg); border: 1px solid var(--field-line); border-radius: var(--r-m); cursor: pointer; }
+  .combo-value { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .combo[aria-expanded="true"] { border-color: var(--line-2); }
+  .combo.is-empty { color: var(--accent-text); background: none; border-style: dashed; border-color: var(--accent-line); }
+  .combo.is-empty::after { background: currentColor; }
+  .combo.is-compact { min-height: 0; gap: var(--s-4); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; border-radius: var(--r-s); }
   .ct .pill { margin-left: auto; }
 
 /* The search picker: a field to type in, then the choices that match it, one tap away (Bank: a bank to connect, a
@@ -80,7 +95,7 @@
   /* the chevron that says the title opens a picker: the sprite's chevron-down (<svg class="ico chev">), small and on the
      title's middle; a « ▾ » in text, which no ds font draws, sat on the big title's base line, 3px low (icon audit,
      22 November 2026) */
-  .periodtitle > .ico { align-self: center; width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
+  .periodtitle > .ico { align-self: center; width: var(--ico-m); height: var(--ico-m); color: var(--faint); }
   /* the middle of the title's line is not its capitals' middle: in Vitrine's capitals (Gilda) the chevron goes up by
      0.075em of the title (2px at 28px); in Atelier, a month in small letters is fine, a year alone in figures on a phone
      gets 0.06em (measured in Chromium, 22 November 2026) */

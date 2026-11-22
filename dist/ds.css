@@ -1,4 +1,4 @@
-/* ds 4.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -100,6 +100,10 @@
   --o-off: .38; --o-muted: .75;
   /* icons: small (a row's, a figure's unit), medium (a button's) */
   --ico-s: 12px; --ico-m: 16px;
+  /* the chevron of every list that opens (a menu, a pill, a search's button): the sprite's chevron-down (icons.js), 1px
+     wide at 12px, as a mask that takes the colour of its ground; a native menu, which has no ::after, takes it as a
+     picture in its theme's quiet grey (--chev-faint) */
+  --chev: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   /* the least a finger can aim at */
   --touch-target: 44px;
   /* the room a phone keeps at its edges (its notch, its bar) */
@@ -127,6 +131,7 @@
   --bg: var(--night-900); --panel: var(--night-800); --panel-2: var(--night-700);
   --line: var(--night-600); --line-2: var(--night-500);
   --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
+  --chev-faint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238892a0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   --accent: var(--gold-500); --accent-soft: color-mix(in srgb, var(--gold-500) 12%, transparent);
   --accent-line: color-mix(in srgb, var(--gold-500) 35%, transparent); --accent-strong: color-mix(in srgb, var(--gold-500) 50%, transparent);
   /* the gold of a word: the gold itself, in both themes; a theme could darken it alone */
@@ -243,6 +248,7 @@
   --line: color-mix(in srgb, var(--gold-500) 20%, transparent); --line-2: var(--gold-500); --pop-line: var(--line);
   /* the site's two greys: 85% for what is read, 60% for what stays quiet */
   --ink: var(--coal-900); --dim: color-mix(in srgb, var(--coal-900) 85%, transparent); --faint: color-mix(in srgb, var(--coal-900) 60%, transparent);
+  --chev-faint: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231a1a1a' stroke-opacity='.6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   /* the gold of alexispaoleschi.com, the reference every colour is matched to; its darker gold on hover, and for a success */
   --accent: var(--gold-500); --accent-soft: color-mix(in srgb, var(--gold-500) 5%, transparent); --accent-line: var(--gold-500); --accent-strong: var(--gold-600);
   /* a word in gold keeps the site's gold, and a word on gold its white, a choice made knowing they read less on white (2.2:1) */
@@ -362,6 +368,11 @@
   input::placeholder, textarea::placeholder { color: var(--faint); }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */
   :where(input:not([type=checkbox], [type=radio], [type=range], [type=file], [type=color], [type=hidden], [type=image]), select:not([multiple], [size])) { box-sizing: border-box; height: var(--control-h); }
+/* a menu looks like every list that opens (a pill, a search's button, .combo): a field, the sprite's chevron on its
+   right instead of the browser's arrow, which each browser draws its own way (« un seul look pour la combo box »,
+   22 November 2026) */
+  select:where(:not([multiple], [size])) { appearance: none; padding-right: calc(var(--field-px) + var(--ico-s) + var(--s-8));
+    background-image: var(--chev-faint); background-repeat: no-repeat; background-position: right var(--field-px) center; background-size: var(--ico-s); }
 /* the boxes to tick: in the accent, the same size everywhere */
   input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
   /* under a finger, a little bigger */
@@ -944,7 +955,7 @@
   .selbar-n:has(+ .selbar-sum:not(:empty)) { margin-right: 0; }
   .selbar-sum { margin-right: auto; color: var(--dim); font: 500 var(--fs-13)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
   .selbar-sum:empty { display: none; }
-  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background: var(--panel); }
+  .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background-color: var(--panel); }
   .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
   .selbar-x { order: 2; }
   /* a phone: the pills on their own line, as wide as each other, a little less padding */
