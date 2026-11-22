@@ -94,6 +94,27 @@
   });
   var SPANS = [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]];
   // a period: the period selector, in the title's place for it (on the right)
+  /* a list in its window (.sheet.is-list): a model's posts, 24 on Patreon, 3 on X, 1 on Bluesky; the window keeps its
+     height from one network to the other, its head stays while the list scrolls */
+  each("listopen", function (btn) {
+    var card = btn.closest(".card"), el = card.querySelector('[data-studio="listsheet"]'), rows = card.querySelector('[data-studio="listrows"]');
+    var counts = { patreon: 24, x: 3, bluesky: 1 }, s = ds.sheet(el);
+    function draw(net) {
+      var items = [];
+      for (var i = 0; i < counts[net]; i++) {
+        var li = node("li"), t = node("span", "row-title", pick(KINDS, i + net.length) + " · Irina");
+        t.append(node("small", null, ds.date(addDays(today, -i * 9 - 2), { day: "numeric", month: "short", year: "numeric" })));
+        li.append(t, node("span", "row-value", "×" + (0.4 + rnd(i + 3) * 2).toFixed(1).replace(".", ",")));
+        items.push(li);
+      }
+      rows.replaceChildren.apply(rows, items);
+      el.querySelector(".sheet-list").scrollTop = 0;
+    }
+    card.querySelector('[data-studio="listnets"]').replaceWith(ds.periodPick(null, [["patreon", "Patreon · 24"], ["x", "X · 3"], ["bluesky", "Bluesky · 1"]],
+      { value: "patreon", label: "Réseau", onPick: draw }));
+    draw("patreon");
+    btn.addEventListener("click", function (e) { s.open(e.currentTarget); });
+  });
   each("period", function (holder) {
     holder.replaceWith(ds.periodPick(null, SPANS, { value: 90, onPick: function (v) { ds.toast({ type: "info", text: "Période : " + SPANS.filter(function (s) { return s[0] === v; })[0][1] }); } }));
   });

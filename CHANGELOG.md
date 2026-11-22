@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.11.0 · 22 novembre 2026
+
+Une fenêtre qui montre une liste garde sa taille : changer d’onglet ne la fait plus grandir ni rétrécir.
+
+- Nouveau `.sheet.is-list` : une fiche (`ds.sheet`) qui montre une liste, comme les posts d’une personne réseau par réseau dans Studio. Sur un ordinateur, elle fait 720 px de large (`--read-l`) au lieu de 560, et toute sa hauteur (86 % de l’écran) dès qu’elle s’ouvre ; sur un téléphone, toute la largeur et 88 % de la hauteur. Son haut (`.sheet-head` : la ligne, le titre, les onglets, les chiffres) reste en place, seule sa liste (`.sheet-list`) défile dessous, jusqu’aux bords de la fenêtre ; la croix reste dans son coin.
+- La fiche d’une opération de Bank, un formulaire, ne change pas : 560 px, et la hauteur de ce qu’elle montre.
+- `ds.sheet` dit ce qu’il rend aussi : `el` (le voile) et `panel` (sa `.sheet-panel`).
+- Page vitrine : « Une liste dans sa fenêtre », 24 posts, 3 ou 1 selon le réseau ; `checks/showcase.js` vérifie, sur un ordinateur et un téléphone, que la hauteur ne bouge pas et que le haut reste quand la liste défile.
+
 ## 4.10.0 · 22 novembre 2026
 
 Les pictogrammes du site en trois tailles, comme les icônes en quatre : 24, 32 et 48 px.

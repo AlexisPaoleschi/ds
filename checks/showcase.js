@@ -124,6 +124,29 @@ async function tools(b, base) {
   const sk = await p.evaluate(c => { const a = document.querySelector('[data-anchor="agenda-atelier"]'), r = a.getBoundingClientRect(); return [r.top >= -2 && r.top < innerHeight / 2, a.classList.contains('is-lit')]; }, col);
   assert(ro[0] === '#analyse/patreon-alexis?compte=hb' && ro[1] === 'analyse / patreon-alexis · {"compte":"hb"}' && ro2 === '—' && sk.join() === 'true,true',
     'page vitrine, ds.route et ds.seek : un lien lu par ds.route, l’adresse vidée par ds.route.go ; l’agenda retrouvé et allumé ' + JSON.stringify([ro, ro2, sk]));
+  // a list in its window (.sheet.is-list, 4.11.0): as high from one network to the other, 720px wide on a computer, the
+  // whole width on a phone; its head stays while its list scrolls
+  for (const [w, h] of [[1440, 900], [375, 812]]) {
+    const q = w === 1440 ? p : await b.newPage({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true });
+    if (q !== p) { await q.goto(base + '/index.html'); await q.waitForLoadState('networkidle'); await q.waitForTimeout(600); }
+    await q.click(col + '[data-studio="listopen"]');
+    const sel = col + '[data-studio="listsheet"]';
+    await q.waitForFunction(s => !document.querySelector(s).hidden, sel);
+    await q.evaluate(s => Promise.all(document.querySelector(s + ' .sheet-panel').getAnimations().map(a => a.finished)), sel);
+    const at = () => q.evaluate(s => { const el = document.querySelector(s), pn = el.querySelector('.sheet-panel'), r = pn.getBoundingClientRect(), hd = el.querySelector('.sheet-head').getBoundingClientRect(), ls = el.querySelector('.sheet-list');
+      return { w: Math.round(r.width), h: Math.round(r.height), head: Math.round(hd.top), rows: el.querySelectorAll('.sheet-list li').length, scroll: ls.scrollTop, tall: ls.scrollHeight > ls.clientHeight, page: pn.scrollTop }; }, sel);
+    const a1 = await at();
+    await q.evaluate(s => { document.querySelector(s + ' .sheet-list').scrollTop = 300; }, sel); await q.waitForTimeout(100);
+    const a2 = await at();
+    if (w === 1440) await q.click(sel + ' .periodpick button:has-text("Bluesky")'); else await q.selectOption(sel + ' .periodpick select', 'bluesky');
+    await q.waitForTimeout(150);
+    const a3 = await at();
+    await q.keyboard.press('Escape');
+    const ok = a1.rows === 24 && a1.tall && a2.scroll > 0 && a2.head === a1.head && a2.page === 0 && a3.rows === 1 && a3.h === a1.h && a3.w === a1.w
+      && (w === 1440 ? a1.w === 720 : a1.w === w);
+    assert(ok, `page vitrine, une liste dans sa fenêtre (${w}px) : même hauteur d’un réseau à l’autre, son haut reste quand sa liste défile, ${w === 1440 ? '720px de large' : 'toute la largeur'} ` + JSON.stringify([a1, a2, a3]));
+    if (q !== p) await q.close();
+  }
   // the live feed: linked, an event received, then stopped
   await p.click(col + '[data-tools="stream"]');
   await p.waitForFunction(c => /Reçu : Bonjour/.test(document.querySelector(c + '[data-tools="streamed"]').textContent), col, { timeout: 5000 }).catch(() => {});

@@ -1,4 +1,4 @@
-/* ds 4.10.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.11.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
    field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
@@ -232,6 +232,16 @@
     background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); color: var(--ink); outline: none; }
   /* in its veil: a window in the middle, the room of a page of reading, scrolling inside when it is longer than the screen */
   .sheet > .sheet-panel { width: min(var(--read-s), 100%); max-height: 86vh; max-height: 86dvh; box-shadow: var(--shadow-sheet); animation: sheet-pop var(--t-mid) ease-out; }
+  /* a sheet that shows a list (Studio: a person's posts, network by network): wider, and as high as it can be from the
+     start, so that a tab or a shorter list changes nothing around it; its head (.sheet-head: the line, the title, the
+     tabs, the figures) stays, only its list (.sheet-list) scrolls under it, out to the window's edges:
+     <div class="sheet is-list"><div class="sheet-panel"><button class="sheet-close">…<div class="sheet-head">…<div class="sheet-list">… */
+  .sheet.is-list > .sheet-panel { display: flex; flex-direction: column; width: min(var(--read-l), 100%); height: 86vh; height: 86dvh; overflow: hidden; }
+  .sheet.is-list > .sheet-panel > .sheet-close { position: absolute; top: var(--s-10); right: var(--s-10); margin: 0; }
+  .sheet.is-list .sheet-head { flex: none; }
+  .sheet.is-list .sheet-head > :is(.sheet-sub, .sheet-t) { margin-right: calc(var(--btn-icon-h) + var(--s-8)); }
+  .sheet.is-list .sheet-list { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain;
+    margin: 0 calc(-1 * var(--sheet-pad)) calc(-1 * var(--sheet-pad)); padding: 0 var(--sheet-pad) var(--sheet-pad); }
   /* the cross sits in the corner, clear of the room inside, and stays there while a long sheet scrolls under it;
      the title wraps beside it */
   .sheet-close { --sheet-x-at: calc(var(--s-10) - var(--sheet-pad)); position: sticky; top: var(--sheet-x-at); z-index: var(--z-raise); float: right;
@@ -273,6 +283,9 @@
 @media (max-width: 768px) {
   /* the whole width, rising from the bottom, clear of an iPhone's bar */
   .sheet { align-items: flex-end; justify-content: stretch; padding: 0; }
+  .sheet.is-list > .sheet-panel { height: 88vh; height: 88dvh; }
+  .sheet.is-list .sheet-list { margin-right: calc(-1 * (var(--sheet-pad) + var(--safe-right))); margin-bottom: calc(-1 * (var(--sheet-pad) + var(--safe-bottom)));
+    padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); }
   .sheet > .sheet-panel { width: 100%; max-height: 88vh; max-height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
     padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
   .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }

@@ -1,4 +1,4 @@
-/* ds 4.10.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.11.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -383,7 +383,8 @@
   window.ds.trouble = trouble;
 })();
 /* ds.sheet(el, {onOpen, onClose}): the sheet of src/sheet.css, its veil el (<div class="sheet" hidden>) around its
-   .sheet-panel. Returns {open(from), close(), toggle(), isOpen}; called again on the same el, it gives the same sheet.
+   .sheet-panel. Returns {open(from), close(), toggle(), isOpen, el, panel} (el the veil, panel its .sheet-panel); called again
+   on the same el, it gives the same sheet.
    Opening it moves the focus into the panel, and Tab stays there; closing gives the focus back to what had it (or to
    from, e.g. the row that opened it). Escape, a click on the veil, its cross (.sheet-close) or a [data-sheet-close] close
    it: the last one opened first, and a window of ds.confirm over it keeps its own Escape. On a phone the page behind
