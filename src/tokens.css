@@ -108,8 +108,9 @@
   --page-site: 1200px;
   /* reading widths: a short form or a band's words, a page of text, a page's introduction, a hero's words */
   --read-s: 560px; --read-m: 640px; --read-l: 720px; --read-xl: 900px;
-  /* a list in its window (.sheet.is-list): its height on a computer, at most 86% of the screen */
-  --sheet-list-h: 640px;
+  /* a window (.sheet) on a computer, always of this size, at most 86% of the screen's height; a phone's is its width
+     and 88% of its height */
+  --sheet-w: var(--read-l); --sheet-h: 640px;
   /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
      as each other; read by fixed elements, so 100% is the screen's width */
   --tabbar-w: min(calc(100% - 40px), 420px);

@@ -144,13 +144,13 @@ function stylesheets() {
   assert(p1.pv === 'Tous les comptes' && !p1.on && p1.over && p1.seen === '0' && p2.pv === 'Revolut' && p2.on && !p3.on,
     'la pilule dit le choix de son menu, posé dessus sans se voir ; un filtre en service s’allume ' + JSON.stringify([p1, p2, p3]));
 
-  // the sheet, on a computer: a window in the middle of the screen (measured once it has come in)
+  // the sheet, on a computer: a window in the middle of the screen, of its one size (measured once it has come in)
   const slid = () => p.waitForTimeout(450);
   await p.click('#open');
   await slid();
   const sh1 = await p.evaluate(() => { const panel = document.querySelector('#sheet .sheet-panel'), r = panel.getBoundingClientRect();
-    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-close').getAttribute('aria-label') }; });
-  assert(sh1.open && sh1.focus && sh1.w === 560 && Math.abs(sh1.gap) <= 1 && sh1.top > 0 && sh1.bottom > 0 && sh1.x === 'Fermer', 'la fiche s’ouvre en fenêtre au milieu, le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
+    return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), h: Math.round(r.height), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-close').getAttribute('aria-label') }; });
+  assert(sh1.open && sh1.focus && sh1.w === 720 && sh1.h === 640 && Math.abs(sh1.gap) <= 1 && sh1.top > 0 && sh1.bottom > 0 && sh1.x === 'Fermer', 'la fiche s’ouvre en fenêtre au milieu, de sa taille fixe (720 × 640), le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
   await p.focus('#last-act');
   await p.keyboard.press('Tab');
   const t1 = await p.evaluate(() => document.activeElement.classList.contains('sheet-close'));

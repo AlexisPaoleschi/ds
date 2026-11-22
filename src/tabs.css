@@ -13,6 +13,11 @@
   .tabs > label:has(input:focus-visible) { outline: var(--focus); outline-offset: var(--focus-offset); }
   .tabs.is-icons > :is(button, a, label) { display: inline-grid; place-items: center; --tab-py: var(--s-4); --tab-px: var(--s-8); }
   .tabs.is-icons .ico { display: block; }
+  /* .tabs.is-scroll: tabs that stay on one line and scroll sideways when they do not fit (a phone), a little tighter
+     from a laptop down, so that more fit before they scroll (Studio's analysis, a person's networks) */
+  .tabs.is-scroll { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; box-sizing: border-box; }
+  .tabs.is-scroll > :is(button, a, label) { flex: none; white-space: nowrap; }
+  @media (max-width: 1280px) { .tabs.is-scroll { --tab-px: var(--s-10); } .tabs.is-scroll > :is(button, a, label) { letter-spacing: 0; } }
   @media (hover: hover) { .tabs > :is(a, label):not([aria-current="page"]):not([aria-current="true"]):not(:has(input:checked)):hover { color: var(--accent-text); } }
 /* a page's main views (Bank: Comptes, Opérations, Analyse, Voyages; Studio: Agenda, Analyse) in <div class="tabs is-bar">,
    each button holding <svg class="ico"> and <span class="tl">: in the header with their names on a computer; on a phone,

@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.12.0 · 23 novembre 2026
+
+Toutes les fenêtres ont la même taille, et des onglets qui défilent sur le côté sont les mêmes partout.
+
+- Toute fiche (`.sheet`) fait 720 × 640 px sur un ordinateur (nouveaux jetons `--sheet-w` et `--sheet-h`, qui remplacent `--sheet-list-h`), 86 % de la hauteur de l’écran au plus, et 88 % de sa hauteur sur un téléphone, quoi qu’elle montre : choisir des dates, un onglet ou une liste plus courte ne la fait plus bouger, elle défile à l’intérieur. Avant, une fiche faisait 560 px de large et la hauteur de ce qu’elle montrait. La petite fenêtre qui pose une question (`ds.confirm`) ne change pas.
+- Une fiche qui montre une liste (`.sheet.is-list`) garde ses actions (`.sheet-acts`) en bas, toujours en vue, après sa liste qui défile : le nouveau voyage de Bank, son bouton « Enregistrer ».
+- Nouveau `.tabs.is-scroll` : des onglets qui restent sur une ligne et défilent sur le côté quand ils ne tiennent pas (un téléphone), un peu plus serrés à partir d’un portable (1280 px). Ce sont ceux que Studio dessinait lui-même en haut de l’analyse.
+- `ds.periodPick` prend l’option `tabs` (`.periodpick.is-tabs`) : sur un téléphone, il garde ses onglets, ceux qui défilent, au lieu du menu, et amène le choisi en vue. Sans elle rien ne change : les périodes de Bank gardent leur menu sur un téléphone.
+- Page vitrine : la liste dans sa fenêtre a ses quatre réseaux en onglets qui défilent ; `checks/showcase.js` vérifie, sur un téléphone, les onglets à la place du menu, sur une ligne dans la fenêtre, et le dernier choisi en vue.
+
 ## 4.11.1 · 22 novembre 2026
 
 Une fenêtre qui montre une liste est moins haute sur un ordinateur.

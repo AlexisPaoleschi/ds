@@ -98,7 +98,7 @@
      height from one network to the other, its head stays while the list scrolls */
   each("listopen", function (btn) {
     var card = btn.closest(".card"), el = card.querySelector('[data-studio="listsheet"]'), rows = card.querySelector('[data-studio="listrows"]');
-    var counts = { patreon: 24, x: 3, bluesky: 1 }, s = ds.sheet(el);
+    var counts = { patreon: 24, x: 3, bluesky: 1, instagram: 0 }, s = ds.sheet(el);
     function draw(net) {
       var items = [];
       for (var i = 0; i < counts[net]; i++) {
@@ -107,11 +107,12 @@
         li.append(t, node("span", "row-value", "×" + (0.4 + rnd(i + 3) * 2).toFixed(1).replace(".", ",")));
         items.push(li);
       }
+      if (!items.length) items.push(node("li", "empty-note", "Aucun post Instagram pour l’instant."));
       rows.replaceChildren.apply(rows, items);
       el.querySelector(".sheet-list").scrollTop = 0;
     }
-    card.querySelector('[data-studio="listnets"]').replaceWith(ds.periodPick(null, [["patreon", "Patreon · 24"], ["x", "X · 3"], ["bluesky", "Bluesky · 1"]],
-      { value: "patreon", label: "Réseau", onPick: draw }));
+    card.querySelector('[data-studio="listnets"]').replaceWith(ds.periodPick(null, [["patreon", "Patreon · 24"], ["x", "X · 3"], ["bluesky", "Bluesky · 1"], ["instagram", "Instagram · 0"]],
+      { value: "patreon", label: "Réseau", tabs: true, onPick: draw }));
     draw("patreon");
     btn.addEventListener("click", function (e) { s.open(e.currentTarget); });
   });

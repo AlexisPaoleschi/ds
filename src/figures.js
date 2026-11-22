@@ -8,10 +8,12 @@
      tone}]: tone "good", "bad" or "mid" colours the figure.
    ds.verdict(holder, ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(holder, options, {value, onPick, label}): a period selector: buttons on a computer, the design system's
-     menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value, label]];
-     value: the one lit; onPick(value) is called with the chosen one, the selector lights it itself. Called again on the
-     same holder, it gives the same selector back, lit on the value given. */
+   ds.periodPick(holder, options, {value, onPick, label, tabs}): a period selector: buttons on a computer, the design
+     system's menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value,
+     label]]; with tabs, a phone keeps the buttons too, the tabs that scroll sideways (.tabs.is-scroll), the lit one
+     brought into view (a person's networks, like the analysis's tabs above them in Studio); value: the one lit;
+     onPick(value) is called with the chosen one, the selector lights it itself. Called again on the same holder, it
+     gives the same selector back, lit on the value given. */
 (function () {
   "use strict";
   var _ = window.ds._, el = _.el, find = _.find;
@@ -73,12 +75,18 @@
     return put(holder, v);
   }
 
+  function inView(group) {
+    var b = group.querySelector('[aria-pressed="true"]');
+    if (!b || group.scrollWidth <= group.clientWidth) return;
+    var n = group.getBoundingClientRect(), r = b.getBoundingClientRect();
+    if (r.left < n.left || r.right > n.right) group.scrollLeft += r.left + r.width / 2 - (n.left + n.width / 2);
+  }
   function periodPick(holder, options, o) {
     o = o || {};
     holder = find(holder);
     var had = holder && holder._dsPeriodPick;
     if (had) { if (o.value !== undefined) had.light(o.value); return had.el; }
-    var pick = o.onPick, label = o.label || words().period, box = el("span", "periodpick"), group = el("div", "tabs");
+    var pick = o.onPick, label = o.label || words().period, box = el("span", o.tabs ? "periodpick is-tabs" : "periodpick"), group = el("div", o.tabs ? "tabs is-scroll" : "tabs");
     // on a phone, the menu: what is chosen in words, the phone's own picker under it
     var list = el("select"), shown = el("span", "pill-value"), menu = el("label", "pill periodpick-list", [shown, list]);
     group.setAttribute("role", "group");
@@ -88,6 +96,8 @@
       [].forEach.call(group.children, function (b) { b.setAttribute("aria-pressed", b.dataset.value === String(v) ? "true" : "false"); });
       list.value = String(v);
       shown.textContent = list.selectedIndex < 0 ? "" : list.options[list.selectedIndex].textContent;
+      // tabs that scroll: the lit one in view, once drawn, without moving the page
+      if (o.tabs) requestAnimationFrame(function () { inView(group); });
     }
     function choose(v) {
       var opt = options.filter(function (x) { return String(x[0]) === String(v); })[0];
