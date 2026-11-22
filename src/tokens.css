@@ -179,7 +179,7 @@
   --card-title-size: var(--fs-17); --card-title-ls: var(--title-ls); --card-gap: var(--s-8);
   --card-meta-size: var(--fs-12); --card-meta-weight: 500; --card-meta-ls: var(--ls-caps); --card-meta-lh: var(--lh-ui);
   /* a message: a sentence in a box, with its icon */
-  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: var(--s-2);
+  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: calc((1lh - var(--msg-icon)) / 2);
   /* a passing message */
   --toast-weight: 500; --toast-py: var(--s-8); --toast-pl: var(--s-14); --toast-pr: var(--s-8);
   /* the smallest corner: a swatch, a small bar */

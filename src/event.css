@@ -203,7 +203,7 @@
   .organizer-links, .model-links { display: flex; gap: var(--s-24); }
   .organizer-links { margin-top: var(--s-16); }
   .model-links { margin-top: var(--s-24); }
-  .organizer-link-icon, .model-link-icon { width: 18px; height: 18px; }
+  .organizer-link-icon, .model-link-icon { width: var(--ico-m); height: var(--ico-m); }
   /* Portfolio */
   .organizer-portfolio { margin: var(--s-80) 0 0; padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .portfolio-title { margin-bottom: var(--s-12); font-family: var(--display); font-size: var(--fs-32); font-weight: 400; letter-spacing: var(--ls-094);

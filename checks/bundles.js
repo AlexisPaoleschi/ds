@@ -38,6 +38,7 @@ function widths() {
 
 // the icons: four sizes and no other (--ico-s 12px, --ico-sm 14px, --ico-m 16px, --ico-l 20px, 4.9.0); no icon of ds
 // sized in pixels, a message's icon one of them too (the charts' pictures are not icons)
+const PICTOGRAMS = ['.feature-icon', '.location-pin-icon', '.location-dest-icon', '.transport-note-icon', '.include-icon', '.contact-icon', '.landscape-warning-icon', '.signup-banner-icon', '.social-icon'];
 function iconSizes() {
   const wrong = [];
   const tokens = read('src/tokens.css');
@@ -48,7 +49,11 @@ function iconSizes() {
     const css = read('src/' + f).replace(/\/\*[\s\S]*?\*\//g, '');
     for (const m of css.matchAll(/([^{}]+)\{([^{}]*)\}/g)) {
       const sel = m[1].trim();
-      if (!/(\.ico|svg)\b/.test(sel) || /chart-/.test(sel)) continue;
+      // an icon: .ico, an svg, or a class of its own named for one (.scroll-arrow, .social-banner-icon); the site's large
+      // pictograms (24px and more: a feature, a place, a contact) wait for a decision of their own
+      const last = sel.split(',').map(x => x.trim().split(/[\s>+~]+/).pop());
+      const named = last.some(x => /\.[\w-]*(-icon|-arrow)\b/.test(x));
+      if ((!/(\.ico|svg)\b/.test(sel) && !named) || /chart-/.test(sel) || last.every(x => PICTOGRAMS.some(k => x.includes(k)))) continue;
       for (const d of m[2].matchAll(/(?<![\w-])(width|height)\s*:\s*([^;]+)/g)) if (/\d(px|em|rem)\b/.test(d[2])) wrong.push(f + ': ' + sel + ' ' + d[1] + ': ' + d[2].trim());
     }
   }

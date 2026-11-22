@@ -1,4 +1,4 @@
-/* ds 4.9.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.9.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -196,7 +196,7 @@
   --card-title-size: var(--fs-17); --card-title-ls: var(--title-ls); --card-gap: var(--s-8);
   --card-meta-size: var(--fs-12); --card-meta-weight: 500; --card-meta-ls: var(--ls-caps); --card-meta-lh: var(--lh-ui);
   /* a message: a sentence in a box, with its icon */
-  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: var(--s-2);
+  --msg-align: flex-start; --msg-py: var(--s-10); --msg-px: var(--s-12); --msg-gap: var(--s-8); --msg-size: var(--note-size); --msg-icon: var(--ico-sm); --msg-icon-top: calc((1lh - var(--msg-icon)) / 2);
   /* a passing message */
   --toast-weight: 500; --toast-py: var(--s-8); --toast-pl: var(--s-14); --toast-pr: var(--s-8);
   /* the smallest corner: a swatch, a small bar */
@@ -437,7 +437,8 @@
   header.top.is-loading .busy { visibility: visible; }
   header.top .busy .busy-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   header.top .busy .busy-share { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
-  header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; }
+  /* its disc on the middle of the name's capitals (1.1px low before, 22 November 2026) */
+  header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; translate: 0 -0.1em; }
   header.top .busy .busy-ok svg { fill: none; height: var(--ico-s); stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: var(--ico-s); }
   header.top.is-loaded .busy { visibility: visible; animation: okfade 1.9s ease forwards; }
   header.top.is-loaded .busy .spin, header.top.is-loaded .busy .busy-share { display: none; }
@@ -700,6 +701,8 @@
     letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
+  /* in vitrine, on the middle of its capitals (+0.6 to +1px low before, 22 November 2026) */
+  [data-theme="vitrine"] .card-meta svg { translate: 0 -0.06em; }
   .card-meta svg { flex: none; width: var(--ico-m); height: var(--ico-m); color: var(--accent); }
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */

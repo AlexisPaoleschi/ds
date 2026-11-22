@@ -35,7 +35,7 @@
   .icons-g { margin: var(--s-16) 0 var(--s-8); font: 600 var(--fs-12)/var(--lh-tight) var(--body); color: var(--accent-text); }
   .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: var(--s-10) var(--s-8); }
   .icons div { display: flex; align-items: center; gap: var(--s-8); font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--dim); }
-  .icons .ico { width: 18px; height: 18px; color: var(--ink); }
+  .icons .ico { width: var(--ico-l); height: var(--ico-l); color: var(--ink); }
   .theme > h2 { margin: 0; font: 800 var(--fs-22)/var(--lh-tight) var(--display); }
   .theme > h2 small { display: block; margin-top: var(--s-4); font: 500 var(--fs-13)/var(--lh-ui) var(--body); color: var(--dim); }
   .row { display: flex; flex-wrap: wrap; gap: var(--s-8); align-items: center; }
@@ -148,7 +148,7 @@
     <section class="card" data-demo-foldcard><h3 class="ct">Une carte qui se plie</h3><p class="note">Un clic sur son titre la plie, Entrée ou Espace aussi ; l’appareil s’en souvient (ds.foldCard).</p></section>
     <div class="periodhead">
       <div class="periodleft"><button class="periodtitle" type="button"><h3>Novembre <span class="periodtitle-year">2026</span></h3><svg class="ico caret" aria-hidden="true"><use href="#i-chevron-down"/></svg></button></div>
-      <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent">‹</button><button class="btn" type="button">Aujourd’hui</button><button class="btn is-icon" type="button" aria-label="Suivant">›</button></div>
+      <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent"><svg class="ico" aria-hidden="true"><use href="#i-chevron-left"/></svg></button><button class="btn" type="button">Aujourd’hui</button><button class="btn is-icon" type="button" aria-label="Suivant"><svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg></button></div>
     </div>
     <div class="periodpop">
       <div class="row"><button type="button" aria-pressed="true">Ce mois-ci</button><button type="button">Le mois dernier</button><button type="button">Cette année</button></div>
@@ -236,11 +236,11 @@
     <div class="card"><h3 class="ct">Une tête de période stable · .periodhead.is-steady</h3>
       <div class="periodhead is-steady" data-tools="steady">
         <div class="periodleft"><button class="periodtitle" type="button"><h3>Mai <span class="periodtitle-year">2026</span></h3><svg class="ico caret" aria-hidden="true"><use href="#i-chevron-down"/></svg></button></div>
-        <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent">‹</button><button class="btn is-icon" type="button" aria-label="Suivant">›</button></div>
+        <div class="periodnav"><button class="btn is-icon" type="button" aria-label="Précédent"><svg class="ico" aria-hidden="true"><use href="#i-chevron-left"/></svg></button><button class="btn is-icon" type="button" aria-label="Suivant"><svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg></button></div>
       </div>
       <div class="periodhead is-steady" data-tools="steady">
         <div class="periodleft"><button class="periodtitle" type="button"><h3>2026</h3><svg class="ico caret" aria-hidden="true"><use href="#i-chevron-down"/></svg></button></div>
-        <div class="periodnav"><button class="btn is-icon is-off" type="button" aria-label="Précédent">‹</button><button class="btn is-icon is-off" type="button" aria-label="Suivant">›</button></div>
+        <div class="periodnav"><button class="btn is-icon is-off" type="button" aria-label="Précédent"><svg class="ico" aria-hidden="true"><use href="#i-chevron-left"/></svg></button><button class="btn is-icon is-off" type="button" aria-label="Suivant"><svg class="ico" aria-hidden="true"><use href="#i-chevron-right"/></svg></button></div>
       </div>
       <p class="note">Les flèches gardent leur place quand elles ne mènent nulle part : choisir une période ne fait rien bouger sous le titre (les opérations de Bank).</p>
     </div>
@@ -395,8 +395,8 @@
       <div class="row"><button class="btn is-icon" type="button" data-studio="version"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button><button class="btn" type="button" data-studio="version-new">Annoncer une nouvelle version</button></div>
       <ul class="rows" data-studio="keep" style="margin-top: var(--s-14)"></ul>
     </div>
-    <div class="msg is-good"><span class="ico">✓</span><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
-    <div class="msg is-bad"><span class="ico">!</span><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
+    <div class="msg is-good"><svg class="ico" aria-hidden="true"><use href="#i-check"/></svg><span class="txt"><b>Synchronisé.</b> 3 comptes lus.</span></div>
+    <div class="msg is-bad"><svg class="ico" aria-hidden="true"><use href="#i-alert"/></svg><span class="txt"><b>BoursoBank n’a pas répondu.</b> <small>Nouvel essai dans 10 minutes.</small></span></div>
     <div class="toasts">
       <div class="toast is-busy" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Lecture des banques… 4/7</span><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
       <div class="toast is-good" role="status"><span class="mark" aria-hidden="true"></span><span class="txt">Loisirs › Restaurant pour Tik Tak</span><button type="button" class="act">Annuler</button><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>

@@ -1,5 +1,17 @@
 # Changelog
 
+## 4.9.1 · 22 novembre 2026
+
+Les icônes du kit du site que 4.9.0 n’avait pas vues (leur taille était écrite sur une classe à elles, pas sur `.ico`), et les dernières icônes à 1 px de leurs mots.
+
+- Sur l’échelle : la flèche « défiler » de l’accueil (20 et 16 px, déjà sur l’échelle, maintenant par ses jetons), l’icône d’un grand bouton de l’accueil (20 px, 18 → 16 px sur tablette), celle d’un bandeau des réseaux et celle du lien d’un organisateur ou d’un modèle (18 → 16 px), celle d’un point fort d’une carte d’événement (14 px).
+- Les grands pictogrammes du site (24 à 80 px : un point fort, un lieu, un contact, les réseaux de l’accueil, le téléphone couché) restent à leur taille en attendant une décision ; le contrôle les nomme un par un.
+- `checks/bundles.js` voit aussi une icône nommée par sa classe (`-icon`, `-arrow`), plus seulement `.ico` et `svg`.
+- En Vitrine, l’icône d’une méta de carte (`.card-meta svg`) monte de 0,06em, sur le milieu de ses capitales (elle était 0,6 à 1 px trop bas, sur un téléphone surtout).
+- La coche du bandeau, une fois les sources lues (`.busy-ok`), monte de 0,1em, sur le milieu des capitales du nom de l’appli (1,1 px trop bas).
+- En Atelier, l’icône d’un message durable (`.msg .ico`) est au milieu de sa première ligne (`--msg-icon-top` la calcule), plus 2 px sous son haut : elle était 0,6 à 0,9 px trop haut.
+- Page vitrine : les flèches des périodes et les marques des messages sont celles de la planche, plus des caractères tapés ; la grille des icônes les montre à 20 px.
+
 ## 4.9.0 · 22 novembre 2026
 
 Les icônes en quatre tailles, et aucune autre, dans ds comme dans les applis : 12, 14, 16 et 20 px. Jusqu’ici, ds n’en nommait que deux (12 et 16) et ses composants en écrivaient neuf autres en pixels (de 11 à 20).

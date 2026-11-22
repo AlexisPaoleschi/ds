@@ -15,7 +15,7 @@
   .event-card-highlight { display: inline-flex; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--s-14); font-family: var(--body);
     font-size: var(--fs-12); font-weight: 500; line-height: var(--lh-tight); letter-spacing: var(--ls-083); text-transform: uppercase;
     color: var(--faint); background: var(--band); border: 1px solid var(--line); }
-  .event-card-highlight-icon { flex-shrink: 0; width: 14px; height: 14px; color: var(--accent); }
+  .event-card-highlight-icon { flex-shrink: 0; width: var(--ico-sm); height: var(--ico-sm); color: var(--accent); }
   /* Models */
   .event-card-models { display: flex; flex-wrap: wrap; gap: var(--s-20); }
   .event-card-model { display: flex; align-items: center; gap: var(--s-10); }

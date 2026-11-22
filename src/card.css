@@ -64,6 +64,8 @@
     letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
+  /* in vitrine, on the middle of its capitals (+0.6 to +1px low before, 22 November 2026) */
+  [data-theme="vitrine"] .card-meta svg { translate: 0 -0.06em; }
   .card-meta svg { flex: none; width: var(--ico-m); height: var(--ico-m); color: var(--accent); }
   /* A card with a cover photo, as the site's events and Selecta's galleries: the photo in 16:9 with its badge on it
      and the gold line under it, then the card's title, details and text. A card you click (.is-link) rises and its photo grows. */

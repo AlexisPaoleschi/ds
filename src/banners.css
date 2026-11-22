@@ -10,7 +10,7 @@
     letter-spacing: var(--ls-107); text-transform: uppercase; color: var(--ink); }
   .social-banner-text { margin-bottom: var(--s-32); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
   .social-banner-links { display: flex; justify-content: center; gap: var(--s-24); }
-  .social-banner-icon { width: 18px; height: 18px; }
+  .social-banner-icon { width: var(--ico-m); height: var(--ico-m); }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
     .social-banner, .testimonials-banner { padding: 0 var(--s-24); }
