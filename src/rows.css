@@ -70,8 +70,14 @@
   .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
   .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
   /* a short line of its own in a row, under what is above it, in small, its colour a tone (a trip's « Remboursé 120 € »,
-     .row-note.tone.is-good, 4.25.0) */
-  .row-note { display: block; font-size: var(--fs-12); }
+     .row-line.tone.is-good, 4.26.1; .row-note is an operation's note, in gold italics) */
+  .row-line { display: block; font-size: var(--fs-12); }
+  /* a line break inside a row, on a phone only (Studio's day: its title and whose it is on the first line, the person,
+     the place and the time on the second): <i class="row-break"></i>, the page ordering what goes on each line (4.26.1) */
+  ul.rows li > .row-break { display: none; }
+@media (max-width: 768px) {
+  ul.rows li > .row-break { display: block; flex: 0 0 100%; height: 0; }
+}
   /* figures each behind its small icon (a post's likes, replies, reposts, views), in a row's place or at its end, the
      same in a list, an agenda's day and a sheet: <span class="figs"><span class="fig" title="40 likes"><svg class="ico">…
      </svg>40</span>…</span> (Studio's) */

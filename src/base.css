@@ -108,4 +108,6 @@
   .tone.is-gold { color: var(--accent-text); }
   .tone.is-ink { color: var(--ink); }
   .tone.is-strong { color: var(--ink); font-weight: 600; }
+/* a country's flag, an emoji, in the body's font so that a line in mono still draws it (4.26.1) */
+  .flag { font-family: var(--body); }
   .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }

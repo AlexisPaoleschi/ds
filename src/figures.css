@@ -21,6 +21,8 @@
   .rank-t { overflow: hidden; color: var(--ink); font-size: var(--fs-14); font-weight: 600; line-height: var(--lh-text); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
   /* a name given as a node (a person's link, a name and its tag) keeps the name's colour, in gold under the pointer */
   .rank-t a { color: inherit; text-decoration: none; }
+  /* a tag in a ranking's line stays upright and whole (a member's « Offert », 4.26.1) */
+  .rank-t .tag { flex: none; font-style: normal; }
   a.rank-t:hover, .rank-t a:hover { color: var(--accent-text); }
   .rank-name small { overflow: hidden; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
   /* the share of the first's value, as a thin bar under the name */

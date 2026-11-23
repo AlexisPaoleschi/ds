@@ -130,3 +130,7 @@
 .auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
 /* The design system's lasting message, centred in the form. */
 .auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
+/* a gallery's cover on a computer: taller, more room, a larger title */
+@media (min-width: 769px) {
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); --hero-t-size: var(--fs-36); }
+}

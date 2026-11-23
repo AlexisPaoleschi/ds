@@ -17,6 +17,11 @@
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  /* a quieter cell (an operation's category beside its name, 4.26.1) */
+  .tbl td.is-quiet { color: var(--faint); font-size: var(--fs-13); }
+  /* a cell's small line under its figure, in gold (« prévu 28 nov. »), or beside it (.is-inline: « · à publier ») (4.26.1) */
+  small.cell-note { display: block; font-size: var(--fs-11); color: var(--accent); }
+  small.cell-note.is-inline { display: inline; margin-left: var(--s-6); }
   /* a row that goes on from the one above it (an operation's category under it, 4.26.0): no room above, close to it */
   .tbl tr.is-cont > td { padding-top: 0; }
   .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -125,7 +130,7 @@
     gap: var(--s-4) var(--s-10); align-items: start; padding: var(--s-10) 0; border-top: 1px solid var(--line); }
   .tbl.is-cards tr:not(:has(> .tbl-ck)) { grid-template-columns: [main-start] minmax(0, 1fr) [main-end end-start] auto [end-end]; }
   .tbl.is-cards td { display: block; min-width: 0; padding: 0; border: 0; grid-column: main-start / end-end; }
-  .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; }
+  .tbl.is-cards td.tbl-ck { grid-column: ck; grid-row: 1; width: auto; padding-top: calc(var(--s-2) / 2); }
   .tbl.is-cards td.tbl-ck > input { display: inline-block; }
   .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
   .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }

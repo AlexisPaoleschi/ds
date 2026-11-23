@@ -15,8 +15,10 @@
   .section-head .section-sub { margin: 0 0 var(--s-48); color: var(--accent-text);
     font: 400 var(--section-sub-size)/var(--title-lh) var(--body); letter-spacing: var(--section-sub-ls); text-transform: uppercase; }
   /* a block of its own, not the row of an app's footer */
-  .site-footer { display: block; padding: var(--footer-py) var(--s-20); text-align: center; background: var(--band); border-top: 1px solid var(--line); }
+  .site-footer { display: block; padding: var(--footer-py) calc(var(--s-20) + var(--safe-right)) calc(var(--footer-py) + var(--safe-bottom)) calc(var(--s-20) + var(--safe-left)); text-align: center; background: var(--band); border-top: 1px solid var(--line); }
   .site-footer p { margin: 0 0 var(--s-16); color: var(--faint); font: var(--text-weight) var(--footer-size)/var(--title-lh) var(--body); letter-spacing: var(--footer-ls); }
+  /* its words a little spaced (Selecta's, 4.26.1) */
+  .site-footer.is-spaced { --footer-ls: var(--ls-loose); }
   .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-32); }
   .site-footer a { color: var(--accent-text); text-decoration: none; font: 400 var(--footer-size)/var(--title-lh) var(--body); letter-spacing: var(--footer-ls); transition: color var(--t-fast) ease; }
   @media (hover: hover) { .site-footer a:hover { color: var(--accent-strong); } }

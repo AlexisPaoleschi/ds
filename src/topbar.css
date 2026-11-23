@@ -32,3 +32,11 @@
   /* on a phone, what is marked .is-wide leaves the bar: the site puts its links and its action in its own menu */
   .topbar .is-wide { display: none; }
 }
+/* a compact bar, for an app on a public theme (Selecta): less room, its name in ink, smaller than the site's (4.26.1) */
+  .topbar.is-compact { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-size: var(--text-lg); --brand-ls: var(--ls-loose); --brand-color: var(--ink); }
+@media (min-width: 769px) {
+  .topbar.is-compact { --topbar-px: var(--space-lg); }
+}
+@media (max-width: 480px) {
+  .topbar.is-compact { --topbar-gap: var(--s-8); }
+}

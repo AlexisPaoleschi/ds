@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.26.1 · 23 novembre 2026
+
+Les derniers ajustements que les applis faisaient sur les pièces de ds passent dans ds, et une erreur de 4.25.0 est réparée.
+
+- 4.25.0 avait appelé `.row-note` la courte ligne d’une ligne de liste, alors que ds avait déjà ce nom pour la note d’une opération (en or et en italique) : les notes de Bank étaient passées à 12px. Elle s’appelle `.row-line`, et les notes sont revenues comme avant.
+- `.tbl td.is-quiet` (une cellule plus discrète), `small.cell-note` et `.is-inline` (la petite ligne d’une cellule, en or), la case d’un tableau en cartes alignée sur la première ligne du texte, `.flag` (un drapeau dans la police du texte), une étiquette droite dans un classement (`.rank-t .tag`), `.row-break` (un retour à la ligne dans une ligne de liste, sur un téléphone).
+- `.topbar.is-compact` (une barre plus serrée, son nom en encre : celle de Selecta), `.site-footer.is-spaced` (ses mots un peu espacés), le pied de page tient compte de l’encoche et de la barre d’accueil d’un iPhone, et la couverture d’une galerie a sa taille sur un ordinateur (`.hero.gallery-cover`).
+- Bank et Studio n’ajustent plus rien eux-mêmes ; Selecta ne garde que ce que ses consignes lui donnent : la hauteur de ses contrôles et le ton de ses messages.
+
 ## 4.26.0 · 23 novembre 2026
 
 Ce que Bank et Selecta dessinaient encore eux-mêmes passe dans ds : les trois applis ne dessinent plus rien à elles (Bank 0, Studio 1, Selecta 0, au lieu de 34 et 26, 19, 135).
