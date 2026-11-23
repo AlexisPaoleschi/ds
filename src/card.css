@@ -133,7 +133,7 @@
   .sum-link:focus-visible b { color: var(--accent); }
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */
-  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--type-card-title-weight) var(--type-card-title-size)/var(--title-lh) var(--type-card-title-font);
+  .card-title { margin: 0 0 var(--card-gap); padding-block: var(--title-wrap-pad); color: var(--ink); font: var(--type-card-title-weight) var(--type-card-title-size)/var(--title-wrap-lh) var(--type-card-title-font);
     letter-spacing: var(--type-card-title-ls); text-transform: var(--type-card-title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--type-caps-weight) var(--type-caps-size)/var(--card-meta-lh) var(--type-caps-font); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); }

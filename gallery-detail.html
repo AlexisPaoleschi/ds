@@ -62,6 +62,8 @@ body > main { flex: 1; width: 100%; }
 /* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
 .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
 .dashboard-card p { margin: 0; }
+/* The cards are links one rank under the page title: a section title, with a card title's room under it. */
+.dashboard-card-title { margin: 0 0 var(--card-gap); }
 /* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
 .tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
 .dashboard-section { margin-top: var(--space-xl); }
@@ -117,7 +119,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
 .form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
 /* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
 .msg { margin: 0 0 var(--space-md); }
-.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+/* As much room under the bar as above it: the grid must not touch its buttons. */
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-block: var(--space-md); }
 @media (min-width: 769px) {
   .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
 }
@@ -126,6 +129,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
   .photo-grid-toolbar #bulk-delete { margin-right: auto; }
 }
 .danger-action { margin-bottom: var(--space-md); }
+/* A delete form: its note, then its button, a form's room apart. */
+.danger-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
 .cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
 .cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
 /* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
@@ -256,7 +261,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 }
 </style></head>
 <body data-image-urls="/admin/galleries/1/image-urls"><!-- the showcase's copy of Selecta's admin-galleries-1: made by scripts/gallery-pages.py, do not edit it -->
-<header class="topbar is-solid">
+<header class="topbar is-solid is-compact">
 <div class="topbar-in">
 <a class="topbar-brand" href="#">selecta</a>
 <nav class="topbar-nav">
@@ -270,12 +275,12 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <button aria-controls="bell-panel" aria-expanded="false" aria-haspopup="true" class="topbar-icon bell-toggle" id="bell-toggle" title="Notifications" type="button">
 <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-bell"></use></svg>
 <span class="visually-hidden">Notifications</span>
-<span class="pop-count bell-count" hidden="" id="bell-count">0</span>
+<span class="pop-count bell-count" id="bell-count">1</span>
 </button>
 <div class="pop-panel bell-panel" hidden="hidden" id="bell-panel">
 <div class="pop-head bell-panel-head">
 <span class="title-3 bell-panel-title">Notifications</span>
-<button class="bell-mark-all" disabled="" id="bell-mark-all" type="button">Tout marquer comme lu</button>
+<button class="bell-mark-all" id="bell-mark-all" type="button">Tout marquer comme lu</button>
 </div>
 <ul class="bell-list" id="bell-list"></ul>
 <a class="pop-foot bell-see-all" href="#">Voir toutes les notifications</a>
@@ -301,7 +306,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 </div>
 <div class="detail-columns">
 <section class="detail-column">
-<h2 class="title-3 detail-column-title">Informations</h2>
+<h2 class="title-2 detail-column-title">Informations</h2>
 <form action="#" class="card is-ruled is-form form-card" method="post">
 <div class="field-group">
 <label class="field-label" for="name">Nom</label> <input id="name" name="name" required="required" type="text" value="Mariage Léa et Hugo"/>
@@ -315,26 +320,26 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <label class="field-label" for="maxSelectablePhotos">Photos incluses dans le forfait</label> <input id="maxSelectablePhotos" inputmode="numeric" min="1" name="maxSelectablePhotos" placeholder="Illimité" type="number" value="40"/>
 <small class="field-note">Laisser vide si le client peut sélectionner autant de photos qu'il veut.</small>
 </div>
-<div class="field-group">
-<span>Identifiant stable (Bunny)</span> <span class="slug-value">mariage-lea-hugo</span>
-</div>
-<div class="field-group">
-<span>Stockage utilisé</span> <span class="metric-inline" id="gallery-storage">137,7 MB</span>
-</div>
+<dl class="facts">
+<div><dt>Identifiant stable (Bunny)</dt>
+<dd class="is-mono">mariage-lea-hugo</dd></div>
+<div><dt>Stockage utilisé</dt>
+<dd id="gallery-storage">137,7 MB</dd></div>
+</dl>
 <div class="acts">
 <button class="btn is-save" type="submit">Enregistrer</button>
 </div>
 </form>
 </section>
 <section class="detail-column">
-<h2 class="title-3 detail-column-title">Activité récente</h2>
+<h2 class="title-2 detail-column-title">Activité récente</h2>
 <div class="card is-ruled is-form form-card gallery-activity">
 <!-- The design system's rows: a client selecting now, then each thing done, its gold dot until read. -->
 <ul class="rows gallery-activity-list">
-<li>
+<li class="is-unread">
 <span class="row-title"><span>Léa a travaillé sur sa sélection</span>
-<small>9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 photo(s) dans la sélection</small>
-<small><time title="09/11/2026 22:39">le 09/11, 22:39</time></small></span>
+<small>9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 sélectionnée(s)</small>
+<small><time title="23/11/2026 22:21">il y a 1 h</time></small></span>
 </li>
 </ul>
 <a class="go-link" href="#"><span>Voir tout l'historique de la galerie</span><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-right"></use></svg></a>
@@ -394,8 +399,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <div class="client-response">
 <section class="response-block">
 <h3 class="title-3">Sa sélection</h3>
-<div class="card is-ruled export-card" data-export-url="/admin/galleries/1/selection-export" data-str-copied="Copié !" data-str-count-template="{0} photo(s) dans la sélection" id="lightroom-export">
-<p class="export-count" id="export-count">9 photo(s) dans la sélection</p>
+<div class="card is-ruled export-card" data-export-url="/admin/galleries/1/selection-export" data-str-copied="Copié !" data-str-count-template="{0} sélectionnée(s)" id="lightroom-export">
+<p class="export-count" id="export-count">9 sélectionnée(s)</p>
 <div class="export-options">
 <label class="export-option"> <input id="export-jpeg" type="checkbox"/> <span>Ajouter .jpg</span> </label> <label class="export-option"> <input id="export-raw" type="checkbox"/> <span>Ajouter le RAW</span> </label> <input aria-label="Extension RAW" autocapitalize="characters" autocomplete="off" class="export-raw-extension" id="export-raw-extension" maxlength="8" spellcheck="false" type="text" value="CR3"/>
 </div>
@@ -449,7 +454,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <summary class="panel-head">
 <h2 class="title-2">Ajouter des photos</h2>
 </summary>
-<div class="dropzone upload-dropzone" data-bulk-delete-url="/admin/galleries/1/photos/delete" data-icon-check="/ds/icons-4.26.0.svg#i-check" data-str-delete="Supprimer" data-str-delete-all-confirm-many="Supprimer les {0} photos de cette galerie ? Cette action est irréversible." data-str-delete-all-confirm-one="Supprimer la photo de cette galerie ? Cette action est irréversible." data-str-delete-all-many="Supprimer les {0} photos" data-str-delete-all-one="Supprimer la photo" data-str-delete-selected-confirm-many="Supprimer les {0} photos cochées ? Cette action est irréversible." data-str-delete-selected-confirm-one="Supprimer la photo cochée ? Cette action est irréversible." data-str-delete-selected-many="Supprimer les {0} photos cochées" data-str-delete-selected-one="Supprimer la photo cochée" data-str-format="Format non supporté, JPEG uniquement" data-str-generic="Échec de l'envoi" data-str-heic="Format HEIC non supporté, exportez en JPEG" data-str-photos-title-template="Photos ({0})" data-str-pick="Cocher cette photo" data-str-progress-template="{0} / {1} photo(s) envoyée(s)" data-str-retry="Réessayer" data-upload-url="/admin/galleries/1/photos" id="upload-dropzone">
+<div class="dropzone upload-dropzone" data-bulk-delete-url="/admin/galleries/1/photos/delete" data-icon-check="/ds/icons-5.1.0.svg#i-check" data-str-delete="Supprimer" data-str-delete-all-confirm-many="Supprimer les {0} photos de cette galerie ? Cette action est irréversible." data-str-delete-all-confirm-one="Supprimer la photo de cette galerie ? Cette action est irréversible." data-str-delete-all-many="Supprimer les {0} photos" data-str-delete-all-one="Supprimer la photo" data-str-delete-selected-confirm-many="Supprimer les {0} photos cochées ? Cette action est irréversible." data-str-delete-selected-confirm-one="Supprimer la photo cochée ? Cette action est irréversible." data-str-delete-selected-many="Supprimer les {0} photos cochées" data-str-delete-selected-one="Supprimer la photo cochée" data-str-format="Format non supporté, JPEG uniquement" data-str-generic="Échec de l'envoi" data-str-heic="Format HEIC non supporté, exportez en JPEG" data-str-photos-title-template="Photos ({0})" data-str-pick="Cocher cette photo" data-str-progress-template="{0} / {1} photo(s) envoyée(s)" data-str-retry="Réessayer" data-upload-url="/admin/galleries/1/photos" id="upload-dropzone">
 <p>Glissez vos photos JPEG ici, ou cliquez pour les sélectionner</p>
 <label class="btn is-save"> <span>Choisir des fichiers</span> <input accept="image/jpeg" hidden="hidden" id="upload-input" multiple="multiple" type="file"/> </label>
 </div>
@@ -487,7 +492,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <div class="display-control">
 <label class="toolbar-icon photogrid-zoom" for="admin-zoom-slider" title="Taille des photos">
 <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-search"></use></svg>
-<span class="visually-hidden">Taille des photos</span> </label> <input aria-valuetext="6 colonnes" class="zoom-slider" id="admin-zoom-slider" max="3" min="0" step="1" type="range" value="2"/>
+<span class="visually-hidden">Taille des photos</span> </label> <input aria-valuetext="7 colonnes" class="zoom-slider" id="admin-zoom-slider" max="3" min="0" step="1" type="range" value="2"/>
 </div>
 </div>
 </div>
@@ -824,8 +829,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <h2 class="title-2">Zone dangereuse</h2>
 </summary>
 <button class="btn is-danger danger-action" id="bulk-delete-all" type="button">Supprimer les 36 photos</button>
-<p>La suppression d'une galerie est irréversible et supprime son association avec tous les clients.</p>
-<form action="#" data-confirm="Supprimer la galerie « Mariage Léa et Hugo » ? 1 client(s) perdront l'accès et 36 photo(s) seront définitivement supprimée(s). Cette action est irréversible." data-confirm-ok="Supprimer la galerie" method="post">
+<form action="#" class="danger-form" data-confirm="Supprimer la galerie « Mariage Léa et Hugo » ? 1 client(s) perdront l'accès et 36 photo(s) seront définitivement supprimée(s). Cette action est irréversible." data-confirm-ok="Supprimer la galerie" method="post">
+<p class="field-note">La suppression d'une galerie est irréversible et supprime son association avec tous les clients.</p>
 <button class="btn is-danger" type="submit">Supprimer la galerie</button>
 </form>
 </details>

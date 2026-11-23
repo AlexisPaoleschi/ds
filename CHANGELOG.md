@@ -1,5 +1,15 @@
 # Changelog
 
+## 5.1.0 · 23 novembre 2026
+
+- Un titre coupé sur deux lignes se lit comme un seul titre : en Vitrine, ses lignes sont espacées de 1,3 au lieu de 1,8, et l’écart rendu au-dessus et au-dessous, si bien qu’un titre d’une ligne garde exactement sa place (`.title-1`, `.title-2`, `.title-3`, `.card-title`). Deux jetons le disent, `--title-wrap-lh` et `--title-wrap-pad` ; en Atelier, rien ne change.
+- Le kit galerie, après l’étude du texte de Selecta page par page :
+  - un nom de fichier s’écrit partout en légende, sans mono : la liste « Ma sélection » (`.selection-panel-name`, 16px avant), les notes photo par photo (`.photo-note-name`) et la visionneuse (`.viewer-name`, 13px avant). Le mono reste à ce qu’on copie : l’identifiant d’une galerie (`.slug-value`, dans un tableau aussi) ;
+  - le compte d’une sélection (`.export-count`) passe des petites capitales au petit texte, comme partout ailleurs ;
+  - les détails et l’heure d’une ligne de la cloche (`.bell-item-detail`, `.bell-item-time`) passent de la légende au petit texte, comme sur la page des notifications ;
+  - le nombre de notes d’un tableau (`.notes-count`) n’est plus en gras : une valeur du tableau comme les autres.
+- `.metric-inline` et `.settings-fact` n’existent plus : Selecta montre ces valeurs par la liste de faits (`.facts`), comme ses réglages de sécurité.
+
 ## 5.0.1 · 23 novembre 2026
 
 - La petite étiquette rouge (`.late-tag`, « lecture en échec ») ne se coupe plus sur plusieurs lignes ; sur une ligne de carte trop étroite (`.sum-line`), elle passe sous le nom au lieu de le recouvrir, et un chiffre au bout de la ligne reste à droite. Dans Bank, sur un téléphone, « Compte facture » n’est plus caché sous l’étiquette, et « Compte courant » tient sur une ligne.

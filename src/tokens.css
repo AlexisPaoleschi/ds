@@ -163,6 +163,9 @@
   --brand-font: var(--display); --brand-size: 13px; --brand-weight: 800; --brand-ls: .22em; --brand-color: var(--accent);
   /* the line heights of a title, of a small heading, of running text */
   --title-lh: var(--lh-tight); --head-lh: var(--lh-ui); --text-lh: var(--lh-text);
+  /* the room between a title's lines when it wraps, and what its line box gives back above and below it: a title on one
+     line keeps its place, a title on two lines reads as one */
+  --title-wrap-lh: var(--title-lh); --title-wrap-pad: 0px;
   --stat-gap: var(--s-24);
   --lede-color: var(--dim); --check-box: 16px;
   --space-md: var(--s-16); --space-lg: var(--s-24); --space-xl: var(--s-32);
@@ -282,6 +285,7 @@
   --brand-size: 20px; --brand-weight: 400; --brand-ls: .1em; --brand-color: var(--ink);
   /* titles, and running text, with room between their lines */
   --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --text-lh: var(--lh-airy);
+  --title-wrap-lh: var(--lh-ui); --title-wrap-pad: calc((var(--lh-loose) - var(--lh-ui)) * .5em);
   --lede-color: var(--ink); --check-box: 20px;
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */

@@ -56,6 +56,8 @@ body > main { flex: 1; width: 100%; }
 /* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
 .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
 .dashboard-card p { margin: 0; }
+/* The cards are links one rank under the page title: a section title, with a card title's room under it. */
+.dashboard-card-title { margin: 0 0 var(--card-gap); }
 /* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
 .tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
 .dashboard-section { margin-top: var(--space-xl); }
@@ -111,7 +113,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
 .form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
 /* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
 .msg { margin: 0 0 var(--space-md); }
-.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+/* As much room under the bar as above it: the grid must not touch its buttons. */
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-block: var(--space-md); }
 @media (min-width: 769px) {
   .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
 }
@@ -120,6 +123,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
   .photo-grid-toolbar #bulk-delete { margin-right: auto; }
 }
 .danger-action { margin-bottom: var(--space-md); }
+/* A delete form: its note, then its button, a form's room apart. */
+.danger-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
 .cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
 .cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
 /* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
@@ -250,7 +255,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 }
 </style></head>
 <body><!-- the showcase's copy of Selecta's admin: made by scripts/gallery-pages.py, do not edit it -->
-<header class="topbar is-solid">
+<header class="topbar is-solid is-compact">
 <div class="topbar-in">
 <a class="topbar-brand" href="#">selecta</a>
 <nav class="topbar-nav">
@@ -264,12 +269,12 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <button aria-controls="bell-panel" aria-expanded="false" aria-haspopup="true" class="topbar-icon bell-toggle" id="bell-toggle" title="Notifications" type="button">
 <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-bell"></use></svg>
 <span class="visually-hidden">Notifications</span>
-<span class="pop-count bell-count" hidden="" id="bell-count">0</span>
+<span class="pop-count bell-count" id="bell-count">2</span>
 </button>
 <div class="pop-panel bell-panel" hidden="hidden" id="bell-panel">
 <div class="pop-head bell-panel-head">
 <span class="title-3 bell-panel-title">Notifications</span>
-<button class="bell-mark-all" disabled="" id="bell-mark-all" type="button">Tout marquer comme lu</button>
+<button class="bell-mark-all" id="bell-mark-all" type="button">Tout marquer comme lu</button>
 </div>
 <ul class="bell-list" id="bell-list"></ul>
 <a class="pop-foot bell-see-all" href="#">Voir toutes les notifications</a>
@@ -307,15 +312,15 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 </div>
 <div class="tile">
 <dt>Stockage utilisé</dt>
-<dd>183,5 MB</dd>
+<dd>2,1 GB</dd>
 </div>
 </dl>
 <div class="dashboard-cards">
 <a class="card is-ruled is-link dashboard-card" href="#">
-<h2 class="card-title">Clients</h2>
+<h2 class="title-2 dashboard-card-title">Clients</h2>
 <p>Gérer les comptes clients</p>
 </a> <a class="card is-ruled is-link dashboard-card" href="#">
-<h2 class="card-title">Galeries</h2>
+<h2 class="title-2 dashboard-card-title">Galeries</h2>
 <p>Gérer les galeries et leurs partages</p>
 </a>
 </div>
@@ -334,8 +339,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 </details>
 </div>
 <span class="meter"><i style="width:22%"></i></span>
-<span class="note is-faint pending-gallery-progress">9 / 40 photos sélectionnées</span>
-<span class="note is-faint pending-gallery-activity" title="09/11/2026 21:39">Dernière activité : le 09/11, 21:39</span>
+<span class="note is-faint pending-gallery-progress">9 sur 40 sélectionnée(s)</span>
+<span class="note is-faint pending-gallery-activity" title="23/11/2026 21:21">Dernière activité : il y a 2 h</span>
 </li>
 </ul>
 </section>
@@ -344,8 +349,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <ul class="rows is-cards pending-gallery-list">
 <li class="is-link pending-gallery-row">
 <a class="pending-gallery-name" href="#">Portraits Zoé</a>
-<span class="pending-gallery-clients" title="07/11/2026 23:39">Terminée le 07/11, 23:39</span>
-<span class="note is-faint pending-gallery-progress">4 photo(s) sélectionnée(s)</span>
+<span class="pending-gallery-clients" title="21/11/2026 23:21">Terminée le 21/11, 23:21</span>
+<span class="note is-faint pending-gallery-progress">4 sélectionnée(s)</span>
 </li>
 </ul>
 </section>

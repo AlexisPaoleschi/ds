@@ -1,4 +1,4 @@
-/* ds 5.0.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -180,6 +180,9 @@
   --brand-font: var(--display); --brand-size: 13px; --brand-weight: 800; --brand-ls: .22em; --brand-color: var(--accent);
   /* the line heights of a title, of a small heading, of running text */
   --title-lh: var(--lh-tight); --head-lh: var(--lh-ui); --text-lh: var(--lh-text);
+  /* the room between a title's lines when it wraps, and what its line box gives back above and below it: a title on one
+     line keeps its place, a title on two lines reads as one */
+  --title-wrap-lh: var(--title-lh); --title-wrap-pad: 0px;
   --stat-gap: var(--s-24);
   --lede-color: var(--dim); --check-box: 16px;
   --space-md: var(--s-16); --space-lg: var(--s-24); --space-xl: var(--s-32);
@@ -299,6 +302,7 @@
   --brand-size: 20px; --brand-weight: 400; --brand-ls: .1em; --brand-color: var(--ink);
   /* titles, and running text, with room between their lines */
   --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --text-lh: var(--lh-airy);
+  --title-wrap-lh: var(--lh-ui); --title-wrap-pad: calc((var(--lh-loose) - var(--lh-ui)) * .5em);
   --lede-color: var(--ink); --check-box: 20px;
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
@@ -501,7 +505,7 @@
    title, what it does on the right on a computer; a sentence under it at reading width (.lede). The spaces that grow a
    step on a computer (--space-md, --space-lg, --space-xl) set a page's room. */
   .title-1, .title-2, .title-3 { margin: 0; min-width: 0; color: var(--ink);
-    line-height: var(--title-lh); overflow-wrap: anywhere; text-wrap: balance; }
+    line-height: var(--title-wrap-lh); padding-block: var(--title-wrap-pad); overflow-wrap: anywhere; text-wrap: balance; }
   .title-1 { font-size: var(--type-title-1-size); text-transform: var(--type-title-1-case); font-family: var(--type-title-1-font); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls); }
   .title-2 { font-size: var(--type-title-2-size); font-family: var(--type-title-2-font); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
   .title-3 { font-size: var(--type-title-3-size); font-family: var(--type-title-3-font); font-weight: var(--type-title-3-weight); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
@@ -990,7 +994,7 @@
   .sum-link:focus-visible b { color: var(--accent); }
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */
-  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--type-card-title-weight) var(--type-card-title-size)/var(--title-lh) var(--type-card-title-font);
+  .card-title { margin: 0 0 var(--card-gap); padding-block: var(--title-wrap-pad); color: var(--ink); font: var(--type-card-title-weight) var(--type-card-title-size)/var(--title-wrap-lh) var(--type-card-title-font);
     letter-spacing: var(--type-card-title-ls); text-transform: var(--type-card-title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
     font: var(--type-caps-weight) var(--type-caps-size)/var(--card-meta-lh) var(--type-caps-font); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); }
@@ -1966,7 +1970,7 @@
   .viewer-bar.is-tools { z-index: 1; display: flex; flex-direction: column; gap: var(--s-4); padding: var(--space-md) calc(var(--space-md) + var(--safe-right)) calc(var(--space-md) + var(--safe-bottom)) calc(var(--space-md) + var(--safe-left));
     text-align: left; background: linear-gradient(to top, var(--overlay-black-medium), transparent); }
   .viewer-tools { display: flex; align-items: center; gap: var(--s-12); }
-  .viewer-name { flex: 1; min-width: 0; overflow: hidden; color: var(--white); font-size: var(--type-small-size); letter-spacing: var(--type-small-ls); white-space: nowrap; text-overflow: ellipsis; text-shadow: var(--shadow-pop); font-family: var(--type-small-font); font-weight: var(--type-small-weight); text-transform: var(--type-small-case); }
+  .viewer-name { flex: 1; min-width: 0; overflow: hidden; color: var(--white); font-size: var(--type-caption-size); letter-spacing: var(--type-caption-ls); white-space: nowrap; text-overflow: ellipsis; text-shadow: var(--shadow-pop); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); text-transform: var(--type-caption-case); }
   .viewer-hint { margin: 0; color: var(--overlay-white-medium); font-size: var(--type-caption-size); letter-spacing: var(--type-caption-ls); text-shadow: var(--shadow-pop); pointer-events: none; font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); text-transform: var(--type-caption-case); }
 @media (min-width: 769px) {
   .viewer-bar.is-tools { padding-right: calc(var(--space-lg) + var(--safe-right)); padding-left: calc(var(--space-lg) + var(--safe-left)); }
@@ -1981,12 +1985,12 @@
 /* The gallery kit (4.26.0): what an app that shows a photographer's galleries to clients draws, taken from Selecta as it
    drew it, so that nothing moved on its pages. Its page (main.page: a <main> only, so that no other page's .page takes its width) and its sign-in page (.auth-page, .auth-form);
    the galleries waiting (.pending-gallery-*: the name over the whole card row, its clients that fold); a row's error
-   (.row-error), an address's last part (.slug-value), a figure in a line (.metric-inline); a cover's buttons while it
+   (.row-error), an address's last part (.slug-value); a cover's buttons while it
    works (.cover-preview); a toolbar's quiet icon (.toolbar-icon); the client's tiles to choose from (.photo-select-*)
    and their heart (.like-btn, .liked, .lightbox-like, its beat); the photos chosen (.selection-panel-*); the export of a
    selection (.export-*); a tile with a note (.has-comment), the client's note (.client-note-body) and the notes on
    photos (.photo-note-*, .notes-none, .notes-count); the bell's notices (.bell-*); a slider between two icons
-   (.settings-zoom), a setting said in a sentence (.settings-fact), a filter of notices (.notification-filter); a
+   (.settings-zoom), a filter of notices (.notification-filter); a
    gallery's cover with no photo yet (.gallery-cover). */
 main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space-lg); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-lg); padding-left: calc(var(--space-md) + var(--safe-left)); }
 @media (min-width: 769px) {
@@ -2004,7 +2008,6 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .pending-gallery-clients--empty { font-style: italic; }
 .row-error { font-size: var(--type-small-size); color: var(--bad); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--type-small-size); color: var(--faint); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
-.metric-inline { font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); color: var(--ink); font-family: var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
 .cover-preview.is-busy .cover-preview-actions { opacity: 0; pointer-events: none; }
 .toolbar-icon { display: flex; align-items: center; color: var(--faint); cursor: pointer; }
 .toolbar-icon svg { display: block; width: var(--ico-m); height: var(--ico-m); }
@@ -2029,7 +2032,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
    on a phone and a tablet */
 .selection-panel-list { display: flex; flex-direction: column; gap: var(--s-6); margin: 0; padding: 0 var(--s-12) 0 0; overflow-x: hidden; overflow-y: auto; scroll-snap-type: none; scrollbar-gutter: stable; list-style: none; }
 .selection-panel-thumb { flex: 0 0 auto; width: 48px; height: 48px; object-fit: cover; }
-.selection-panel-name { display: none; flex: 1; min-width: 0; overflow: hidden; font-size: var(--type-text-size); text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+.selection-panel-name { display: none; flex: 1; min-width: 0; overflow: hidden; font-size: var(--type-caption-size); text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 @media (max-width: 1024px) {
   .selection-panel-list { flex-direction: row; gap: var(--s-12); padding: var(--s-10) var(--s-10) var(--s-4) 0; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-gutter: auto; }
   .selection-panel-thumb { width: 84px; height: 84px; }
@@ -2052,7 +2055,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
         transform: scale(1);
     }
 }
-.export-count { margin: 0; font-size: var(--type-smallcaps-size); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); font-family: var(--type-smallcaps-font); font-weight: var(--type-smallcaps-weight); }
+.export-count { margin: 0; font-size: var(--type-small-size); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); }
 .export-option { display: flex; align-items: center; gap: var(--s-8); font-size: var(--type-text-size); cursor: pointer; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 /* A short field beside a label: 8px inside, for an extension to fit in its 90px. */
 .export-raw-extension { --field-py: var(--s-8); --field-px: var(--s-10); width: 90px; letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); }
@@ -2070,10 +2073,10 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .photo-tile.has-comment { box-shadow: inset 0 0 0 1px var(--accent-strong); }
 .client-note-body { flex: 1; margin: 0; padding: var(--space-md); font-size: var(--type-text-size); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; background: var(--panel); border-left: 2px solid var(--accent-strong); border-radius: 0 var(--r-m) var(--r-m) 0; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 .photo-note-thumb { flex: 0 0 auto; width: 72px; height: 72px; object-fit: cover; background: var(--ink); }
-.photo-note-name { margin: 0 0 var(--s-4); font-family: var(--mono); font-size: var(--type-caption-size); color: var(--accent-strong); overflow-wrap: anywhere; font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+.photo-note-name { margin: 0 0 var(--s-4); font-family: var(--type-caption-font); font-size: var(--type-caption-size); color: var(--accent-strong); overflow-wrap: anywhere; font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 .photo-note-text { margin: 0; font-size: var(--type-text-size); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 .notes-none { color: var(--faint); }
-.notes-count { font-weight: var(--type-strong-weight); color: var(--ink); }
+.notes-count { color: var(--ink); }
 /* --- Bell, notifications page, settings screen. The bell is the design system's panel under a button of the top bar
    (.pop, .pop-panel, .pop-head, .pop-foot, its figure .pop-count); Selecta draws only its lines. */
 .topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--type-text-size); line-height: var(--lh-text); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); text-align: left; color: inherit; text-decoration: none; font-family: var(--type-text-font); font-weight: var(--type-text-weight); }
@@ -2085,7 +2088,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .bell-item.is-unread { background: var(--accent-soft); }
 .bell-item-title { overflow-wrap: anywhere; color: var(--ink); }
 .bell-item.is-unread .bell-item-title { font-weight: var(--type-strong-weight); }
-.bell-item-detail, .bell-item-time { font-size: var(--type-caption-size); color: var(--faint); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+.bell-item-detail, .bell-item-time { font-size: var(--type-small-size); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .bell-item-read::before { content: ''; display: block; width: 8px; height: 8px; margin: auto; background: var(--accent); border-radius: 50%; }
 @media (hover: hover) {
   .bell-item-read:hover::before { background: transparent; box-shadow: inset 0 0 0 1px var(--accent); }
@@ -2096,11 +2099,9 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .footer-link .ico { flex: none; width: var(--ico-m); height: var(--ico-m); margin-right: var(--s-8); }
 .settings-zoom { display: flex; align-items: center; gap: var(--s-8); width: 100%; min-height: 30px; color: var(--faint); }
 .settings-zoom-icon { flex: none; width: var(--ico-m); height: var(--ico-m); }
-.settings-fact { margin: 0; font-size: var(--type-text-size); color: var(--ink); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 .notification-filter { font-size: var(--type-smallcaps-size); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); text-decoration: none; color: var(--accent-strong); font-family: var(--type-smallcaps-font); font-weight: var(--type-smallcaps-weight); }
 /* On a computer, Selecta's tables sit in a card of their own (the design system's .tbl-wrap.is-card: a white panel, its
    column titles on the beige band, a row lit in beige under the pointer), every column after the first centred. */
-.tbl .slug-value { font-family: inherit; }
 /* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
    title size, its date in the hero's own small capitals; without a photo, a beige light. */
 .hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }

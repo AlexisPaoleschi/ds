@@ -3,7 +3,7 @@
    title, what it does on the right on a computer; a sentence under it at reading width (.lede). The spaces that grow a
    step on a computer (--space-md, --space-lg, --space-xl) set a page's room. */
   .title-1, .title-2, .title-3 { margin: 0; min-width: 0; color: var(--ink);
-    line-height: var(--title-lh); overflow-wrap: anywhere; text-wrap: balance; }
+    line-height: var(--title-wrap-lh); padding-block: var(--title-wrap-pad); overflow-wrap: anywhere; text-wrap: balance; }
   .title-1 { font-size: var(--type-title-1-size); text-transform: var(--type-title-1-case); font-family: var(--type-title-1-font); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls); }
   .title-2 { font-size: var(--type-title-2-size); font-family: var(--type-title-2-font); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
   .title-3 { font-size: var(--type-title-3-size); font-family: var(--type-title-3-font); font-weight: var(--type-title-3-weight); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }

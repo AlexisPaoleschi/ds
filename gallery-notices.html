@@ -56,6 +56,8 @@ body > main { flex: 1; width: 100%; }
 /* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
 .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
 .dashboard-card p { margin: 0; }
+/* The cards are links one rank under the page title: a section title, with a card title's room under it. */
+.dashboard-card-title { margin: 0 0 var(--card-gap); }
 /* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
 .tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
 .dashboard-section { margin-top: var(--space-xl); }
@@ -111,7 +113,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
 .form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
 /* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
 .msg { margin: 0 0 var(--space-md); }
-.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+/* As much room under the bar as above it: the grid must not touch its buttons. */
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-block: var(--space-md); }
 @media (min-width: 769px) {
   .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
 }
@@ -120,6 +123,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
   .photo-grid-toolbar #bulk-delete { margin-right: auto; }
 }
 .danger-action { margin-bottom: var(--space-md); }
+/* A delete form: its note, then its button, a form's room apart. */
+.danger-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
 .cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
 .cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
 /* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
@@ -250,7 +255,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 }
 </style></head>
 <body><!-- the showcase's copy of Selecta's admin-notifications: made by scripts/gallery-pages.py, do not edit it -->
-<header class="topbar is-solid">
+<header class="topbar is-solid is-compact">
 <div class="topbar-in">
 <a class="topbar-brand" href="#">selecta</a>
 <nav class="topbar-nav">
@@ -271,7 +276,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <span class="title-3 bell-panel-title">Notifications</span>
 <button class="bell-mark-all" disabled="" id="bell-mark-all" type="button">Tout marquer comme lu</button>
 </div>
-<ul class="bell-list" id="bell-list"><li class="bell-item"><a class="bell-item-body" href="#"><span class="bell-item-title">Léa a travaillé sur la galerie « Mariage Léa et Hugo »</span><span class="bell-item-detail">9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 photo(s) dans la sélection</span><time class="bell-item-time" title="09/11/2026 22:39">le 09/11, 22:39</time></a></li><li class="bell-item"><a class="bell-item-body" href="#"><span class="bell-item-title">Zoé a terminé sa sélection sur la galerie « Portraits Zoé »</span><span class="bell-item-detail">4 photo(s) dans la sélection</span><time class="bell-item-time" title="07/11/2026 23:39">le 07/11, 23:39</time></a></li></ul>
+<ul class="bell-list" id="bell-list"><li class="bell-item"><a class="bell-item-body" href="#"><span class="bell-item-title">Léa a travaillé sur la galerie « Mariage Léa et Hugo »</span><span class="bell-item-detail">9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 sélectionnée(s)</span><time class="bell-item-time" title="23/11/2026 22:21">il y a 1 h</time></a></li><li class="bell-item"><a class="bell-item-body" href="#"><span class="bell-item-title">Zoé a terminé sa sélection sur la galerie « Portraits Zoé »</span><span class="bell-item-detail">4 sélectionnée(s)</span><time class="bell-item-time" title="21/11/2026 23:21">le 21/11, 23:21</time></a></li></ul>
 <a class="pop-foot bell-see-all" href="#">Voir toutes les notifications</a>
 </div>
 </div>
@@ -295,22 +300,29 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <h1 class="title-1">Notifications</h1>
 </div>
 <section class="notification-group">
-<h2 class="eyebrow">Plus ancien</h2>
+<h2 class="eyebrow">Aujourd'hui</h2>
 <!-- The design system's card rows: one that opens is a link over the whole card (li.is-link), one not read yet
              has its gold dot (li.is-unread); its detail and its time on the lines under its title. -->
 <ul class="rows is-cards notification-list">
 <li class="is-link">
 <span class="row-title">
 <a href="#">Léa a travaillé sur la galerie « Mariage Léa et Hugo »</a>
-<small>9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 photo(s) dans la sélection</small>
-<small><time title="09/11/2026 22:39">le 09/11, 22:39</time></small>
+<small>9 photo(s) ajoutée(s) · 1 retirée(s) · 2 note(s) · 9 sélectionnée(s)</small>
+<small><time title="23/11/2026 22:21">il y a 1 h</time></small>
 </span>
 </li>
-<li class="is-link">
+</ul>
+</section>
+<section class="notification-group">
+<h2 class="eyebrow">Cette semaine</h2>
+<!-- The design system's card rows: one that opens is a link over the whole card (li.is-link), one not read yet
+             has its gold dot (li.is-unread); its detail and its time on the lines under its title. -->
+<ul class="rows is-cards notification-list">
+<li class="is-link is-unread">
 <span class="row-title">
 <a href="#">Zoé a terminé sa sélection sur la galerie « Portraits Zoé »</a>
-<small>4 photo(s) dans la sélection</small>
-<small><time title="07/11/2026 23:39">le 07/11, 23:39</time></small>
+<small>4 sélectionnée(s)</small>
+<small><time title="21/11/2026 23:21">le 21/11, 23:21</time></small>
 </span>
 </li>
 </ul>

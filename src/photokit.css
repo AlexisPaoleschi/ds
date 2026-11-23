@@ -93,7 +93,7 @@
   .viewer-bar.is-tools { z-index: 1; display: flex; flex-direction: column; gap: var(--s-4); padding: var(--space-md) calc(var(--space-md) + var(--safe-right)) calc(var(--space-md) + var(--safe-bottom)) calc(var(--space-md) + var(--safe-left));
     text-align: left; background: linear-gradient(to top, var(--overlay-black-medium), transparent); }
   .viewer-tools { display: flex; align-items: center; gap: var(--s-12); }
-  .viewer-name { flex: 1; min-width: 0; overflow: hidden; color: var(--white); font-size: var(--type-small-size); letter-spacing: var(--type-small-ls); white-space: nowrap; text-overflow: ellipsis; text-shadow: var(--shadow-pop); font-family: var(--type-small-font); font-weight: var(--type-small-weight); text-transform: var(--type-small-case); }
+  .viewer-name { flex: 1; min-width: 0; overflow: hidden; color: var(--white); font-size: var(--type-caption-size); letter-spacing: var(--type-caption-ls); white-space: nowrap; text-overflow: ellipsis; text-shadow: var(--shadow-pop); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); text-transform: var(--type-caption-case); }
   .viewer-hint { margin: 0; color: var(--overlay-white-medium); font-size: var(--type-caption-size); letter-spacing: var(--type-caption-ls); text-shadow: var(--shadow-pop); pointer-events: none; font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); text-transform: var(--type-caption-case); }
 @media (min-width: 769px) {
   .viewer-bar.is-tools { padding-right: calc(var(--space-lg) + var(--safe-right)); padding-left: calc(var(--space-lg) + var(--safe-left)); }

@@ -60,6 +60,8 @@ body > main { flex: 1; width: 100%; }
 /* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
 .dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
 .dashboard-card p { margin: 0; }
+/* The cards are links one rank under the page title: a section title, with a card title's room under it. */
+.dashboard-card-title { margin: 0 0 var(--card-gap); }
 /* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
 .tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
 .dashboard-section { margin-top: var(--space-xl); }
@@ -115,7 +117,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
 .form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
 /* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
 .msg { margin: 0 0 var(--space-md); }
-.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+/* As much room under the bar as above it: the grid must not touch its buttons. */
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-block: var(--space-md); }
 @media (min-width: 769px) {
   .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
 }
@@ -124,6 +127,8 @@ ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; g
   .photo-grid-toolbar #bulk-delete { margin-right: auto; }
 }
 .danger-action { margin-bottom: var(--space-md); }
+/* A delete form: its note, then its button, a form's room apart. */
+.danger-form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
 .cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
 .cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
 /* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
@@ -254,7 +259,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 }
 </style></head>
 <body data-image-urls="/client/galleries/1/image-urls"><!-- the showcase's copy of Selecta's client-galleries-1: made by scripts/gallery-pages.py, do not edit it -->
-<header class="topbar is-solid">
+<header class="topbar is-solid is-compact">
 <div class="topbar-in">
 <a class="topbar-brand" href="#">selecta</a>
 <nav class="topbar-nav">
@@ -309,7 +314,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <div class="display-control">
 <label class="toolbar-icon photogrid-zoom" for="zoom-slider" title="Taille des photos">
 <svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-search"></use></svg>
-<span class="visually-hidden">Taille des photos</span> </label> <input aria-valuetext="4 colonnes" class="zoom-slider" id="zoom-slider" max="3" min="0" step="1" type="range" value="2"/>
+<span class="visually-hidden">Taille des photos</span> </label> <input aria-valuetext="5 colonnes" class="zoom-slider" id="zoom-slider" max="3" min="0" step="1" type="range" value="2"/>
 </div>
 </div>
 <div class="selection-toolbar-group">
@@ -324,7 +329,7 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 </section>
 <p class="note is-faint selection-hint">Cliquez sur une photo pour l'agrandir, double-cliquez pour l'ajouter à votre sélection.</p>
 <div class="gallery-layout">
-<div class="photo-select-grid photogrid is-flush" data-comment-url-template="/client/galleries/1/photos/PHOTO_ID/comment" data-default-layout="grid" data-default-zoom="2" data-icon-close="/ds/icons-4.26.0.svg#i-close" data-locked="false" data-max="40" data-preview-url-template="/client/galleries/1/photos/PHOTO_ID/preview" data-str-count-capped-template="{0} / {1} photo(s) sélectionnée(s)" data-str-count-uncapped-template="{0} photo(s) sélectionnée(s)" data-str-generic="Une erreur est survenue, réessayez." data-str-limit="Vous avez atteint le nombre maximum de photos sélectionnables." data-str-locked="Votre sélection est terminée, rouvrez-la pour la modifier." data-str-preview-error="Impossible d'afficher cette photo en grand, réessayez." data-str-reopen="Rouvrir" data-str-select="Sélectionner cette photo" data-str-unselect="Retirer cette photo de la sélection" data-toggle-url-template="/client/galleries/1/photos/PHOTO_ID/toggle" id="photo-select-grid" style="--tile: 190px;">
+<div class="photo-select-grid photogrid is-flush" data-comment-url-template="/client/galleries/1/photos/PHOTO_ID/comment" data-default-layout="grid" data-default-zoom="2" data-icon-close="/ds/icons-5.1.0.svg#i-close" data-locked="false" data-max="40" data-preview-url-template="/client/galleries/1/photos/PHOTO_ID/preview" data-str-count-capped-template="{0} sur {1} sélectionnée(s)" data-str-count-uncapped-template="{0} sélectionnée(s)" data-str-generic="Une erreur est survenue, réessayez." data-str-limit="Vous avez atteint le nombre maximum de photos sélectionnables." data-str-locked="Votre sélection est terminée, rouvrez-la pour la modifier." data-str-preview-error="Impossible d'afficher cette photo en grand, réessayez." data-str-reopen="Rouvrir" data-str-select="Sélectionner cette photo" data-str-unselect="Retirer cette photo de la sélection" data-toggle-url-template="/client/galleries/1/photos/PHOTO_ID/toggle" id="photo-select-grid" style="--tile: 190px;">
 <div class="photo-select-tile is-pickable is-selected is-picked" data-index="0" data-photo-comment="Celle-ci en noir et blanc, s'il te plaît !" data-photo-id="1" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
 <img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="1" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1000.jpg</span>
 <button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
@@ -474,8 +479,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
 <!-- Server-rendered, not built by JS: the selection is the one thing here that must survive the script not running. -->
 <aside class="card is-ruled selection-panel" id="selection-panel">
 <div class="selection-panel-head">
-<h2 class="title-3 is-caps selection-panel-title">Ma sélection</h2>
-<p class="note is-faint selection-panel-count" id="selection-panel-count">9 / 40 photo(s) sélectionnée(s)</p>
+<h2 class="title-3 selection-panel-title">Ma sélection</h2>
+<p class="note is-faint selection-panel-count" id="selection-panel-count">9 sur 40 sélectionnée(s)</p>
 </div>
 <p class="empty-note" hidden="" id="selection-panel-empty">Aucune photo sélectionnée pour le moment.</p>
 <ul class="selection-panel-list" id="selection-panel-list">
