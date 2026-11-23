@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr" data-theme="atelier">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Réglages · Design system</title>
+<link rel="stylesheet" href="dist/ds.css">
+<link rel="stylesheet" href="dist/ds-tools.css">
+<script src="dist/ds.js" defer></script>
+<script src="dist/ds-icons.js" defer></script>
+<script src="dist/ds-tools.js" defer></script>
+</head>
+<!-- The settings page every app draws the same way (src/settings.css): its head, its jumps, its syncs (ds.jobs), its
+     settings (ds.fields and ds.switch), its connections (ds.conns) and the server's memory. The showcase's own page;
+     Bank's and Studio's take the same pieces. -->
+<body class="settings">
+<div class="wrap">
+  <header>
+    <div><p class="eyebrow"><a href="index.html">← Design system</a></p><h1>Réglages</h1></div>
+    <div class="hacts"><button class="btn" id="reload" type="button" aria-label="Recharger"><svg class="ico" aria-hidden="true"><use href="#i-refresh"/></svg></button></div>
+  </header>
+  <nav class="jump" aria-label="Aller à"><a class="pill" href="#synchros">Synchros</a><a class="pill" href="#reglages">Réglages</a><a class="pill" href="#connexions">Connexions</a></nav>
+  <div class="outrow"><p class="lede">Ce que l’appli lit, quand elle le lit, et comment elle se règle. Un passage se lance d’un clic ; son journal s’ouvre en dessous.</p>
+    <span id="switches"></span></div>
+  <section class="card" id="synchros"><h2 class="ct">Synchros</h2><div id="jobs"></div></section>
+  <section class="card" id="reglages"><h2 class="ct">Réglages</h2>
+    <form id="form"><div id="fields"></div>
+      <div class="outrow"><p class="msg" id="msg" role="status"></p><button class="btn is-save" id="save" type="submit" disabled>Enregistrer</button></div></form></section>
+  <section class="card" id="connexions"><h2 class="ct">Connexions</h2><div id="conns"></div><p class="err">Le serveur ne répond pas : la dernière lecture date d’hier (une erreur de la page, en rouge).</p><p class="mem" id="mem">Mémoire du serveur en ce moment : 182Mo sur 512.</p></section>
+</div>
+<script>
+// the showcase has no server: a sync's journal (GET /api/jobs/<key>/logs) answers from here
+var realFetch = window.fetch;
+window.fetch = function (url, o) {
+  if (/\/api\/jobs\/[^/]+\/logs/.test(String(url))) {
+    var t = Date.now() / 1000, after = +((String(url).match(/after=(\d+)/) || [])[1] || 0);
+    if (after >= 4) return Promise.resolve(new Response(JSON.stringify({ lines: [], last: 4 }), { headers: { "Content-Type": "application/json" } }));
+    return Promise.resolve(new Response(JSON.stringify({ lines: [
+      { t: t - 120, level: "INFO", text: "===== Patreon · passage de 11h00 =====" }, { t: t - 110, level: "INFO", text: "214 posts lus" },
+      { t: t - 100, level: "WARNING", text: "⚠ 2 posts sans date, laissés" }, { t: t - 90, level: "ERROR", text: "✖ Notion a refusé une ligne" }], last: 4 }),
+      { headers: { "Content-Type": "application/json" } }));
+  }
+  return realFetch.apply(this, arguments);
+};
+document.addEventListener("DOMContentLoaded", function () {
+  var wait = function (ms) { return new Promise(function (ok) { setTimeout(ok, ms); }); };
+  ds.jobs(document.getElementById("jobs"), [
+    { key: "demo-patreon", label: "Patreon · toutes les heures", state: true, when: "Dernier passage il y a 12 min · prochain dans 48 min", summary: "214 posts, 31 ventes",
+      run: function () { return wait(1200); }, own: ds.switch({ label: "Patreon", on: true, text: "En marche" }, function () { return wait(400); }) },
+    { key: "demo-socials", label: "Réseaux · toutes les 2h", state: "run", when: "Passage en cours depuis 2 min", running: true,
+      subs: ["Instagram", "X", "Bluesky"].map(function (n, i) { return ds.switch({ label: n, on: i !== 1 }, function () { return wait(400); }); }) },
+    { key: "demo-notion", label: "Notion · toutes les 5 minutes", state: false, when: "Dernier passage il y a 3 min", summary: "Notion ne répond pas", bad: true }
+  ], { logsLink: "#" });
+  document.getElementById("switches").append(ds.switch({ label: "Lecture du matin", on: true, help: "Chaque jour à 6h" }, function () { return wait(400); }));
+  var typed = { edited: {}, wrong: 0 };
+  function bar(text, cls) {
+    var n = Object.keys(typed.edited).length, m = document.getElementById("msg");
+    document.getElementById("save").disabled = !n || typed.wrong > 0;
+    m.className = "msg" + (cls ? " is-" + cls : typed.wrong ? " is-bad" : "");
+    m.textContent = text || (typed.wrong ? "Une valeur est hors des limites." : n ? ds.count(n, "réglage modifié", "réglages modifiés") + ", pas encore enregistré." : "");
+  }
+  ds.fields(document.getElementById("fields"), [
+    { group: "Patreon", key: "stale", label: "Jours avant le rouge", help: "Une modèle pas publiée depuis plus longtemps est en rouge.", value: 21, default: 21, min: 7, max: 90, unit: "jours" },
+    { group: "Patreon", key: "posts", label: "Posts par page", value: 24, default: 24, min: 6, max: 100 },
+    { group: "Réseaux", key: "every", label: "Lecture des réseaux", help: "Entre deux passages.", value: 2, default: 2, min: 1, max: 24, unit: "h" }
+  ], { onChange: function (st) { typed = st; bar(); } });
+  document.getElementById("form").addEventListener("submit", function (e) { e.preventDefault(); typed = { edited: {}, wrong: 0 }; bar("Enregistré.", "good"); });
+  var conns = ds.conns("#conns", [
+    { name: "Google", tone: "good", details: ["Agenda et tâches lus il y a 4 min"], action: { href: "#", text: "Reconnecter" } },
+    { name: "Notion", tone: "bad", details: [{ text: "Le jeton a expiré", tone: "bad" }], action: { href: "https://www.notion.so", text: "Ouvrir Notion" } }
+  ]);
+  // one more, built alone (ds.conn), as a page that adds a row
+  document.getElementById("conns").append(ds.conn({ name: "Bluesky", details: ["Pas encore relié"], action: { href: "#", text: "Relier" } }));
+});
+</script>
+</body>
+</html>

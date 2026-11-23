@@ -57,7 +57,6 @@
    header.top { gap: var(--s-6); }
    header.top .brand { letter-spacing: var(--ls-caps); }
    header.top .tabs button { padding: var(--s-8) var(--s-8); letter-spacing: 0; }
-   header.top .gear { width: 32px; height: 32px; }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok { animation: none; }

@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.22.1 · 23 novembre 2026
+
+Un tableau trié garde sa place, et la vitrine montre tout ce que ds dessine.
+
+- `ds.sortable` : un tableau redessiné après un tri (`onSort`) reste là où on l’avait fait défiler de côté, et le titre de sa colonne garde le focus ; avant, il revenait à gauche (le tableau des modèles de Studio sur un téléphone).
+- La vitrine montre chaque pièce de ds : la page de réglages (`settings.html`, ses synchros, ses réglages, ses connexions), une copie de chaque sorte de page du site dessinée par `dist/` (`site-home.html`, `site-event.html`, `site-senegal.html`, `site-events.html`, `site-newsletter.html`, `site-doc.html`, faites par `scripts/site-render.js` et `scripts/site-pages.py`, ses photos remplacées par un fond doré), et une carte « Le reste » pour ce qui n’avait pas encore sa place (l’ancien en-tête, le chargement, les lignes, le dépôt compact, la confirmation, le choix dans une liste…). Le calendrier montre un jour trop plein (« +N ») et une ligne qui compte, l’anneau une catégorie qui dit comment elle bouge et s’ouvre.
+- `checks/coverage.js` vérifie que la vitrine montre chaque classe et se sert de chaque fonction de ds.
+- `header.top .gear`, que plus aucune appli n’emploie, s’en va : un bouton d’icône garde la hauteur des autres sur un téléphone.
+
 ## 4.22.0 · 23 novembre 2026
 
 Le kit mail : un client mail ne lit ni feuille de style ni variable CSS, alors ds écrit ses valeurs en clair.

@@ -18,6 +18,21 @@
   const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }]));
   ds.password("#demo-pw", { toggle: '[data-forms="show"]', generate: '[data-forms="gen"]' });
   ds.autosave("#demo-note", { note: '[data-forms="note"]', save: v => new Promise(ok => setTimeout(() => ok(v.trim()), 300)) });
+  document.querySelectorAll('[data-rest="thumb"]').forEach(im => { im.src = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="96" height="96"><rect width="96" height="96" fill="#c9a96e"/></svg>'); });
+  const scores = [1.4, 0.8, 1.1, 2.3];
+  document.querySelector('[data-rest="figures"]').innerHTML = "Visibilité médiane " + ds.median(scores).toFixed(2) + ", moyenne " + ds.mean(scores).toFixed(2) + ", d’un mois à l’autre " + ds.delta(12).html + " et " + ds.delta(-3).html + ".";
+  document.querySelector('[data-rest="boot"]').addEventListener("click", () => {
+    const was = document.querySelector(".boot");
+    if (was) { was.hidden = false; was.classList.remove("is-gone", "is-failed"); was.querySelector(".boot-retry")?.remove(); }
+    else document.body.append(ds.h("div", { class: "boot", role: "status", "aria-live": "polite" }, [ds.h("div", {}, [ds.h("p", { class: "boot-progress" }, [ds.h("span", { class: "spin" }), "3 sur 7"]), ds.h("p", { class: "boot-title", text: "Chargement…" }), ds.h("p", { class: "boot-text" })])]));
+    ds.boot.say("Chargement…", "Lecture des comptes");
+    setTimeout(() => ds.boot.fail("Chargement impossible", "Le serveur ne répond pas.", () => { ds.boot.say("Chargement…", "Nouvel essai"); setTimeout(() => ds.boot.done(), 900); }), 1200);
+  });
+  document.querySelector('[data-rest="confirm"]').addEventListener("click", () => ds.confirm({ title: "Renommer le marchand", text: "Le nouveau nom vaut pour ses autres opérations.", value: "Boulangerie Paul", ok: "Renommer", check: { label: "Seulement cette opération" } }));
+  ds.picker('[data-rest="picker"]', [{ value: "lyon", label: "Lyon 2026", sub: "juin" }, { value: "dakar", label: "Sénégal 2027", sub: "février" }, { value: "new", label: "Nouveau voyage", cta: "Créer" }],
+    { placeholder: "Chercher un voyage…", opener: '[data-rest="pick"]', onPick: x => ds.toast({ type: "info", text: x.label }) });
+  // a card's title and a tile's figure made to fit (ds does it on its own; called here as an app may after drawing)
+  ds.fitTitles(); ds.fitFigures(document.body);
   const pkGrid = document.getElementById("pk-grid"), pkColors = ["#c9a96e", "#8a9bb0", "#b07a6a", "#7a9a7e", "#a08cb8"];
   pkColors.forEach((c, i) => {
     const img = ds.h("img", { alt: "Photo " + (i + 1), width: "300", height: i % 2 ? "400" : "220", src: "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="220"><rect width="300" height="220" fill="' + c + '"/></svg>') });
@@ -418,6 +433,24 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card" id="rest-demo"><h3 class="ct">Le reste · tout ce que ds dessine</h3>
+      <p class="note">Les pages de la vitrine : <a class="link" href="settings.html">les réglages</a>, <a class="link" href="site.html">le kit du site</a> et les pages du site telles qu’il les dessine, <a class="link" href="site-home.html">l’accueil</a>, <a class="link" href="site-event.html">un événement</a> (et <a class="link" href="site-senegal.html">un autre</a>), <a class="link" href="site-events.html">la liste des événements</a>, <a class="link" href="site-newsletter.html">la newsletter</a> et <a class="link" href="site-doc.html">un document légal</a>.</p>
+      <header class="top"><span class="busy"></span><div class="periodtitle"><span>Novembre 2026</span><span class="chev">▾</span></div>
+        <span style="position: relative; display: inline-flex"><button class="btn is-icon" type="button" aria-label="Filtres"><svg class="ico" aria-hidden="true"><use href="#i-filter"/></svg></button><span class="pip filter-pip" aria-hidden="true"></span></span>
+        <button class="btn is-icon" type="button" aria-label="Réglages"><svg class="ico" aria-hidden="true"><use href="#i-settings"/></svg></button>
+        <a class="topbar-icon" href="#" aria-label="Notifications"><svg class="ico" aria-hidden="true"><use href="#i-bell"/></svg></a></header>
+      <ul class="rows"><li><img class="row-thumb" alt="" data-rest="thumb"><span class="row-title">Loyer du studio<small>le 1er du mois</small></span><span class="row-value">800€<span class="row-sub">prélevé</span></span><span class="late-tag">en retard</span></li></ul>
+      <div class="grid-cards"><div class="card is-raised"><p class="note">Une carte parmi d’autres, côte à côte (.grid-cards)</p></div><div class="card is-raised"><p class="note">et une deuxième</p></div></div>
+      <div class="dropzone is-compact"><p>Une couverture, à glisser ici</p><div class="dropzone-acts"><button class="btn is-save" type="button">Choisir</button></div></div>
+      <div class="photo-frame" style="margin-top: var(--s-12)"><div class="photo-frame-empty"></div><div class="spinner is-medium on-photo"></div></div>
+      <div class="note is-faint upload-total"><span class="meter" role="progressbar" aria-valuenow="40" aria-label="Envoi"><i style="width: 40%"></i></span><span>2 sur 5</span></div>
+      <ul class="rows is-cards"><li style="position: relative"><img class="row-thumb" alt="" data-rest="thumb"><span class="row-title">IMG_0412.jpg</span><button class="thumb-x" type="button" aria-label="Retirer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></li></ul>
+      <div class="viewer-bar is-tools" style="position: relative; background: var(--overlay-black-strong)"><div class="viewer-tools"><span class="viewer-name">IMG_0412.jpg</span><button class="btn is-icon" type="button" aria-label="Choisir"><svg class="ico" aria-hidden="true"><use href="#i-heart"/></svg></button></div><p class="viewer-hint">Flèches pour passer d’une photo à l’autre, espace pour choisir.</p></div>
+      <p data-rest="figures"></p>
+      <p class="note"><button class="btn" type="button" data-rest="boot">Voir l’écran de chargement</button> L’écran du premier chargement (ds.boot), son fondu, son échec et son « Réessayer ».</p>
+      <p class="note"><button class="btn" type="button" data-rest="confirm">Renommer (ds.confirm)</button> une fenêtre qui demande un nom et propose une case ; <button class="btn" type="button" data-rest="pick" aria-expanded="false">Choisir un voyage</button> un sélecteur dont une option propose une action.</p>
+      <div data-rest="picker" hidden></div>
+    </div>
     <div class="card" id="photokit-demo"><h3 class="ct">Kit photo · 4.21.0</h3>
       <div class="dropzone" id="pk-drop"><p>Glisse tes photos ici</p><button class="btn is-save" type="button">Choisir des fichiers</button></div>
       <ul class="rows is-cards upload-list"><li class="upload-row"><span class="upload-row-name">IMG_0412.jpg</span><span class="meter" role="progressbar" aria-valuenow="64" aria-label="IMG_0412.jpg"><i style="width: 64%"></i></span><span class="upload-row-status"></span></li></ul>

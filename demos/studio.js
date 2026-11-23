@@ -35,6 +35,9 @@
     if ((n % 7 === 1 || n % 7 === 4) && d < 30) out.push({ title: "Pilates", mark: "bar", color: "--c-rouge", time: "18h30" });
     if (rnd(n * 19) > 0.82) out.push({ title: "Rendez-vous " + pick(["imprimeur", "comptable", "galerie Regard"], n), mark: "bar", color: "--c-bleu", time: "14h00", place: "Lyon" });
     if (rnd(n * 23) > 0.86) out.push({ title: "Shooting Katline · " + pick(MODELS, n * 29), mark: "thick", color: "--c-rose", time: "09h30", place: pick(PLACES, n + 1) });
+    // a grouped line with its count (Studio's tasks of a day), and a busy day whose cell cannot hold everything (« +N »)
+    if (d === 2) out.push({ title: "Tâches", count: 3, color: "--c-violet", codes: [{ text: "IG", color: "--c-rose", title: "Instagram" }] });
+    if (d === 3) for (var j = 0; j < 9; j++) out.push({ title: "Post " + pick(MODELS, n + j), color: pick(NETS, j)[1], codes: [{ text: pick(NETS, j)[0], color: pick(NETS, j)[1], title: pick(NETS, j)[2] }] });
     // the publications first, then the agenda in the order of its hours
     var bars = out.filter(function (it) { return it.mark; }).sort(function (a, b) { return a.time < b.time ? -1 : 1; });
     // what runs over several days (a stay, a trip): one bar across them in the month

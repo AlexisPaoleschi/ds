@@ -1,4 +1,4 @@
-/* ds 4.22.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.22.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -821,7 +821,8 @@
      it, the rows of the tbody are put in order here, by each cell's data-value or else its text, figures as figures,
      names in French order, empty cells last whichever the way.
    Returns {by, up, set(by, up)}; called again on the same table it gives the same, so a page that draws its table anew
-   (Studio) calls it again on the new one and finds its choice under key.
+   (Studio) calls it again on the new one and finds its choice under key, and the new table's box keeps the place it
+   was scrolled to sideways (a wide table, « ça me remet à gauche », 23 November 2026) and its title the focus.
    ds.selection, which picks rows, is in ds.js (selection.js) since 4.21.0: tiles of photos use it too. */
 (function () {
   "use strict";
@@ -853,10 +854,26 @@
   }
   var ISO = /^\d{4}-\d{2}(-\d{2})?/;
 
+  // a sort the page draws again: where its table's box was scrolled sideways, and whether its title had the focus, by key
+  var carry = {};
+  function scroller(t) {
+    for (var e = t.parentElement; e && e !== document.body; e = e.parentElement) if (/(auto|scroll)/.test(getComputedStyle(e).overflowX)) return e;
+    return null;
+  }
   function sortable(table, o) {
     table = find(table);
     if (!table) return null;
     if (table._dsSort) { if (o) table._dsSort.o = o; return table._dsSort; }
+    // the table drawn anew after a sort: its box goes back where the last one was, once it is on the page
+    var back = carry[(o && o.key) || ""];
+    if (back) {
+      delete carry[(o && o.key) || ""];
+      requestAnimationFrame(function () {
+        var sc = scroller(table), b = table.querySelector('thead .sort[data-sort="' + back.by + '"]');
+        if (sc) sc.scrollLeft = back.left;
+        if (back.focus && b) b.focus({ preventScroll: true });
+      });
+    }
     var s = { table: table, o: o || {}, by: null, up: false };
     table._dsSort = s;
     var saved = s.o.key ? stored(s.o.key) : null;
@@ -907,7 +924,13 @@
       s.up = !!up;
       if (s.o.key) store(s.o.key, [s.by, s.up]);
       mark();
-      if (s.o.onSort) s.o.onSort(s.by, s.up); else order();
+      if (s.o.onSort) {
+        var k = s.o.key || "", sc = scroller(table), at = document.activeElement;
+        carry[k] = { left: sc ? sc.scrollLeft : 0, by: s.by, focus: !!(at && table.contains(at)) };
+        s.o.onSort(s.by, s.up);
+        // the page sorted the rows of this same table: nothing moved
+        if (table.isConnected && carry[k]) delete carry[k];
+      } else order();
       return s;
     };
     table.addEventListener("click", function (e) {

@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+
+<html data-theme="vitrine" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- no link laid by the phone over a place, a date or a number: Safari's detection, then Chrome's on an iPhone -->
+<meta content="telephone=no, date=no, address=no, email=no" name="format-detection"/>
+<meta content="nointentdetection" name="chrome"/>
+
+
+<title>La newsletter · Kit du site · Design system</title>
+
+<link as="font" crossorigin="" href="dist/fonts/urbanist-var-latin.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="dist/fonts/gilda-display-400-latin.woff2" rel="preload" type="font/woff2"/>
+<link href="dist/ds.css" rel="stylesheet"/>
+<link href="dist/ds-site.css" rel="stylesheet"/>
+<meta content="noindex" name="robots"/></head>
+<body><!-- the showcase's copy of the site's events/newsletter/index.php: made by scripts/site-pages.py, do not edit it -->
+<div data-href="/events/" data-label="Events" id="back-button"></div>
+<header class="hero newsletter-hero" style="--hero-photo: url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E&quot;)">
+<div class="hero-in">
+<h1 class="hero-t">Newsletter</h1>
+<p class="hero-sub">Nude art photography in exceptional locations</p>
+</div>
+</header>
+<main class="newsletter-main">
+<section aria-live="polite" class="card is-ruled newsletter-card" data-email="" data-state="" data-token="" id="newsletter-card">
+<!-- One icon, always: which one a visitor gets never depends on whether
+             they were identified by a link, only on this page ever offering
+             one thing (the newsletter) rather than several. -->
+<svg aria-hidden="true" class="ico newsletter-envelope"><use href="dist/icons.svg#i-mail"></use></svg>
+<p class="newsletter-message" id="newsletter-message"></p>
+<!-- One field, one button, every state: an identified visitor's address
+             fills it read-only instead of being typed, but nothing about the
+             row itself changes shape depending on how they arrived. -->
+<form class="newsletter-form" id="newsletter-form" novalidate="">
+<div class="newsletter-field">
+<input aria-label="Email address" autocomplete="email" class="newsletter-input" id="newsletter-input" name="email" placeholder="Your email address" required="" type="email" value=""/>
+<button class="btn is-save" id="newsletter-submit" type="submit"></button>
+</div>
+<!-- Honeypot: hidden from people, filled in by bots that complete every field. -->
+<div aria-hidden="true" class="newsletter-honeypot">
+<label for="newsletter-check">Leave this field empty</label> <input autocomplete="off" id="newsletter-check" name="email_address_check" tabindex="-1" type="text"/>
+</div>
+<!-- Where the visitor stands and what a click just did, in the same
+                 words, colours and spacing as the events banner (a form child,
+                 not the card's own centered flex flow). Filled in for an
+                 identified visitor on the very first paint, so they read their
+                 status without pressing anything; newsletter.js only ever
+                 replaces it, never the message or icon above. No aria-live of
+                 its own: the card is already one, and nesting two would
+                 announce every update twice. -->
+<p class="field-note is-reserved newsletter-feedback" id="newsletter-feedback"></p>
+</form>
+<div class="newsletter-actions">
+<a class="btn is-large is-act" href="#">See the Events</a>
+</div>
+</section>
+</main>
+<div id="footer"></div>
+
+<script src="dist/ds-site.js"></script>
+
+
+<script>window.hideLoader && window.hideLoader();</script></body>
+</html>

@@ -71,7 +71,10 @@
     function drawPie() {
       var rows = spending(menu.value);
       ops.replaceChildren();
-      ds.chart.donut(pie, rows, { format: function (n) { return ds.money(n); }, center: "dépensés", onPick: function (key) {
+      // the first category says how it moved, and a chosen one opens its subcategories under its row
+      if (rows[0]) { rows[0].note = "+12 % sur un mois"; rows[0].tone = "bad"; }
+      ds.chart.donut(pie, rows, { format: function (n) { return ds.money(n); }, center: "dépensés",
+        open: function (key, holder) { holder.append(node("p", "note", "Ce que la catégorie contient, ouvert sous elle.")); }, onPick: function (key) {
         var c = rows.filter(function (r) { return r.key === key; })[0];
         ops.replaceChildren.apply(ops, c ? c.ops.map(function (o) {
           var li = node("li");
