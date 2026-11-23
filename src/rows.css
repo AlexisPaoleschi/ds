@@ -7,6 +7,10 @@
   ul.rows li, .rank li, .facts > div, :where(.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
   ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
   ul.rows li:first-child { border-top: none; padding-top: 0; }
+  /* under a ruled heading (h4.sect.is-ruled), right after it or at the top of a sheet's list whose head ends with it, the
+     first row keeps its room above the line, as the others under theirs (« l'écart en haut de la première ligne est
+     vraiment trop petit », Studio's posts, 23 November 2026) */
+  :is(h4.sect.is-ruled + ul.rows, .sheet-head:has(> h4.sect.is-ruled:last-child) + .sheet-list > ul.rows:first-child):not(.is-cards) > li:first-child:not(.rows-head) { padding-top: var(--row-py, var(--s-8)); }
   .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
   .row-place { font-size: var(--fs-13); color: var(--faint); }
   /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what

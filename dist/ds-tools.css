@@ -1,4 +1,4 @@
-/* ds 4.22.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.22.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
    field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:

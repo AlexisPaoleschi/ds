@@ -140,6 +140,11 @@ async function tools(b, base) {
     const at = () => q.evaluate(s => { const el = document.querySelector(s), pn = el.querySelector('.sheet-panel'), r = pn.getBoundingClientRect(), hd = el.querySelector('.sheet-head').getBoundingClientRect(), ls = el.querySelector('.sheet-list');
       return { w: Math.round(r.width), h: Math.round(r.height), head: Math.round(hd.top), rows: el.querySelectorAll('.sheet-list li').length, scroll: ls.scrollTop, tall: ls.scrollHeight > ls.clientHeight, page: pn.scrollTop }; }, sel);
     const a1 = await at();
+    // under the head's ruled line, the first post has as much room above it as the next ones under their hairline
+    // (« l'écart en haut de la première ligne est vraiment trop petit », 23 November 2026)
+    const gaps = await q.evaluate(s => { const el = document.querySelector(s), line = el.querySelector('.sheet-head > h4.sect.is-ruled').getBoundingClientRect().bottom;
+      return [...el.querySelectorAll('.sheet-list > ul.rows > li')].slice(0, 3).map((li, i) => Math.round(li.firstElementChild.getBoundingClientRect().top - (i ? li.getBoundingClientRect().top + 1 : line))); }, sel);
+    assert(gaps.length === 3 && gaps[0] > 0 && gaps.every(g => g === gaps[0]), `${w}px, la première ligne sous un titre souligné a la même place au-dessus que les suivantes ` + JSON.stringify(gaps));
     await q.evaluate(s => { document.querySelector(s + ' .sheet-list').scrollTop = 300; }, sel); await q.waitForTimeout(100);
     const a2 = await at();
     // the networks as tabs on a phone too (.is-tabs), on one line that scrolls sideways inside the window (.tabs.is-scroll)

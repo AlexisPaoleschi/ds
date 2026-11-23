@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.22.2 · 23 novembre 2026
+
+- Sous un titre souligné (`h4.sect.is-ruled`), juste après lui ou en haut de la liste d’une fenêtre dont le haut finit par lui, la première ligne de `ul.rows` garde sa place au-dessus, comme les suivantes sous leur filet : elle touchait presque le trait (les posts d’une modèle dans Studio). `checks/showcase.js` le mesure.
+
 ## 4.22.1 · 23 novembre 2026
 
 Un tableau trié garde sa place, et la vitrine montre tout ce que ds dessine.
