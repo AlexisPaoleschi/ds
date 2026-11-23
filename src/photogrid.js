@@ -6,7 +6,9 @@
    sizes: the widths a column may have, in px ([140, 190, 240, 300]); size: the one to start with (190); key: the device
    remembers the size chosen under it; slider: an <input type="range" class="zoom-slider"> that picks among the sizes,
    from small to large, offering only those that change the grid (a phone has fewer); masonry: false for even rows,
-   each photo cut to a square-ish tile. The tiles slide to their new places when the size changes, unless the device
+   each photo cut to a square-ish tile; layoutKey: the device remembers the layout chosen (grid or masonry) under it;
+   layouts: the element holding the layout's buttons ([data-layout="grid"] and [data-layout="masonry"], pressed for the
+   one shown), which switch it. The tiles slide to their new places when the size changes, unless the device
    asks for less motion. Returns {el, size, columns, masonry, layout(), set({size, masonry})}; called again on the same
    grid, it gives the same one. */
 (function () {
@@ -32,6 +34,11 @@
     if (want < 0) want = Math.min(1, sizes.length - 1);
     if (o.key) { var kept = sizes.indexOf(+_.read(o.key)); if (kept >= 0) want = kept; }
     var g = { el: grid, size: sizes[want], columns: 1, masonry: o.masonry !== false };
+    if (o.layoutKey) { var lk = _.read(o.layoutKey); if (lk === "grid" || lk === "masonry") g.masonry = lk === "masonry"; }
+    var switcher = _.find(o.layouts) || null;
+    function showLayout() {
+      if (switcher) [].forEach.call(switcher.querySelectorAll("[data-layout]"), function (b) { b.setAttribute("aria-pressed", String((b.getAttribute("data-layout") === "masonry") === g.masonry)); });
+    }
     grid._dsPhotogrid = g;
     grid.classList.add("photogrid");
 
@@ -122,7 +129,11 @@
         want = i;
         if (o.key) _.write(o.key, String(sizes[i]));
       }
-      if (x.masonry != null) g.masonry = !!x.masonry;
+      if (x.masonry != null) {
+        g.masonry = !!x.masonry;
+        if (o.layoutKey) _.write(o.layoutKey, g.masonry ? "masonry" : "grid");
+        showLayout();
+      }
       move(layout);
       return g;
     };
@@ -130,6 +141,13 @@
     if (slider) {
       if (!slider.hasAttribute("aria-label") && !(slider.labels && slider.labels.length && slider.labels[0].textContent.trim())) slider.setAttribute("aria-label", words().size);
       slider.addEventListener("input", function () { var i = steps[+slider.value]; if (i != null) g.set({ size: sizes[i] }); });
+    }
+    if (switcher) {
+      showLayout();
+      switcher.addEventListener("click", function (e) {
+        var b = e.target.closest && e.target.closest("[data-layout]");
+        if (b && b.getAttribute("aria-pressed") !== "true") g.set({ masonry: b.getAttribute("data-layout") === "masonry" });
+      });
     }
     if (window.ResizeObserver) new ResizeObserver(function () { if (grid.clientWidth !== lastW) soon(); }).observe(grid);
     else window.addEventListener("resize", soon);

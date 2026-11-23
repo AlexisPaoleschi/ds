@@ -51,6 +51,9 @@ function look() {
       inQuiet = fg => quiet && [0, 1, 2].every(i => Math.abs(fg[i] - quiet[i]) <= 2) && Math.abs(fg[3] - quiet[3]) <= .02;
     for (const el of col.querySelectorAll('*')) {
       const c = getComputedStyle(el); if (c.display === 'none' || c.visibility === 'hidden' || +c.opacity === 0) continue;
+      // hidden by a parent faded out (a tile's buttons on its veil, shown under the pointer)
+      let shown = true; for (let a = el.parentElement; a && a !== document.body; a = a.parentElement) if (+getComputedStyle(a).opacity === 0) { shown = false; break; }
+      if (!shown) continue;
       const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
       const own = [...el.childNodes].filter(n => n.nodeType === 3).map(n => n.textContent).join('').trim();
       if (own && !el.closest('[aria-hidden=true], .hero, .chart-heat')) {

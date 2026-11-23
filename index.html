@@ -18,6 +18,18 @@
   const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }]));
   ds.password("#demo-pw", { toggle: '[data-forms="show"]', generate: '[data-forms="gen"]' });
   ds.autosave("#demo-note", { note: '[data-forms="note"]', save: v => new Promise(ok => setTimeout(() => ok(v.trim()), 300)) });
+  const pkGrid = document.getElementById("pk-grid"), pkColors = ["#c9a96e", "#8a9bb0", "#b07a6a", "#7a9a7e", "#a08cb8"];
+  pkColors.forEach((c, i) => {
+    const img = ds.h("img", { alt: "Photo " + (i + 1), width: "300", height: i % 2 ? "400" : "220", src: "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="300" height="220"><rect width="300" height="220" fill="' + c + '"/></svg>') });
+    pkGrid.append(ds.h("div", { class: "has-tools is-pickable" + (i === 1 ? " is-busy" : ""), "data-key": String(i) }, [img,
+      ds.h("button", { type: "button", class: "box on-photo sel-box", "aria-pressed": "false", "aria-label": "Choisir" }, [ds.ico("check")]),
+      i === 3 ? ds.h("p", { class: "tile-caption", text: "Recadrer plus serré" }) : null,
+      ds.h("div", { class: "tile-acts" }, [ds.h("button", { type: "button", class: "btn is-danger", text: "Supprimer" })]),
+      ds.h("div", { class: "spinner is-medium on-photo" })]));
+  });
+  ds.photogrid(pkGrid, { sizes: [140, 190], size: 140, masonry: false });
+  ds.selection(pkGrid, { cls: "is-picked" }).set("0", true);
+  ds.dropzone("#pk-drop", { onFiles: files => ds.toast({ type: "info", text: files.length + " fichier(s) déposé(s)" }) });
   const undo = ds.undo({ undo: "#g-undo", redo: "#g-redo", key: "showcase", keys: false, run: (step, redo) => new Promise(ok => setTimeout(ok, 400)) });
   document.querySelector('[data-gestures="change"]').addEventListener("click", () => ds.toast({ key: "showcase", type: "good", text: "Catégorie enregistrée · Boulangerie Paul", action: undo.remember({ label: "Catégorie · Boulangerie Paul" }) }));
   ds.pop("#g-bell", "#g-panel");
@@ -406,6 +418,12 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card" id="photokit-demo"><h3 class="ct">Kit photo · 4.21.0</h3>
+      <div class="dropzone" id="pk-drop"><p>Glisse tes photos ici</p><button class="btn is-save" type="button">Choisir des fichiers</button></div>
+      <ul class="rows is-cards upload-list"><li class="upload-row"><span class="upload-row-name">IMG_0412.jpg</span><span class="meter" role="progressbar" aria-valuenow="64" aria-label="IMG_0412.jpg"><i style="width: 64%"></i></span><span class="upload-row-status"></span></li></ul>
+      <div class="photogrid is-flush" id="pk-grid"></div>
+      <p class="note">Une case sur chaque photo (Maj pour toute une plage), l’anneau doré des choisies, les boutons sur le voile, la roue pendant le travail, une légende au pied. Aussi : ds.upload (la file d’envoi), ds.photogrid({layoutKey, layouts}), ds.images.renew, .thumb-x, .photo-frame, .viewer-bar.is-tools.</p>
+    </div>
     <div class="card" id="gestures-demo"><h3 class="ct">Gestes · 4.20.0</h3>
       <p class="note">Ce que chaque appli écrivait pour elle : annuler, cocher tout de suite, copier, ouvrir plusieurs liens, une fenêtre sous un bouton, arriver et partir, redessiner sans perdre sa place, chercher et filtrer.</p>
       <p><button class="btn is-icon" id="g-undo" type="button" disabled><svg class="ico" aria-hidden="true"><use href="#i-undo"/></svg></button>

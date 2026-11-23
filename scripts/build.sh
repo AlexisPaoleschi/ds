@@ -13,7 +13,7 @@ marks="src/marks.css"
 controls="src/buttons.css src/tabs.css"
 surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/viewer.css src/pop.css"
 data="src/tiles.css src/meter.css src/table.css src/rows.css"
-public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css"
+public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css src/photokit.css"
 pages="src/doc.css"
 states="src/chosen.css"
 # the tools: what only Bank and Studio draw (pickers and periods, the date picker, moving by the grip, the new version,
@@ -26,7 +26,7 @@ tools_pages="src/settings.css"
 # the scripts: the core every bundle starts with, then the shared behaviours; the tools' behaviours and components in
 # ds-tools.js, after ds.js (no core of their own: they need ds.js, which has it); the photos in ds-photo.js
 js_tools="src/tools.js src/query.js src/sheet.js src/table.js src/calendar.js src/chart.js src/figures.js src/pick.js src/reorder.js src/datepick.js src/live.js"
-js_photo="src/viewer.js src/photogrid.js"
+js_photo="src/viewer.js src/photogrid.js src/photokit.js"
 # the site kit: what alexispaoleschi.com shares between its pages and no app needs, in files of their own
 css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css src/home.css src/eventslist.css src/newsletter.css src/testimonials.css"
 js_site="src/site.js"
@@ -35,7 +35,7 @@ head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, 
 { echo "$head"; cat $tools_controls $tools_surfaces $tools_data $tools_pages $states; } > dist/ds-tools.css
 # the script every app links: the core, the shared behaviours (the bubble, the window, dates and figures, the server)
 # and the small tools every app wrote for itself (kit.js)
-{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js src/gestures.js; } > dist/ds.js
+{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js src/gestures.js src/selection.js src/images.js; } > dist/ds.js
 { echo "$head"; cat $js_tools; } > dist/ds-tools.js
 # the icons' sprite, put at the top of the page by a script of its own that the browser keeps: Bank and Studio link it
 # after ds.js, and their pages keep writing <use href="#i-name"/>

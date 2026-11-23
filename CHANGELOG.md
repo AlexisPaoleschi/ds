@@ -1,5 +1,19 @@
 # Changelog
 
+## 4.21.0 · 23 novembre 2026
+
+Le kit photo : ce qu’une appli qui reçoit et montre des photos dessine autour d’elles (les galeries de Selecta).
+
+- `.dropzone` et `ds.dropzone` : le cadre en pointillé qui prend les fichiers glissés ou ouvre le choix, doré pendant le glisser (`.is-over`), son bouton d’abord et en travers sur un téléphone ; `.is-compact` pour un petit cadre à côté d’une photo.
+- `ds.upload` : une ligne par fichier (`li.upload-row`) avec sa jauge et « Réessayer », trois envois à la fois, la jauge du lot et « 3 sur 12 » (`.upload-total`), la ligne qui s’en va une fois le fichier envoyé.
+- Sur une tuile de `.photogrid` : ses boutons sur le voile au survol ou au focus, en barre au pied de la photo sur un écran tactile (`.tile-acts`) ; une case claire dans son coin (`button.box.on-photo`) ; l’anneau doré d’une photo choisie (`.is-pickable.is-picked`) ; la roue au milieu pendant le travail (`.is-busy`) ; une légende au pied (`.tile-caption`). Une photo seule dans son cadre (`.photo-frame`, une couverture).
+- `ds.selection` passe dans `ds.js` et choisit aussi des tuiles : une case à cocher ou un bouton `box`, Maj pour toute une plage, la classe de ce qui est choisi au choix (`cls`).
+- `ds.photogrid({layoutKey, layouts})` retient la disposition (grille ou mosaïque) sur l’appareil et tient son interrupteur à jour.
+- `ds.images.renew()` : une image signée qui a expiré redemande son adresse, avec toutes celles du même moment, et la remet en place sans recharger la page ; deux essais au plus.
+- `.thumb-x` : la croix qui retire une vignette, dans son coin et de la taille du doigt sur un téléphone ou une tablette, un petit rond à côté sur un ordinateur, avec la croix du sprite.
+- La barre de la visionneuse avec ses outils (`.viewer-bar.is-tools`, `.viewer-tools`, `.viewer-name`, `.viewer-hint`).
+- Selecta passe ses deux dépôts, ses envois, ses tuiles, ses cases, son anneau, sa couverture, sa croix, la barre de sa visionneuse, sa disposition retenue et ses adresses d’images dessus : sa feuille de style dessine 130 déclarations elle-même au lieu de 240.
+
 ## 4.20.0 · 23 novembre 2026
 
 Les gestes que chaque appli écrivait pour elle : annuler, chercher, filtrer, cocher, copier, ouvrir, une fenêtre sous un bouton, arriver et partir.

@@ -114,6 +114,9 @@
   /* a panel under a button of the top bar (.pop-panel, Selecta's bell): its width on a computer and its highest; the
      figure on such a button (.pop-count), a small round of this height */
   --pop-w: 380px; --pop-h: min(70vh, 560px); --count-h: 16px;
+  /* the photo kit: a file's bar in the list of files sent, a photo framed alone (a cover) and the small dropzone beside it on a computer, a button on a tile's veil at most, the gold ring of a chosen
+     photo, the light round behind a thumbnail's cross on a phone, the dark at the foot of a tile under its caption */
+  --upload-meter-w: 120px; --photo-frame-h: 220px; --tile-act-w: 170px; --pick-ring: 1px; --thumb-x-r: 11px; --caption-veil: color-mix(in srgb, var(--black) 82%, transparent);
   /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
      as each other; read by fixed elements, so 100% is the screen's width */
   --tabbar-w: min(calc(100% - 40px), 420px);
