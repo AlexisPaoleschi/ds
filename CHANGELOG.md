@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.14.0 · 23 novembre 2026
+
+Ce que Bank, Studio et Selecta dessinaient chacun à leur façon est maintenant une seule pièce du design system (le tour des différences du 23 novembre).
+
+- Les lignes de liste : un titre de ligne peut être un lien, gris dans la ligne et doré sous le pointeur (`.row-title > a`) ; les chiffres derrière leur petite icône (likes, réponses, vues) sont une pièce (`.figs`, `.fig`), la même dans une liste, un jour de l’agenda et une fenêtre. Une ligne non lue a son point doré et son titre en gras (`li.is-unread`), une ligne en cours son point qui respire (`li.is-live`) ; une ligne-carte qui s’ouvre s’éclaire sous le pointeur (`ul.rows.is-cards > li.is-link`). Le montant d’une ligne-carte passe en chiffres à chasse fixe, comme celui des autres lignes.
+- Les lignes et les paires clé/valeur (`.facts`) passent de `ds-tools.css` à `ds.css` : Selecta les a aussi.
+- Nouveau `.go-link` : le lien « vers », jumeau du lien retour, ses mots puis une flèche qui avance (« Tout Patreon Alexis → », « Voir la commande ↗ », « Tout l’historique »).
+- Nouveau `a.link` : un lien dans le texte (une personne, un jour, une opération liée), dans la couleur de ses mots, doré sous le pointeur.
+- Nouveau `button.box` : la case qu’un clic enregistre (le Planning de Studio), dessinée comme les cases à cocher, dorée une fois cochée (`aria-pressed`).
+- Nouveau `.tbl.is-dense` : un tableau serré de chiffres (les modèles de Studio, ses mois), ses cellules en chiffres discrets, sa colonne de noms (`.tbl-name`) dans la police du texte.
+- `ds.date(jour, "row")` : la date d’une ligne, « 9 nov. » cette année et « 9 nov. 2025 » sinon, dans toutes les listes de Bank et de Studio.
+- Page vitrine : « Lignes, liens et cases », toutes ces pièces ensemble.
+
 ## 4.13.0 · 23 novembre 2026
 
 Des pièces que Bank et Studio dessinaient eux-mêmes passent dans le design system, et la ligne au-dessus d’une liste est la même partout.

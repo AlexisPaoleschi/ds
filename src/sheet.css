@@ -51,17 +51,6 @@
   .sheet-acts > .btn { max-width: 100%; }
   /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
 
-/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
-   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
-  .facts { margin: 0; }
-  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
-  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
-  /* words as the bank wrote them */
-  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
-  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
-  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
-
   @keyframes sheet-veil { from { background-color: transparent; } }
   @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @keyframes sheet-up { from { transform: translateY(100%); } }
@@ -74,7 +63,6 @@
   .sheet > .sheet-panel { width: 100%; height: 88vh; height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
     padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
   .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
-  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
      does not hold the page */
   :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }

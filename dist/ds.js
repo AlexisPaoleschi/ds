@@ -1,4 +1,4 @@
-/* ds 4.13.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -398,17 +398,20 @@
   }
 
   /* ds.date(t, style): a date in words, Paris's day: "long" « 9 novembre 2026 » (the default), "weekday" « lundi 9 novembre »,
-     "month" « novembre 2026 », "short" « 09/11/26 », "day" « 9 nov. », or Intl's own options; the first of a month is
+     "month" « novembre 2026 », "short" « 09/11/26 », "day" « 9 nov. », "row" a list's date, « 9 nov. » this year and
+     « 9 nov. 2025 » before or after it (every row of Bank and Studio), or Intl's own options; the first of a month is
      « 1er » in French. A day without its time ("2026-11-09", or a month "2026-11") stays that day wherever the device is. */
   var STYLES = { long: { day: "numeric", month: "long", year: "numeric" }, weekday: { weekday: "long", day: "numeric", month: "long" },
     month: { month: "long", year: "numeric" }, short: { day: "2-digit", month: "2-digit", year: "2-digit" }, day: { day: "numeric", month: "short" } };
   function dateText(t, style) {
     if (t == null || t === "") return "";
-    var opts = Object.assign({}, typeof style === "object" ? style : STYLES[style || "long"]), d;
+    var opts = Object.assign({}, typeof style === "object" ? style : STYLES[style === "row" ? "day" : style || "long"]), d;
     var bare = typeof t === "string" && /^\d{4}-\d{2}(-\d{2})?$/.test(t);
     if (bare) { d = new Date(t.length === 7 ? t + "-15T12:00:00Z" : t + "T12:00:00Z"); opts.timeZone = "UTC"; }
     else { d = date(t); opts.timeZone = TZ; }
     if (isNaN(d.getTime())) return "—";
+    // a list's date says its year only when it is not this one
+    if (style === "row" && _.intl("DateTimeFormat", "en-GB", { timeZone: opts.timeZone, year: "numeric" }).format(d) !== window.ds.day.today().slice(0, 4)) opts.year = "numeric";
     var text = _.intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", opts).format(d);
     return english() || opts.day !== "numeric" ? text : text.replace(/(^|\s)1 (?=\D)/, "$11er ");
   }

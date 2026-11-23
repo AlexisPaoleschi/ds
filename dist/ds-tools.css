@@ -1,4 +1,4 @@
-/* ds 4.13.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
    field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
@@ -276,17 +276,6 @@
   .sheet-acts > .btn { max-width: 100%; }
   /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
 
-/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
-   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
-  .facts { margin: 0; }
-  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
-  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
-  /* words as the bank wrote them */
-  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
-  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
-  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
-
   @keyframes sheet-veil { from { background-color: transparent; } }
   @keyframes sheet-pop { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @keyframes sheet-up { from { transform: translateY(100%); } }
@@ -299,7 +288,6 @@
   .sheet > .sheet-panel { width: 100%; height: 88vh; height: 88dvh; border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
     padding-right: calc(var(--sheet-pad) + var(--safe-right)); padding-bottom: calc(var(--sheet-pad) + var(--safe-bottom)); animation-name: sheet-up; }
   .sheet-acts > .btn { flex: 1 1 0; min-width: max-content; padding-inline: var(--s-8); }
-  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
   /* while a sheet is open, the finger scrolls the sheet and the page behind stays still; one left open in a hidden view
      does not hold the page */
   :root:has(.sheet:not([hidden]):not([hidden] *)) { overflow: hidden; }
@@ -380,51 +368,6 @@
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
   @media (hover: none) { .side .frow button.filter-only { opacity: .8; } }
-/* Lists of rows: rows split by a hairline, or drawn as small cards (.is-cards), a heading over a group of them
-   (.rows-head), a row's title and its second line, place, date and figure, a row done, a row that opens, a word in a
-   palette colour, a person's tag, the late badge (.late-tag). An empty list says so with .empty-note (card.css). */
-  ul.rows { list-style: none; margin: 0; padding: 0; }
-  /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
-     settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
-  ul.rows li, .rank li, .facts > div, :where(.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
-  ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
-  ul.rows li:first-child { border-top: none; padding-top: 0; }
-  .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
-  .row-place { font-size: var(--fs-13); color: var(--faint); }
-  /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what
-     the group comes to on its right */
-  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--label-ls); padding: var(--s-24) 0 var(--s-2); text-transform: uppercase; }
-  ul.rows > li.rows-head:first-child { padding-top: var(--s-4); }
-  /* rows drawn as small cards (a trip, and what it is made of under it): each on the lighter ground, apart from the
-     next, its name and its figure a step larger */
-  ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
-  ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
-  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 700 var(--fs-15)/var(--lh-tight) var(--display); }
-  /* rows under a row (a person's lessons under the person): a dashed line between them, less room, the title smaller
-     and quieter: <ul class="rows is-sub"> inside the row */
-  ul.rows.is-sub > li { --row-py: var(--s-4); border-top-style: dashed; gap: var(--s-4) var(--s-8); }
-  ul.rows.is-sub > li:first-child { border-top: none; padding-top: var(--s-4); }
-  ul.rows.is-sub .row-title { color: var(--dim); font-size: var(--fs-13); font-weight: 500; }
-  /* a row being saved steps back until it is (--o-busy), as a table's */
-  ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
-  /* a row's second line, under its title: a detail, smaller and faint */
-  .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
-  /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
-  ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
-  /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
-  ul.rows li.is-link { cursor: pointer; }
-  @media (hover: hover) { a.row-title:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
-  /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
-  .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
-  .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
-  .late-tag { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
-  /* a list's line: its date or time, and its amount or figure */
-  .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
-  .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
-  .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
-@media (max-width: 768px) {
-    .row-value { font-size: var(--fs-12); min-width: 68px; }
-}
 /* The state of a page's sources (ds.status), in an app's footer at the end of its page. */
   details.status summary { cursor: pointer; list-style: none; display: inline-flex; align-items: center; gap: var(--s-8); }
   details.status summary::-webkit-details-marker { display: none; }

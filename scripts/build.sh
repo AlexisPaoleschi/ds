@@ -12,7 +12,7 @@ foundation="src/fonts.css src/tokens.css src/base.css src/page.css"
 marks="src/marks.css"
 controls="src/buttons.css src/tabs.css"
 surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/viewer.css"
-data="src/tiles.css src/meter.css src/table.css"
+data="src/tiles.css src/meter.css src/table.css src/rows.css"
 public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css"
 pages="src/doc.css"
 states="src/chosen.css"
@@ -21,7 +21,7 @@ states="src/chosen.css"
 # ds-tools.css after ds.css, in the same order by role; the chosen gold closes it too, over its controls' hover
 tools_controls="src/pick.css src/period.css src/periodpick.css src/datepick.css src/reorder.css src/live.css"
 tools_surfaces="src/sheet.css src/panel.css"
-tools_data="src/rows.css src/status.css src/figures.css src/chart.css src/calendar.css"
+tools_data="src/status.css src/figures.css src/chart.css src/calendar.css"
 tools_pages="src/settings.css"
 # the scripts: the core every bundle starts with, then the shared behaviours; the tools' behaviours and components in
 # ds-tools.js, after ds.js (no core of their own: they need ds.js, which has it); the photos in ds-photo.js

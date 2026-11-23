@@ -17,7 +17,16 @@
      next, its name and its figure a step larger */
   ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
   ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
-  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 700 var(--fs-15)/var(--lh-tight) var(--display); }
+  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 600 var(--fs-15)/var(--lh-tight) var(--mono); }
+  /* a card row that opens, lit under the pointer (Selecta's galleries waiting), and one not read yet, its gold dot
+     before its title (Selecta's notifications) */
+  @media (hover: hover) { ul.rows.is-cards > li.is-link:is(:hover, :focus-within) { background: var(--row-lit); } }
+  ul.rows > li.is-unread .row-title::before { content: ""; display: inline-block; width: var(--pip-size, 7px); height: var(--pip-size, 7px);
+    margin-right: var(--s-6); border-radius: 50%; background: var(--accent); vertical-align: middle; }
+  ul.rows > li.is-unread .row-title { font-weight: 700; }
+  /* one happening right now (a client selecting in Selecta): the same dot, breathing */
+  ul.rows > li.is-live .row-title::before { animation: pulse calc(var(--t-mid) * 4) ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { ul.rows > li.is-live .row-title::before { animation: none; } }
   /* rows under a row (a person's lessons under the person): a dashed line between them, less room, the title smaller
      and quieter: <ul class="rows is-sub"> inside the row */
   ul.rows.is-sub > li { --row-py: var(--s-4); border-top-style: dashed; gap: var(--s-4) var(--s-8); }
@@ -31,7 +40,10 @@
   ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
   /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
   ul.rows li.is-link { cursor: pointer; }
-  @media (hover: hover) { a.row-title:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
+  /* a row whose name is a link and whose second line holds other links (a post's, then who is on it): the title's
+     link in the row's ink, gold under the pointer: <span class="row-title"><a href>…</a><small>…</small></span> */
+  .row-title > a { color: inherit; text-decoration: none; }
+  @media (hover: hover) { a.row-title:hover, .row-title > a:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
   /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
   .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
@@ -40,6 +52,25 @@
   .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
   .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
   .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+  /* figures each behind its small icon (a post's likes, replies, reposts, views), in a row's place or at its end, the
+     same in a list, an agenda's day and a sheet: <span class="figs"><span class="fig" title="40 likes"><svg class="ico">…
+     </svg>40</span>…</span> (Studio's) */
+  .figs { align-items: center; color: var(--dim); display: inline-flex; flex-wrap: wrap; font: 500 var(--fs-13)/var(--lh-tight) var(--mono);
+    font-variant-numeric: tabular-nums; gap: var(--s-4) var(--s-12); vertical-align: middle; }
+  .fig { align-items: center; display: inline-flex; gap: var(--s-4); white-space: nowrap; }
+  .fig .ico { height: var(--ico-sm); width: var(--ico-sm); }
+/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
+   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
+  .facts { margin: 0; }
+  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  /* words as the bank wrote them */
+  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
+
 @media (max-width: 768px) {
     .row-value { font-size: var(--fs-12); min-width: 68px; }
+  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
 }

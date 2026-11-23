@@ -73,14 +73,15 @@ function iconSizes() {
   const inJs = ids(read('dist/ds-icons.js')), inSvg = ids(read('dist/icons.svg'));
   assert(!/<symbol/.test(read('dist/ds.js')) && inJs.length === 214 && inJs.join() === inSvg.join(),
     'les icônes hors de ds.js : les 214, les mêmes dans ds-icons.js et dans icons.svg ' + JSON.stringify([inJs.length, inSvg.length]));
-  // each tools' file is in ds-tools.css or ds-tools.js, and nowhere in ds.css or ds.js; the photos' in ds-photo.js only
+  // each tools' file is in ds-tools.css or ds-tools.js, and nowhere in ds.css or ds.js; the photos' in ds-photo.js only; the
+  // tables and the lists of rows (Selecta's too, since 4.14.0) in ds.css
   const has = (dist, src) => read('dist/' + dist).includes(read('src/' + src).trim());
-  const toolsCss = ['pick', 'period', 'periodpick', 'datepick', 'reorder', 'live', 'sheet', 'panel', 'rows', 'status', 'figures', 'chart', 'calendar', 'settings'].map(n => n + '.css');
+  const toolsCss = ['pick', 'period', 'periodpick', 'datepick', 'reorder', 'live', 'sheet', 'panel', 'status', 'figures', 'chart', 'calendar', 'settings'].map(n => n + '.css');
   const toolsJs = ['tools', 'sheet', 'table', 'calendar', 'chart', 'figures', 'pick', 'reorder', 'datepick', 'live'].map(n => n + '.js');
   const misplaced = toolsCss.filter(f => has('ds.css', f) || !has('ds-tools.css', f)).concat(toolsJs.filter(f => has('ds.js', f) || !has('ds-tools.js', f)),
     ['viewer.js', 'photogrid.js'].filter(f => has('ds.js', f) || !has('ds-photo.js', f)), ['icons.js'].filter(f => has('ds.js', f) || !has('ds-icons.js', f)),
-    ['core.js', 'ds.js'].filter(f => has('ds-tools.js', f)), ['table.css'].filter(f => !has('ds.css', f) || has('ds-tools.css', f)));
-  assert(!misplaced.length, 'les outils dans ds-tools.css et ds-tools.js seulement, les tableaux dans ds.css, la visionneuse dans ds-photo.js, les icônes dans ds-icons.js, ds.js et son noyau une seule fois ' + misplaced.join(' '));
+    ['core.js', 'ds.js'].filter(f => has('ds-tools.js', f)), ['table.css', 'rows.css'].filter(f => !has('ds.css', f) || has('ds-tools.css', f)));
+  assert(!misplaced.length, 'les outils dans ds-tools.css et ds-tools.js seulement, les tableaux et les listes (4.14.0) dans ds.css, la visionneuse dans ds-photo.js, les icônes dans ds-icons.js, ds.js et son noyau une seule fois ' + misplaced.join(' '));
 
   await new Promise(ok => server.listen(0, '127.0.0.1', ok));
   const base = 'http://127.0.0.1:' + server.address().port;

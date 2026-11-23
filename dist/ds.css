@@ -1,4 +1,4 @@
-/* ds 4.13.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -389,7 +389,19 @@
 /* the boxes to tick: in the accent, the same size everywhere */
   input[type=checkbox] { accent-color: var(--accent); width: 16px; height: 16px; margin: 0; cursor: pointer; vertical-align: middle; }
   /* under a finger, a little bigger */
-  @media (pointer: coarse) { input[type=checkbox] { width: 20px; height: 20px; } }
+  @media (pointer: coarse) { input[type=checkbox], button.box { width: 20px; height: 20px; } }
+/* a box ticked by a click that saves at once (Studio's Planning), a button drawn as the boxes above, filled with the
+   accent and its tick once on: <button class="box" aria-pressed="false"><svg class="ico"><use href="#i-check"/></svg></button> */
+  button.box { display: inline-grid; place-items: center; flex: none; width: 16px; height: 16px; margin: 0; padding: 0; box-sizing: border-box; cursor: pointer;
+    background: transparent; border: 1.5px solid var(--line-2); border-radius: var(--r-xs); color: transparent; }
+  button.box .ico { width: var(--ico-s); height: var(--ico-s); stroke-width: 2.8; }
+  button.box[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  @media (hover: hover) { button.box:hover { border-color: var(--accent); } }
+  button.box.is-busy { opacity: var(--o-busy); cursor: progress; }
+/* a link inside running words (a person's name in a row's line, a day, a site): the words' own colour, gold under the
+   pointer, as a row's title: <a class="link"> */
+  a.link { color: inherit; text-decoration: none; }
+  @media (hover: hover) { a.link:hover { color: var(--accent-text); } }
 /* a field in use, on the public sites: the full gold edge and a faint gold halo, as on alexispaoleschi.com */
   :where([data-theme="vitrine"]) :where(input:not([type=checkbox]):not([type=radio]), select, textarea) { transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
   :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
@@ -965,6 +977,11 @@
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
   .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  /* a dense table of figures (Studio's people, a column a network): tighter rows, its cells in the quieter mono, flush
+     left; the name column stays in the words' font (.tbl-name) */
+  .tbl.is-dense :is(th, td) { padding: var(--s-6) var(--s-10) var(--s-6) 0; }
+  .tbl.is-dense td { color: var(--dim); font: 500 var(--fs-13)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .tbl.is-dense td.tbl-name { color: var(--ink); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
   /* money in and money out, what is fresh and what is late */
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
@@ -1069,6 +1086,82 @@
   .card .tbl.is-cards tbody tr.is-selected { box-shadow: calc(-1 * var(--card-pad)) 0 var(--accent-soft), var(--card-pad) 0 var(--accent-soft); }
   /* what only a wide screen shows stays hidden in a card too */
   .tbl.is-cards td.tbl-wide { display: none; }
+}
+/* Lists of rows: rows split by a hairline, or drawn as small cards (.is-cards), a heading over a group of them
+   (.rows-head), a row's title and its second line, place, date and figure, a row done, a row that opens, a word in a
+   palette colour, a person's tag, the late badge (.late-tag). An empty list says so with .empty-note (card.css). */
+  ul.rows { list-style: none; margin: 0; padding: 0; }
+  /* rows split by a hairline: ul.rows, and the lists of rows ds draws the same way (a ranking, a sheet's pairs of words, a
+     settings page's jobs, connections and fields), each with its own room above and below a row (--row-py) */
+  ul.rows li, .rank li, .facts > div, :where(.settings) :is(.job, .conn, .field) { border-top: 1px solid var(--line); padding-block: var(--row-py, var(--s-8)); }
+  ul.rows li { align-items: center; display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-10); }
+  ul.rows li:first-child { border-top: none; padding-top: 0; }
+  .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
+  .row-place { font-size: var(--fs-13); color: var(--faint); }
+  /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what
+     the group comes to on its right */
+  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--label-ls); padding: var(--s-24) 0 var(--s-2); text-transform: uppercase; }
+  ul.rows > li.rows-head:first-child { padding-top: var(--s-4); }
+  /* rows drawn as small cards (a trip, and what it is made of under it): each on the lighter ground, apart from the
+     next, its name and its figure a step larger */
+  ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
+  ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
+  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 600 var(--fs-15)/var(--lh-tight) var(--mono); }
+  /* a card row that opens, lit under the pointer (Selecta's galleries waiting), and one not read yet, its gold dot
+     before its title (Selecta's notifications) */
+  @media (hover: hover) { ul.rows.is-cards > li.is-link:is(:hover, :focus-within) { background: var(--row-lit); } }
+  ul.rows > li.is-unread .row-title::before { content: ""; display: inline-block; width: var(--pip-size, 7px); height: var(--pip-size, 7px);
+    margin-right: var(--s-6); border-radius: 50%; background: var(--accent); vertical-align: middle; }
+  ul.rows > li.is-unread .row-title { font-weight: 700; }
+  /* one happening right now (a client selecting in Selecta): the same dot, breathing */
+  ul.rows > li.is-live .row-title::before { animation: pulse calc(var(--t-mid) * 4) ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { ul.rows > li.is-live .row-title::before { animation: none; } }
+  /* rows under a row (a person's lessons under the person): a dashed line between them, less room, the title smaller
+     and quieter: <ul class="rows is-sub"> inside the row */
+  ul.rows.is-sub > li { --row-py: var(--s-4); border-top-style: dashed; gap: var(--s-4) var(--s-8); }
+  ul.rows.is-sub > li:first-child { border-top: none; padding-top: var(--s-4); }
+  ul.rows.is-sub .row-title { color: var(--dim); font-size: var(--fs-13); font-weight: 500; }
+  /* a row being saved steps back until it is (--o-busy), as a table's */
+  ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
+  /* a row's second line, under its title: a detail, smaller and faint */
+  .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
+  /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
+  ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
+  /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
+  ul.rows li.is-link { cursor: pointer; }
+  /* a row whose name is a link and whose second line holds other links (a post's, then who is on it): the title's
+     link in the row's ink, gold under the pointer: <span class="row-title"><a href>…</a><small>…</small></span> */
+  .row-title > a { color: inherit; text-decoration: none; }
+  @media (hover: hover) { a.row-title:hover, .row-title > a:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
+  /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
+  .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
+  .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
+  .late-tag { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
+  /* a list's line: its date or time, and its amount or figure */
+  .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
+  .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
+  .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+  /* figures each behind its small icon (a post's likes, replies, reposts, views), in a row's place or at its end, the
+     same in a list, an agenda's day and a sheet: <span class="figs"><span class="fig" title="40 likes"><svg class="ico">…
+     </svg>40</span>…</span> (Studio's) */
+  .figs { align-items: center; color: var(--dim); display: inline-flex; flex-wrap: wrap; font: 500 var(--fs-13)/var(--lh-tight) var(--mono);
+    font-variant-numeric: tabular-nums; gap: var(--s-4) var(--s-12); vertical-align: middle; }
+  .fig { align-items: center; display: inline-flex; gap: var(--s-4); white-space: nowrap; }
+  .fig .ico { height: var(--ico-sm); width: var(--ico-sm); }
+/* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
+   each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
+  .facts { margin: 0; }
+  .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
+  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  /* words as the bank wrote them */
+  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
+  .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
+
+@media (max-width: 768px) {
+    .row-value { font-size: var(--fs-12); min-width: 68px; }
+  .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
 }
 /* The pieces of a public site, taken from alexispaoleschi.com: a badge, a section's head, the footer (the card's parts
    are in card.css).
@@ -1243,6 +1336,16 @@
 @media (prefers-reduced-motion: reduce) {
   .back-link, .back-link .ico { transition: none; }
 }
+
+/* The way there, « Tout Patreon Alexis → », under a block that has more elsewhere: <a class="go-link"> (or a button),
+   its words then the sprite's arrow, <svg class="ico" aria-hidden="true"><use href="#i-arrow-right"/></svg>. In the
+   accent, its arrow stepping on under the pointer; in Vitrine in the site's small capitals (Studio's « Voir le détail »,
+   Selecta's « Toute l'activité »). */
+  .go-link { display: inline-flex; align-items: center; gap: var(--s-6); margin: 0; padding: var(--s-6) 0; background: none; border: 0; cursor: pointer;
+    color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); text-decoration: none; white-space: nowrap; }
+  :where([data-theme="vitrine"]) .go-link { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--back-ls); text-transform: uppercase; }
+  .go-link .ico { width: var(--ico-sm); height: var(--ico-sm); transition: transform var(--t-fast) ease; }
+  @media (hover: hover) { .go-link:hover .ico { transform: translateX(var(--s-4)); } }
 /* The photo grid, taken from Selecta's galleries (ds.photogrid, src/photogrid.js): a wall of photos, any element holding
    an image a tile (a link that opens the viewer, a figure…). ds.photogrid lays it out in masonry, columns of even height
    where each photo keeps its shape; without it, or with masonry: false, even rows of tiles cut to the same height.
