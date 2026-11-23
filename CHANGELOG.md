@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.27.0 · 23 novembre 2026
+
+- Un message durable d’erreur (`.msg.is-bad`) s’écrit en rouge, dans tous les thèmes, et plus seulement dans son cadre rosé : ce que Selecta faisait seul devient la règle (Bank, Studio et le site aussi).
+- Selecta prend les boutons, les messages et la ligne sous un champ tels que le site les dessine : ses messages en 16px au lieu de 14, la ligne sous un champ en 13px, ses boutons inchangés (déjà de la hauteur d’un champ).
+
 ## 4.26.1 · 23 novembre 2026
 
 Les derniers ajustements que les applis faisaient sur les pièces de ds passent dans ds, et une erreur de 4.25.0 est réparée.

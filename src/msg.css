@@ -1,7 +1,7 @@
 /* The message: a sentence in a box, with its icon, good or bad, and its action. */
   .msg { align-items: var(--msg-align); background: var(--box-bg); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--msg-size); gap: var(--msg-gap); margin-top: var(--s-10); padding: var(--msg-py) var(--msg-px); }
   .msg .ico { color: var(--accent); margin-top: var(--msg-icon-top); flex: none; height: var(--msg-icon); width: var(--msg-icon); }
-  .msg.is-bad { background: var(--bad-soft); border-color: var(--bad-line); }
+  .msg.is-bad { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); }
   .msg.is-bad .ico { color: var(--bad); }
   .msg.is-good { background: var(--good-soft); border-color: var(--good-line); }
   .msg.is-good .ico { color: var(--good); }
