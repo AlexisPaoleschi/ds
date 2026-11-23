@@ -110,7 +110,10 @@
   :is(.sum-head, .sum-line) > .sum-name { flex: 1; min-width: 0; }
   .sum-head > .sum-name { color: var(--n, var(--accent-text)); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .sum-head > .sum-fig { font: var(--type-figure-weight) var(--type-figure-size)/var(--lh-tight) var(--type-figure-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
-  .sum-line { padding: var(--s-10) 0 0 var(--s-14); }
+  /* a line too narrow for its name and what follows it (a late tag, a figure) puts them under the name, never over it */
+  .sum-line { flex-wrap: wrap; row-gap: var(--s-4); padding: var(--s-10) 0 0 var(--s-14); }
+  .sum-line > .sum-name { flex: 1 1 auto; }
+  .sum-line > .sum-fig { margin-left: auto; }
   .sum-line > .sum-name { color: var(--dim); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-ui) var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   .sum-line > .sum-fig { color: var(--dim); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .sum-link { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-10); color: var(--faint); text-align: right; text-decoration: none; }
@@ -149,7 +152,7 @@
   .card-body > * { margin: 0; }
   /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
   .card.is-small {--card-pad: var(--card-s-pad);
-    --card-gap: var(--card-s-gap);--cover-badge: var(--card-s-badge); }
+    --card-gap: var(--card-s-gap); --cover-badge: var(--card-s-badge); }
 /* The ruled card in a colour of its own (Bank: a card per bank, each in its bank's colour, as many a row as fit):
    .card.is-ruled.is-tinted with --n; its label (.ct) takes the colour too. Without --n, the gold of .is-ruled. */
   .card.is-ruled.is-tinted { border-top-color: var(--n, var(--accent)); }

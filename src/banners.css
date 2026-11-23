@@ -41,7 +41,7 @@
   .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); }
   .signup-banner input.signup-banner-input:focus, .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
   /* as high as the field beside it: 8px lower than the site's large buttons */
-  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px);}
+  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); }
   /* Honeypot: moved off-screen rather than display:none, because some bots skip
      fields that are explicitly hidden and would give themselves away less. */
   .signup-banner-honeypot, .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }

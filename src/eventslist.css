@@ -36,7 +36,7 @@
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
     .events-hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
-    .event-card { --card-pad: var(--s-24);}
+    .event-card { --card-pad: var(--s-24); }
   }
   /* ─── Portrait phone only (≤768px) ─── */
   @media (max-width: 768px) {

@@ -8,7 +8,7 @@
     position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; min-height: var(--btn-h); padding: var(--pill-py) var(--pill-px);
     gap: var(--s-8); border: 1px solid var(--field-line); border-radius: var(--r-m); color: var(--ink); background: var(--field-bg); cursor: pointer;
     font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
-  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16);}
+  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); }
   .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill::after, .combo::after { content: ""; flex: none; width: var(--ico-s); height: var(--ico-s); background: var(--faint);
     -webkit-mask: var(--chev) center / contain no-repeat; mask: var(--chev) center / contain no-repeat; }

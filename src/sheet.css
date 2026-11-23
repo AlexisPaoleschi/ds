@@ -37,7 +37,7 @@
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .sheet-sub::first-letter { text-transform: uppercase; }
-  /* the sheet's name as large as its figure: at 22px, the square buttons beside it (rename, see) looked bigger than it
+  /* the sheet's name as large as its figure: smaller, the square buttons beside it (rename, see) looked bigger than it
      (« le bouton renommer est trop gros par rapport au texte », 22 November 2026) */
   .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
     font: var(--type-title-1-weight) var(--type-title-1-size)/var(--head-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }

@@ -1,4 +1,4 @@
-/* ds 5.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.0.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -784,7 +784,7 @@
     position: relative; display: inline-flex; align-items: center; max-width: 100%; box-sizing: border-box; min-height: var(--btn-h); padding: var(--pill-py) var(--pill-px);
     gap: var(--s-8); border: 1px solid var(--field-line); border-radius: var(--r-m); color: var(--ink); background: var(--field-bg); cursor: pointer;
     font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
-  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16);}
+  [data-theme="vitrine"] .pill { --pill-py: var(--s-10); --pill-px: var(--s-16); }
   .pill .pill-value { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .pill::after, .combo::after { content: ""; flex: none; width: var(--ico-s); height: var(--ico-s); background: var(--faint);
     -webkit-mask: var(--chev) center / contain no-repeat; mask: var(--chev) center / contain no-repeat; }
@@ -967,7 +967,10 @@
   :is(.sum-head, .sum-line) > .sum-name { flex: 1; min-width: 0; }
   .sum-head > .sum-name { color: var(--n, var(--accent-text)); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .sum-head > .sum-fig { font: var(--type-figure-weight) var(--type-figure-size)/var(--lh-tight) var(--type-figure-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
-  .sum-line { padding: var(--s-10) 0 0 var(--s-14); }
+  /* a line too narrow for its name and what follows it (a late tag, a figure) puts them under the name, never over it */
+  .sum-line { flex-wrap: wrap; row-gap: var(--s-4); padding: var(--s-10) 0 0 var(--s-14); }
+  .sum-line > .sum-name { flex: 1 1 auto; }
+  .sum-line > .sum-fig { margin-left: auto; }
   .sum-line > .sum-name { color: var(--dim); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-ui) var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   .sum-line > .sum-fig { color: var(--dim); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .sum-link { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-10); color: var(--faint); text-align: right; text-decoration: none; }
@@ -1006,7 +1009,7 @@
   .card-body > * { margin: 0; }
   /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
   .card.is-small {--card-pad: var(--card-s-pad);
-    --card-gap: var(--card-s-gap);--cover-badge: var(--card-s-badge); }
+    --card-gap: var(--card-s-gap); --cover-badge: var(--card-s-badge); }
 /* The ruled card in a colour of its own (Bank: a card per bank, each in its bank's colour, as many a row as fit):
    .card.is-ruled.is-tinted with --n; its label (.ct) takes the colour too. Without --n, the gold of .is-ruled. */
   .card.is-ruled.is-tinted { border-top-color: var(--n, var(--accent)); }
@@ -1204,7 +1207,7 @@
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .sheet-sub::first-letter { text-transform: uppercase; }
-  /* the sheet's name as large as its figure: at 22px, the square buttons beside it (rename, see) looked bigger than it
+  /* the sheet's name as large as its figure: smaller, the square buttons beside it (rename, see) looked bigger than it
      (« le bouton renommer est trop gros par rapport au texte », 22 November 2026) */
   .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
     font: var(--type-title-1-weight) var(--type-title-1-size)/var(--head-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }
@@ -1289,7 +1292,7 @@
   .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); opacity: .8; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
      the figure in gold above its label */
-  /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
+  /* wide enough for a sum in the figure role (two side by side on a phone, from 150px each) */
   [data-theme="vitrine"] .tiles.is-compact { gap: var(--s-20); }
   [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
@@ -1549,7 +1552,8 @@
   /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
   .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); padding: var(--s-2) var(--s-6); text-transform: var(--type-smallcaps-case); }
-  .late-tag { font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  /* never cut over lines: on a narrow line it goes under what it follows (.sum-line wraps) */
+  .late-tag { flex: none; white-space: nowrap; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a list's line: its date or time, and its amount or figure */
   .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: var(--type-small-weight) var(--type-small-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
@@ -1646,8 +1650,6 @@
   /* a block of its own, not the row of an app's footer */
   .site-footer { display: block; padding: var(--footer-py) calc(var(--s-20) + var(--safe-right)) calc(var(--footer-py) + var(--safe-bottom)) calc(var(--s-20) + var(--safe-left)); text-align: center; background: var(--band); border-top: 1px solid var(--line); }
   .site-footer p { margin: 0 0 var(--s-16); color: var(--faint); font: var(--type-text-weight) var(--type-text-size)/var(--title-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  /* its words a little spaced (Selecta's, 4.26.1) */
-  .site-footer.is-spaced {}
   .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-32); }
   .site-footer a { color: var(--accent-text); text-decoration: none; font: var(--type-strong-weight) var(--type-text-size)/var(--title-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); transition: color var(--t-fast) ease; text-transform: var(--type-text-case); }
   @media (hover: hover) { .site-footer a:hover { color: var(--accent-strong); } }
@@ -1662,13 +1664,14 @@
    page's sizes, .is-band is a photo band between two sections, .is-short is low (Selecta's cover), .is-bottom puts the words at the bottom
    left over a veil that darkens downwards (Selecta's), .is-parallax lets the photo drift slower than the page (CSS only;
    still on a touch screen and for those who ask for less motion). */
-  /* the page's hero (the site's events and newsletter): 420px high, its title in 56px over a gold line, gold capitals under
-     it; .is-full gives an event page's sizes. Each size is a --hero-* token, so that a page can set the one it needs. */
+  /* the page's hero (the site's events and newsletter): 420px high, its title (the big title) over a gold line, its
+     subtitle under it; .is-full gives an event page's room. Each room is a --hero-* token, so that a page can set the one
+     it needs; the words are the text roles'. */
   .hero { --hero-veil: var(--overlay-black-medium); --hero-h: 420px; --hero-pad: var(--s-80); --hero-pad-end: var(--hero-pad); --hero-side: var(--s-40);
     --hero-in-max: var(--read-l); --hero-in-pad: 0px;
---hero-t-lh: var(--title-lh);--hero-t-gap: var(--s-32); --hero-rule: block; --hero-rule-gap: var(--s-24);
---hero-sub-gap: 0px;
---hero-meta-gap: var(--s-56);
+    --hero-t-lh: var(--title-lh); --hero-t-gap: var(--s-32); --hero-rule: block; --hero-rule-gap: var(--s-24);
+    --hero-sub-gap: 0px;
+    --hero-meta-gap: var(--s-56);
     position: relative; isolation: isolate; display: flex; flex-direction: column; align-items: center; justify-content: center;
     min-height: var(--hero-h); overflow: hidden; color: var(--white); text-align: center;
     padding: var(--hero-pad) max(var(--hero-side), var(--safe-right)) var(--hero-pad-end) max(var(--hero-side), var(--safe-left));
@@ -1697,19 +1700,19 @@
   /* the way back, in the hero's top left corner, clear of an iPhone's notch */
   .hero > .back-link { position: absolute; z-index: var(--z-raise); top: max(var(--s-24), var(--safe-top)); left: max(var(--s-24), var(--safe-left)); }
 
-  /* an event page: the screen’s height, its name in 80px, the place in 28px gold capitals, the date, then its button */
+  /* an event page: the screen’s height, its name, the place, the date, then its button */
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
---hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
---hero-sub-gap: var(--s-16); }
-  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title in
-     64px, a line in light italics under it */
+    --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-sub-gap: var(--s-16); }
+  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title, a line
+     in italics under it */
   .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
---hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
---hero-meta-gap: var(--s-40); }
+    --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
+    --hero-meta-gap: var(--s-40); }
   .hero.is-band .hero-meta { font-style: italic; }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
---hero-t-lh: var(--lh-ui);--hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
+    --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
   .hero.is-short .hero-in { gap: var(--s-12); }
   .hero.is-bottom { --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent); align-items: stretch; justify-content: flex-end; text-align: left; }
   .hero.is-bottom .hero-in { align-items: flex-start; width: 100%; gap: var(--s-6); }
@@ -1727,15 +1730,13 @@
 }
 @media (max-width: 768px) {
   .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
-  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px;}
-  .hero.is-band { --hero-h: 50vh;}
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; }
+  .hero.is-band { --hero-h: 50vh; }
 }
 @media (max-width: 480px) {
-  .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16);}
-  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px;}
-  .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16);}
-  /* a band's title shrinks with the phone, so that its longest word (« PHOTOGRAPHERS ») holds on the screen */
-  .hero.is-band {}
+  .hero { --hero-h: 300px; --hero-pad: var(--s-80); --hero-pad-end: var(--s-48); --hero-side: var(--s-16); }
+  .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; }
+  .hero.is-short { --hero-h: 220px; --hero-pad: var(--s-20); --hero-pad-end: var(--s-20); --hero-side: var(--s-16); }
   .hero > .back-link { top: max(var(--s-16), var(--safe-top)); left: max(var(--s-16), var(--safe-left)); }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1777,7 +1778,7 @@
   .topbar .is-wide { display: none; }
 }
 /* a compact bar, for an app on a public theme (Selecta): less room, its name in ink, smaller than the site's (4.26.1) */
-  .topbar.is-compact { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md);--brand-color: var(--ink); }
+  .topbar.is-compact { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-color: var(--ink); }
 @media (min-width: 769px) {
   .topbar.is-compact { --topbar-px: var(--space-lg); }
 }
@@ -2102,7 +2103,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .tbl .slug-value { font-family: inherit; }
 /* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
    title size, its date in the hero's own small capitals; without a photo, a beige light. */
-.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md);--hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
 .gallery-cover--placeholder { background: linear-gradient(135deg, var(--band), var(--accent-soft)); }
 /* the sign-in page */
 .auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
@@ -2110,7 +2111,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
 /* a gallery's cover on a computer: taller, more room, a larger title */
 @media (min-width: 769px) {
-  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg);}
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); }
 }
 /* The small pages of an app (privacy, terms, signed out): the app's name above a title, one column of text. */
   body.doc { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: var(--type-text-weight) var(--type-text-size)/var(--text-lh) var(--type-text-font); -webkit-font-smoothing: antialiased; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }

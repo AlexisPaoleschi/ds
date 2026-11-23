@@ -58,7 +58,7 @@
   }
   @media (max-width: 768px) {
     /* the site's room and name size, kept on the smallest phones */
-    .sticky-nav { --topbar-px: var(--s-24);}
+    .sticky-nav { --topbar-px: var(--s-24); }
     /* the name in the middle, the menu's button on the left */
     .sticky-nav .topbar-brand { position: absolute; left: 50%; padding-top: calc(var(--s-6) / 2); text-align: center; transform: translateX(-50%); }
   }

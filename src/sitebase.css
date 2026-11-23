@@ -27,13 +27,9 @@
   .golden-divider-after { position: relative; padding-bottom: var(--s-24); }
   .golden-divider-after::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 60px; height: 1px; background: var(--accent);
     transform: translateX(-50%); }
-  /* Footer: the design system's (.site-footer). A phone held sideways keeps its
-     smaller room, and its text stays 16px: the 14px is for a phone held upright only */
+  /* Footer: the design system's (.site-footer). A phone held sideways keeps its smaller room */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
     .site-footer { --footer-py: var(--s-24); }
-  }
-  @media (max-width: 768px) and (orientation: landscape) {
-    .site-footer {}
   }
   /* Responsive */
   @media (max-width: 956px) and (orientation: landscape) {

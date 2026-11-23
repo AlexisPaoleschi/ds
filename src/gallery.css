@@ -123,7 +123,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .tbl .slug-value { font-family: inherit; }
 /* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
    title size, its date in the hero's own small capitals; without a photo, a beige light. */
-.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md);--hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
 .gallery-cover--placeholder { background: linear-gradient(135deg, var(--band), var(--accent-soft)); }
 /* the sign-in page */
 .auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
@@ -131,5 +131,5 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
 /* a gallery's cover on a computer: taller, more room, a larger title */
 @media (min-width: 769px) {
-  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg);}
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); }
 }

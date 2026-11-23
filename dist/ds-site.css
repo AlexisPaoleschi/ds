@@ -1,4 +1,4 @@
-/* ds 5.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.0.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -28,13 +28,9 @@
   .golden-divider-after { position: relative; padding-bottom: var(--s-24); }
   .golden-divider-after::after { content: ''; position: absolute; bottom: 0; left: 50%; width: 60px; height: 1px; background: var(--accent);
     transform: translateX(-50%); }
-  /* Footer: the design system's (.site-footer). A phone held sideways keeps its
-     smaller room, and its text stays 16px: the 14px is for a phone held upright only */
+  /* Footer: the design system's (.site-footer). A phone held sideways keeps its smaller room */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
     .site-footer { --footer-py: var(--s-24); }
-  }
-  @media (max-width: 768px) and (orientation: landscape) {
-    .site-footer {}
   }
   /* Responsive */
   @media (max-width: 956px) and (orientation: landscape) {
@@ -114,7 +110,7 @@
   }
   @media (max-width: 768px) {
     /* the site's room and name size, kept on the smallest phones */
-    .sticky-nav { --topbar-px: var(--s-24);}
+    .sticky-nav { --topbar-px: var(--s-24); }
     /* the name in the middle, the menu's button on the left */
     .sticky-nav .topbar-brand { position: absolute; left: 50%; padding-top: calc(var(--s-6) / 2); text-align: center; transform: translateX(-50%); }
   }
@@ -168,7 +164,7 @@
   .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); }
   .signup-banner input.signup-banner-input:focus, .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
   /* as high as the field beside it: 8px lower than the site's large buttons */
-  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px);}
+  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); }
   /* Honeypot: moved off-screen rather than display:none, because some bots skip
      fields that are explicitly hidden and would give themselves away less. */
   .signup-banner-honeypot, .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -458,7 +454,6 @@
     .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: var(--s-12); }
     .venue-gallery { margin-top: var(--s-60); padding-top: var(--s-40); }
     /* Pricing */
-    .price-display, .price-option {}
     .pricing-box, .booking-box { padding: var(--s-40) var(--s-24); }
     .pricing-note { padding: var(--s-24) var(--s-20); }
     /* FAQ */
@@ -472,19 +467,15 @@
     /* Transport */
     .location-transport-note { padding: var(--s-16) var(--s-20); }
   }
-  /* ─── Landscape phone wider than 768px: a phone's section heads, as the design system draws them from 768px down ─── */
-  @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
-    .section-head {}
-  }
   /* ─── Landscape phone only (≤956px landscape) ─── */
   @media (max-width: 956px) and (orientation: landscape) {
     /* Hero: a phone's sizes (the design system's, from 768px down), closer together, clear of the 59px bar;
        written as long as the design system's .hero.is-full so that it wins */
     .hero.hero-parallax { --hero-pad: calc(var(--s-60) - var(--s-2) / 2); --hero-pad-end: 0px;
-      --hero-t-gap: 0px;--hero-sub-gap: var(--s-12);
+      --hero-t-gap: 0px; --hero-sub-gap: var(--s-12);
       --hero-meta-gap: var(--s-32); }
     /* the photo bands: a phone's sizes, the screen's whole height */
-    .hero.parallax-section { --hero-h: 100vh;}
+    .hero.parallax-section { --hero-h: 100vh; }
     /* Sections */
     .content-section { padding: var(--s-48) var(--s-32); }
     .elegant-box { padding: var(--s-48) var(--s-32); }
@@ -521,7 +512,6 @@
   .price-display.is-pair { flex-direction: row; justify-content: center; gap: 0; }
   .price-option { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 0 var(--s-40); }
   .price-divider { width: 1px; height: 120px; background: color-mix(in srgb, var(--accent) 20%, transparent); flex-shrink: 0; }
-  .price-display.is-pair {}
   .price-display.is-pair .big-fig-note { color: var(--ink); }
   .price-label { margin-top: var(--s-8); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); color: var(--faint); font-family: var(--type-small-font); text-transform: var(--type-small-case); }
   /* two landscape photos side by side (.gallery-grid-duo), stacked on a phone.
@@ -531,7 +521,7 @@
   /* ─── Mobile shared: portrait ≤768px + landscape ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .gallery-grid.gallery-grid-duo { grid-template-columns: 1fr; }
-    /* a phone's price size, which the 80px above would otherwise override */
+    /* on a phone, the two prices one under the other */
     .price-display.is-pair { flex-direction: column; gap: var(--s-40); }
     .price-divider { width: 60px; height: 1px; }
     .price-option { padding: 0; }
@@ -729,7 +719,7 @@
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
     .events-hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
-    .event-card { --card-pad: var(--s-24);}
+    .event-card { --card-pad: var(--s-24); }
   }
   /* ─── Portrait phone only (≤768px) ─── */
   @media (max-width: 768px) {

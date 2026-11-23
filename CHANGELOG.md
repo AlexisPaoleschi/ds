@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.0.1 · 23 novembre 2026
+
+- La petite étiquette rouge (`.late-tag`, « lecture en échec ») ne se coupe plus sur plusieurs lignes ; sur une ligne de carte trop étroite (`.sum-line`), elle passe sous le nom au lieu de le recouvrir, et un chiffre au bout de la ligne reste à droite. Dans Bank, sur un téléphone, « Compte facture » n’est plus caché sous l’étiquette, et « Compte courant » tient sur une ligne.
+- Ménage : les règles laissées vides par la 5.0.0 et les commentaires qui donnaient encore une taille de texte d’avant les rôles. `.site-footer.is-spaced` n’existe plus (il ne faisait plus rien).
+
 ## 5.0.0 · 23 novembre 2026
 
 Le texte n’a plus que treize rôles. Avant, ds offrait 25 tailles et une quarantaine d’espacements de lettres, et chaque composant choisissait les siens : la vitrine dessinait 129 styles de texte en Vitrine et 60 en Atelier. Désormais, chaque thème donne à treize rôles une police, une taille, une graisse, un espacement et une casse, et rien d’autre n’existe.
