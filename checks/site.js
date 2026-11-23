@@ -69,9 +69,9 @@ function stylesheets() {
     icon: window.ds.icon('mail', 'ico x'), land: document.documentElement.classList.contains('landscape-warning-disabled'),
     visible: document.querySelector('.sticky-nav').classList.contains('is-visible') }));
   assert(built.bar && built.links === 2 && built.menu === 2 && built.cta === 'Book Now', 'the bar and its phone menu are built from <div id="nav">');
-  // the bar's action spaced as the site's other buttons, 2.5px
+  // the bar's action spaced as every button (the button role, .12em: 1.68px at 14px)
   const ctaLs = await phone.evaluate(() => getComputedStyle(document.querySelector('.sticky-nav .btn')).letterSpacing);
-  assert(ctaLs === '2.5px', 'the bar\'s « Book Now » spaced as the site\'s other buttons ' + ctaLs);
+  assert(ctaLs === '1.68px', 'the bar\'s « Book Now » spaced as every button ' + ctaLs);
   assert(/\/dist\/icons\.svg#i-arrow-left$/.test(built.back) && built.backText.trim() === 'Events', 'the way back is built with the sprite file\'s arrow');
   assert(/<use href="[^"]*\/dist\/icons\.svg#i-mail"><\/use>/.test(built.icon) && /class="ico x"/.test(built.icon), 'ds.icon names the sprite file beside the script');
   assert(built.land, 'without window.dsLandscapeWarning the page scrolls held sideways (landscape-warning-disabled)');

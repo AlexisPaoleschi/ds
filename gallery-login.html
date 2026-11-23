@@ -22,76 +22,28 @@
 :root {
     /* The three spaces that grow on a computer (--space-md, --space-lg, --space-xl) are the design system's, from 4.19.0. */
 
-    /* The four text sizes that grow one step on a computer (--text-md, --text-lg, --text-xl, --text-2xl) are the
-       design system's, from 2.39.0. */
+    /* Its text takes the design system's thirteen text roles (--type-..., 5.0.0), and no size of its own. */
 
     /* One height for every control (a select, an input and a button have three different line boxes): Vitrine's
        --control-h, 45px, the design system's. */
-
-    /* The design system's lasting message (.msg) in Selecta's text size and room. */
-    --msg-size: var(--fs-14);
-    --msg-py: var(--s-12);
-    --msg-px: var(--s-20);
-
-    /* The design system's line under a field (.field-note), where a refusal is written: in Selecta's text. */
-    --field-note-size: var(--fs-14);
-    --field-note-weight: 300;
-    --field-note-lh: var(--lh-ui);
-    --field-note-ls: normal;
 
     /* The touch target, the veils over a photo and the notch's insets are the design system's (--touch-target,
        --overlay-*, --safe-*). */
 }
 
 
-/* Document-level reset, loaded by every page right after tokens.css, after the design system. */
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+/* Loaded by every page right after tokens.css, after the design system (its reset: text that keeps its size when a
+   phone turns, pictures that never run wider than their room). */
 
 html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-
     /* clip and not hidden: hidden makes a scroll container, which would break the sticky selection panel. */
     overflow-x: clip;
 }
 
-
-img,
-video,
-canvas {
-    max-width: 100%;
-}
-
-
-/* --- Selecta on the design system: its components, in the Vitrine theme (its soft gold line, --line, is Selecta's),
-   with Selecta's capitals. */
-
-/* Buttons: the design system's, in Vitrine's capitals; Selecta's height: as tall as a field, not the site's 63px. Its
-   small button's size is set in tokens.css. */
-.btn {
-    --btn-h: var(--control-h);
-    line-height: var(--lh-ui);
-}
-
-/* A lasting message: the design system's, in Selecta's weight and spacing (its size and room in tokens.css); a refusal
-   is written in red. */
-.msg {
-    font-weight: 500;
-    letter-spacing: var(--ls-loose);
-}
-
-.msg.is-bad {
-    color: var(--bad);
-}
-
-
 /* Authentication pages (login, change password), built on the design system and tokens.css. */
-body { margin: 0; /* dvh: with vh the page is taller than the screen and the footer never sits at its foot. */ min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; /* its children take the whole width (the footer from edge to edge); the form stays in the middle by its own margins */ align-items: stretch; font-family: var(--body); font-size: var(--text-md); font-weight: 300; line-height: var(--lh-loose); color: var(--ink); background-color: var(--bg); }
+body { margin: 0; /* dvh: with vh the page is taller than the screen and the footer never sits at its foot. */ min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; /* its children take the whole width (the footer from edge to edge); the form stays in the middle by its own margins */ align-items: stretch;
+  /* its text: the design system's page, in the site's airy line height */
+  --text-lh: var(--lh-loose); }
 .auth-form { display: flex; flex-direction: column; gap: var(--space-md); }
 /* The design system's card title (.card-title), centred on the form. */
 .auth-form .card-title { text-align: center; }
@@ -101,16 +53,8 @@ body { margin: 0; /* dvh: with vh the page is taller than the screen and the foo
 .auth-form .btn { width: 100%; margin-top: var(--s-8); }
 .auth-language-switch { display: flex; justify-content: center; margin-top: var(--space-lg); }
 
-/* The design system's footer (.site-footer), in Selecta's letter spacing, clear of the notch and the home indicator;
-   its contact links (an icon then the words, as tall as a finger) are the design system's. */
-.site-footer {
-    --footer-ls: var(--ls-loose);
-    padding-right: calc(var(--s-20) + var(--safe-right));
-    padding-bottom: calc(var(--footer-py) + var(--safe-bottom));
-    padding-left: calc(var(--s-20) + var(--safe-left));
-}
-
-
+/* The design system's footer (.site-footer.is-spaced: its words a little spaced, clear of the notch and the home
+   indicator; its contact links, an icon then the words, as tall as a finger). */
 /* one link under the other on a phone */
 @media (max-width: 768px) {
     .site-footer nav {

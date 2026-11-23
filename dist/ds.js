@@ -1,4 +1,4 @@
-/* ds 4.27.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -609,57 +609,6 @@
     return span;
   }
 
-  /* A card's title that holds something on its line (a menu, a period, a button, the hour it was read: its last element)
-     keeps them on one line when it can: its letters come closer, then smaller (12px, then 11px, the least, with a menu's
-     edges narrower), only as much as needed; past that, the title keeps its size and what it holds goes under it. On loading, when the window changes size, once the fonts have come,
-     and whenever a page draws its cards again. */
-  var FIT = ["ct-fit-1", "ct-fit-2", "ct-fit-3"];
-  function fitTitle(h) {
-    var held = h.lastElementChild;
-    FIT.forEach(function (c) { h.classList.remove(c); });
-    if (!held || held.matches("svg") || !h.offsetParent) return;
-    var words = [].filter.call(h.childNodes, function (n) { return n.nodeType === 3 && n.textContent.trim(); });
-    if (!words.length) return;
-    var range = document.createRange();
-    range.setStartBefore(words[0]);
-    range.setEndAfter(words[words.length - 1]);
-    // what it holds went under the words when it starts below their last line
-    function under() { return held.getBoundingClientRect().top >= range.getBoundingClientRect().bottom - 2; }
-    for (var i = 0; i < FIT.length && under(); i++) {
-      if (i) h.classList.remove(FIT[i - 1]);
-      h.classList.add(FIT[i]);
-    }
-    // not even at the least: the title keeps its size, and what it holds goes under it
-    if (under()) FIT.forEach(function (c) { h.classList.remove(c); });
-  }
-  var fitting = 0;
-  // a change that touches a title: inside one, or bringing one
-  function titled(m) {
-    var at = m.target.nodeType === 1 ? m.target : m.target.parentElement;
-    if (at && at.closest && at.closest(".ct")) return true;
-    return [].some.call(m.addedNodes, function (n) { return n.nodeType === 1 && (n.matches(".ct") || !!n.querySelector(".ct")); });
-  }
-  // a title whose width changes is fitted again: its view shown (it was not measured while hidden), its card resized
-  var watched = new WeakSet(), widths = new WeakMap();
-  var resized = window.ResizeObserver ? new ResizeObserver(function (entries) {
-    entries.forEach(function (e) {
-      var w = Math.round(e.contentRect.width);
-      if (widths.get(e.target) === w) return;
-      widths.set(e.target, w);
-      if (w) fitTitle(e.target);
-    });
-  }) : null;
-  function fitTitles() {
-    if (fitting) return;
-    fitting = requestAnimationFrame(function () {
-      fitting = 0;
-      document.querySelectorAll(".ct").forEach(function (h) {
-        if (resized && !watched.has(h)) { watched.add(h); resized.observe(h); }
-        fitTitle(h);
-      });
-    });
-  }
-
   /* Foldable sections: <details class="fold" data-fold="key"> open as the device left them, each change remembered under
      ds-fold:<key>. On loading, and again with ds.fold(holder) once a page draws them anew. */
   function fold(root) {
@@ -712,11 +661,11 @@
 
   /* Figures that must show whole in narrow tiles (Bank's sums on a phone): in .tiles.is-shrink, or in a holder given to
      ds.fitFigures(holder), a tile's figure (dd) too long for its tile gets smaller, a pixel at a time, down to ds's
-     smallest text (--fs-11, never below); still too long there, it goes on two lines rather than be cut. Again when the
+     smallest text (the small capitals' size, never below); still too long there, it goes on two lines rather than be cut. Again when the
      tiles change width (a turned phone, a view shown) and whenever the page draws them anew. */
   var least = null;
   function floor() {
-    if (least == null) least = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--fs-11")) || 11;
+    if (least == null) least = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--type-smallcaps-size")) || 11;
     return least;
   }
   // a figure too long for its tile: the largest of the sizes a pixel apart under its own (down to the smallest text) at
@@ -929,13 +878,10 @@
   function onReady(fn) { if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn); else fn(); }
   onReady(function () {
     holder();
-    fold(); arrivals(); cameBack(); fitTitles(); fitAllFigures();
-    window.addEventListener("resize", fitTitles, { passive: true });
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { fitTitles(); fitAllFigures(); });
-    // a page that draws its cards again, or changes what a title holds: their titles are fitted once it is done; a
-    // change anywhere else (a loading's share, a chart's bubble, a journal) measures nothing
+    fold(); arrivals(); cameBack(); fitAllFigures();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fitAllFigures);
+    // a page that draws its tiles again: their figures are fitted once it is done
     new MutationObserver(function (changes) {
-      if (changes.some(titled)) fitTitles();
       shrinking(changes).forEach(fitFigures);
     }).observe(document.body, { childList: true, subtree: true });
   });
@@ -957,7 +903,6 @@
   window.ds.fold = fold;
   window.ds.foldCard = foldCard;
   window.ds.fitFigures = fitFigures;
-  window.ds.fitTitles = fitTitles;
   window.ds.route = route;
   window.ds.seek = seek;
 })();

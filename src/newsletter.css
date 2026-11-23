@@ -10,8 +10,8 @@
   /* Same thin gold envelope everywhere: the one icon the page ever shows,
      whether the visitor is anonymous, identified, or has just signed up. */
   .newsletter-envelope { width: 48px; height: 48px; color: var(--accent); stroke-width: 1; }
-  .newsletter-message { max-width: 52ch; font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-airy);
-    color: var(--dim); }
+  .newsletter-message { max-width: 52ch; font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-airy);
+    color: var(--dim); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* One field, one button, every state — the field row itself never changes
      shape depending on how the visitor arrived. */
   .newsletter-form { width: 100%; max-width: var(--read-s); }
@@ -47,7 +47,6 @@
     .newsletter-main { padding: 0 var(--s-16); }
     .newsletter-card { gap: var(--s-20); margin: var(--s-36) 0 var(--s-48); padding: var(--s-32) var(--s-20); }
     .newsletter-envelope { width: 40px; height: 40px; }
-    .newsletter-message { font-size: var(--fs-15); }
     .newsletter-field { flex-direction: column; }
     /* Full width already, and a phone is narrower than the widest label. */
     .newsletter-form .btn, .newsletter-actions .btn { width: 100%; min-width: 0; }

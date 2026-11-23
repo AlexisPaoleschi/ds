@@ -32,7 +32,7 @@
    too, darkened in vitrine so that it reads on white (--tint-ink, as a tile's label). A link
    (a.tag) shows its edge in full on hover; an icon in it is the small one. */
   .tag { --a: var(--accent); display: inline-flex; align-items: center; gap: var(--s-4); box-sizing: border-box; padding: var(--s-2) var(--s-6);
-    font: 600 var(--fs-11)/var(--lh-tight) var(--mono); letter-spacing: 0; text-transform: none; text-decoration: none; white-space: nowrap;
+    font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); text-decoration: none; white-space: nowrap;
     color: color-mix(in oklab, var(--a) var(--tint-ink), var(--ink)); background: color-mix(in srgb, var(--a) var(--soft-mix), transparent);
     border: 1px solid color-mix(in srgb, var(--a) var(--line-mix), transparent); border-radius: var(--r-s); }
   .tag.is-good { --a: var(--good); }

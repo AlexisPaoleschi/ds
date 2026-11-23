@@ -11,14 +11,14 @@
   .topbar-in { display: flex; align-items: center; justify-content: space-between; gap: var(--topbar-gap); max-width: var(--topbar-max, var(--page-max)); margin: 0 auto;
     padding: calc(var(--topbar-py) + var(--safe-top)) max(var(--topbar-px), var(--safe-right)) var(--topbar-py) max(var(--topbar-px), var(--safe-left)); }
   .topbar-brand { flex: none; color: var(--brand-color); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
-    font: var(--title-weight) var(--brand-size)/var(--lh-tight) var(--title-font); letter-spacing: var(--brand-ls); text-transform: uppercase; }
+    font: var(--brand-weight) var(--brand-size)/var(--lh-tight) var(--brand-font); letter-spacing: var(--brand-ls); text-transform: uppercase; }
   .topbar-nav { display: flex; flex: 1; align-items: center; justify-content: flex-end; gap: var(--topbar-gap); min-width: 0; }
   /* centred while it holds, never pushed over the name when it does not */
   .topbar-nav.is-center { justify-content: safe center; }
   /* nothing in the bar shrinks: a choice of language keeps its two letters */
   .topbar-nav > * { flex: none; }
   .topbar-link { position: relative; padding: var(--s-8) 0; color: var(--ink); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;
-    font: 400 var(--topbar-link-size)/var(--lh-ui) var(--body); letter-spacing: var(--topbar-link-ls); text-transform: uppercase; }
+    font: var(--type-caps-weight) var(--type-caps-size)/var(--lh-ui) var(--type-caps-font); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); }
   .topbar-link::after { content: ""; position: absolute; left: 0; bottom: 0; width: 0; height: 2px; background: var(--accent); transition: width var(--t-fast) ease; }
   .topbar-icon { position: relative; display: grid; place-items: center; min-width: var(--touch-target); min-height: var(--touch-target); padding: 0; color: var(--ink); background: none; border: 0; cursor: pointer;
     transition: color var(--t-fast) ease; }
@@ -33,7 +33,7 @@
   .topbar .is-wide { display: none; }
 }
 /* a compact bar, for an app on a public theme (Selecta): less room, its name in ink, smaller than the site's (4.26.1) */
-  .topbar.is-compact { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-size: var(--text-lg); --brand-ls: var(--ls-loose); --brand-color: var(--ink); }
+  .topbar.is-compact { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md);--brand-color: var(--ink); }
 @media (min-width: 769px) {
   .topbar.is-compact { --topbar-px: var(--space-lg); }
 }

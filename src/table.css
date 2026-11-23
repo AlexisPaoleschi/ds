@@ -13,14 +13,14 @@
   .tbl-wrap.is-card .tbl :is(th, td) { padding: var(--s-12) var(--s-20); border-top: 0; border-bottom: 1px solid var(--line); }
   .tbl-wrap.is-card .tbl th { background: var(--band); }
   .tbl-wrap.is-card .tbl tbody tr:last-child > td { border-bottom: 0; }
-  .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--tbl-size); }
+  .tbl { width: 100%; border-collapse: collapse; color: var(--ink); font-size: var(--type-text-size); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
-    font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+    font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
   /* a quieter cell (an operation's category beside its name, 4.26.1) */
-  .tbl td.is-quiet { color: var(--faint); font-size: var(--fs-13); }
+  .tbl td.is-quiet { color: var(--faint); font-size: var(--type-small-size); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a cell's small line under its figure, in gold (« prévu 28 nov. »), or beside it (.is-inline: « · à publier ») (4.26.1) */
-  small.cell-note { display: block; font-size: var(--fs-11); color: var(--accent); }
+  small.cell-note { display: block; font-size: var(--type-caption-size); color: var(--accent); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   small.cell-note.is-inline { display: inline; margin-left: var(--s-6); }
   /* a row that goes on from the one above it (an operation's category under it, 4.26.0): no room above, close to it */
   .tbl tr.is-cont > td { padding-top: 0; }
@@ -28,8 +28,8 @@
   /* a dense table of figures (Studio's people, a column a network): tighter rows, its cells in the quieter mono, flush
      left; the name column stays in the words' font (.tbl-name) */
   .tbl.is-dense :is(th, td) { padding: var(--s-6) var(--s-10) var(--s-6) 0; }
-  .tbl.is-dense td { color: var(--dim); font: 500 var(--fs-13)/var(--lh-tight) var(--mono); white-space: nowrap; }
-  .tbl.is-dense td.tbl-name { color: var(--ink); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
+  .tbl.is-dense td { color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .tbl.is-dense td.tbl-name { color: var(--ink); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* money in and money out, what is fresh and what is late */
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
@@ -38,17 +38,16 @@
      right; ds.date(day, "heading")); a phone's cards take it as a heading */
   .tbl tr.tbl-group > td { padding: var(--s-16) var(--s-8) var(--s-6); border-bottom: 1px solid var(--line-2); }
   @media (hover: hover) { .tbl tbody tr.tbl-group:hover > td { background: none; } }
-  .tbl-group-head { display: flex; justify-content: space-between; gap: var(--s-12); color: var(--dim); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
-  .tbl-group-sum { font: 500 var(--fs-13)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .tbl-group-head { display: flex; justify-content: space-between; gap: var(--s-12); color: var(--dim); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .tbl-group-sum { font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* nothing yet (« jamais »): quieter than the row */
   .tbl .is-faint { color: var(--faint); }
   .tbl .tbl-ck { width: 28px; }
   /* a row's box on its row's middle, not on the line of its own cell (icon audit, 22 November 2026); a phone's cards keep
      theirs, already right (below) */
   .tbl td.tbl-ck > input { display: block; }
-  .tbl .tbl-main { min-width: 0; font-weight: 600; overflow-wrap: break-word; }
+  .tbl .tbl-main { min-width: 0; font-weight: var(--type-strong-weight); overflow-wrap: break-word; }
   /* in vitrine, a row's name keeps the weight of its text */
-  [data-theme="vitrine"] .tbl .tbl-main { font-weight: inherit; }
   .tbl .tbl-phone { display: none; }
   .tbl tbody tr.is-link { cursor: pointer; }
   /* a row reached with Tab (one that opens a sheet, tabindex="0"): the focus ring inside it, along the table's lines */
@@ -91,12 +90,12 @@
    holding its menu (.btn.is-select). On a phone the count, the total and the cross make the first line and the pills
    share the second, as wide as each other, icons kept; on a computer all is on one line. It stays at the top while the
    list scrolls; hidden while nothing is picked. ds.selection runs it. */
-  .selbar { --field-size: var(--selbar-field-size); --field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
+  .selbar {--field-py: var(--selbar-field-py); --field-px: var(--selbar-field-px);
     position: sticky; top: var(--safe-top); z-index: var(--z-raise); display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8) var(--s-10);
     margin-bottom: var(--s-10); padding: var(--s-10) var(--s-12); background: var(--panel-2); border: 1px solid var(--accent-line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); }
-  .selbar-n { margin-right: auto; color: var(--ink); font: 700 var(--fs-14)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-n { margin-right: auto; color: var(--ink); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-ui) var(--type-strong-font); font-variant-numeric: tabular-nums; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   .selbar-n:has(+ .selbar-sum:not(:empty)) { margin-right: 0; }
-  .selbar-sum { margin-right: auto; color: var(--dim); font: 500 var(--fs-13)/var(--lh-ui) var(--body); font-variant-numeric: tabular-nums; }
+  .selbar-sum { margin-right: auto; color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); font-variant-numeric: tabular-nums; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .selbar-sum:empty { display: none; }
   .selbar select { flex: 0 1 auto; min-width: 0; max-width: 100%; background-color: var(--panel); }
   .selbar-acts { display: flex; flex: 0 1 auto; order: 1; flex-wrap: wrap; gap: var(--s-8); }
@@ -113,15 +112,13 @@
   @media (max-width: 480px) {
     .selbar-acts > .btn { gap: var(--s-4); padding-left: var(--s-4); padding-right: var(--s-4); }
     /* the Vitrine's capitals, spaced out, keep a narrower spacing there */
-    [data-theme="vitrine"] .selbar-acts > .btn { letter-spacing: var(--ls-031); }
     /* the site's capitals are wider: a pill that cannot keep its word goes to the next line rather than being cut */
     [data-theme="vitrine"] .selbar-acts > * { min-width: max-content; }
   }
-  [data-theme="vitrine"] .selbar-n { font-weight: 500; }
 
 @media (max-width: 768px) {
   .tbl .tbl-wide { display: none; }
-  .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tbl .tbl-phone { display: block; margin-top: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tbl-sortmenu, .pill.tbl-sortmenu { display: inline-flex; }
   .tbl-wrap:has(> .tbl.is-cards) { overflow-x: visible; }
   .tbl.is-cards, .tbl.is-cards tbody { display: block; }
@@ -143,7 +140,7 @@
   /* a cell named by its column: the name on the left, the value on the right */
   .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
   .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);
-    font: var(--label-weight) var(--tbl-th-size)/var(--lh-ui) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
+    font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-ui) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   /* a card is lit whole, not cell by cell; in a .card, out to its edges (over its padding, --card-pad), so that the gold
      takes the whole width of the screen's line */
   .tbl.is-cards tbody tr > td, .tbl.is-cards tbody tr.is-selected > td { background: none; }

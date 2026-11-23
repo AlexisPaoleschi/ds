@@ -5,14 +5,14 @@
   .filter-pip { position: absolute; top: var(--s-4); right: var(--s-4); }
   button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
   button.edgetab:is(:hover, :active), button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
-  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   button.edgetab .filter-pip { position: static; }
   .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
   .side-layout.is-open { grid-template-columns: 230px minmax(0, 1fr); }
   .side-layout .side { order: 0; }
   .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
   .side-layout.is-open .side { display: block; }
-  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); }
   /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
      icon button, its edges let into the head's room so that the head keeps its height */
   .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
@@ -26,8 +26,8 @@
   .side button.chip[aria-pressed]:hover { background: var(--panel-2); }
   .scrim { display: none; }
   .fgroup { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: center; }
-  .fhead { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); min-width: 92px; }
-  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
+  .fhead { font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); min-width: 92px; }
+  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   button.chip[aria-pressed]:hover { border-color: var(--line-2); }
   button.chip[aria-pressed] .ico { color: var(--accent); width: var(--ico-s); height: var(--ico-s); margin-left: calc(-1 * var(--s-2)); }
   button.chip[aria-pressed="false"] { opacity: var(--o-off); }
@@ -46,7 +46,7 @@
   /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
      source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
   .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
-  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); color: var(--faint); cursor: pointer; }
   .side button.filter-only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
   .side button.filter-only .ico { width: var(--ico-m); height: var(--ico-m); }
   .side button.filter-all:hover, .side button.filter-only:hover, .side button.filter-all:focus-visible, .side button.filter-only:focus-visible { color: var(--accent-text); }
@@ -66,7 +66,6 @@
   .side button.filter-more:hover, .side button.filter-more:focus-visible { color: var(--accent-text); }
   .side .fsub { display: grid; margin: 0 0 var(--s-6) var(--s-20); padding-left: var(--s-8); border-left: 1px solid var(--line); }
   .side .fsub[hidden] { display: none; }
-  .side .fsub button.chip[aria-pressed] { font-size: var(--fs-12); }
   .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }

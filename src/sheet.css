@@ -35,19 +35,19 @@
     background: var(--panel-2); color: var(--dim); cursor: pointer; }
   .sheet-close:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
-  .sheet-sub { margin: 0; color: var(--faint); font: 500 var(--fs-13)/var(--lh-ui) var(--body); }
+  .sheet-sub { margin: 0; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .sheet-sub::first-letter { text-transform: uppercase; }
   /* the sheet's name as large as its figure: at 22px, the square buttons beside it (rename, see) looked bigger than it
      (« le bouton renommer est trop gros par rapport au texte », 22 November 2026) */
   .sheet-t { margin: var(--s-4) 0 var(--s-6); color: var(--ink); overflow-wrap: anywhere;
-    font: var(--title-weight) var(--fs-28)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
-  .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--head-weight) var(--fs-28)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; }
+    font: var(--type-title-1-weight) var(--type-title-1-size)/var(--head-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }
+  .sheet-fig { margin: var(--s-6) 0 var(--s-16); color: var(--ink); font: var(--type-figure-weight) var(--type-figure-size)/var(--lh-tight) var(--type-figure-font); font-variant-numeric: tabular-nums; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
   .sheet-fig.is-good { color: var(--good); }
   .sheet-fig.is-bad { color: var(--bad); }
   /* what it was in another currency, under its euros */
-  .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  .sheet-fig small { display: block; margin-top: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* its actions, on one line while they hold on it, then on two: a word is never cut; on a phone they share the width */
-  .sheet-acts { --btn-px: var(--sheet-acts-btn-px); --btn-ls: var(--sheet-acts-btn-ls); --btn-size: var(--sheet-acts-btn-size); display: flex; flex-wrap: wrap; gap: var(--s-8); margin-top: var(--s-14); }
+  .sheet-acts { --btn-px: var(--sheet-acts-btn-px);display: flex; flex-wrap: wrap; gap: var(--s-8); margin-top: var(--s-14); }
   .sheet-acts > .btn { max-width: 100%; }
   /* vitrine: the site's buttons, a little narrower and less spaced, so that three hold on the line */
 

@@ -16,7 +16,6 @@ const assert = (ok, what, got) => { if (!ok) { console.log('ÉCHEC', what, JSON.
 // what no page shows, and why
 const EXCEPT = {
   'newsletter-honeypot': 'a hidden field that only robots fill', 'signup-banner-honeypot': 'a hidden field that only robots fill',
-  'ct-fit-1': 'only when a card title does not fit its card (ds.fitTitles)', 'ct-fit-2': 'idem', 'ct-fit-3': 'idem',
   'landscape-warning': 'only on a phone held sideways, and the site has it off', 'landscape-warning-icon': 'idem', 'landscape-warning-text': 'idem',
   'social-banner-inner--no-border': 'a variant the site no longer uses',
   'api': 'asks the app’s server', 'json': 'reads a file from the server (the site’s Gist)', 'newsletter': 'posts to the newsletter’s server',

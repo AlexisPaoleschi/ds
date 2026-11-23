@@ -3,11 +3,11 @@
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
   .periodleft { position: relative; display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
   .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; min-height: var(--s-24); padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
-    font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    font: var(--type-title-1-weight) var(--type-title-1-size)/var(--title-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
-  .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
-  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodtitle .periodtitle-year { color: var(--faint); }
+  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: var(--type-text-weight) var(--type-text-size)/var(--lh-tight) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* the chevron that says the title opens a picker: the sprite's chevron-down (<svg class="ico chev">), small and on the
      title's middle; a « ▾ » in text, which no ds font draws, sat on the big title's base line, 3px low (icon audit,
      22 November 2026) */
@@ -27,13 +27,12 @@
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
-  .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: 500 var(--fs-13)/var(--lh-tight) var(--body); padding: var(--s-8) var(--s-10); }
+  .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); padding: var(--s-8) var(--s-10); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .periodpop button:not(:where(.tabs button)):is(:hover, :active) { border-color: var(--accent-line); color: var(--accent-text); }
   /* the tabs inside the picker are tabs, only a little tighter */
   .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; --tab-py: var(--s-6); --tab-px: var(--s-10); }
 @media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
-    .periodtitle { font-size: var(--fs-22); }
     .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
 }

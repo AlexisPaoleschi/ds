@@ -4,7 +4,7 @@
     display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-8); pointer-events: none; }
   .toast { pointer-events: auto; display: flex; align-items: center; gap: var(--s-10); box-sizing: border-box; max-width: min(400px, calc(100vw - 32px));
     padding: var(--toast-py) var(--toast-pr) var(--toast-py) var(--toast-pl); background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-l);
-    box-shadow: var(--shadow-pop); color: var(--ink); font: var(--toast-weight) var(--note-size)/var(--lh-ui) var(--body); animation: toast-in var(--t-mid) ease-out; }
+    box-shadow: var(--shadow-pop); color: var(--ink); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); animation: toast-in var(--t-mid) ease-out; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .toast.is-leaving { opacity: 0; transform: translateY(var(--s-8)); transition: opacity var(--t-fast), transform var(--t-fast); }
   .toast .mark { flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
   .toast.is-good .mark { background: var(--good); }
@@ -12,7 +12,7 @@
   .toast.is-busy .mark { --spin-size: 12px; }
   .toast .txt { flex: 1 1 auto; min-width: 0; }
   .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
-  .toast .act { color: var(--accent-text); font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--act-ls); text-transform: var(--act-case); }
+  .toast .act { color: var(--accent-text); font: var(--type-button-weight) var(--type-button-size)/var(--lh-tight) var(--type-button-font); letter-spacing: var(--type-button-ls); text-transform: var(--type-button-case); }
   /* its cross: the sprite's, in the middle of a square */
   .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
   .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }

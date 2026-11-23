@@ -1,17 +1,17 @@
 /* The site kit: the testimonials' banner (the events list): the photographers' words, each in the design system's card. */
   /* its wrapper, its inner border and its title are the bands' (banners.css) */
   .testimonials-banner-head { max-width: var(--read-s); margin: 0 auto var(--s-48); text-align: center; }
-  .testimonials-banner-subtitle { font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
+  .testimonials-banner-subtitle { font-family: var(--type-subtitle-font); font-weight: var(--type-subtitle-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-subtitle-size); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
   .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--s-32); }
   .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: var(--s-36) var(--s-32);
     transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
   .testimonial-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-pop); }
-  .testimonial-quote-mark { font-family: var(--display); font-size: var(--fs-56); line-height: calc(var(--lh-tight) * .6); color: var(--accent); }
-  .testimonial-text { flex: 1; font-family: var(--body); font-weight: 300; font-style: italic; line-height: var(--lh-airy); color: var(--dim); }
+  .testimonial-quote-mark { font-family: var(--type-display-font); font-size: var(--type-display-size); line-height: calc(var(--lh-tight) * .6); color: var(--accent); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-ls); text-transform: var(--type-display-case); }
+  .testimonial-text { flex: 1; font-family: var(--type-text-font); font-weight: var(--type-text-weight); font-style: italic; line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .testimonial-signature { padding-top: var(--s-20); border-top: 1px solid var(--line); }
-  .testimonial-author { display: block; font-family: var(--display); font-size: var(--fs-18); letter-spacing: var(--ls-056); color: var(--ink); }
-  .testimonial-workshop { display: block; margin-top: var(--s-6); font-family: var(--body); font-size: var(--fs-12); font-weight: 500;
-    letter-spacing: var(--ls-125); text-transform: uppercase; color: var(--faint); }
+  .testimonial-author { display: block; font-family: var(--type-title-3-font); font-size: var(--type-title-3-size); letter-spacing: var(--type-title-3-ls); color: var(--ink); font-weight: var(--type-title-3-weight); text-transform: var(--type-title-3-case); }
+  .testimonial-workshop { display: block; margin-top: var(--s-6); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
+    letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
     .testimonials-banner-head { margin-bottom: var(--s-36); }
@@ -19,7 +19,5 @@
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .testimonials-banner-subtitle { font-size: var(--fs-14); }
     .testimonial-card { padding: var(--s-28) var(--s-24); }
-    .testimonial-text { font-size: var(--fs-14); }
   }

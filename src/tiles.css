@@ -1,33 +1,35 @@
 /* Figures in tiles: a label, a big figure, a note; in a grid. The compact form is for the top of a screen. */
   .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1px; margin-top: var(--s-16); background: var(--line); border: 1px solid var(--line); border-radius: var(--r-l); overflow: hidden; }
   .tile { background: var(--panel); padding: var(--s-14) var(--s-14) var(--s-12); min-width: 0; border-top: 3px solid var(--n, var(--line)); }
-  .tile dt { display: flex; align-items: center; gap: var(--s-6); font: var(--head-weight) var(--fs-13)/var(--title-lh) var(--title-font); letter-spacing: 0; color: color-mix(in oklab, var(--n, var(--ink)) var(--tint-ink), var(--ink)); margin-bottom: var(--s-10); text-transform: none; }
-  .tile dd { margin: 0; font: var(--head-weight) var(--fs-28)/var(--title-lh) var(--title-font); font-variant-numeric: tabular-nums; }
-  .tile .tile-unit { font: 500 var(--fs-12)/var(--lh-tight) var(--body); color: var(--dim); margin-left: var(--s-6); letter-spacing: 0; }
+  .tile dt { display: flex; align-items: center; gap: var(--s-6); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--title-lh) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); color: color-mix(in oklab, var(--n, var(--ink)) var(--tint-ink), var(--ink)); margin-bottom: var(--s-10); text-transform: var(--type-smallcaps-case); }
+  .tile dd { margin: 0; font: var(--type-figure-weight) var(--type-figure-size)/var(--title-lh) var(--type-figure-font); font-variant-numeric: tabular-nums; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
+  .tile .tile-unit { font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); color: var(--dim); margin-left: var(--s-6); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the change under a figure, in a tone (is-good, is-bad, is-mid) or plain */
-  .tile .tile-delta { display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-6); color: var(--dim); letter-spacing: 0; }
-  .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: 600; }
+  .tile .tile-delta { display: block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); margin-top: var(--s-6); color: var(--dim); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: var(--type-strong-weight); }
   .tile .tile-delta.is-good { color: var(--good); }
-  .tile .tile-note { display: inline-block; font: 400 var(--fs-11)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; }
+  .tile .tile-note { display: inline-block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
   .tile .tile-delta.is-bad { color: var(--bad); }
   .tile .tile-delta.is-mid { color: var(--mid); }
   /* a short list inside a tile, a word and its figure on each line (Studio's members by tier) */
   .tile .tile-list { border-top: 1px solid var(--line); display: grid; gap: var(--s-4); list-style: none; margin: var(--s-12) 0 0; padding: var(--s-10) 0 0; }
-  .tile .tile-list li { color: var(--dim); display: flex; font-size: var(--fs-13); gap: var(--s-10); justify-content: space-between; }
-  .tile .tile-list b { color: var(--ink); font: 600 var(--fs-13)/var(--lh-ui) var(--mono); font-variant-numeric: tabular-nums; }
+  .tile .tile-list li { color: var(--dim); display: flex; font-size: var(--type-small-size); gap: var(--s-10); justify-content: space-between; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .tile .tile-list b { color: var(--ink); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-ui) var(--mono); font-variant-numeric: tabular-nums; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* figures in a row, without boxes: each its value in the titles' font, its word under it in small capitals; .is-accent
      for the one that matters (Selecta's gallery: photos, chosen, still to choose) */
   .stats { align-items: flex-end; display: flex; flex-wrap: wrap; gap: var(--s-16) var(--stat-gap); }
   .stat { display: flex; flex-direction: column; line-height: var(--lh-ui); }
-  .stat-value { color: var(--ink); font: var(--head-weight) var(--stat-size)/var(--lh-ui) var(--title-font); font-variant-numeric: tabular-nums; letter-spacing: var(--stat-ls); }
-  .stat-label { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .stat-value { color: var(--ink); font: var(--type-figure-weight) var(--type-figure-size)/var(--lh-ui) var(--type-figure-font); font-variant-numeric: tabular-nums; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
+  .stat-label { color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .stat.is-accent .stat-value { color: var(--accent-text); }
   /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
   .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
   .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
-  .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
-  .tiles.is-compact .tile dd { font: var(--head-weight) var(--fs-17)/var(--title-lh) var(--title-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tiles.is-compact .tile dt { display: block; margin-bottom: var(--s-6); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); }
+  .tiles.is-compact .tile dd { font: var(--type-title-3-weight) var(--type-title-3-size)/var(--title-lh) var(--type-title-3-font); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
+  /* in Vitrine, the site's small cards keep a tile's figure; in Atelier a small tile's figure is a block's title */
+  [data-theme="vitrine"] .tiles.is-compact .tile dd { font: var(--type-figure-weight) var(--type-figure-size)/var(--title-lh) var(--type-figure-font); letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
   .tiles .tile.is-good dd { color: var(--good); } .tiles .tile.is-bad dd { color: var(--bad); } .tiles .tile.is-mid dd { color: var(--mid); }
   /* a set number of columns (Bank's four sums, two by two on a phone): .tiles.is-cols, --tile-cols (4), and on a phone
      --tile-cols-phone (2) */
@@ -45,7 +47,7 @@
   .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
   .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
   .tiles.is-fit .tile .tile-unit .ico { width: var(--ico-s); height: var(--ico-s); }
-  .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: 500 var(--fs-11)/var(--lh-ui) var(--body); opacity: .8; }
+  .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); opacity: .8; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,
      the figure in gold above its label */
   /* wide enough for a sum at 28px (22px on a phone, where two stand side by side from 150px each) */
@@ -53,9 +55,8 @@
   [data-theme="vitrine"] .tiles.is-compact:not(.is-cols) { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { display: flex; flex-direction: column-reverse; justify-content: flex-end; padding: var(--s-20);
     background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-m); box-shadow: var(--card-shadow); }
-  [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; font-size: var(--fs-11); font-weight: 400; line-height: var(--title-lh); }
-  /* its figure in the big title's size, a step smaller on a phone (--text-2xl) */
-  [data-theme="vitrine"] .tiles.is-compact .tile dd { font-size: var(--text-2xl); font-weight: 400; }
+  [data-theme="vitrine"] .tiles.is-compact .tile dt { margin: var(--s-4) 0 0; line-height: var(--title-lh); }
+  /* its figure in gold, unless it says a gain, a loss or a look */
   [data-theme="vitrine"] .tiles.is-compact .tile:not(.is-good):not(.is-bad):not(.is-mid) dd { color: var(--accent-strong); }
 @media (max-width: 768px) {
   /* four fitted tiles make two rows of two on a phone, where a long label goes on two lines; fewer keep theirs on one, so
@@ -73,14 +74,14 @@
    (a.big-fig) lights its label under the pointer.
    <a class="big-fig" href="#"><span class="big-fig-label">Tous les comptes</span><span class="big-fig-value">12 345€</span></a> */
   .big-fig { display: flex; flex-direction: column; align-items: center; padding: var(--big-fig-pt) 0 var(--big-fig-pb); color: inherit; text-decoration: none; }
-  .big-fig-label { margin-bottom: var(--big-fig-gap); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font);
-    letter-spacing: var(--ls-wide); text-transform: uppercase; }
-  .big-fig-value { color: var(--accent); font: var(--big-fig-weight) var(--big-fig-size)/var(--lh-tight) var(--display); letter-spacing: var(--big-fig-ls);
-    font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .big-fig-note { margin-top: var(--big-fig-gap); color: var(--faint); font-size: var(--big-fig-note-size); letter-spacing: var(--big-fig-note-ls); }
+  .big-fig-label { margin-bottom: var(--big-fig-gap); color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font);
+    letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+  .big-fig-value { color: var(--accent); font: var(--type-display-weight) var(--type-display-size)/var(--lh-tight) var(--type-display-font); letter-spacing: var(--type-display-ls);
+    font-variant-numeric: tabular-nums; white-space: nowrap; text-transform: var(--type-display-case); }
+  .big-fig-note { margin-top: var(--big-fig-gap); color: var(--faint); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); font-family: var(--type-text-font); font-weight: var(--type-text-weight); text-transform: var(--type-text-case); }
   @media (hover: hover) { a.big-fig:hover .big-fig-label { color: var(--accent-text); } }
 /* a link of its own under it, closer to it than the rest (Bank's « Ce mois-ci : +2 100 € · −1 830 € », 4.25.0): dim,
    in ink under the pointer: <a class="big-fig-link" href="#operations?periode=mois">… */
   a.big-fig-link { display: block; margin: calc(-1 * var(--s-12)) 0 var(--s-16); text-align: center; text-decoration: none;
-    font: 500 var(--fs-13)/var(--lh-ui) var(--body); color: var(--dim); }
+    font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); color: var(--dim); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   a.big-fig-link:hover { color: var(--ink); }

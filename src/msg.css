@@ -1,15 +1,15 @@
 /* The message: a sentence in a box, with its icon, good or bad, and its action. */
-  .msg { align-items: var(--msg-align); background: var(--box-bg); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--msg-size); gap: var(--msg-gap); margin-top: var(--s-10); padding: var(--msg-py) var(--msg-px); }
+  .msg { align-items: var(--msg-align); background: var(--box-bg); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--type-text-size); gap: var(--msg-gap); margin-top: var(--s-10); padding: var(--msg-py) var(--msg-px); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .msg .ico { color: var(--accent); margin-top: var(--msg-icon-top); flex: none; height: var(--msg-icon); width: var(--msg-icon); }
   .msg.is-bad { background: var(--bad-soft); border-color: var(--bad-line); color: var(--bad); }
   .msg.is-bad .ico { color: var(--bad); }
   .msg.is-good { background: var(--good-soft); border-color: var(--good-line); }
   .msg.is-good .ico { color: var(--good); }
   .msg > .txt { flex: 1 1 auto; min-width: 0; }
-  .msg .txt b { color: var(--ink); font-weight: 600; }
-  .msg .txt small { display: block; margin-top: var(--s-4); font-size: var(--fs-12); color: var(--faint); }
-  .msg .txt small.det { font-family: var(--mono); font-size: var(--fs-11); overflow-wrap: anywhere; }
-  .msg .act { align-items: center; align-self: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--ink); cursor: pointer; display: inline-flex; flex: none; font: var(--btn-weight) var(--fs-12)/var(--lh-tight) var(--body); gap: var(--s-6); padding: var(--s-6) var(--s-10); white-space: nowrap; text-decoration: none; }
+  .msg .txt b { color: var(--ink); font-weight: var(--type-strong-weight); }
+  .msg .txt small { display: block; margin-top: var(--s-4); font-size: var(--type-small-size); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .msg .txt small.det { font-family: var(--mono); font-size: var(--type-caption-size); overflow-wrap: anywhere; font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .msg .act { align-items: center; align-self: center; background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line); color: var(--ink); cursor: pointer; display: inline-flex; flex: none; font: var(--type-button-weight) var(--type-button-size)/var(--lh-tight) var(--type-button-font); gap: var(--s-6); padding: var(--s-6) var(--s-10); white-space: nowrap; text-decoration: none; letter-spacing: var(--type-button-ls); text-transform: var(--type-button-case); }
   .msg .act:not(:disabled):is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .msg .act:not(:disabled):is(:hover, :active) .ico { color: inherit; }
   .msg .act .ico { color: var(--dim); margin: 0; width: var(--ico-sm); height: var(--ico-sm); }

@@ -1,6 +1,6 @@
 /* Base of every page: the boxes to tick, the fields and the focus, drawn the same in every app. */
   a:focus-visible:where(:not([data-theme="vitrine"] *)), button:focus-visible:where(:not([data-theme="vitrine"] *)), select:focus-visible:where(:not([data-theme="vitrine"] *)), input:focus-visible:where(:not([data-theme="vitrine"] *)), textarea:focus-visible:where(:not([data-theme="vitrine"] *)) { outline: var(--focus); outline-offset: var(--focus-offset); border-radius: var(--r-s); }
-  input:not([type=checkbox]):not([type=radio]), select, textarea { font: var(--field-weight) var(--field-size)/var(--field-lh) var(--body); letter-spacing: var(--field-ls); color: var(--ink); background: var(--field-bg); border: 1px solid var(--field-line); border-radius: var(--r-m); padding: 0 var(--field-px); min-width: 0; }
+  input:not([type=checkbox]):not([type=radio]), select, textarea { font: var(--type-text-weight) var(--type-text-size)/var(--field-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); color: var(--ink); background: var(--field-bg); border: 1px solid var(--field-line); border-radius: var(--r-m); padding: 0 var(--field-px); min-width: 0; text-transform: var(--type-text-case); }
   /* a field's text is centred in its height; only a textarea, which grows, takes room above and under its lines */
   textarea { padding-block: var(--field-py); }
   input::placeholder, textarea::placeholder { color: var(--faint); }
@@ -33,7 +33,7 @@
   a.link { color: inherit; text-decoration: none; }
   @media (hover: hover) { a.link:hover { color: var(--accent-text); } }
 /* its second line, in small under it (a linked operation's kind, 4.25.0): <a class="link">Le nom<small>remboursement</small></a> */
-  a.link > small { display: block; color: var(--faint); font-size: var(--fs-12); }
+  a.link > small { display: block; color: var(--faint); font-size: var(--type-caption-size); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* a quiet link of one icon beside a name (a person's profile on a network, 4.25.0): faint, gold on a gold ground under
    the pointer or the focus, its icon the small one: <a class="icon-link" href="…" aria-label="…"><svg class="ico">… */
   a.icon-link { display: inline-flex; padding: var(--s-2); border-radius: var(--r-s); color: var(--faint); }
@@ -45,18 +45,18 @@
   :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
 /* running text on the public sites: paragraphs at 85%, their links in gold, a little heavier and underlined */
   :where([data-theme="vitrine"]) p { color: var(--dim); }
-  :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: 400; text-decoration: underline; transition: color var(--t-fast) ease; }
+  :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: var(--type-strong-weight); text-decoration: underline; transition: color var(--t-fast) ease; }
   @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
 /* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
-  .field-label { display: block; color: var(--faint); font-family: var(--label-font); font-size: var(--field-label-size); font-weight: var(--label-weight);
-    letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .field-label { display: block; color: var(--faint); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
+    letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
 /* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
    .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
   .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);
-    font: var(--field-note-weight) var(--field-note-size)/var(--field-note-lh) var(--body); letter-spacing: var(--field-note-ls); }
+    font: var(--type-small-weight) var(--type-small-size)/var(--field-note-lh) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .field-note.is-good { color: var(--good); }
   .field-note.is-bad { color: var(--bad); }
-  .field-note.is-reserved { min-height: calc(var(--field-note-size) * var(--field-note-lh)); }
+  .field-note.is-reserved { min-height: calc(var(--type-small-size) * var(--field-note-lh)); }
   :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
 /* Something being saved or worked on (.is-busy on a photo's tile, a cover, a row): its picture steps back while it lasts;
    a button that works shows its wheel (buttons.css), a table's row steps back whole (table.css) */
@@ -85,12 +85,12 @@
   .search-field > .search-info:hover, .search-field > .search-info:focus-visible, .search-field > .search-info[aria-expanded="true"] { color: var(--accent-text); }
   .search-field > .search-help { display: none; position: absolute; top: calc(100% + var(--s-6)); right: 0; z-index: var(--z-over);
     width: min(100%, var(--read-s)); box-sizing: border-box; padding: var(--s-12) var(--s-16); background: var(--panel); border: 1px solid var(--line);
-    border-radius: var(--r-l); box-shadow: var(--shadow-pop); color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); }
+    border-radius: var(--r-l); box-shadow: var(--shadow-pop); color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .search-field > .search-help::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(var(--s-6) + 1px); }
   .search-field > .search-info:hover ~ .search-help, .search-field > .search-info:focus-visible ~ .search-help,
   .search-field > .search-help:hover, .search-field > .search-help.is-open { display: block; }
   .search-help dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-6) var(--s-16); margin: 0; }
-  .search-help dt { font: 500 var(--fs-12)/var(--lh-ui) var(--mono); color: var(--ink); white-space: nowrap; }
+  .search-help dt { font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); color: var(--ink); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .search-help dd { margin: 0; }
   @media (max-width: 480px) { .search-help dl { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-2); } .search-help dd { margin-bottom: var(--s-6); } }
 
@@ -107,7 +107,7 @@
    quieter ones), .tone.is-strong (the same, bold: a month's net) */
   .tone.is-gold { color: var(--accent-text); }
   .tone.is-ink { color: var(--ink); }
-  .tone.is-strong { color: var(--ink); font-weight: 600; }
+  .tone.is-strong { color: var(--ink); font-weight: var(--type-strong-weight); }
 /* a country's flag, an emoji, in the body's font so that a line in mono still draws it (4.26.1) */
-  .flag { font-family: var(--body); }
-  .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+  .flag { font-family: var(--type-text-font); }
+  .delta { font-variant-numeric: tabular-nums; font-weight: var(--type-strong-weight); white-space: nowrap; }

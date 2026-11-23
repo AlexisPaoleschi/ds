@@ -6,9 +6,9 @@
   .social-banner-inner, .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
   .social-banner-inner--no-border { border-top: none; }
   .social-banner-box { max-width: var(--read-s); margin: 0 auto; text-align: center; }
-  .social-banner-title, .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--display); font-size: var(--fs-28); font-weight: 400;
-    letter-spacing: var(--ls-107); text-transform: uppercase; color: var(--ink); }
-  .social-banner-text { margin-bottom: var(--s-32); font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--faint); }
+  .social-banner-title, .testimonials-banner-title { margin-bottom: var(--s-16); font-family: var(--type-title-1-font); font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight);
+    letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); color: var(--ink); }
+  .social-banner-text { margin-bottom: var(--s-32); font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .social-banner-links { display: flex; justify-content: center; gap: var(--s-24); }
   .social-banner-icon { width: var(--ico-m); height: var(--ico-m); }
   /* Responsive - Tablet */
@@ -21,18 +21,16 @@
   @media (max-width: 480px) {
     .social-banner, .testimonials-banner { padding: 0 var(--s-16); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-48) 0; }
-    .social-banner-title, .testimonials-banner-title { font-size: var(--fs-24); letter-spacing: var(--ls-083); }
-    .social-banner-text { font-size: var(--fs-14); }
   }
   .signup-banner { padding: var(--s-40); background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
   .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: var(--page-site);
     margin: 0 auto; }
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
   .signup-banner-icon { flex-shrink: 0; width: var(--picto-l); height: var(--picto-l); color: var(--accent); }
-  .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--display);
-    font-size: var(--fs-26); font-weight: 400; letter-spacing: var(--ls-096); text-transform: uppercase; color: var(--ink); }
+  .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--type-title-1-font);
+    font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
-  .signup-banner-subtitle { font-family: var(--body); font-size: var(--fs-16); font-weight: 300; line-height: var(--lh-loose); color: var(--faint); }
+  .signup-banner-subtitle { font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight); line-height: var(--lh-loose); color: var(--faint); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
   .signup-banner-form { flex: 1; min-width: 0; }
   .signup-banner-field { display: flex; gap: var(--s-12); }
   /* the newsletter's banner: its field written as long as the design system's field rule, so that the site's field keeps its own size; its text is the
@@ -40,10 +38,10 @@
   /* the same field in the banner and on the newsletter's page (newsletter.css) */
   .signup-banner input.signup-banner-input, .newsletter-field input.newsletter-input { height: auto; flex: 1; min-width: 0; padding: var(--s-14) var(--s-20); color: var(--ink);
     background: var(--white); border: 1px solid var(--line); transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); letter-spacing: var(--ls-063); }
+  .signup-banner-input::placeholder, .newsletter-input::placeholder { color: var(--faint); }
   .signup-banner input.signup-banner-input:focus, .newsletter-field input.newsletter-input:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
   /* as high as the field beside it: 8px lower than the site's large buttons */
-  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px); --btn-ls: var(--btn-l-ls); }
+  .signup-banner-button, .newsletter-form .btn { --btn-h: calc(var(--btn-l-h) - var(--s-8)); --btn-px: var(--btn-l-px);}
   /* Honeypot: moved off-screen rather than display:none, because some bots skip
      fields that are explicitly hidden and would give themselves away less. */
   .signup-banner-honeypot, .newsletter-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
@@ -65,8 +63,6 @@
     .signup-banner { padding: var(--s-24) var(--s-16); }
     .signup-banner-text { gap: var(--s-14); }
     .signup-banner-icon { width: var(--picto-m); height: var(--picto-m); }
-    .signup-banner-title { font-size: var(--fs-22); letter-spacing: var(--ls-091); }
-    .signup-banner-subtitle { font-size: var(--fs-14); }
     .signup-banner-field { flex-direction: column; gap: var(--s-12); }
     .signup-banner-button { width: 100%; }
     .signup-banner .field-note { min-height: 0; margin-top: var(--s-8); }

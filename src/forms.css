@@ -11,20 +11,19 @@
   .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
   .field-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
   .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
-  .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--check-size); }
+  .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--type-strong-size); font-family: var(--type-strong-font); font-weight: var(--type-strong-weight); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   .check > input { flex: none; margin: 0; }
   /* in Vitrine, what belongs to a form (a label, the line under a field, a box's words, its hint, a button) is medium; only
      the text around it is light */
-  :where([data-theme="vitrine"]) .check { font-weight: var(--label-weight); }
   /* the hint under a box is drawn as the line under a field (.field-note): one look for both */
   .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--dim);
-    font: var(--field-note-weight) var(--field-note-size)/var(--field-note-lh) var(--body); letter-spacing: var(--field-note-ls); }
+    font: var(--type-small-weight) var(--type-small-size)/var(--field-note-lh) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
   .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
   /* two fields side by side with their words (« du … au … »), one under the other on a phone */
   .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
-  .field-pair > label { display: contents; color: var(--faint); font: 500 var(--fs-13)/var(--lh-tight) var(--body); }
+  .field-pair > label { display: contents; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .field-pair :is(input, select) { min-width: 0; }
   @media (min-width: 769px) { .field-pair { grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); } }
   .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-12); margin-top: var(--space-lg); }

@@ -351,7 +351,7 @@ function stylesheets() {
     'Vitrine : les tuiles compactes sont les petites cartes du site, à part, avec une ombre douce, le chiffre or au-dessus de son libellé ' + JSON.stringify(tv));
   await v.setViewportSize({ width: 375, height: 812 });
   const tp = await tilesLook(v);
-  assert(tp.gap === '16px' && tp.size === '22px' && tp.figureFirst, 'Vitrine, sur téléphone : les cartes plus serrées, le chiffre de 22px ' + JSON.stringify(tp));
+  assert(tp.gap === '16px' && tp.size === '28px' && tp.figureFirst, 'Vitrine, sur téléphone : les cartes plus serrées, le chiffre de même taille (un rôle, 5.0.0) ' + JSON.stringify(tp));
   await vit.close();
 
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));

@@ -3,7 +3,7 @@
    comes: it turns gold and its arrow steps back (Selecta's). Over a photo (.on-photo: a hero's corner) it is the site's
    floating button instead, white with a soft gold edge, over a blur. The settings' .back stays the settings' own. */
   .back-link { display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-6) 0; color: var(--faint); text-decoration: none;
-    font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--back-ls); text-transform: uppercase; white-space: nowrap;
+    font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); white-space: nowrap;
     transition: color var(--t-fast) ease, background-color var(--t-fast) ease, border-color var(--t-fast) ease, transform var(--t-fast) ease, box-shadow var(--t-fast) ease; }
   .back-link .ico { width: var(--ico-m); height: var(--ico-m); transition: transform var(--t-fast) ease; }
   @media (hover: hover) {
@@ -22,7 +22,7 @@
     .back-link.on-photo:hover .ico { transform: none; }
   }
 @media (max-width: 480px) {
-  .back-link.on-photo { --back-ls: var(--ls-136); padding: var(--s-8) var(--s-14); font-size: var(--fs-11); }
+  .back-link.on-photo {padding: var(--s-8) var(--s-14); }
 }
 @media (prefers-reduced-motion: reduce) {
   .back-link, .back-link .ico { transition: none; }
@@ -33,7 +33,6 @@
    accent, its arrow stepping on under the pointer; in Vitrine in the site's small capitals (Studio's « Voir le détail »,
    Selecta's « Toute l'activité »). */
   .go-link { display: inline-flex; align-items: center; gap: var(--s-6); margin: 0; padding: var(--s-6) 0; background: none; border: 0; cursor: pointer;
-    color: var(--accent-text); font: 600 var(--fs-13)/var(--lh-tight) var(--body); text-decoration: none; white-space: nowrap; }
-  :where([data-theme="vitrine"]) .go-link { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--back-ls); text-transform: uppercase; }
+    color: var(--accent-text); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); text-decoration: none; white-space: nowrap; letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .go-link .ico { width: var(--ico-sm); height: var(--ico-sm); transition: transform var(--t-fast) ease; }
   @media (hover: hover) { .go-link:hover .ico { transform: translateX(var(--s-4)); } }

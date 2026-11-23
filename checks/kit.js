@@ -83,7 +83,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
 
   r = await p.evaluate(() => { const n = document.querySelectorAll('.note'); const a = [getComputedStyle(n[0]).fontSize, getComputedStyle(n[1]).color !== getComputedStyle(n[0]).color];
     document.documentElement.setAttribute('data-theme', 'vitrine'); return a.concat([getComputedStyle(n[0]).fontSize]); });
-  assert(same(r, ['13px', true, '14px']), 'the note follows its theme (13px in Atelier, 14px in Vitrine), is-faint quieter', r);
+  assert(same(r, ['13px', true, '13px']), 'the note is small text (13px in both themes), is-faint quieter', r);
 
   r = await p.evaluate(() => { document.documentElement.lang = 'en'; const t = ds.day.today();
     return [ds.plural(0, 'item'), ds.list(['A', 'B', 'C']), ds.duration(456), ds.every(7200), ds.date(ds.day.add(t, 3), 'relative'), ds.date(t, 'heading')]; });
@@ -134,7 +134,7 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     document.documentElement.setAttribute('data-theme', 'vitrine');
     const b = [g('.title-1').textTransform, g('.title-1').fontWeight, g('.lede').maxWidth, g('#pressed').borderColor === g('.btn[aria-pressed]').borderColor];
     document.documentElement.setAttribute('data-theme', 'atelier'); return [a, b]; });
-  assert(same(r[0], ['28px', '22px', '17px', 'uppercase', 'flex', '100%']) && same(r[1].slice(0, 3), ['uppercase', '400', '640px']), 'three heading levels and a page head, in each theme', r);
+  assert(same(r[0], ['28px', '22px', '17px', 'none', 'flex', '100%']) && same(r[1].slice(0, 3), ['uppercase', '400', '640px']), 'three heading levels and a page head, in each theme', r);
 
   r = await p.evaluate(async () => { const picks = []; ds.rows('#tb', { open: row => picks.push(row.dataset.k) });
     const row = document.querySelector('#tb tr.is-link'); row.querySelector('td').click(); row.querySelector('button').click();

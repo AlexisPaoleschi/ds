@@ -12,8 +12,8 @@
   .event-card { --card-lift: calc(-1 * var(--s-6)); }
   /* Highlights */
   .event-card-highlights { display: flex; flex-wrap: wrap; gap: var(--s-12); margin-top: var(--s-4); }
-  .event-card-highlight { display: inline-flex; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--s-14); font-family: var(--body);
-    font-size: var(--fs-12); font-weight: 500; line-height: var(--lh-tight); letter-spacing: var(--ls-083); text-transform: uppercase;
+  .event-card-highlight { display: inline-flex; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--s-14); font-family: var(--type-smallcaps-font);
+    font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); line-height: var(--lh-tight); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case);
     color: var(--faint); background: var(--band); border: 1px solid var(--line); }
   .event-card-highlight-icon { flex-shrink: 0; width: var(--ico-sm); height: var(--ico-sm); color: var(--accent); }
   /* Models */
@@ -21,13 +21,13 @@
   .event-card-model { display: flex; align-items: center; gap: var(--s-10); }
   /* the design system's round avatar (.avatar.is-round), at the site's size, inside a thin gold ring */
   .event-card-model-avatar { width: 40px; height: 40px; border: 2px solid var(--line); }
-  .event-card-model-name { font-family: var(--body); font-size: var(--fs-14); font-weight: 400; letter-spacing: var(--ls-036); color: var(--faint); }
+  .event-card-model-name { font-family: var(--type-small-font); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); color: var(--faint); text-transform: var(--type-small-case); }
   /* Description */
-  .event-card-description { font-family: var(--body); font-weight: 300; line-height: var(--lh-airy); color: var(--dim); }
+  .event-card-description { font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* Card Footer */
   .event-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--s-20); margin-top: var(--s-8);
     padding-top: var(--s-24); border-top: 1px solid var(--line); }
-  .event-card-price { font-family: var(--display); font-size: var(--fs-32); font-weight: 400; letter-spacing: var(--ls-063); color: var(--ink); }
+  .event-card-price { font-family: var(--type-figure-font); font-size: var(--type-figure-size); font-weight: var(--type-figure-weight); letter-spacing: var(--type-figure-ls); color: var(--ink); text-transform: var(--type-figure-case); }
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .events-main { padding: 0 var(--s-24); }
@@ -36,7 +36,7 @@
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
     .events-hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
-    .event-card { --card-pad: var(--s-24); --card-title-size: var(--fs-24); }
+    .event-card { --card-pad: var(--s-24);}
   }
   /* ─── Portrait phone only (≤768px) ─── */
   @media (max-width: 768px) {
@@ -47,7 +47,5 @@
     .events-main { padding: 0 var(--s-16); }
     .events-grid { gap: var(--s-24); margin-top: var(--s-36); margin-bottom: var(--s-48); }
     .event-card-highlights { gap: var(--s-8); }
-    .event-card-highlight { padding: calc(var(--s-10) / 2) var(--s-10); font-size: var(--fs-11); }
-    .event-card-description { font-size: var(--fs-14); }
-    .event-card-price { font-size: var(--fs-28); }
+    .event-card-highlight { padding: calc(var(--s-10) / 2) var(--s-10); }
   }

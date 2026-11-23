@@ -10,8 +10,8 @@
   .card.is-link { color: inherit; text-decoration: none; transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
   @media (hover: hover) { .card.is-link:hover { transform: translateY(var(--card-lift)); box-shadow: var(--card-hover-shadow); } }
   /* a card's label, and what acts on the card beside it; when both do not hold on the line, the action goes under it */
-  .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--label-weight) var(--fs-13)/var(--lh-tight) var(--label-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--label-ls); margin: 0 0 var(--s-12); text-transform: uppercase; }
-  h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-6); letter-spacing: var(--label-ls); margin: var(--s-16) 0 var(--s-6); text-transform: uppercase; }
+  .ct { align-items: center; color: var(--faint); display: flex; flex-wrap: wrap; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); gap: var(--s-8) var(--s-10); letter-spacing: var(--type-smallcaps-ls); margin: 0 0 var(--s-12); text-transform: var(--type-smallcaps-case); }
+  h4.sect { align-items: center; color: color-mix(in oklab, var(--n, var(--faint)) var(--tint-ink), var(--ink)); display: flex; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); gap: var(--s-6); letter-spacing: var(--type-smallcaps-ls); margin: var(--s-16) 0 var(--s-6); text-transform: var(--type-smallcaps-case); }
   /* a section's title right above a list (Studio: « Du plus récent au plus ancien », Bank: a trip's ticked operations):
      a line under it, its action on its right (a button); as high as that button, with one or not, so that its words sit
      at the same place in every list; the list's first row then needs no line of its own */
@@ -22,20 +22,19 @@
   .empty-note { color: var(--dim); margin: 0; }
   /* in a list, as high as its rows */
   li.empty-note { list-style: none; padding: var(--s-12) var(--s-2); }
-  .empty-note.is-box { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--r-l); color: var(--faint); font-size: var(--fs-14); padding: var(--s-32) var(--s-16); text-align: center; }
+  .empty-note.is-box { background: var(--panel); border: 1px dashed var(--line); border-radius: var(--r-l); color: var(--faint); font-size: var(--type-small-size); padding: var(--s-32) var(--s-16); text-align: center; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a short sentence under a block, quieter than the text: what a figure means, where it comes from */
-  .note { color: var(--dim); font-size: var(--note-size); line-height: var(--lh-ui); margin: var(--s-8) 0 0; }
+  .note { color: var(--dim); font-size: var(--type-small-size); line-height: var(--lh-ui); margin: var(--s-8) 0 0; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* quieter still: a count, a state, what is going on (« 12 photos dans la sélection », « Aucune notification ») */
   .note.is-faint { color: var(--faint); }
   /* an icon before a card's or a section's title, in gold, the size of its capitals */
   .ct > .ico, h4.sect > .ico { color: var(--accent-text); height: var(--ico-s); width: var(--ico-s); }
-  /* in Atelier, Archivo's capitals stand higher than the middle of their 13px line (0.9px): the icon and the swatch go up
-     to theirs; not on a title made smaller to fit (ct-fit-2, ct-fit-3), whose lines round the other way, nor in Vitrine,
-     whose capitals sit on the middle (icon audit, 22 November 2026) */
-  .ct:not(.ct-fit-2, .ct-fit-3) > :is(.ico, .swatch):where(:not([data-theme="vitrine"] *)) { translate: 0 -0.075em; }
+  /* in Atelier, Archivo's capitals stand higher than the middle of their line: the icon and the swatch go up to theirs;
+     not in Vitrine, whose capitals sit on the middle (icon audit, 22 November 2026) */
+  .ct > :is(.ico, .swatch):where(:not([data-theme="vitrine"] *)) { translate: 0 -0.075em; }
   /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
      control rather than the title's capitals; on a narrow line it goes under the title */
-  .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
+  .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: var(--type-button-ls); margin-left: auto; text-transform: var(--type-button-case); font-family: var(--type-button-font); font-size: var(--type-button-size); font-weight: var(--type-button-weight); }
   /* a card title with its tools (a period selector, tabs; ds.card): they go under the title on a narrow screen, the fold's
      chevron just after them, and a folded card hides them (its chevron back on the right) */
   .ct:has(> .ct-tools) { row-gap: var(--s-8); }
@@ -43,11 +42,6 @@
   .ct-tools :is(.tabs, .periodpick) { margin: 0; }
   .card.is-folded > .ct > .ct-tools { display: none; }
   .card.is-folded > .ct.fold:has(> .ct-tools)::after { margin-left: auto; }
-  /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
-  .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
-  .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }
-  .ct.ct-fit-3 { font-size: var(--fs-11); letter-spacing: var(--ls-045); }
-  .ct.ct-fit-3 .pill { --pill-px: var(--s-8); }
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
    Its chevron turns; a closed card's title takes no room below it. A card's title that folds its card itself, its state
@@ -70,11 +64,11 @@
   .folds > details.fold { border-top: 1px solid var(--line); }
   /* a group's title in its summary, in gold (who made the rules), and what it is under it, before its lines (4.26.0):
      <summary><span class="fold-t">Apprises</span><span class="fold-n">12</span></summary><p class="fold-d">… */
-  .fold-t { font: 700 var(--fs-13)/var(--lh-tight) var(--display); color: var(--accent); }
-  .fold-d { margin: 0 0 var(--s-6); font-size: var(--fs-13); color: var(--dim); }
+  .fold-t { font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); color: var(--accent); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
+  .fold-d { margin: 0 0 var(--s-6); font-size: var(--type-small-size); color: var(--dim); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .folds > details.fold:first-child { border-top: none; }
   .folds > details.fold > summary { padding-block: var(--s-12); }
-  details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
+  details.fold .fold-n { font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   details.card.fold:not([open]) > summary.ct { margin-bottom: 0; }
   /* a card folded by its title (ds.foldCard): only the title stays */
   .card.is-folded > :not(.ct) { display: none !important; }
@@ -99,47 +93,47 @@
     border-right: 1.5px solid var(--accent-text); transform: rotate(45deg); transition: transform var(--t-mid) ease; }
   details.fold.is-lead[open] > summary::before { transform: translateY(-28%) rotate(135deg); }
   /* what a section comes to, on the right of its title (Bank's bills: « Prévu 1 234€ ») */
-  h4.sect > .sect-sum { display: inline-flex; align-items: baseline; gap: var(--s-6); margin-left: auto; color: var(--dim); font: 400 var(--fs-12)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; }
-  h4.sect > .sect-sum b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
+  h4.sect > .sect-sum { display: inline-flex; align-items: baseline; gap: var(--s-6); margin-left: auto; color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  h4.sect > .sect-sum b { color: var(--ink); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a short note right after its title, in the body's words and not in capitals (a line's move today: « +1,2 % à 17h »,
      in its tone, 4.25.0) */
-  h4.sect > .sect-note { margin-left: var(--s-6); font: 600 var(--fs-12)/var(--lh-ui) var(--body); letter-spacing: 0; text-transform: none; }
+  h4.sect > .sect-note { margin-left: var(--s-6); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a line of short figures in mono, in gold (the golden hour: « ☀ 7h52 → 8h40 48 min ») : b a figure in ink, i its note,
      faint; the items apart (4.25.0) */
-  .figline { display: flex; flex-wrap: wrap; gap: var(--s-14); margin: 0 0 var(--s-10); font: 500 var(--fs-13)/var(--lh-ui) var(--mono); color: var(--accent); }
-  .figline b { font-weight: 600; color: var(--ink); }
+  .figline { display: flex; flex-wrap: wrap; gap: var(--s-14); margin: 0 0 var(--s-10); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--mono); color: var(--accent); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .figline b { font-weight: var(--type-strong-weight); color: var(--ink); }
   .figline i { font-style: normal; color: var(--faint); margin-left: var(--s-6); }
   /* a card's total and its lines (a bank and its accounts): .sum-head, its name in small capitals in its colour (--n) and
      its figure large; .sum-line under it, a line's name and figure, quieter; .sum-link, a figure and its word aligned right
      with its arrow (where the money goes at the month's end; is-bad in red); each may be a link, gold under the pointer */
   :is(.sum-head, .sum-line) { display: flex; align-items: center; gap: var(--s-12); color: inherit; text-decoration: none; }
   :is(.sum-head, .sum-line) > .sum-name { flex: 1; min-width: 0; }
-  .sum-head > .sum-name { color: var(--n, var(--accent-text)); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); text-transform: uppercase; }
-  .sum-head > .sum-fig { font: 700 var(--fs-display-2)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-head > .sum-name { color: var(--n, var(--accent-text)); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+  .sum-head > .sum-fig { font: var(--type-figure-weight) var(--type-figure-size)/var(--lh-tight) var(--type-figure-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-figure-ls); text-transform: var(--type-figure-case); }
   .sum-line { padding: var(--s-10) 0 0 var(--s-14); }
-  .sum-line > .sum-name { color: var(--dim); font: 500 var(--fs-15)/var(--lh-ui) var(--body); }
-  .sum-line > .sum-fig { color: var(--dim); font: 600 var(--fs-17)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-line > .sum-name { color: var(--dim); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-ui) var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .sum-line > .sum-fig { color: var(--dim); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .sum-link { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-10); color: var(--faint); text-align: right; text-decoration: none; }
   .sum-link > span { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-2); }
-  .sum-link b { color: var(--dim); font: 600 var(--fs-15)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-link b { color: var(--dim); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--type-strong-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   /* a note under a line, a link to its detail (the bills account's « fin du mois estimée 412 € → », 4.25.0): set in as the
      line, small and faint, in ink under the pointer; .is-bad when it says money must be sent */
   a.sum-note { display: flex; align-items: center; gap: var(--s-2); padding: var(--s-4) 0 0 var(--s-14); color: var(--faint);
-    font: 500 var(--fs-12)/var(--lh-ui) var(--body); text-decoration: none; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   a.sum-note .ico { width: var(--ico-s); height: var(--ico-s); flex: none; }
   a.sum-note.is-bad { color: var(--bad); }
   a.sum-note:is(:hover, :focus-visible) { color: var(--ink); }
-  .sum-link small { font: 500 var(--fs-11)/var(--lh-tight) var(--body); white-space: nowrap; }
+  .sum-link small { font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .sum-link > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); }
   .sum-link.is-bad :is(b, small) { color: var(--bad); }
   @media (hover: hover) { a:is(.sum-head, .sum-line):hover > .sum-name { color: var(--accent); } .sum-link:hover :is(b, .ico) { color: var(--accent); } }
   .sum-link:focus-visible b { color: var(--accent); }
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */
-  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--title-weight) var(--card-title-size)/var(--title-lh) var(--title-font);
-    letter-spacing: var(--card-title-ls); text-transform: var(--title-case); }
+  .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--type-card-title-weight) var(--type-card-title-size)/var(--title-lh) var(--type-card-title-font);
+    letter-spacing: var(--type-card-title-ls); text-transform: var(--type-card-title-case); }
   .card-meta { display: flex; align-items: center; gap: var(--s-8); margin: 0 0 var(--card-gap); color: var(--faint);
-    font: var(--card-meta-weight) var(--card-meta-size)/var(--card-meta-lh) var(--body); letter-spacing: var(--card-meta-ls); text-transform: uppercase; }
+    font: var(--type-caps-weight) var(--type-caps-size)/var(--card-meta-lh) var(--type-caps-font); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); }
   /* in vitrine, on the middle of its capitals (+0.6 to +1px low before, 22 November 2026) */
   [data-theme="vitrine"] .card-meta svg { translate: 0 -0.06em; }
   .card-meta svg { flex: none; width: var(--ico-m); height: var(--ico-m); color: var(--accent); }
@@ -154,8 +148,8 @@
   .card-body { display: flex; flex: 1; flex-direction: column; gap: var(--card-gap); padding: var(--card-pad); }
   .card-body > * { margin: 0; }
   /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
-  .card.is-small { --card-title-size: var(--card-s-title-size); --card-title-ls: var(--card-s-title-ls); --card-pad: var(--card-s-pad);
-    --card-gap: var(--card-s-gap); --card-meta-size: var(--card-s-meta-size); --cover-badge: var(--card-s-badge); }
+  .card.is-small {--card-pad: var(--card-s-pad);
+    --card-gap: var(--card-s-gap);--cover-badge: var(--card-s-badge); }
 /* The ruled card in a colour of its own (Bank: a card per bank, each in its bank's colour, as many a row as fit):
    .card.is-ruled.is-tinted with --n; its label (.ct) takes the colour too. Without --n, the gold of .is-ruled. */
   .card.is-ruled.is-tinted { border-top-color: var(--n, var(--accent)); }

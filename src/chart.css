@@ -7,7 +7,7 @@
   .chart-line-svg { display: block; width: 100%; height: 40px; overflow: visible; }
   .chart-rule { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
   .chart-path { fill: none; stroke: var(--n, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+  .chart-line-y, .chart-line-x { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-line-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
   .chart-line-x { display: flex; justify-content: space-between; }
   /* tall, a chart of its own: room above it for the bubble; the dashed level and its name, the dots of the days given,
@@ -22,21 +22,21 @@
   .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
   .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
   .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
-    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
-  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
+  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;
     background: var(--panel); border: 2px solid var(--n, var(--accent)); }
   .chart-dot { background: var(--n, var(--accent)); pointer-events: none; }
   .chart-cursor { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line-2); pointer-events: none; }
   .chart-tip { position: absolute; top: 0; z-index: var(--z-raise); transform: translate(-50%, calc(-100% - var(--s-4))); padding: var(--s-4) var(--s-8);
     background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-s); box-shadow: var(--shadow-pop); color: var(--ink);
-    font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; pointer-events: none; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
    --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
    of its own figures (1ch in its font) */
   .chart-bars { --bars-h: 120px; --bars-room: 18px; position: relative; min-width: 0; padding: var(--bars-room) 0 0 calc(var(--axc, 4) * 1ch + var(--s-6));
-    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the scale's box stops on the bars' base line, so that its 0 sits on it */
   .chart-bars-axis, .chart-bars-grid, .chart-bars-avg { position: absolute; top: var(--bars-room); height: calc(var(--bars-h) - 1px); pointer-events: none; }
   .chart-bars-axis { left: 0; width: calc(var(--axc, 4) * 1ch); }
@@ -61,8 +61,8 @@
   /* the figure sits on its bar; past a year the columns are too narrow: on hover or when chosen only */
   .chart-bar-v { position: absolute; bottom: calc(100% + var(--s-4)); left: 50%; color: var(--dim); white-space: nowrap; transform: translateX(-50%); }
   .chart-bars.is-dense .chart-bar-v { visibility: hidden; }
-  .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: 600; }
-  .chart-bar-l { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; text-transform: uppercase; white-space: nowrap; }
+  .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: var(--type-strong-weight); }
+  .chart-bar-l { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); white-space: nowrap; }
   .chart-bar.is-on .chart-bar-l { color: var(--accent-text); }
 /* paired bars (Bank's money in and out): a bar per series side by side in each column, each in its colour; their figures
    stacked over the tallest, in the same colours, on hover, under the keys or when chosen. The room above the scale holds
@@ -73,9 +73,9 @@
   .chart-bars.is-pairs .chart-bar-stack i { flex: 1; }
   .chart-bar-vs { position: absolute; left: 50%; display: flex; flex-direction: column; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4);
     transform: translateX(-50%); visibility: hidden; pointer-events: none; }
-  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: 600; transform: none; }
+  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: var(--type-strong-weight); transform: none; }
   .chart-bar:hover .chart-bar-vs, .chart-bar.is-on .chart-bar-vs, .chart-bar:focus-visible .chart-bar-vs, .chart-bars.is-pairs .chart-bar:focus-visible .chart-bar-v { visibility: visible; }
-  .chart-bars-legend { margin-top: var(--s-12); font-family: var(--body); line-height: var(--lh-ui); }
+  .chart-bars-legend { margin-top: var(--s-12); font-family: var(--type-caption-font); line-height: var(--lh-ui); font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* a year of days: one square per day, a column per week, Monday on top; pale, coloured, full */
   .chart-heat { --heat-gap: var(--s-2); min-width: 0; }
   /* a narrow card scrolls the year sideways, opened on its latest weeks, instead of shrinking the squares below the size
@@ -83,11 +83,11 @@
   .chart-heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--s-4); contain: inline-size; }
   .chart-heat-year { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); min-width: 740px; }
   .chart-heat-year + .chart-heat-year { margin-top: var(--s-14); }
-  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-year.has-below .chart-heat-dow { grid-template-rows: 16px repeat(7, minmax(0, 1fr)) 34px; }
   .chart-heat-dow span { display: flex; align-items: center; }
   .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
-  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
   .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); }
   .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
@@ -96,16 +96,13 @@
   .heat-day.is-future { visibility: hidden; }
   /* a week's figure under its column, upright: what it gained */
   .chart-heat-below { height: 34px; margin-top: var(--heat-gap); padding-top: var(--s-4); }
-  .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
-  .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--fs-12); }
+  .chart-heat-below span { justify-self: center; color: var(--good); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--type-caption-size); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-legend span { display: inline-flex; align-items: center; gap: var(--s-4); }
   .chart-heat-legend .heat-day { width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); }
   .chart-heat-note { color: var(--good); }
 @media (max-width: 768px) {
   /* the bars: smaller figures, and one month name in two where twelve would touch */
-  .chart-bars { font-size: var(--fs-11); }
-  .chart-bar-v { letter-spacing: var(--ls-tight); }
-  .chart-bar-l { font-size: var(--fs-11); }
   .chart-bar-yr { display: none; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt .chart-bar-l { visibility: hidden; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt:not(.is-on):not(:hover) .chart-bar-v { visibility: hidden; }
@@ -117,12 +114,12 @@
   .chart-split { display: grid; gap: var(--s-6); min-width: 0; }
   .chart-split-bar { display: flex; gap: calc(var(--s-2) / 2); height: 8px; overflow: hidden; background: var(--panel-2); border-radius: var(--r-s); }
   .chart-split-bar i { display: block; height: 100%; }
-  .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
+  .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--type-caption-size); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* on one baseline: the smaller figures would otherwise sit too high */
   .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
   .chart-key, :is(.chart-split-legend, .chart-bars-legend) .swatch { align-self: center; }
-  .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
-  .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
+  .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-split-legend em { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-style: normal; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on
    a phone), one row per slice: its colour, its name, its share, its amount. With pick, slices and rows are buttons: the
    chosen slice moves out, the others fade, its row is in gold */
@@ -138,22 +135,22 @@
   .chart-donut-slice:focus-visible { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
   .chart-donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); padding: 0 22%;
     pointer-events: none; text-align: center; }
-  .chart-donut-c b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls);
-    text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+  .chart-donut-c b { color: var(--ink); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
+  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-ui) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls);
+    text-overflow: ellipsis; text-transform: var(--type-smallcaps-case); white-space: nowrap; }
   .chart-donut-legend { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
   .chart-donut-legend li + li .chart-donut-row { border-top: 1px solid var(--line); }
   .chart-donut-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: baseline; gap: var(--s-10); width: 100%; box-sizing: border-box; margin: 0;
-    padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); text-align: left; }
+    padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); text-align: left; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   button.chart-donut-row { cursor: pointer; }
   /* what the chosen row opens, under it, the row's line over it */
   .chart-donut-open { min-width: 0; padding: var(--s-4) 0 var(--s-16); }
-  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: var(--type-strong-weight); overflow-wrap: anywhere; }
   /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
-  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-donut-n.is-bad { color: var(--bad); } .chart-donut-n.is-good { color: var(--good); }
-  .chart-donut-row em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
-  .chart-donut-row b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .chart-donut-row em { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-style: normal; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-donut-row b { color: var(--ink); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent-text); }
   .chart-donut-row.is-on b { color: var(--accent-text); }
 @media (max-width: 768px) {

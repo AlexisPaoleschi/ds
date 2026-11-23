@@ -13,12 +13,12 @@
   /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
   .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-icon-h); height: var(--btn-icon-h); padding: 0; }
-  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-ui) var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .dp-title::first-letter, .dp-title.is-zoom > span::first-letter { text-transform: uppercase; }
   /* the title that zooms out (the twelve months, then the years): the head's words with a small chevron, no frame, gold
      under the pointer; its words stay a block so that their first letter still rises */
   .datepick .dp-title.is-zoom { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: var(--s-4); min-width: 0; padding: var(--s-6) var(--s-8);
-    border-color: transparent; color: var(--ink); font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    border-color: transparent; color: var(--ink); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-ui) var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .dp-title.is-zoom > span { display: inline-block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .dp-title.is-zoom > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); color: var(--faint); transition: color var(--t-fast), transform var(--t-fast); }
   /* Gilda's capitals stand higher than the middle of their line (1px at 14px): the chevron goes up to theirs (icon audit,
@@ -35,7 +35,7 @@
   .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
   .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
   .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
-  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
   .datepick .dp-grid button.is-today:not([aria-pressed="true"]) { border-color: var(--accent-line); color: var(--ink); }
   .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
@@ -43,7 +43,7 @@
   [data-theme="vitrine"] .datepick .dp-grid button.is-in { background: color-mix(in srgb, var(--accent) 20%, transparent); }
   .datepick button:disabled { opacity: .35; cursor: default; }
   .datepick button:disabled:hover { border-color: var(--line); color: var(--dim); }
-  .dp-hint { margin: 0; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-ui); }
+  .dp-hint { margin: 0; color: var(--faint); font-size: var(--type-caption-size); line-height: var(--lh-ui); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the public sites show the keys' place as their fields do: the gold edge and its halo */
   [data-theme="vitrine"] .datepick button:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
 @media (prefers-reduced-motion: reduce) {
@@ -60,6 +60,6 @@
 }
 @media (max-width: 480px) {
   /* four units side by side in a phone's width: the tabs' capitals closer, as the calendar's views are */
-  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-045); }
+  .datepick .tabs button { padding: var(--s-6) var(--s-2); }
   .dp-quick button { padding-inline: var(--s-6); }
 }

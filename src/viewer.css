@@ -22,7 +22,7 @@
   /* the site's position over the photo: « 2 / 9 » in a blurred pill */
   .viewer-count { position: absolute; z-index: var(--z-raise); left: 50%; bottom: calc(var(--s-32) + var(--safe-bottom)); transform: translateX(-50%); padding: var(--s-12) var(--s-28);
     color: var(--viewer-ink); background: var(--overlay-black-medium); border: 1px solid var(--viewer-line); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-    font: 300 var(--fs-14)/var(--lh-loose) var(--body); letter-spacing: var(--ls-143); white-space: nowrap; }
+    font: var(--type-small-weight) var(--type-small-size)/var(--lh-loose) var(--type-small-font); letter-spacing: var(--type-small-ls); white-space: nowrap; text-transform: var(--type-small-case); }
 @media (max-width: 768px) {
   /* on a phone the photo takes the width, and the arrows sit over it */
   .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); }
@@ -46,8 +46,8 @@
   .viewer.is-dragging .viewer-stage img, .viewer.is-dragging .viewer-veil { transition: none; }
   /* under the photo, in the row viewer.css keeps for an app's bar: a caption, when an item has one */
   .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
-  .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
-    font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-036); }
+  .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--type-text-size) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
+    font: var(--type-text-weight) var(--type-text-size)/var(--lh-text) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* a field in the bar (Selecta's note on a photo), light on the dark veil, and the line under it */
   .viewer-bar :is(input:not([type=checkbox]):not([type=radio]), textarea) { width: 100%; color: var(--white); background: var(--overlay-black-soft); border-color: var(--viewer-line); }
   .viewer-bar :is(input, textarea)::placeholder { color: var(--viewer-ink); }

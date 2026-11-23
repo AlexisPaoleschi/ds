@@ -32,76 +32,28 @@
 :root {
     /* The three spaces that grow on a computer (--space-md, --space-lg, --space-xl) are the design system's, from 4.19.0. */
 
-    /* The four text sizes that grow one step on a computer (--text-md, --text-lg, --text-xl, --text-2xl) are the
-       design system's, from 2.39.0. */
+    /* Its text takes the design system's thirteen text roles (--type-..., 5.0.0), and no size of its own. */
 
     /* One height for every control (a select, an input and a button have three different line boxes): Vitrine's
        --control-h, 45px, the design system's. */
-
-    /* The design system's lasting message (.msg) in Selecta's text size and room. */
-    --msg-size: var(--fs-14);
-    --msg-py: var(--s-12);
-    --msg-px: var(--s-20);
-
-    /* The design system's line under a field (.field-note), where a refusal is written: in Selecta's text. */
-    --field-note-size: var(--fs-14);
-    --field-note-weight: 300;
-    --field-note-lh: var(--lh-ui);
-    --field-note-ls: normal;
 
     /* The touch target, the veils over a photo and the notch's insets are the design system's (--touch-target,
        --overlay-*, --safe-*). */
 }
 
 
-/* Document-level reset, loaded by every page right after tokens.css, after the design system. */
-
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
+/* Loaded by every page right after tokens.css, after the design system (its reset: text that keeps its size when a
+   phone turns, pictures that never run wider than their room). */
 
 html {
-    -webkit-text-size-adjust: 100%;
-    text-size-adjust: 100%;
-
     /* clip and not hidden: hidden makes a scroll container, which would break the sticky selection panel. */
     overflow-x: clip;
 }
 
-
-img,
-video,
-canvas {
-    max-width: 100%;
-}
-
-
-/* --- Selecta on the design system: its components, in the Vitrine theme (its soft gold line, --line, is Selecta's),
-   with Selecta's capitals. */
-
-/* Buttons: the design system's, in Vitrine's capitals; Selecta's height: as tall as a field, not the site's 63px. Its
-   small button's size is set in tokens.css. */
-.btn {
-    --btn-h: var(--control-h);
-    line-height: var(--lh-ui);
-}
-
-/* A lasting message: the design system's, in Selecta's weight and spacing (its size and room in tokens.css); a refusal
-   is written in red. */
-.msg {
-    font-weight: 500;
-    letter-spacing: var(--ls-loose);
-}
-
-.msg.is-bad {
-    color: var(--bad);
-}
-
-
 /* Authenticated areas: top bar, page container, tables, forms, cards. */
-body { display: flex; flex-direction: column; margin: 0; /* dvh, not vh: 100vh counts the browser chrome a phone does not show. */ min-height: 100vh; min-height: 100dvh; font-family: var(--body); font-size: var(--text-md); font-weight: 300; line-height: var(--lh-loose); color: var(--ink); background-color: var(--bg); }
+body { display: flex; flex-direction: column; margin: 0; /* dvh, not vh: 100vh counts the browser chrome a phone does not show. */ min-height: 100vh; min-height: 100dvh;
+  /* its text: the design system's page (its text role, its ink, its ground), in the site's airy line height */
+  --text-lh: var(--lh-loose); }
 body > main { flex: 1; width: 100%; }
 .page-header { display: flex; flex-direction: column; align-items: flex-start; flex-wrap: wrap; gap: var(--s-12); margin-bottom: var(--space-lg); }
 @media (min-width: 769px) {
@@ -275,21 +227,11 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
    client selecting right now with the dot breathing (li.is-live) */
 /* the way to the whole history: the design system's (.go-link), at the card's foot */
 .gallery-activity > .go-link { align-self: flex-start; margin-top: auto; }
-/* --- The design system's top bar, solid (.topbar.is-solid: its white panel under a soft shadow), in Selecta's height and
-   spacing: its name in the display font's capitals, a little spaced. */
-.topbar { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-size: var(--text-lg); --brand-ls: var(--ls-loose); --brand-color: var(--ink); }
+/* --- The design system's top bar, solid and compact (.topbar.is-solid.is-compact: its white panel under a soft shadow,
+   less room, its name in ink, a little spaced). */
 .topbar-nav form { display: flex; }
 @media (min-width: 769px) {
-  .topbar { --topbar-px: var(--space-lg); }
-}
-@media (max-width: 480px) {
-  .topbar { --topbar-gap: var(--s-8); }
-}
-@media (min-width: 769px) {
   .tbl th:not(:first-child), .tbl td:not(:first-child) { text-align: center; }
-}
-@media (min-width: 769px) {
-  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); --hero-t-size: var(--fs-36); }
 }
 /* A phone's table card: a cell's name on the left, all it holds together on the right (a gallery's notes, its count
    and its bar). */
@@ -302,16 +244,8 @@ ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: 
    under) is taken from the gap. */
 .back-link { margin-bottom: calc(var(--space-md) - var(--s-12)); }
 
-/* The design system's footer (.site-footer), in Selecta's letter spacing, clear of the notch and the home indicator;
-   its contact links (an icon then the words, as tall as a finger) are the design system's. */
-.site-footer {
-    --footer-ls: var(--ls-loose);
-    padding-right: calc(var(--s-20) + var(--safe-right));
-    padding-bottom: calc(var(--footer-py) + var(--safe-bottom));
-    padding-left: calc(var(--s-20) + var(--safe-left));
-}
-
-
+/* The design system's footer (.site-footer.is-spaced: its words a little spaced, clear of the notch and the home
+   indicator; its contact links, an icon then the words, as tall as a finger). */
 /* one link under the other on a phone */
 @media (max-width: 768px) {
     .site-footer nav {

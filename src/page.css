@@ -6,24 +6,26 @@
      and Studio's, every app's) */
   html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   img, video, canvas { max-width: 100%; }
-  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); -webkit-font-smoothing: antialiased; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--text-lh); -webkit-font-smoothing: antialiased; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   a { color: inherit; }
+  /* a word put forward takes the strong weight, never the browser's bold (5.0.0) */
+  b, strong { font-weight: var(--type-strong-weight); }
   .ico { width: var(--ico-m); height: var(--ico-m); flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
   header.top { align-items: center; border-bottom: 1px solid var(--line-2); display: flex; gap: var(--s-12); justify-content: space-between; padding-bottom: var(--s-12); position: relative; }
-  .brand { font: var(--title-weight) var(--fs-13)/var(--lh-tight) var(--title-font); letter-spacing: var(--ls-brand); text-transform: uppercase; color: var(--accent-text); }
+  .brand { font: var(--brand-weight) var(--brand-size)/var(--lh-tight) var(--brand-font); letter-spacing: var(--brand-ls); text-transform: uppercase; color: var(--accent-text); }
   /* the header's square buttons (reload the sources, the settings, the new version): .btn.is-icon, quieter than a button
      of the page, on the panel's ground with a faint icon; under the pointer and pressed, its icon and its edge in gold like
      every button; a lit new version (.newver.is-on, live.css) keeps its gold. One with nothing to do (disabled: Bank's
      undo and redo) stays in its place, greyed further (--o-off), and does not light up */
   :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
   :where(header.top) .btn.is-icon:disabled { opacity: var(--o-off); }
-  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: 600 var(--fs-11)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; }
+  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   /* ds.busy puts the class loading on header.top while something loads; .busy-text says what, for screen readers only */
   header.top.is-loading .busy { visibility: visible; }
   header.top .busy .busy-text { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-  header.top .busy .busy-share { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  header.top .busy .busy-share { font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--accent-text); min-width: 3.2ch; font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* its disc on the middle of the name's capitals (1.1px low before, 22 November 2026) */
   header.top .busy .busy-ok { display: none; width: 16px; height: 16px; border-radius: 50%; background: var(--good-soft); place-items: center; translate: 0 -0.1em; }
   header.top .busy .busy-ok svg { fill: none; height: var(--ico-s); stroke-dasharray: 16; stroke-dashoffset: 16; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2.4; stroke: var(--good); width: var(--ico-s); }
@@ -39,13 +41,13 @@
 /* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
   .boot { display: grid; place-items: center; text-align: center; min-height: 52vh; padding: var(--s-24); transition: opacity var(--t-mid) ease; }
   .boot.is-gone { opacity: 0; }
-  .boot .boot-title { margin: 0; font-size: var(--fs-17); font-weight: 600; color: var(--ink); }
-  .boot .boot-text { margin: var(--s-8) 0 0; font-size: var(--fs-13); color: var(--dim); min-height: 1.3em; }
+  .boot .boot-title { margin: 0; font-size: var(--type-title-3-size); font-weight: var(--type-title-3-weight); color: var(--ink); font-family: var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
+  .boot .boot-text { margin: var(--s-8) 0 0; font-size: var(--type-small-size); color: var(--dim); min-height: 1.3em; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .boot .boot-retry { margin-top: var(--s-16); }
 /* over the page below the header, so that nothing moves when it goes: the page is drawn under it, then it fades */
   .boot { position: fixed; inset: calc(72px + var(--safe-top)) 0 0 0; z-index: var(--z-over); background: var(--bg); min-height: 0; }
 /* the loading's spinner and share in the middle too, above what is being read: the eye goes there first */
-  .boot .boot-progress { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; }
+  .boot .boot-progress { display: inline-flex; align-items: center; gap: var(--s-8); margin-bottom: var(--s-14); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--mono); color: var(--accent-text); font-variant-numeric: tabular-nums; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .boot .boot-progress .spin { --spin-size: 18px; display: block; }
   .boot .boot-progress span { min-width: 3.2ch; text-align: left; }
   .boot .boot-progress span:empty { display: none; }
@@ -59,8 +61,7 @@
 }
 @media (max-width: 480px) {
    header.top { gap: var(--s-6); }
-   header.top .brand { letter-spacing: var(--ls-caps); }
-   header.top .tabs button { padding: var(--s-8) var(--s-8); letter-spacing: 0; }
+   header.top .tabs button { padding: var(--s-8) var(--s-8); }
 }
 @media (prefers-reduced-motion: reduce) {
    header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok { animation: none; }

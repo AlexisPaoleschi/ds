@@ -1,7 +1,7 @@
 /* buttons: one height, one font, one corner; only the colours tell them apart.
    grey to go somewhere, gold to act, filled gold to save, red to delete or sign out */
 .btn { box-sizing: border-box; display: inline-flex; align-items: center; justify-content: center; gap: var(--s-6); min-height: var(--btn-h); padding: 0 var(--btn-px);
-  font: var(--btn-weight) var(--btn-size)/var(--lh-tight) var(--body); letter-spacing: var(--btn-ls); text-transform: var(--btn-case); white-space: nowrap; text-decoration: none;
+  font: var(--type-button-weight) var(--type-button-size)/var(--lh-tight) var(--type-button-font); letter-spacing: var(--type-button-ls); text-transform: var(--type-button-case); white-space: nowrap; text-decoration: none;
   border: 1px solid var(--line); border-radius: var(--r-m); background: var(--btn-bg); box-shadow: var(--btn-shadow); color: var(--dim); cursor: pointer; }
 /* under the pointer and while pressed, the same for every button of the Atelier: its text or its icon and its edge in gold
    (the header's square ones too); a button with nothing to do (disabled) does not move */
@@ -28,7 +28,7 @@
 .btn.is-pill .ico, .selbar-acts > .btn .ico { color: inherit; }
 
 /* a large button: a public site's call to act (« Book now » on its hero); in a tool, the usual button */
-.btn.is-large { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); letter-spacing: var(--btn-l-ls); }
+.btn.is-large { min-height: var(--btn-l-h); padding: 0 var(--btn-l-px); }
 /* a small button: a row's actions, a way back */
 /* one size for every button of a theme, in every app: no small one since 4.0.0 (18 November 2026) */
 /* an icon before the words, drawn with empty space around it in its square: moved by that space towards the edge, so

@@ -421,37 +421,6 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   await p.goto(base + '/checks/behaviours.html');
   await p.waitForFunction(() => window.side);
   assert(await p.evaluate(() => location.hash) === '#analyse/x', 'une session finie mène à la connexion, puis la page rouvre où elle était');
-  // a card's title too long for its menu: its letters closer, then smaller, only as much as needed; one that fits never,
-  // nor one that would not fit even at the least
-  const fits = await p.evaluate(async () => {
-    const make = (w, t) => { const d = document.createElement('div'); d.className = 'card'; d.style.width = w + 'px';
-      d.innerHTML = '<h2 class="ct">' + t + '<label class="pill"><span class="pill-value">novembre 2026</span><select><option>novembre 2026</option></select></label></h2>';
-      document.body.append(d); return d.firstChild; };
-    const roomy = make(600, 'Dépenses par catégorie'), tight = make(370, 'Dépenses par catégorie'), never = make(200, 'Dépenses par catégorie');
-    await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    const pv = tight.querySelector('.pill').getBoundingClientRect(), words = document.createRange();
-    words.selectNodeContents(tight.firstChild);
-    const res = [roomy.className, tight.className, never.className, pv.top < words.getBoundingClientRect().bottom];
-    [roomy, tight, never].forEach(h => h.parentNode.remove());
-    return res;
-  });
-  assert(fits[0] === 'ct' && /ct-fit-/.test(fits[1]) && fits[3] && fits[2] === 'ct',
-    'un titre trop long pour son menu se resserre puis rapetisse, seulement s’il le faut ' + JSON.stringify(fits));
-  // a title drawn in a hidden view is fitted once the view is shown (it could not be measured while hidden)
-  const shown = await p.evaluate(async () => {
-    const view = document.createElement('div'); view.hidden = true;
-    view.innerHTML = '<div class="card" style="width:370px"><h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pill-value">novembre 2026</span><select><option>novembre 2026</option></select></label></h2></div>';
-    document.body.append(view);
-    const frames = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    await frames(); await frames();
-    const hidden = view.querySelector('.ct').className;
-    view.hidden = false;
-    await frames(); await frames();
-    const after = view.querySelector('.ct').className;
-    view.remove();
-    return [hidden, after];
-  });
-  assert(shown[0] === 'ct' && /ct-fit-/.test(shown[1]), 'un titre dessiné dans une vue cachée s’ajuste quand la vue s’affiche ' + JSON.stringify(shown));
   // ds.confirm keeps the keyboard: Tab goes round inside, the page behind is inert, the window is named and described
   await p.evaluate(() => { window.asked = ds.confirm({ title: 'Supprimer la règle ?', text: 'Elle ne sera plus appliquée.', ok: 'Supprimer', danger: true }); });
   const inside = [];
@@ -493,26 +462,6 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     return [mid, end];
   });
   assert(fade[0] === true && fade[1] === false, 'en Vitrine, une bulle reste le temps de son fondu (0,3 s), puis s’en va ' + JSON.stringify(fade));
-
-  // fitting the titles measures only when a title comes or what it holds changes: not on a text changed elsewhere
-  const measures = await p.evaluate(async () => {
-    let n = 0;
-    const orig = Range.prototype.getBoundingClientRect;
-    Range.prototype.getBoundingClientRect = function () { n++; return orig.call(this); };
-    const frame = () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-    const card = document.createElement('section'); card.className = 'card'; card.style.width = '392px';
-    card.innerHTML = '<h2 class="ct">Dépenses par catégorie<label class="pill"><span class="pill-value">Novembre 2026</span></label></h2><p class="pc">0 %</p>';
-    document.body.append(card); await frame();
-    const onCome = n; n = 0;
-    for (let i = 1; i <= 6; i++) { card.querySelector('.pc').textContent = i * 10 + ' %'; await frame(); }
-    const onText = n; n = 0;
-    card.querySelector('.pill-value').textContent = 'Octobre 2026'; await frame();
-    const onHeld = n;
-    Range.prototype.getBoundingClientRect = orig; card.remove();
-    return { onCome, onText, onHeld };
-  });
-  assert(measures.onCome > 0 && measures.onText === 0 && measures.onHeld > 0,
-    'l’ajustement des titres mesure à l’arrivée d’un titre et quand ce qu’il porte change, jamais sur un texte ailleurs ' + JSON.stringify(measures));
 
   // a date that cannot be read is written « — », as a missing figure, instead of stopping the page
   const unread = await p.evaluate(() => [ds.date('pas une date'), ds.when('pas une date'), ds.ago('pas une date'), ds.soon('pas une date'), ds.date('2026-11-09')]);
@@ -705,7 +654,7 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
     'ds.foldCard : le titre plie la carte, au clavier aussi, ce qu’il contient n’y touche pas, l’appareil s’en souvient');
   assert(pieces.tiles[0] === 3 && pieces.tiles[1] === '11px' && pieces.tiles[2] === 'normal' && pieces.tiles[3] === '' && pieces.tiles[4] === 'pointer' && pieces.tiles[5] === '#tuile',
     'les cases : leur nombre de colonnes, un chiffre trop long rapetisse jusqu’à 11 px puis passe à la ligne, une case qui s’ouvre');
-  assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '11px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
+  assert(JSON.stringify(pieces.tag) === JSON.stringify([true, true, true, '12px', '1px']), 'l’étiquette : en or, dans un ton, dans la couleur donnée');
   assert(JSON.stringify(pieces.head) === JSON.stringify([true, true, 34, 34, true, 'block', true]), 'les boutons carrés de l’en-tête : discrets, 34 px comme tout bouton fait d’une icône, l’or d’une nouvelle version, grisés quand ils n’ont rien à faire');
   // under the pointer and pressed, every button of the Atelier has its icon or its text and its edge in gold: a button, the
   // header's square ones, a message's; the crosses with no border (the bubble's, the drawer's) get a gold edge drawn inside;

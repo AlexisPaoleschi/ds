@@ -15,22 +15,22 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 @media (hover: hover) {
   .panel-head:hover h2 { color: var(--accent); }
 }
-.pending-gallery-name { grid-column: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 500; text-decoration: none; color: var(--ink); }
+.pending-gallery-name { grid-column: 1; min-width: 0; overflow-wrap: anywhere; font-weight: var(--type-strong-weight); text-decoration: none; color: var(--ink); }
 .pending-gallery-name::after { content: ""; position: absolute; inset: 0; }
 .pending-gallery-name:hover { color: var(--accent); }
-.pending-gallery-clients { grid-column: 1 / -1; min-width: 0; font-size: var(--fs-14); color: var(--faint); text-align: left; }
+.pending-gallery-clients { grid-column: 1 / -1; min-width: 0; font-size: var(--type-small-size); color: var(--faint); text-align: left; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .pending-gallery-clients > details > summary:hover { color: var(--accent); }
 .pending-gallery-client-list { margin: var(--s-4) 0; padding: 0; list-style: none; overflow-wrap: break-word; }
 .pending-gallery-clients--empty { font-style: italic; }
-.row-error { font-size: var(--fs-14); color: var(--bad); }
-.slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--fs-14); color: var(--faint); }
-.metric-inline { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+.row-error { font-size: var(--type-small-size); color: var(--bad); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+.slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--type-small-size); color: var(--faint); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+.metric-inline { font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); color: var(--ink); font-family: var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
 .cover-preview.is-busy .cover-preview-actions { opacity: 0; pointer-events: none; }
 .toolbar-icon { display: flex; align-items: center; color: var(--faint); cursor: pointer; }
 .toolbar-icon svg { display: block; width: var(--ico-m); height: var(--ico-m); }
 .photo-select-tile { position: relative; overflow: hidden; background: var(--ink); cursor: zoom-in; transform-origin: top left; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
 .photo-select-tile:focus-visible { outline: var(--focus); outline-offset: calc(-1 * var(--focus-offset)); }
-.photo-select-name { position: absolute; right: 0; bottom: 0; left: 0; z-index: 1; padding: var(--s-20) var(--s-10) calc(var(--s-14) / 2); overflow: hidden; font-size: var(--fs-11); font-weight: 400; text-overflow: ellipsis; white-space: nowrap; color: var(--white); text-shadow: var(--shadow-pop); background: linear-gradient(to top, var(--overlay-black-medium), transparent); pointer-events: none; letter-spacing: var(--ls-loose); }
+.photo-select-name { position: absolute; right: 0; bottom: 0; left: 0; z-index: 1; padding: var(--s-20) var(--s-10) calc(var(--s-14) / 2); overflow: hidden; font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); text-overflow: ellipsis; white-space: nowrap; color: var(--white); text-shadow: var(--shadow-pop); background: linear-gradient(to top, var(--overlay-black-medium), transparent); pointer-events: none; letter-spacing: var(--type-caption-ls); font-family: var(--type-caption-font); text-transform: var(--type-caption-case); }
 @media (hover: hover) {
   .photo-select-tile:hover img { transform: scale(1.04); }
 }
@@ -49,7 +49,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
    on a phone and a tablet */
 .selection-panel-list { display: flex; flex-direction: column; gap: var(--s-6); margin: 0; padding: 0 var(--s-12) 0 0; overflow-x: hidden; overflow-y: auto; scroll-snap-type: none; scrollbar-gutter: stable; list-style: none; }
 .selection-panel-thumb { flex: 0 0 auto; width: 48px; height: 48px; object-fit: cover; }
-.selection-panel-name { display: none; flex: 1; min-width: 0; overflow: hidden; font-size: var(--fs-14); text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+.selection-panel-name { display: none; flex: 1; min-width: 0; overflow: hidden; font-size: var(--type-text-size); text-overflow: ellipsis; white-space: nowrap; color: var(--ink); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 @media (max-width: 1024px) {
   .selection-panel-list { flex-direction: row; gap: var(--s-12); padding: var(--s-10) var(--s-10) var(--s-4) 0; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-gutter: auto; }
   .selection-panel-thumb { width: 84px; height: 84px; }
@@ -72,14 +72,11 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
         transform: scale(1);
     }
 }
-.export-count { margin: 0; font-size: var(--fs-14); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); }
-.export-option { display: flex; align-items: center; gap: var(--s-8); font-size: var(--fs-14); cursor: pointer; }
+.export-count { margin: 0; font-size: var(--type-smallcaps-size); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); font-family: var(--type-smallcaps-font); font-weight: var(--type-smallcaps-weight); }
+.export-option { display: flex; align-items: center; gap: var(--s-8); font-size: var(--type-text-size); cursor: pointer; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 /* A short field beside a label: 8px inside, for an extension to fit in its 90px. */
-.export-raw-extension { --field-py: var(--s-8); --field-px: var(--s-10); width: 90px; letter-spacing: var(--ls-caps); text-transform: uppercase; }
-.export-text { flex: 1; width: 100%; min-height: 96px; padding: var(--s-12) var(--s-14); font-family: var(--mono); line-height: var(--lh-text); resize: vertical; }
-@media (min-width: 769px) {
-  .export-text { font-size: var(--fs-14); }
-}
+.export-raw-extension { --field-py: var(--s-8); --field-px: var(--s-10); width: 90px; letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); }
+.export-text { flex: 1; width: 100%; min-height: 96px; padding: var(--s-12) var(--s-14); font-family: var(--mono); line-height: var(--lh-text); resize: vertical; font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 /* --- Touch targets: 44px floor on coarse pointers. */
 @media (max-width: 768px), (pointer: coarse) {
   .pending-gallery-name { display: flex; align-items: center; min-height: var(--touch-target); }
@@ -91,15 +88,15 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
   .export-raw-extension { min-height: var(--touch-target); }
 }
 .photo-tile.has-comment { box-shadow: inset 0 0 0 1px var(--accent-strong); }
-.client-note-body { flex: 1; margin: 0; padding: var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; background: var(--panel); border-left: 2px solid var(--accent-strong); border-radius: 0 var(--r-m) var(--r-m) 0; }
+.client-note-body { flex: 1; margin: 0; padding: var(--space-md); font-size: var(--type-text-size); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; background: var(--panel); border-left: 2px solid var(--accent-strong); border-radius: 0 var(--r-m) var(--r-m) 0; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 .photo-note-thumb { flex: 0 0 auto; width: 72px; height: 72px; object-fit: cover; background: var(--ink); }
-.photo-note-name { margin: 0 0 var(--s-4); font-family: var(--mono); font-size: var(--fs-11); color: var(--accent-strong); overflow-wrap: anywhere; }
-.photo-note-text { margin: 0; font-size: var(--fs-14); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; }
+.photo-note-name { margin: 0 0 var(--s-4); font-family: var(--mono); font-size: var(--type-caption-size); color: var(--accent-strong); overflow-wrap: anywhere; font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+.photo-note-text { margin: 0; font-size: var(--type-text-size); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
 .notes-none { color: var(--faint); }
-.notes-count { font-weight: 500; color: var(--ink); }
+.notes-count { font-weight: var(--type-strong-weight); color: var(--ink); }
 /* --- Bell, notifications page, settings screen. The bell is the design system's panel under a button of the top bar
    (.pop, .pop-panel, .pop-head, .pop-foot, its figure .pop-count); Selecta draws only its lines. */
-.topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); letter-spacing: normal; text-transform: none; text-align: left; color: inherit; text-decoration: none; }
+.topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--type-text-size); line-height: var(--lh-text); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); text-align: left; color: inherit; text-decoration: none; font-family: var(--type-text-font); font-weight: var(--type-text-weight); }
 /* a line that opens its gallery is not underlined: its title turns gold under the mouse, as a row of a list does */
 @media (hover: hover) { a.bell-item-body:hover .bell-item-title { color: var(--accent-text); } }
 .topbar-nav .bell-item-read { flex: none; width: var(--touch-target); height: var(--touch-target); }
@@ -107,26 +104,26 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .bell-item { position: relative; display: flex; align-items: flex-start; border-bottom: 1px solid var(--line); }
 .bell-item.is-unread { background: var(--accent-soft); }
 .bell-item-title { overflow-wrap: anywhere; color: var(--ink); }
-.bell-item.is-unread .bell-item-title { font-weight: 500; }
-.bell-item-detail, .bell-item-time { font-size: var(--fs-11); color: var(--faint); }
+.bell-item.is-unread .bell-item-title { font-weight: var(--type-strong-weight); }
+.bell-item-detail, .bell-item-time { font-size: var(--type-caption-size); color: var(--faint); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 .bell-item-read::before { content: ''; display: block; width: 8px; height: 8px; margin: auto; background: var(--accent); border-radius: 50%; }
 @media (hover: hover) {
   .bell-item-read:hover::before { background: transparent; box-shadow: inset 0 0 0 1px var(--accent); }
 }
-.bell-empty { padding: var(--space-lg) var(--space-md); font-size: var(--fs-14); text-align: center; color: var(--faint); }
+.bell-empty { padding: var(--space-lg) var(--space-md); font-size: var(--type-small-size); text-align: center; color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 /* a footer's contact link, its icon then its words, as tall as a finger */
 .site-footer .footer-link { display: inline-flex; align-items: center; min-height: var(--touch-target); }
 .footer-link .ico { flex: none; width: var(--ico-m); height: var(--ico-m); margin-right: var(--s-8); }
 .settings-zoom { display: flex; align-items: center; gap: var(--s-8); width: 100%; min-height: 30px; color: var(--faint); }
 .settings-zoom-icon { flex: none; width: var(--ico-m); height: var(--ico-m); }
-.settings-fact { margin: 0; font-size: var(--text-md); color: var(--ink); }
-.notification-filter { font-size: var(--fs-11); letter-spacing: var(--ls-caps); text-transform: uppercase; text-decoration: none; color: var(--accent-strong); }
+.settings-fact { margin: 0; font-size: var(--type-text-size); color: var(--ink); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+.notification-filter { font-size: var(--type-smallcaps-size); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); text-decoration: none; color: var(--accent-strong); font-family: var(--type-smallcaps-font); font-weight: var(--type-smallcaps-weight); }
 /* On a computer, Selecta's tables sit in a card of their own (the design system's .tbl-wrap.is-card: a white panel, its
    column titles on the beige band, a row lit in beige under the pointer), every column after the first centred. */
 .tbl .slug-value { font-family: inherit; }
 /* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
    title size, its date in the hero's own small capitals; without a photo, a beige light. */
-.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-t-size: var(--text-2xl); --hero-t-ls: var(--ls-loose); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md);--hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
 .gallery-cover--placeholder { background: linear-gradient(135deg, var(--band), var(--accent-soft)); }
 /* the sign-in page */
 .auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
@@ -134,5 +131,5 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
 /* a gallery's cover on a computer: taller, more room, a larger title */
 @media (min-width: 769px) {
-  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); --hero-t-size: var(--fs-36); }
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg);}
 }

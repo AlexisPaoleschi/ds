@@ -1,14 +1,14 @@
-/* ds 4.27.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
   .periodleft { position: relative; display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
   .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; min-height: var(--s-24); padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
-    font: var(--title-weight) var(--fs-28)/var(--title-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    font: var(--type-title-1-weight) var(--type-title-1-size)/var(--title-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
-  .periodtitle .periodtitle-year { color: var(--faint); font-weight: 600; }
-  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: 400 var(--fs-14)/var(--lh-tight) var(--body); }
+  .periodtitle .periodtitle-year { color: var(--faint); }
+  .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: var(--type-text-weight) var(--type-text-size)/var(--lh-tight) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* the chevron that says the title opens a picker: the sprite's chevron-down (<svg class="ico chev">), small and on the
      title's middle; a « ▾ » in text, which no ds font draws, sat on the big title's base line, 3px low (icon audit,
      22 November 2026) */
@@ -28,13 +28,12 @@
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
-  .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: 500 var(--fs-13)/var(--lh-tight) var(--body); padding: var(--s-8) var(--s-10); }
+  .periodpop button:not(:where(.tabs button)) { background: transparent; border: 1px solid var(--line); border-radius: var(--r-m); color: var(--dim); cursor: pointer; font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); padding: var(--s-8) var(--s-10); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .periodpop button:not(:where(.tabs button)):is(:hover, :active) { border-color: var(--accent-line); color: var(--accent-text); }
   /* the tabs inside the picker are tabs, only a little tighter */
   .periodpop .tabs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); width: auto; --tab-py: var(--s-6); --tab-px: var(--s-10); }
 @media (max-width: 768px) {
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
-    .periodtitle { font-size: var(--fs-22); }
     .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
 }
@@ -67,12 +66,12 @@
   /* the head: the arrows (the sprite's chevrons) in the small buttons' size, the month, the year or the years between them */
   .dp-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); min-width: 0; }
   .datepick .dp-step { flex: none; display: inline-flex; align-items: center; justify-content: center; width: var(--btn-icon-h); height: var(--btn-icon-h); padding: 0; }
-  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .dp-title { flex: 1; min-width: 0; color: var(--ink); text-align: center; font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-ui) var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .dp-title::first-letter, .dp-title.is-zoom > span::first-letter { text-transform: uppercase; }
   /* the title that zooms out (the twelve months, then the years): the head's words with a small chevron, no frame, gold
      under the pointer; its words stay a block so that their first letter still rises */
   .datepick .dp-title.is-zoom { display: inline-flex; flex: 1; align-items: center; justify-content: center; gap: var(--s-4); min-width: 0; padding: var(--s-6) var(--s-8);
-    border-color: transparent; color: var(--ink); font: var(--head-weight) var(--fs-14)/var(--lh-ui) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+    border-color: transparent; color: var(--ink); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-ui) var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .dp-title.is-zoom > span { display: inline-block; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .dp-title.is-zoom > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); color: var(--faint); transition: color var(--t-fast), transform var(--t-fast); }
   /* Gilda's capitals stand higher than the middle of their line (1px at 14px): the chevron goes up to theirs (icon audit,
@@ -89,7 +88,7 @@
   .dp-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--s-6); }
   .dp-grid.is-days { grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-4); }
   .datepick .dp-grid button { padding: var(--s-8) 0; text-align: center; font-variant-numeric: tabular-nums; }
-  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .dp-wd { padding: var(--s-4) 0; color: var(--faint); text-align: center; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   /* today is ringed in gold until it is chosen; the days between two dates are lit softly, their ends as a choice */
   .datepick .dp-grid button.is-today:not([aria-pressed="true"]) { border-color: var(--accent-line); color: var(--ink); }
   .datepick .dp-grid button.is-in { background: var(--accent-soft); border-color: transparent; color: var(--ink); }
@@ -97,7 +96,7 @@
   [data-theme="vitrine"] .datepick .dp-grid button.is-in { background: color-mix(in srgb, var(--accent) 20%, transparent); }
   .datepick button:disabled { opacity: .35; cursor: default; }
   .datepick button:disabled:hover { border-color: var(--line); color: var(--dim); }
-  .dp-hint { margin: 0; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-ui); }
+  .dp-hint { margin: 0; color: var(--faint); font-size: var(--type-caption-size); line-height: var(--lh-ui); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the public sites show the keys' place as their fields do: the gold edge and its halo */
   [data-theme="vitrine"] .datepick button:focus-visible { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
 @media (prefers-reduced-motion: reduce) {
@@ -114,7 +113,7 @@
 }
 @media (max-width: 480px) {
   /* four units side by side in a phone's width: the tabs' capitals closer, as the calendar's views are */
-  .datepick .tabs button { padding: var(--s-6) var(--s-2); font-size: var(--fs-11); letter-spacing: var(--ls-045); }
+  .datepick .tabs button { padding: var(--s-6) var(--s-2); }
   .dp-quick button { padding-inline: var(--s-6); }
 }
 /* Drag to reorder (Bank: the order of the accounts on its first page, the banks and the accounts of each bank): each
@@ -147,14 +146,14 @@
   .filter-pip { position: absolute; top: var(--s-4); right: var(--s-4); }
   button.edgetab { position: fixed; left: 0; top: 40%; z-index: var(--z-edge); display: grid; place-items: center; gap: var(--s-6); padding: var(--s-14) var(--s-6); background: var(--panel); border: 1px solid var(--line-2); border-left: none; border-radius: 0 var(--r-m) var(--r-m) 0; color: var(--dim); cursor: pointer; }
   button.edgetab:is(:hover, :active), button.edgetab[aria-expanded="true"] { color: var(--accent-text); border-color: var(--accent-line); }
-  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  button.edgetab .edgetab-label { writing-mode: vertical-rl; transform: rotate(180deg); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   button.edgetab .filter-pip { position: static; }
   .side-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); align-items: start; }
   .side-layout.is-open { grid-template-columns: 230px minmax(0, 1fr); }
   .side-layout .side { order: 0; }
   .side { display: none; position: sticky; top: calc(var(--safe-top) + 12px); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); padding: var(--s-14) var(--s-12); }
   .side-layout.is-open .side { display: block; }
-  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); }
+  .sidehead { display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--s-14); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); }
   /* its cross: the sprite's (<svg class="ico"><use href="#i-close"/></svg>), in the middle of a square as large as every
      icon button, its edges let into the head's room so that the head keeps its height */
   .sidehead button { display: grid; place-items: center; width: var(--btn-icon-h); height: var(--btn-icon-h); margin: calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) calc(var(--s-24) / 2 - var(--btn-icon-h) / 2) 0;
@@ -168,8 +167,8 @@
   .side button.chip[aria-pressed]:hover { background: var(--panel-2); }
   .scrim { display: none; }
   .fgroup { display: flex; flex-wrap: wrap; gap: var(--s-6); align-items: center; }
-  .fhead { font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); min-width: 92px; }
-  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: 500 var(--fs-13)/var(--lh-tight) var(--body); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; }
+  .fhead { font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); color: var(--faint); min-width: 92px; }
+  button.chip[aria-pressed] { display: inline-flex; align-items: center; gap: var(--s-6); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); color: var(--ink); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-6) var(--s-10); cursor: pointer; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   button.chip[aria-pressed]:hover { border-color: var(--line-2); }
   button.chip[aria-pressed] .ico { color: var(--accent); width: var(--ico-s); height: var(--ico-s); margin-left: calc(-1 * var(--s-2)); }
   button.chip[aria-pressed="false"] { opacity: var(--o-off); }
@@ -188,7 +187,7 @@
   /* the eye (<button class="only"><svg class="ico"><use href="#i-eye"/></svg></button>, named « Seulement … ») keeps one
      source alone in its group, « see only this one »; « Tout », in the group's head, switches the group back on */
   .side .fhead { display: flex; align-items: center; justify-content: space-between; gap: var(--s-8); }
-  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; color: var(--faint); cursor: pointer; }
+  .side button.filter-all, .side button.filter-only { background: none; border: 0; border-radius: var(--r-s); padding: var(--s-4) var(--s-6); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); color: var(--faint); cursor: pointer; }
   .side button.filter-only { display: grid; place-items: center; min-width: var(--s-24); min-height: var(--s-24); padding: var(--s-4); }
   .side button.filter-only .ico { width: var(--ico-m); height: var(--ico-m); }
   .side button.filter-all:hover, .side button.filter-only:hover, .side button.filter-all:focus-visible, .side button.filter-only:focus-visible { color: var(--accent-text); }
@@ -208,7 +207,6 @@
   .side button.filter-more:hover, .side button.filter-more:focus-visible { color: var(--accent-text); }
   .side .fsub { display: grid; margin: 0 0 var(--s-6) var(--s-20); padding-left: var(--s-8); border-left: 1px solid var(--line); }
   .side .fsub[hidden] { display: none; }
-  .side .fsub button.chip[aria-pressed] { font-size: var(--fs-12); }
   .side .frow button.chip[aria-pressed] { flex: 1 1 auto; min-width: 0; }
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
@@ -228,14 +226,14 @@
   details.status .ico { flex: none; height: var(--ico-sm); opacity: var(--o-muted); width: var(--ico-sm); color: currentColor; }
   details.status .status-state .ico { color: var(--good); opacity: 1; }
   details.status li.is-late .status-state, details.status li.is-late .status-state .ico { color: var(--mid); }
-  details.status .status-detail { grid-column: 2 / -1; color: var(--faint); font-size: var(--fs-12); margin-top: calc(-1 * var(--s-2)); }
+  details.status .status-detail { grid-column: 2 / -1; color: var(--faint); font-size: var(--type-small-size); margin-top: calc(-1 * var(--s-2)); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   details.status li:not(.is-late) .status-detail { display: none; }
-  details.status .status-every { color: var(--faint); font-family: var(--mono); font-size: var(--fs-11); }
+  details.status .status-every { color: var(--faint); font-family: var(--mono); font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   details.status li.status-link { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
-  details.status li.status-link a { color: var(--accent-text); text-decoration: none; font-weight: 600; }
+  details.status li.status-link a { color: var(--accent-text); text-decoration: none; font-weight: var(--type-strong-weight); }
   /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;
      any other footer (a site's, Selecta's) keeps its own look */
-  .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--fs-12); gap: var(--s-10); justify-content: space-between; }
+  .wrap > footer { align-items: flex-start; color: var(--faint); display: flex; flex-wrap: nowrap; font-size: var(--type-caption-size); gap: var(--s-10); justify-content: space-between; font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .wrap > footer details.status { min-width: 0; }
 @media (max-width: 768px) {
    details.status li { grid-template-columns: 1fr auto; }
@@ -252,8 +250,8 @@
   .ranks { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 0 var(--s-24); align-items: start; }
   .rank-col { min-width: 0; }
   .rank-head { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-10); margin: 0; padding-bottom: var(--s-8); border-bottom: 1px solid var(--line-2);
-    color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .rank-note { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; }
+    color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+  .rank-note { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the rows share their columns (subgrid): every value lines up, and the bars under the names start and end together */
   .rank { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; column-gap: var(--s-10); margin: 0; padding: 0; list-style: none; }
   .rank.is-plain { grid-template-columns: minmax(0, 1fr) auto; }
@@ -261,21 +259,21 @@
   .rank li:first-child { border-top: 0; }
   /* a value, whatever it is, keeps to the right edge */
   .rank-name ~ * { justify-self: end; }
-  .rank-n { color: var(--faint); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .rank-n { color: var(--faint); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .rank li.is-top .rank-n { color: var(--accent-text); }
   .rank-name { display: grid; gap: var(--s-2); min-width: 0; }
   /* a name and its grey line in the text's own spacing, as Studio's rankings have them */
-  .rank-t { overflow: hidden; color: var(--ink); font-size: var(--fs-14); font-weight: 600; line-height: var(--lh-text); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; }
+  .rank-t { overflow: hidden; color: var(--ink); font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); line-height: var(--lh-text); text-decoration: none; text-overflow: ellipsis; white-space: nowrap; font-family: var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   /* a name given as a node (a person's link, a name and its tag) keeps the name's colour, in gold under the pointer */
   .rank-t a { color: inherit; text-decoration: none; }
   /* a tag in a ranking's line stays upright and whole (a member's « Offert », 4.26.1) */
   .rank-t .tag { flex: none; font-style: normal; }
   a.rank-t:hover, .rank-t a:hover { color: var(--accent-text); }
-  .rank-name small { overflow: hidden; color: var(--faint); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
+  .rank-name small { overflow: hidden; color: var(--faint); font-size: var(--type-small-size); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* the share of the first's value, as a thin bar under the name */
   .rank-bar { display: block; height: 3px; margin-top: var(--s-2); border-radius: var(--r-s);
     background: linear-gradient(90deg, var(--n, var(--accent)) calc(var(--share, 0) * 100%), var(--line) 0); }
-  .rank-v { color: var(--ink); font: 600 var(--fs-13)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .rank-v { color: var(--ink); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 @media (max-width: 1024px) {
   .ranks { grid-auto-flow: row; grid-template-columns: minmax(0, 1fr); gap: var(--s-16); }
 }
@@ -283,9 +281,9 @@
    it in a word under it. An empty one keeps its room, so that the figures beside it stay in line */
   .verdict { display: inline-grid; justify-items: center; gap: var(--s-2); box-sizing: border-box; min-width: 50px; padding: var(--s-4) var(--s-8);
     color: var(--dim); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m);
-    font: 600 var(--fs-13)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; }
-  .verdict.is-tall { width: 72px; padding: var(--s-6) 0; font-size: var(--fs-14); font-weight: 700; }
-  .verdict small { color: inherit; font: 500 var(--fs-11)/var(--lh-tight) var(--body); opacity: .85; }
+    font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: center; white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .verdict.is-tall { width: 72px; padding: var(--s-6) 0; font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); font-family: var(--mono); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .verdict small { color: inherit; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); opacity: .85; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .verdict.is-good { color: var(--good); background: var(--good-soft); border-color: var(--good-line); }
   .verdict.is-mid { color: var(--mid); background: var(--mid-soft); border-color: var(--mid-line); }
   .verdict.is-bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
@@ -304,7 +302,7 @@
   .chart-line-svg { display: block; width: 100%; height: 40px; overflow: visible; }
   .chart-rule { stroke: var(--line-2); stroke-width: 1; stroke-dasharray: 2 3; }
   .chart-path { fill: none; stroke: var(--n, var(--accent)); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-  .chart-line-y, .chart-line-x { color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+  .chart-line-y, .chart-line-x { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-line-y { display: flex; flex-direction: column; justify-content: space-between; text-align: right; }
   .chart-line-x { display: flex; justify-content: space-between; }
   /* tall, a chart of its own: room above it for the bubble; the dashed level and its name, the dots of the days given,
@@ -319,21 +317,21 @@
   .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
   .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
   .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
-    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
-  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; }
+  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;
     background: var(--panel); border: 2px solid var(--n, var(--accent)); }
   .chart-dot { background: var(--n, var(--accent)); pointer-events: none; }
   .chart-cursor { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--line-2); pointer-events: none; }
   .chart-tip { position: absolute; top: 0; z-index: var(--z-raise); transform: translate(-50%, calc(-100% - var(--s-4))); padding: var(--s-4) var(--s-8);
     background: var(--panel-2); border: 1px solid var(--pop-line); border-radius: var(--r-s); box-shadow: var(--shadow-pop); color: var(--ink);
-    font: 500 var(--fs-12)/var(--lh-ui) var(--body); white-space: nowrap; pointer-events: none; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* the bars: a round scale on the left, its dashed lines behind the bars, the average as a lighter dashed line;
    --bars-h is the tallest step, --bars-room the room above it for the figures. The scale's gutter is --axc characters
    of its own figures (1ch in its font) */
   .chart-bars { --bars-h: 120px; --bars-room: 18px; position: relative; min-width: 0; padding: var(--bars-room) 0 0 calc(var(--axc, 4) * 1ch + var(--s-6));
-    font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the scale's box stops on the bars' base line, so that its 0 sits on it */
   .chart-bars-axis, .chart-bars-grid, .chart-bars-avg { position: absolute; top: var(--bars-room); height: calc(var(--bars-h) - 1px); pointer-events: none; }
   .chart-bars-axis { left: 0; width: calc(var(--axc, 4) * 1ch); }
@@ -358,8 +356,8 @@
   /* the figure sits on its bar; past a year the columns are too narrow: on hover or when chosen only */
   .chart-bar-v { position: absolute; bottom: calc(100% + var(--s-4)); left: 50%; color: var(--dim); white-space: nowrap; transform: translateX(-50%); }
   .chart-bars.is-dense .chart-bar-v { visibility: hidden; }
-  .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: 600; }
-  .chart-bar-l { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; text-transform: uppercase; white-space: nowrap; }
+  .chart-bar.is-on .chart-bar-v, .chart-bar:hover .chart-bar-v { visibility: visible; color: var(--ink); font-weight: var(--type-strong-weight); }
+  .chart-bar-l { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); white-space: nowrap; }
   .chart-bar.is-on .chart-bar-l { color: var(--accent-text); }
 /* paired bars (Bank's money in and out): a bar per series side by side in each column, each in its colour; their figures
    stacked over the tallest, in the same colours, on hover, under the keys or when chosen. The room above the scale holds
@@ -370,9 +368,9 @@
   .chart-bars.is-pairs .chart-bar-stack i { flex: 1; }
   .chart-bar-vs { position: absolute; left: 50%; display: flex; flex-direction: column; align-items: center; gap: var(--s-2); margin-bottom: var(--s-4);
     transform: translateX(-50%); visibility: hidden; pointer-events: none; }
-  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: 600; transform: none; }
+  .chart-bars.is-pairs .chart-bar .chart-bar-v { position: static; color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink), var(--ink)); font-weight: var(--type-strong-weight); transform: none; }
   .chart-bar:hover .chart-bar-vs, .chart-bar.is-on .chart-bar-vs, .chart-bar:focus-visible .chart-bar-vs, .chart-bars.is-pairs .chart-bar:focus-visible .chart-bar-v { visibility: visible; }
-  .chart-bars-legend { margin-top: var(--s-12); font-family: var(--body); line-height: var(--lh-ui); }
+  .chart-bars-legend { margin-top: var(--s-12); font-family: var(--type-caption-font); line-height: var(--lh-ui); font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* a year of days: one square per day, a column per week, Monday on top; pale, coloured, full */
   .chart-heat { --heat-gap: var(--s-2); min-width: 0; }
   /* a narrow card scrolls the year sideways, opened on its latest weeks, instead of shrinking the squares below the size
@@ -380,11 +378,11 @@
   .chart-heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--s-4); contain: inline-size; }
   .chart-heat-year { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); min-width: 740px; }
   .chart-heat-year + .chart-heat-year { margin-top: var(--s-14); }
-  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-year.has-below .chart-heat-dow { grid-template-rows: 16px repeat(7, minmax(0, 1fr)) 34px; }
   .chart-heat-dow span { display: flex; align-items: center; }
   .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
-  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: 400 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; }
+  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
   .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); }
   .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
@@ -393,16 +391,13 @@
   .heat-day.is-future { visibility: hidden; }
   /* a week's figure under its column, upright: what it gained */
   .chart-heat-below { height: 34px; margin-top: var(--heat-gap); padding-top: var(--s-4); }
-  .chart-heat-below span { justify-self: center; color: var(--good); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); }
-  .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--fs-12); }
+  .chart-heat-below span { justify-self: center; color: var(--good); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; writing-mode: vertical-rl; transform: rotate(180deg); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-heat-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-6) var(--s-14); margin-top: var(--s-12); color: var(--dim); font-size: var(--type-caption-size); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-legend span { display: inline-flex; align-items: center; gap: var(--s-4); }
   .chart-heat-legend .heat-day { width: var(--swatch-size, 10px); height: var(--swatch-size, 10px); }
   .chart-heat-note { color: var(--good); }
 @media (max-width: 768px) {
   /* the bars: smaller figures, and one month name in two where twelve would touch */
-  .chart-bars { font-size: var(--fs-11); }
-  .chart-bar-v { letter-spacing: var(--ls-tight); }
-  .chart-bar-l { font-size: var(--fs-11); }
   .chart-bar-yr { display: none; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt .chart-bar-l { visibility: hidden; }
   .chart-bars:not(.is-dense) .chart-bar.is-alt:not(.is-on):not(:hover) .chart-bar-v { visibility: hidden; }
@@ -414,12 +409,12 @@
   .chart-split { display: grid; gap: var(--s-6); min-width: 0; }
   .chart-split-bar { display: flex; gap: calc(var(--s-2) / 2); height: 8px; overflow: hidden; background: var(--panel-2); border-radius: var(--r-s); }
   .chart-split-bar i { display: block; height: 100%; }
-  .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--fs-12); }
+  .chart-split-legend, .chart-bars-legend { display: flex; flex-wrap: wrap; gap: var(--s-4) var(--s-16); color: var(--dim); font-size: var(--type-caption-size); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* on one baseline: the smaller figures would otherwise sit too high */
   .chart-split-legend span, .chart-bars-legend span { display: inline-flex; align-items: baseline; gap: var(--s-6); }
   .chart-key, :is(.chart-split-legend, .chart-bars-legend) .swatch { align-self: center; }
-  .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
-  .chart-split-legend em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
+  .chart-split-legend b, .chart-bars-legend b { color: var(--ink); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-split-legend em { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-style: normal; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
 /* the donut, taken from Bank's spending: the ring on the left, its total in the hole, the legend on its right (under it on
    a phone), one row per slice: its colour, its name, its share, its amount. With pick, slices and rows are buttons: the
    chosen slice moves out, the others fade, its row is in gold */
@@ -435,22 +430,22 @@
   .chart-donut-slice:focus-visible { stroke: var(--ink); stroke-width: 2; stroke-linejoin: round; }
   .chart-donut-c { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); padding: 0 22%;
     pointer-events: none; text-align: center; }
-  .chart-donut-c b { color: var(--ink); font: var(--head-weight) var(--fs-17)/var(--lh-tight) var(--title-font); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls);
-    text-overflow: ellipsis; text-transform: uppercase; white-space: nowrap; }
+  .chart-donut-c b { color: var(--ink); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--lh-tight) var(--type-title-3-font); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
+  .chart-donut-c small { max-width: 100%; overflow: hidden; color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-ui) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls);
+    text-overflow: ellipsis; text-transform: var(--type-smallcaps-case); white-space: nowrap; }
   .chart-donut-legend { display: grid; min-width: 0; margin: 0; padding: 0; list-style: none; }
   .chart-donut-legend li + li .chart-donut-row { border-top: 1px solid var(--line); }
   .chart-donut-row { display: grid; grid-template-columns: auto minmax(0, 1fr) auto auto; align-items: baseline; gap: var(--s-10); width: 100%; box-sizing: border-box; margin: 0;
-    padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); text-align: left; }
+    padding: var(--s-8) 0; background: none; border: 0; color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); text-align: left; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   button.chart-donut-row { cursor: pointer; }
   /* what the chosen row opens, under it, the row's line over it */
   .chart-donut-open { min-width: 0; padding: var(--s-4) 0 var(--s-16); }
-  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: 500; overflow-wrap: anywhere; }
+  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: var(--type-strong-weight); overflow-wrap: anywhere; }
   /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
-  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: 500 var(--fs-12)/var(--lh-ui) var(--body); }
+  .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-donut-n.is-bad { color: var(--bad); } .chart-donut-n.is-good { color: var(--good); }
-  .chart-donut-row em { color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); font-style: normal; }
-  .chart-donut-row b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+  .chart-donut-row em { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-style: normal; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-donut-row b { color: var(--ink); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); font-variant-numeric: tabular-nums; text-align: right; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   button.chart-donut-row:hover .chart-donut-l, .chart-donut-row.is-on .chart-donut-l { color: var(--accent-text); }
   .chart-donut-row.is-on b { color: var(--accent-text); }
 @media (max-width: 768px) {
@@ -468,7 +463,7 @@
    done), a dot, or a bar for what has a time (an appointment, a shooting); on a phone the cells only keep the marks, as dots. */
   .cal-body { display: block; min-width: 0; }
   .cal-dow { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); margin-bottom: var(--s-6); }
-  .cal-dow span { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-align: center; text-transform: uppercase; }
+  .cal-dow span { color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-align: center; text-transform: var(--type-smallcaps-case); }
   .cal-grid { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); }
   /* a cell is as tall as eight lines, the most it shows before « +N » */
   .cal-grid { container-type: inline-size; }
@@ -479,10 +474,10 @@
   .cal-cell.is-today { border-color: var(--accent); }
   /* the chosen day takes the chosen gold (chosen.css), with the full gold edge and its own text's colour */
   .cal-cell { --chosen-line: var(--accent); --chosen-ink: currentColor; }
-  .cal-n { margin-bottom: var(--s-2); color: var(--dim); font: 700 var(--fs-15)/var(--lh-tight) var(--mono); }
+  .cal-n { margin-bottom: var(--s-2); color: var(--dim); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   .cal-cell.is-today .cal-n { color: var(--accent-text); }
   .cal-line { display: flex; align-items: center; gap: var(--s-4); min-width: 0; }
-  .cal-lt { min-width: 0; overflow: hidden; color: var(--ink); font-size: var(--fs-12); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; }
+  .cal-lt { min-width: 0; overflow: hidden; color: var(--ink); font-size: var(--type-caption-size); line-height: var(--lh-text); text-overflow: ellipsis; white-space: nowrap; font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* what has a time (a bar) reads a little quieter than what is to publish; what is done fades, what is late is red */
   .cal-line.is-bar .cal-lt { color: var(--dim); }
   .cal-line.is-done .cal-lt { color: var(--faint); }
@@ -490,18 +485,18 @@
   /* what runs over several days: one bar in its colour across them, reaching over the cells' edges and the gap between
      them, the same height in every cell it crosses (an empty line keeps a free lane); its title, where it starts and on
      each Monday, runs over the days it goes on to */
-  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--fs-12) * var(--lh-text)); }
+  .cal-line.is-run, .cal-line.is-gap { flex: none; height: calc(var(--type-caption-size) * var(--lh-text)); }
   .cal-line.is-run { --reach: calc(var(--s-8) + 1px + var(--s-6) / 2); position: relative; margin: 0 calc(-1 * var(--reach)); padding: 0 var(--s-6);
     background: color-mix(in srgb, var(--n, var(--dim)) 30%, var(--panel)); }
   .cal-line.is-run.is-first { margin-left: 0; border-top-left-radius: var(--r-s); border-bottom-left-radius: var(--r-s); }
   .cal-line.is-run.is-last { margin-right: 0; border-top-right-radius: var(--r-s); border-bottom-right-radius: var(--r-s); }
-  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: 600;
+  .cal-line.is-run .cal-lt { flex: none; position: relative; z-index: 1; font-weight: var(--type-strong-weight);
     max-width: calc(var(--run, 1) * (100cqw - 6 * var(--s-6)) / 7 + (var(--run, 1) - 1) * var(--s-6) - 2 * var(--s-8) - 2 * var(--s-6)); }
   .cal-line.is-run.is-done { opacity: .55; }
-  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-count { flex: none; margin-left: auto; color: var(--faint); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a group's codes, after its count, are the first thing a narrow cell lets go */
   @media (max-width: 1024px) { .cal-count ~ .cal-code { display: none; } }
-  .cal-more { padding-left: var(--s-2); color: var(--faint); font: 600 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-more { padding-left: var(--s-2); color: var(--faint); font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .cal-more-dots { display: none; }
   /* the marks: a square, filled once done; a dot; a bar, thin or thick (a shooting) */
   .cal-mark.is-dot { border-radius: 50%; }
@@ -509,11 +504,11 @@
   .cal-mark.is-thick { width: 3px; }
   /* a short coloured code (a network: « IG », « P »), its full name on hover */
   .cal-code { display: inline-grid; flex: none; place-items: center; min-width: 18px; height: 15px; padding: 0 var(--s-2); border-radius: var(--r-s);
-    color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--dim)) var(--tint-soft), transparent); font: 700 var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: 0; }
+    color: color-mix(in oklab, var(--n, var(--dim)) var(--tint-ink-on-tint), var(--ink)); background: color-mix(in srgb, var(--n, var(--dim)) var(--tint-soft), transparent); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   /* the day's panel, under the month or one per day in the list */
   .cal-day { margin-top: var(--s-14); padding: var(--card-pad); background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); box-shadow: var(--card-shadow); }
   .cal-day.is-today { border-color: var(--accent-line); }
-  .cal-day-t { margin: 0 0 var(--s-12); font: var(--head-weight) var(--fs-17)/var(--head-lh) var(--title-font); letter-spacing: var(--title-ls); text-transform: var(--title-case); }
+  .cal-day-t { margin: 0 0 var(--s-12); font: var(--type-title-3-weight) var(--type-title-3-size)/var(--head-lh) var(--type-title-3-font); letter-spacing: var(--type-title-3-ls); text-transform: var(--type-title-3-case); }
   .cal-day-t::first-letter { text-transform: uppercase; }
   .cal-day .rows .cal-mark, .cal-wcol .rows .cal-mark { align-self: center; }
   .cal-day li.is-done .row-title, .cal-wcol li.is-done .row-title { color: var(--faint); }
@@ -522,15 +517,15 @@
   .cal-week { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: var(--s-6); align-items: start; }
   .cal-wcol { min-width: 0; min-height: 160px; padding: var(--s-12) var(--s-10); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); }
   .cal-wcol.is-today { border-color: var(--accent); }
-  .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-ui) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-ui) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .cal-wcol.is-today h3 { color: var(--accent-text); }
-  .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   /* a narrow column cuts its titles between syllables, never in the middle of one */
   .cal-wcol .row-title { overflow-wrap: break-word; hyphens: auto; }
-  .cal-wdate { display: block; margin-top: var(--s-2); font: 400 var(--fs-11)/var(--lh-ui) var(--mono); letter-spacing: 0; text-transform: none; }
+  .cal-wdate { display: block; margin-top: var(--s-2); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);
-    color: var(--faint); font: 600 var(--fs-13)/var(--lh-tight) var(--body); cursor: pointer; }
+    color: var(--faint); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); cursor: pointer; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .cal-prev:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
   .cal-body[data-view="list"] .cal-prev + .cal-day { margin-top: var(--s-10); }
   /* the arrows and « Aujourd’hui » take the height of the views beside them, buttons like the others */
@@ -544,7 +539,7 @@
   /* the views and the arrows share one row under the title; the arrows go under the views where the row is too narrow */
   .cal-head .periodnav { flex-wrap: wrap; justify-content: space-between; gap: var(--s-6) var(--s-4); }
   .cal-head .periodnav .tabs { flex: 1 1 auto; min-width: 0; }
-  .cal-head .periodnav .tabs button { flex: 1 1 0; padding: var(--s-6) var(--s-8); font-size: var(--fs-11); letter-spacing: 0; text-align: center; }
+  .cal-head .periodnav .tabs button { flex: 1 1 0; padding: var(--s-6) var(--s-8); text-align: center; }
   .cal-arrows { margin-left: auto; gap: var(--s-4); }
   .cal-head .periodnav .btn { flex: none; padding: 0 var(--s-8); }
   .cal-dow, .cal-grid { gap: var(--s-4); }
@@ -562,10 +557,9 @@
   .cal-cell .cal-line.is-run.is-first.is-last { flex-basis: 100%; }
   .cal-cell .cal-mark, .cal-cell .cal-mark.is-bar, .cal-cell .cal-mark.is-thick { width: 6px; height: 6px; border: 1.5px solid var(--n, var(--dim)); border-radius: 50%; }
   .cal-cell .cal-mark.is-open { background: transparent; }
-  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); }
+  .cal-more-dots { display: block; margin-left: var(--s-2); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .cal-week { grid-template-columns: minmax(0, 1fr); }
   .cal-wcol { min-height: 0; }
-  .cal-wcol h3 { font-size: var(--fs-12); }
 }
 /* Chosen: the gold every framed choice takes, the same everywhere: a pill in use, a period in the date picker, a gold
    button, the chosen day of the calendar. Its colours are roles (--chosen-ink, --chosen-bg, --chosen-line), which a

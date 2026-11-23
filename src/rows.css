@@ -11,23 +11,22 @@
      first row keeps its room above the line, as the others under theirs (« l'écart en haut de la première ligne est
      vraiment trop petit », Studio's posts, 23 November 2026) */
   :is(h4.sect.is-ruled + ul.rows, .sheet-head:has(> h4.sect.is-ruled:last-child) + .sheet-list > ul.rows:first-child):not(.is-cards) > li:first-child:not(.rows-head) { padding-top: var(--row-py, var(--s-8)); }
-  .row-title { flex: 1 1 150px; font-size: var(--fs-14); font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-decoration: none; }
-  .row-place { font-size: var(--fs-13); color: var(--faint); }
+  .row-title { flex: 1 1 150px; font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); min-width: 0; overflow-wrap: anywhere; text-decoration: none; font-family: var(--type-strong-font); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .row-place { font-size: var(--type-small-size); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what
      the group comes to on its right */
-  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--label-ls); padding: var(--s-24) 0 var(--s-2); text-transform: uppercase; }
+  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--type-smallcaps-ls); padding: var(--s-24) 0 var(--s-2); text-transform: var(--type-smallcaps-case); }
   ul.rows > li.rows-head:first-child { padding-top: var(--s-4); }
   /* rows drawn as small cards (a trip, and what it is made of under it): each on the lighter ground, apart from the
      next, its name and its figure a step larger */
   ul.rows.is-cards > li:not(.rows-head) { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-l); display: block; margin-top: var(--s-8); padding: var(--s-14); }
-  ul.rows.is-cards > li:not(.rows-head) .row-title { font-size: var(--fs-15); line-height: var(--lh-ui); }
-  ul.rows.is-cards > li:not(.rows-head) .row-value { font: 600 var(--fs-15)/var(--lh-tight) var(--mono); }
+  ul.rows.is-cards > li:not(.rows-head) .row-title { line-height: var(--lh-ui); }
+  ul.rows.is-cards > li:not(.rows-head) .row-value { font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   /* a card row that opens, lit under the pointer (Selecta's galleries waiting), and one not read yet, its gold dot
      before its title (Selecta's notifications) */
   @media (hover: hover) { ul.rows.is-cards > li.is-link:is(:hover, :focus-within) { background: var(--row-lit); } }
   ul.rows > li.is-unread .row-title::before { content: ""; display: inline-block; width: var(--pip-size, 7px); height: var(--pip-size, 7px);
     margin-right: var(--s-6); border-radius: 50%; background: var(--accent); vertical-align: middle; }
-  ul.rows > li.is-unread .row-title { font-weight: 700; }
   /* one happening right now (a client selecting in Selecta): the same dot, breathing */
   ul.rows > li.is-live .row-title::before { animation: pulse calc(var(--t-mid) * 4) ease-in-out infinite; }
   @media (prefers-reduced-motion: reduce) { ul.rows > li.is-live .row-title::before { animation: none; } }
@@ -35,15 +34,15 @@
      and quieter: <ul class="rows is-sub"> inside the row */
   ul.rows.is-sub > li { --row-py: var(--s-4); border-top-style: dashed; gap: var(--s-4) var(--s-8); }
   ul.rows.is-sub > li:first-child { border-top: none; padding-top: var(--s-4); }
-  ul.rows.is-sub .row-title { color: var(--dim); font-size: var(--fs-13); font-weight: 500; }
+  ul.rows.is-sub .row-title { color: var(--dim); font-size: var(--type-small-size); font-weight: var(--type-strong-weight); font-family: var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a row being saved steps back until it is (--o-busy), as a table's */
   ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
   /* a row's second line, under its title: a detail, smaller and faint */
-  .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
+  .row-title small { color: var(--faint); display: block; font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); margin-top: var(--s-2); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* the words as a bank or a server wrote them, under a row's name, in the fixed-width font (an operation's label) */
-  .row-label { color: var(--faint); display: block; font: 400 var(--fs-12)/var(--lh-ui) var(--mono); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  .row-label { color: var(--faint); display: block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); margin-top: var(--s-2); overflow-wrap: anywhere; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a note under a row, in gold italics (one's own words on an operation) */
-  .row-note { color: var(--accent-text); display: block; font: italic 500 var(--fs-13)/var(--lh-ui) var(--body); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  .row-note { color: var(--accent-text); display: block; font: italic var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); margin-top: var(--s-2); overflow-wrap: anywhere; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a small picture at the head of a row (a photo a note is about), square, its corners the row's */
   .row-thumb { flex: none; width: var(--row-thumb, 48px); height: var(--row-thumb, 48px); object-fit: cover; border-radius: var(--r-s); background: var(--panel-2); }
   /* rows under a row, indented (a trip's kinds of spending and their lines) */
@@ -63,15 +62,15 @@
   @media (hover: hover) { a.row-title:hover, .row-title > a:hover, ul.rows li.is-link:hover .row-title { color: var(--accent-text); } }
   /* a word in a palette colour (a bank's name): <span class="tint" style="--n: var(--c-ciel)">; in vitrine darkened with ink to read */
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
-  .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); padding: var(--s-2) var(--s-6); text-transform: uppercase; }
-  .late-tag { font: 600 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); }
+  .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); padding: var(--s-2) var(--s-6); text-transform: var(--type-smallcaps-case); }
+  .late-tag { font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a list's line: its date or time, and its amount or figure */
-  .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
-  .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
-  .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+  .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: var(--type-small-weight) var(--type-small-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .row-value .row-sub { color: var(--faint); display: block; font-size: var(--type-caption-size); margin-top: var(--s-4); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a short line of its own in a row, under what is above it, in small, its colour a tone (a trip's « Remboursé 120 € »,
      .row-line.tone.is-good, 4.26.1; .row-note is an operation's note, in gold italics) */
-  .row-line { display: block; font-size: var(--fs-12); }
+  .row-line { display: block; font-size: var(--type-small-size); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a line break inside a row, on a phone only (Studio's day: its title and whose it is on the first line, the person,
      the place and the time on the second): <i class="row-break"></i>, the page ordering what goes on each line (4.26.1) */
   ul.rows li > .row-break { display: none; }
@@ -81,23 +80,23 @@
   /* figures each behind its small icon (a post's likes, replies, reposts, views), in a row's place or at its end, the
      same in a list, an agenda's day and a sheet: <span class="figs"><span class="fig" title="40 likes"><svg class="ico">…
      </svg>40</span>…</span> (Studio's) */
-  .figs { align-items: center; color: var(--dim); display: inline-flex; flex-wrap: wrap; font: 500 var(--fs-13)/var(--lh-tight) var(--mono);
-    font-variant-numeric: tabular-nums; gap: var(--s-4) var(--s-12); vertical-align: middle; }
+  .figs { align-items: center; color: var(--dim); display: inline-flex; flex-wrap: wrap; font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--mono);
+    font-variant-numeric: tabular-nums; gap: var(--s-4) var(--s-12); vertical-align: middle; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .fig { align-items: center; display: inline-flex; gap: var(--s-4); white-space: nowrap; }
   .fig .ico { height: var(--ico-sm); width: var(--ico-sm); }
 /* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
    each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
   .facts { margin: 0; }
   .facts > div { --row-py: var(--s-10); display: grid; grid-template-columns: 9.5em minmax(0, 1fr); gap: var(--s-10); align-items: start; }
-  .facts dt { color: var(--faint); font: var(--label-weight) var(--kv-k-size)/var(--lh-text) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
-  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--kv-v-size); }
+  .facts dt { color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-text) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+  .facts dd { margin: 0; min-width: 0; overflow-wrap: anywhere; font-size: var(--type-text-size); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* words as the bank wrote them */
-  .facts dd.is-mono { color: var(--dim); font: 400 var(--fs-13)/var(--lh-text) var(--mono); }
+  .facts dd.is-mono { color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .facts dd :is(select, textarea, input:not([type=checkbox]):not([type=radio])) { width: 100%; max-width: 100%; box-sizing: border-box; }
   .facts dd textarea { resize: vertical; line-height: var(--lh-text); }
 
 @media (max-width: 768px) {
-    .row-value { font-size: var(--fs-12); min-width: 68px; }
+    .row-value { min-width: 68px; }
   .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
 }
 
@@ -107,15 +106,15 @@
    mono, on the right.
    <div class="parts is-ruled"><div class="is-head"><span><i class="swatch"></i>Transport</span><span>−312 €</span></div>
      <div class="is-sub"><span>Train</span><span>−212 €</span></div>… */
-  .parts { display: grid; gap: var(--s-2); font-size: var(--fs-13); }
+  .parts { display: grid; gap: var(--s-2); font-size: var(--type-small-size); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .parts.is-ruled { padding-top: var(--s-12); border-top: 1px solid var(--line); }
   .parts > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-12); }
-  .parts > .is-head { margin-top: var(--s-10); color: var(--ink); font-weight: 600; }
+  .parts > .is-head { margin-top: var(--s-10); color: var(--ink); font-weight: var(--type-strong-weight); }
   .parts > .is-head:first-child { margin-top: 0; }
   .parts > .is-head .swatch { display: inline-block; vertical-align: middle; margin-right: var(--s-8); }
   .parts > .is-sub { padding-left: var(--s-16); color: var(--dim); }
-  .parts > div > span:last-child { font: 500 var(--fs-13)/var(--lh-text) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
-  .parts > .is-head > span:last-child { font-weight: 600; color: var(--ink); }
+  .parts > div > span:last-child { font: var(--type-small-weight) var(--type-small-size)/var(--lh-text) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .parts > .is-head > span:last-child { font-weight: var(--type-strong-weight); color: var(--ink); }
   .parts > .is-good, .parts > .is-good > span:last-child { color: var(--good); }
 
 /* Lines of pairs (a rule: the merchant and where it goes, a note under it, 4.26.0): .pair, a hairline above it; .pair-k
@@ -123,12 +122,12 @@
    under it, small and faint (.is-wide across the line); .pair.is-off a line kept but not used, struck through.
    <div class="pair"><span class="pair-k">Super U <small>SUPER U</small></span><span class="pair-v">Courses</span><span class="pair-n">Dépense</span></div> */
   .pair { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-2) var(--s-12); padding: var(--s-8) 0; border-top: 1px solid var(--line); }
-  .pair-k { min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
-  .pair-k small { margin-left: var(--s-6); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--faint); }
+  .pair-k { min-width: 0; font-weight: var(--type-strong-weight); overflow-wrap: anywhere; font-family: var(--type-strong-font); font-size: var(--type-strong-size); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .pair-k small { margin-left: var(--s-6); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .pair-v { text-align: right; color: var(--dim); }
   a.pair-v { color: var(--accent); font-variant-numeric: tabular-nums; text-decoration: none; }
   a.pair-v:hover { text-decoration: underline; }
-  .pair-n { font-size: var(--fs-12); color: var(--faint); }
+  .pair-n { font-size: var(--type-caption-size); color: var(--faint); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .pair-n.is-wide { grid-column: 1 / -1; }
   .pair.is-off :is(.pair-k, .pair-v) { color: var(--faint); text-decoration: line-through; }
   .pair.is-off .pair-n { color: var(--mid); }
