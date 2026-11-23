@@ -1,4 +1,4 @@
-/* ds 4.24.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.25.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -1927,4 +1927,337 @@
     }, true);
   }
   ds.images = { renew: renew };
+})();
+/* ds.sheet(el, {onOpen, onClose}): the sheet of src/sheet.css, its veil el (<div class="sheet" hidden>) around its
+   .sheet-panel. Returns {open(from), close(), toggle(), isOpen, el, panel} (el the veil, panel its .sheet-panel); called again
+   on the same el, it gives the same sheet.
+   Opening it moves the focus into the panel, and Tab stays there; closing gives the focus back to what had it (or to
+   from, e.g. the row that opened it). Escape, a click on the veil, its cross (.sheet-close) or a [data-sheet-close] close
+   it: the last one opened first, and a window of ds.confirm over it keeps its own Escape. On a phone the page behind
+   does not scroll while it is open (sheet.css). */
+(function () {
+  "use strict";
+  var _ = window.ds._;
+  function sheet(el, opts) {
+    el = _.find(el);
+    if (!el) return null;
+    if (el._dsSheet) { if (opts) el._dsSheet.opts = opts; return el._dsSheet; }
+    var panel = el.querySelector(".sheet-panel") || el, s = { el: el, panel: panel, opts: opts || {}, isOpen: false, before: null };
+    // open, a layer: Escape closes it, the last one opened first, and Tab goes round inside it while the focus is in it
+    // (a picker's list floating outside it keeps its own keys)
+    var cover = { el: panel, loose: true, close: function () { s.close(); } };
+    el._dsSheet = s;
+    panel.setAttribute("tabindex", "-1");
+    el.querySelectorAll(".sheet-close").forEach(function (x) { if (!x.hasAttribute("aria-label")) x.setAttribute("aria-label", _.words().close); });
+    s.open = function (from) {
+      if (s.isOpen) return s;
+      s.isOpen = true;
+      s.before = from || document.activeElement;
+      el.hidden = false;
+      _.layer(cover);
+      panel.scrollTop = 0;
+      panel.focus({ preventScroll: true });
+      if (s.opts.onOpen) s.opts.onOpen(s);
+      return s;
+    };
+    s.close = function () {
+      if (!s.isOpen) return s;
+      s.isOpen = false;
+      el.hidden = true;
+      _.unlayer(cover);
+      var back = s.before;
+      s.before = null;
+      // what opened it may be gone, drawn again while the sheet was open: then the focus stays where the page puts it
+      if (back && back.focus && back.isConnected) back.focus({ preventScroll: true });
+      if (s.opts.onClose) s.opts.onClose(s);
+      return s;
+    };
+    s.toggle = function (from) { return s.isOpen ? s.close() : s.open(from); };
+    el.addEventListener("click", function (e) {
+      if (e.target === el || (e.target.closest && e.target.closest(".sheet-close, [data-sheet-close]"))) s.close();
+    });
+    return s;
+  }
+  window.ds = window.ds || {};
+  window.ds.sheet = sheet;
+})();
+/* The behaviour of src/pick.css.
+   ds.pills(root): each pill of root (or the page, or root itself when it is one) says its menu’s choice in its .pill-value,
+   and a .pill.is-filter is lit (.is-on) while its menu holds a value. Done on its own when the page is ready and on
+   every change of a pill's menu; a page that sets a menu itself (select.value = …) calls it after.
+   ds.picker(holder, items, {value, first, limit, placeholder, label, empty, onPick, opener, check}) draws a search picker
+   in holder: a field, then the choices that match what is typed, accents and capitals aside, every word of it.
+     items: [{value, label, sub (a word in small after it), group (its heading), color (its --n), initial or icon,
+     cta (what a tap does), href (a link: a tap goes there), keywords (more words it is found by)}], or null while they
+     are read (« Chargement… »); value: the current choice, in gold; first: the values shown before anything is typed
+     (the banks most people have), else every choice; limit: how many at most (12); empty: the words when nothing
+     matches; onPick(item, {checked}) on a tap or Enter; opener: a button that shows and hides it (aria-expanded), the
+     search taking the focus, and one such picker open at a time (opening one closes the other: a sheet with a
+     category's and a trip's would grow too tall); check: a box at its foot ({label, checked}, Bank's « Seulement cette opération »), its state
+     given to onPick (checked) and read by checked(). ↑ and ↓ go through the choices, Enter takes one, Escape empties the search, then closes it.
+     Returns {open(), close(), toggle(), set(items, options), draw(), checked(), input}; set takes the list once read, and
+     may change the options with it (first, empty…). */
+(function () {
+  "use strict";
+  var _ = window.ds._, find = _.find, tag = _.el;
+  // the picker with an opener open now: opening another closes it (« quand j'ouvre la recherche de la catégorie, ça
+  // ferme celle de voyage », 22 November 2026)
+  var shown = null;
+  var WORDS = _.table({
+    fr: { search: "Chercher…", none: "Rien ne correspond.", loading: "Chargement de la liste…", clear: "Effacer" },
+    en: { search: "Search…", none: "Nothing matches.", loading: "Loading the list…", clear: "Clear" }
+  });
+  function words() { return _.words(WORDS); }
+
+  function pills(root) {
+    root = find(root) || document;
+    var list = root.matches && root.matches(".pill") ? [root] : root.querySelectorAll(".pill");
+    [].forEach.call(list, function (p) {
+      var sel = p.querySelector("select");
+      if (!sel) return;
+      var pv = p.querySelector(".pill-value");
+      if (!pv) { pv = tag("span", "pill-value"); p.insertBefore(pv, p.firstChild); }
+      var o = sel.options[sel.selectedIndex];
+      pv.textContent = o ? o.textContent : "";
+      if (p.classList.contains("is-filter")) p.classList.toggle("is-on", !!sel.value);
+    });
+  }
+  document.addEventListener("change", function (e) {
+    var p = e.target.closest && e.target.closest(".pill");
+    if (p) pills(p);
+  });
+  // now, for what is on the page already, and once it is all there, for what a page's first script drew
+  pills();
+  document.addEventListener("DOMContentLoaded", function () { pills(); });
+
+  var made = 0;
+  var fold = window.ds.text.fold;
+  function picker(holder, items, o) {
+    holder = find(holder);
+    if (!holder) return null;
+    o = Object.assign({}, o);
+    // called again on the same holder: the same picker, with the items given
+    if (holder._dsPicker) { if (items !== undefined) holder._dsPicker.set(items); return holder._dsPicker; }
+    var w = words(), id = "ds-picker-" + (++made), p = { items: items === undefined ? [] : items, shown: [], active: -1 };
+    holder._dsPicker = p;
+    holder.classList.add("picker");
+    var input = tag("input", "picker-q"), list = tag("div", "picker-list");
+    input.type = "search";
+    input.autocomplete = "off";
+    input.spellcheck = false;
+    input.placeholder = o.placeholder || w.search;
+    input.setAttribute("aria-label", o.label || input.placeholder);
+    input.setAttribute("role", "combobox");
+    input.setAttribute("aria-autocomplete", "list");
+    input.setAttribute("aria-expanded", "true");
+    input.setAttribute("aria-controls", id);
+    list.id = id;
+    list.setAttribute("role", "listbox");
+    // the field with its cross (.search-field): emptied in one tap, the whole list is back
+    var field = tag("span", "search-field"), clear = tag("button", "search-clear");
+    clear.type = "button";
+    clear.setAttribute("aria-label", w.clear);
+    clear.innerHTML = '<svg class="ico" aria-hidden="true"><use href="#i-close"/></svg>';
+    field.append(input, clear);
+    holder.replaceChildren(field, list);
+    p.input = input;
+    // its box, under the choices: what a choice is for
+    var box = null;
+    if (o.check) {
+      var foot = tag("label", "picker-check");
+      box = tag("input");
+      box.type = "checkbox";
+      box.checked = !!o.check.checked;
+      foot.append(box, tag("span", "", o.check.label || ""));
+      holder.appendChild(foot);
+    }
+    p.checked = function () { return !!(box && box.checked); };
+
+    function matches() {
+      var items = p.items || [], q = fold(input.value.trim()), limit = o.limit || 12;
+      if (!q) {
+        var start = o.first ? o.first.map(function (v) { return items.filter(function (x) { return fold(x.value) === fold(v); })[0]; }).filter(Boolean) : items;
+        return start.slice(0, limit);
+      }
+      var parts = q.split(/\s+/);
+      return items.filter(function (x) {
+        var text = fold([x.label, x.sub, x.group, x.keywords].join(" "));
+        return parts.every(function (part) { return text.indexOf(part) >= 0; });
+      }).slice(0, limit);
+    }
+    function option(x, i) {
+      var opt = tag(x.href ? "a" : "button", "picker-opt");
+      if (x.href) opt.href = x.href; else opt.type = "button";
+      opt.id = id + "-" + i;
+      opt.tabIndex = -1;
+      opt.setAttribute("role", "option");
+      opt.setAttribute("aria-selected", o.value != null && String(x.value) === String(o.value) ? "true" : "false");
+      if (x.initial || x.icon || x.color) {
+        var av = tag("span", "picker-av" + (x.initial || x.icon ? "" : " is-dot"), x.initial || null);
+        av.setAttribute("aria-hidden", "true");
+        // a colour given as a token's name ("--c-bleu") or as a value, as in the charts and the calendar
+        if (x.color) av.style.setProperty("--n", _.tone(x.color));
+        if (x.icon) av.appendChild(window.ds.ico(x.icon));
+        opt.appendChild(av);
+      }
+      var name = tag("span", "picker-name", x.label);
+      if (x.sub) { name.append(" "); name.appendChild(tag("small", "", x.sub)); }
+      opt.appendChild(name);
+      if (x.cta) opt.appendChild(tag("span", "picker-cta", x.cta));
+      opt.addEventListener("click", function () { pick(x); });
+      return opt;
+    }
+    p.draw = function () {
+      p.shown = p.items ? matches() : [];
+      p.active = -1;
+      input.removeAttribute("aria-activedescendant");
+      var kids = [], group = null;
+      if (!p.items) kids.push(tag("p", "picker-none", w.loading));
+      else if (!p.shown.length) kids.push(tag("p", "picker-none", o.empty || w.none));
+      p.shown.forEach(function (x, i) {
+        // a heading each time the group changes: a category, then its subcategories
+        if (x.group && x.group !== group) kids.push(tag("p", "picker-g", x.group));
+        group = x.group || null;
+        kids.push(option(x, i));
+      });
+      list.replaceChildren.apply(list, kids);
+      return p;
+    };
+    function light(i) {
+      var opts = list.querySelectorAll(".picker-opt");
+      if (!opts.length) return;
+      p.active = (i + opts.length) % opts.length;
+      [].forEach.call(opts, function (x, k) { x.classList.toggle("is-focused", k === p.active); });
+      input.setAttribute("aria-activedescendant", opts[p.active].id);
+      opts[p.active].scrollIntoView({ block: "nearest" });
+    }
+    function pick(x) {
+      o.value = x.value;
+      if (o.onPick) o.onPick(x, { checked: p.checked() });
+      if (x.href) return;
+      p.draw();
+    }
+    input.addEventListener("input", p.draw);
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "ArrowDown" || e.key === "ArrowUp") { e.preventDefault(); light(p.active < 0 && e.key === "ArrowUp" ? -1 : p.active + (e.key === "ArrowDown" ? 1 : -1)); }
+      else if (e.key === "Enter") {
+        // Enter takes the lit choice, or the first one once something is typed
+        var x = p.shown[p.active >= 0 ? p.active : input.value.trim() ? 0 : -1];
+        if (!x) return;
+        e.preventDefault();
+        if (x.href) { if (o.onPick) o.onPick(x); location.href = x.href; } else pick(x);
+      } else if (e.key === "Escape") {
+        // first the search, then the picker itself; with nothing left to do, Escape goes on to the sheet around it
+        if (input.value) { e.preventDefault(); input.value = ""; p.draw(); }
+        else if (opener && !holder.hidden) { e.preventDefault(); p.close(); opener.focus(); }
+      }
+    });
+    var opener = find(o.opener);
+    p.open = function () {
+      if (opener && shown && shown !== p) shown.close();
+      if (opener) shown = p;
+      holder.hidden = false;
+      if (opener) opener.setAttribute("aria-expanded", "true");
+      p.draw();
+      input.focus();
+      return p;
+    };
+    p.close = function () {
+      if (shown === p) shown = null;
+      holder.hidden = true;
+      if (opener) opener.setAttribute("aria-expanded", "false");
+      return p;
+    };
+    p.toggle = function () { return holder.hidden ? p.open() : p.close(); };
+    p.set = function (items, more) { p.items = items; if (more) Object.keys(more).forEach(function (k) { o[k] = more[k]; }); return p.draw(); };
+    if (opener) {
+      opener.setAttribute("aria-controls", holder.id || (holder.id = id + "-box"));
+      opener.setAttribute("aria-expanded", holder.hidden ? "false" : "true");
+      opener.addEventListener("click", p.toggle);
+    }
+    return p.draw();
+  }
+  window.ds = window.ds || {};
+  window.ds.pills = pills;
+  window.ds.picker = picker;
+})();
+/* A settings page's pieces, in ds.js for every app (4.25.0; Studio's and Bank's settings wrote them by hand, then
+   ds-tools.js had them): a switch that saves, a connection's row, number fields by group. Their look is src/settings.css,
+   on a page whose body is .settings; ds.jobs (the syncs and their journal) stays in ds-tools.js. */
+(function () {
+  "use strict";
+  var _ = window.ds._;
+  /* A settings page's pieces, built (Studio's and Bank's settings wrote them by hand):
+     ds.switch({label, on, help, text}, save): a switch (label.switch) that saves at once: save(on) gives back a promise; the
+     switch waits disabled, and goes back with a red bubble if saving failed.
+     ds.conn({name, tone, details, action}) and ds.conns(holder, rows): a connection's row (.conn): its dot (tone "good" or
+     "bad"), its name, its details (a text, or {text, tone}), its action (a node, or {href, text}: another site opens in
+     a new tab, « ↗ », the app's own page « → »); ds.conn.html for a page that writes strings (name and details as HTML).
+     ds.fields(holder, groups, {onChange}): number fields by group, [{group, key, label, help, value, default, min, max,
+     unit}]: changed (is-changed) or out of bounds (aria-invalid) as typed; onChange({edited, wrong}) after each key;
+     gives back {edited(), wrong()}. */
+  function settingSwitch(sw, save) {
+    var h = window.ds.h, input = h("input", { type: "checkbox", role: "switch", "aria-label": sw.label });
+    input.checked = !!sw.on;
+    input.addEventListener("change", function () {
+      input.disabled = true;
+      Promise.resolve().then(function () { return save(input.checked); }).then(function () { input.disabled = false; }, function (e) {
+        input.checked = !input.checked; input.disabled = false;
+        window.ds.toast({ type: "bad", text: e && e.message ? e.message : String(e) });
+      });
+    });
+    return h("label", { class: "switch", title: sw.help || null }, [input, sw.text || sw.label]);
+  }
+  function connAction(a) {
+    var h = window.ds.h;
+    if (!a) return null;
+    if (a.nodeType) return a;
+    var ext = /^https?:/.test(a.href);
+    return h("a", { href: a.href, target: ext ? "_blank" : null, rel: ext ? "noopener" : null, text: a.text + (ext ? " ↗" : " →") });
+  }
+  function conn(c) {
+    var h = window.ds.h;
+    return h("div", { class: "conn" }, [h("span", { class: "name" }, [c.tone ? h("i", { class: "sync-dot is-" + c.tone, "aria-hidden": "true" }) : null, c.name]),
+      ].concat((c.details || []).map(function (d) { return h("span", { class: "det" + (d && d.tone ? " is-" + d.tone : ""), text: d && d.text != null ? d.text : d }); }), [connAction(c.action)]));
+  }
+  conn.html = function (c) {
+    return '<div class="conn"><span class="name">' + (c.tone ? '<i class="sync-dot is-' + c.tone + '" aria-hidden="true"></i>' : "") + c.name + "</span>" +
+      (c.details || []).map(function (d) { return '<span class="det' + (d && d.tone ? " is-" + d.tone : "") + '">' + (d && d.text != null ? d.text : d) + "</span>"; }).join("") +
+      (c.action || "") + "</div>";
+  };
+  function conns(holder, rows) {
+    holder = _.find(holder);
+    var list = (rows || []).map(conn);
+    if (holder) { holder.textContent = ""; list.forEach(function (x) { holder.append(x); }); }
+    return list;
+  }
+  function fields(holder, list, o) {
+    var h = window.ds.h, edited = {}, groups = {};
+    holder = _.find(holder);
+    o = o || {};
+    (list || []).forEach(function (f) { (groups[f.group || ""] = groups[f.group || ""] || []).push(f); });
+    function wrong() { return holder ? holder.querySelectorAll('input[aria-invalid="true"]').length : 0; }
+    function tell() { if (o.onChange) o.onChange({ edited: Object.assign({}, edited), wrong: wrong() }); }
+    var out = Object.keys(groups).map(function (g) {
+      return h("div", { class: "group" }, [g ? h("h3", { text: g }) : null].concat(groups[g].map(function (f) {
+        var id = "f-" + f.key, input = h("input", { id: id, type: "number", inputmode: "numeric", min: f.min, max: f.max, step: 1, value: f.value });
+        input.addEventListener("input", function () {
+          var v = input.value.trim();
+          if (v === "" || +v === f.value) delete edited[f.key]; else edited[f.key] = v;
+          var bad = v !== "" && (!/^-?\d+$/.test(v) || (f.min != null && +v < f.min) || (f.max != null && +v > f.max));
+          if (bad) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
+          input.classList.toggle("is-changed", f.key in edited && !bad);
+          tell();
+        });
+        return h("div", { class: "field" }, [h("label", { class: "lab", for: id, text: f.label }),
+          h("div", { class: "help" }, [f.help ? f.help + " " : "", f.default != null ? h("span", { class: "def", text: (_.english() ? "Default " : "Par défaut ") + f.default + (f.unit ? " " + f.unit : "") +
+            (f.min != null && f.max != null ? (_.english() ? ", between " : ", entre ") + f.min + (_.english() ? " and " : " et ") + f.max : "") + "." }) : null]),
+          h("div", { class: "inp" }, [input, f.unit ? h("span", { class: "unit", text: f.unit }) : null])]);
+      })));
+    });
+    if (holder) { holder.textContent = ""; out.forEach(function (x) { holder.append(x); }); }
+    tell();
+    return { edited: function () { return Object.assign({}, edited); }, wrong: wrong };
+  }
+  window.ds.switch = settingSwitch; window.ds.conn = conn; window.ds.conns = conns; window.ds.fields = fields;
 })();

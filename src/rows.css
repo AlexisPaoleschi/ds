@@ -69,6 +69,9 @@
   .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: 500 var(--fs-13)/var(--lh-text) var(--mono); }
   .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: 600 var(--fs-14)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; }
   .row-value .row-sub { color: var(--faint); display: block; font-size: var(--fs-11); margin-top: var(--s-4); }
+  /* a short line of its own in a row, under what is above it, in small, its colour a tone (a trip's « Remboursé 120 € »,
+     .row-note.tone.is-good, 4.25.0) */
+  .row-note { display: block; font-size: var(--fs-12); }
   /* figures each behind its small icon (a post's likes, replies, reposts, views), in a row's place or at its end, the
      same in a list, an agenda's day and a sheet: <span class="figs"><span class="fig" title="40 likes"><svg class="ico">…
      </svg>40</span>…</span> (Studio's) */
@@ -91,3 +94,20 @@
     .row-value { font-size: var(--fs-12); min-width: 68px; }
   .facts > div { grid-template-columns: minmax(0, 1fr); gap: var(--s-4); }
 }
+
+/* What a total is made of (a trip's money, kind by kind, 4.25.0): .parts, a line each, a <div> with its words and its
+   figure; .is-head a kind and its total, in ink and bold, a little apart from the one before (its .swatch in front);
+   .is-sub a line of it, set in and quieter; .is-good what came back; .is-ruled a hairline above it all. The figures in
+   mono, on the right.
+   <div class="parts is-ruled"><div class="is-head"><span><i class="swatch"></i>Transport</span><span>−312 €</span></div>
+     <div class="is-sub"><span>Train</span><span>−212 €</span></div>… */
+  .parts { display: grid; gap: var(--s-2); font-size: var(--fs-13); }
+  .parts.is-ruled { padding-top: var(--s-12); border-top: 1px solid var(--line); }
+  .parts > div { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-12); }
+  .parts > .is-head { margin-top: var(--s-10); color: var(--ink); font-weight: 600; }
+  .parts > .is-head:first-child { margin-top: 0; }
+  .parts > .is-head .swatch { display: inline-block; vertical-align: middle; margin-right: var(--s-8); }
+  .parts > .is-sub { padding-left: var(--s-16); color: var(--dim); }
+  .parts > div > span:last-child { font: 500 var(--fs-13)/var(--lh-text) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .parts > .is-head > span:last-child { font-weight: 600; color: var(--ink); }
+  .parts > .is-good, .parts > .is-good > span:last-child { color: var(--good); }

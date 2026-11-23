@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.25.0 · 23 novembre 2026
+
+La fenêtre, le choix dans une liste et les réglages passent dans les fichiers communs, et ds reprend ce que Bank et Studio dessinaient encore eux-mêmes.
+
+- `ds.sheet`, `ds.picker` et `ds.pills` (avec leurs pilules), `ds.switch`, `ds.conn`, `ds.conns` et `ds.fields` passent de `ds-tools.js` à `ds.js` (`src/settings.js`), et leurs feuilles (`sheet.css`, `pick.css`, `settings.css`) de `ds-tools.css` à `ds.css` : Selecta et le site les ont aussi. `ds.jobs` (les synchros et leur journal) reste dans les outils. Aucune page ne bouge (captures des quatre applis avant et après). `checks/bundles.js` vérifie la nouvelle répartition, et lit désormais la feuille elle-même : une page ne peut pas lire les règles d’une feuille venue d’une autre adresse, et le contrôle d’avant ne vérifiait rien.
+- Les tons d’un mot : `.tone.is-gold` (« en attente », un jour prévu, un cadeau), `.tone.is-ink` (un chiffre parmi d’autres plus discrets), `.tone.is-strong` (le même en gras).
+- `a.big-fig-link` : un lien à part sous un grand chiffre (« Ce mois-ci : +2 100 € · −1 830 € »).
+- `a.sum-note` : une note sous la ligne d’une carte, lien vers son détail (« fin du mois estimée 412 € → »), `.is-bad` quand il faut verser.
+- `h4.sect > .sect-note` : une courte note après un titre de section, dans le texte courant (« +1,2 % à 17h »).
+- `.figline` : une ligne de petits chiffres en mono (l’heure dorée).
+- `a.link > small` : la seconde ligne d’un lien ; `a.icon-link` : un lien discret d’une seule icône (les profils d’une personne).
+- `.row-note` : une courte ligne à part dans une ligne de liste, en petit, avec son ton (« Remboursé 120 € »).
+- `.parts` : ce dont un total est fait (l’argent d’un voyage, sorte par sorte), `.is-head`, `.is-sub`, `.is-good`, `.is-ruled`.
+- Bank et Studio passent dessus : la page de Bank ne dessine plus qu’une déclaration à elle (34 avant), celle de Studio une (19 avant).
+
 ## 4.24.0 · 23 novembre 2026
 
 - Un tap sur la vue déjà ouverte dans la barre des vues d’une appli (`.tabs.is-bar`, l’onglet `aria-selected`) remonte en haut de la page, en douceur sauf si le mouvement est réduit, comme dans les applis d’un téléphone. Rien à faire dans les applis : `ds.js` l’écoute pour toute la page, avant que la page ne redessine ses onglets ; un tap sur une autre vue reste à l’appli. `checks/behaviours.js` le vérifie.

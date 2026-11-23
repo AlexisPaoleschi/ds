@@ -32,6 +32,14 @@
    pointer, as a row's title: <a class="link"> */
   a.link { color: inherit; text-decoration: none; }
   @media (hover: hover) { a.link:hover { color: var(--accent-text); } }
+/* its second line, in small under it (a linked operation's kind, 4.25.0): <a class="link">Le nom<small>remboursement</small></a> */
+  a.link > small { display: block; color: var(--faint); font-size: var(--fs-12); }
+/* a quiet link of one icon beside a name (a person's profile on a network, 4.25.0): faint, gold on a gold ground under
+   the pointer or the focus, its icon the small one: <a class="icon-link" href="…" aria-label="…"><svg class="ico">… */
+  a.icon-link { display: inline-flex; padding: var(--s-2); border-radius: var(--r-s); color: var(--faint); }
+  a.icon-link:focus-visible { color: var(--accent); background: var(--accent-soft); }
+  @media (hover: hover) { a.icon-link:hover { color: var(--accent); background: var(--accent-soft); } }
+  a.icon-link .ico { width: var(--ico-sm); height: var(--ico-sm); }
 /* a field in use, on the public sites: the full gold edge and a faint gold halo, as on alexispaoleschi.com */
   :where([data-theme="vitrine"]) :where(input:not([type=checkbox]):not([type=radio]), select, textarea) { transition: border-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
   :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
@@ -95,4 +103,9 @@
   :is(.tone, .delta).is-bad { color: var(--bad); }
   :is(.tone, .delta).is-mid { color: var(--mid); }
   .tone.is-faint { color: var(--faint); }
+/* and a word put forward (4.25.0): .tone.is-gold (a planned day, « en attente », a gift), .tone.is-ink (a figure among
+   quieter ones), .tone.is-strong (the same, bold: a month's net) */
+  .tone.is-gold { color: var(--accent-text); }
+  .tone.is-ink { color: var(--ink); }
+  .tone.is-strong { color: var(--ink); font-weight: 600; }
   .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }

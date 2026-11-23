@@ -1,6 +1,7 @@
 // The files each app loads, in a real browser: a page of Selecta's (ds.css and ds.js alone) gets the bubble, the window
-// and the forms that ask, the tables (in ds.css since 2.40, for Selecta's lists), and nothing of the tools (no pill,
-// calendar or sheet rule, no ds.calendar, no ds-tools file asked for); a page of Bank's (ds-tools.css, ds-icons.js, ds-tools.js after ds.css and ds.js) gets the tools and
+// and the forms that ask, the tables (in ds.css since 2.40, for Selecta's lists), the sheet, the search picker and its
+// pills, a settings page's switch, connections and fields (in ds.js and ds.css since 4.25.0), and nothing of the tools
+// (no calendar, date picker or filters' panel rule, no ds.calendar, no ds-tools file asked for); a page of Bank's (ds-tools.css, ds-icons.js, ds-tools.js after ds.css and ds.js) gets the tools and
 // the icons, put in the page by their own file, the calendar's and the date picker's arrows being the sprite's chevrons;
 // the site's way to the icons (icons.svg, with no script) draws them too. And the screen widths of every stylesheet.
 // usage: node checks/bundles.js (Playwright installed); it serves the repository itself on a free port
@@ -76,12 +77,15 @@ function iconSizes() {
   // each tools' file is in ds-tools.css or ds-tools.js, and nowhere in ds.css or ds.js; the photos' in ds-photo.js only; the
   // tables and the lists of rows (Selecta's too, since 4.14.0) in ds.css
   const has = (dist, src) => read('dist/' + dist).includes(read('src/' + src).trim());
-  const toolsCss = ['pick', 'period', 'periodpick', 'datepick', 'reorder', 'live', 'sheet', 'panel', 'status', 'figures', 'chart', 'calendar', 'settings'].map(n => n + '.css');
-  const toolsJs = ['tools', 'sheet', 'table', 'calendar', 'chart', 'figures', 'pick', 'reorder', 'datepick', 'live'].map(n => n + '.js');
+  const toolsCss = ['period', 'periodpick', 'datepick', 'reorder', 'live', 'panel', 'status', 'figures', 'chart', 'calendar'].map(n => n + '.css');
+  const toolsJs = ['tools', 'table', 'calendar', 'chart', 'figures', 'reorder', 'datepick', 'live'].map(n => n + '.js');
+  // the sheet, the search picker and its pills, a settings page's pieces: in ds.css and ds.js for every app (4.25.0)
+  const sharedCss = ['pick', 'sheet', 'settings'].map(n => n + '.css'), sharedJs = ['sheet', 'pick', 'settings'].map(n => n + '.js');
   const misplaced = toolsCss.filter(f => has('ds.css', f) || !has('ds-tools.css', f)).concat(toolsJs.filter(f => has('ds.js', f) || !has('ds-tools.js', f)),
     ['viewer.js', 'photogrid.js'].filter(f => has('ds.js', f) || !has('ds-photo.js', f)), ['icons.js'].filter(f => has('ds.js', f) || !has('ds-icons.js', f)),
-    ['core.js', 'ds.js'].filter(f => has('ds-tools.js', f)), ['table.css', 'rows.css'].filter(f => !has('ds.css', f) || has('ds-tools.css', f)));
-  assert(!misplaced.length, 'les outils dans ds-tools.css et ds-tools.js seulement, les tableaux et les listes (4.14.0) dans ds.css, la visionneuse dans ds-photo.js, les icônes dans ds-icons.js, ds.js et son noyau une seule fois ' + misplaced.join(' '));
+    ['core.js', 'ds.js'].filter(f => has('ds-tools.js', f)), ['table.css', 'rows.css'].concat(sharedCss).filter(f => !has('ds.css', f) || has('ds-tools.css', f)),
+    sharedJs.filter(f => !has('ds.js', f) || has('ds-tools.js', f)));
+  assert(!misplaced.length, 'les outils dans ds-tools.css et ds-tools.js seulement, les tableaux, les listes (4.14.0), la fenêtre, le choix dans une liste et les réglages (4.25.0) dans ds.css et ds.js, la visionneuse dans ds-photo.js, les icônes dans ds-icons.js, ds.js et son noyau une seule fois ' + misplaced.join(' '));
 
   await new Promise(ok => server.listen(0, '127.0.0.1', ok));
   const base = 'http://127.0.0.1:' + server.address().port;
@@ -97,23 +101,26 @@ function iconSizes() {
     <form id="del" data-confirm="Supprimer ce client ?" data-confirm-ok="Supprimer" action="#parti"><button class="btn is-danger" type="submit">Supprimer</button></form>
     <dl class="tiles is-compact"><div class="tile"><dt>Photos</dt><dd>42</dd></div></dl><div class="msg">Un message</div></body></html>`);
   await sel.waitForFunction(() => window.ds && window.ds.toast);
-  const selecta = await sel.evaluate(async () => {
-    const rules = [...document.styleSheets].flatMap(s => { try { return [...s.cssRules].map(r => r.cssText); } catch (e) { return []; } }).join('\n');
+  const selecta = await sel.evaluate(async dsCss => {
     ds.toast({ type: 'good', text: 'Sélection terminée' });
     const asking = ds.confirm({ title: 'Supprimer ?', text: 'Pour de bon', ok: 'Supprimer', danger: true });
     await new Promise(r => setTimeout(r, 300));
     const shown = { toast: !!document.querySelector('.toasts .toast'), dialog: !!document.querySelector('.dialog') };
     document.querySelector('.dialog .btn:not(.is-danger), .dialog button').click();
     await asking;
-    return { ...shown, tools: ['calendar', 'chart', 'sheet', 'drawer', 'busy', 'datePick', 'picker', 'sortable', 'viewer'].filter(n => n in ds),
-      rules: ['.pill', '.cal-cell', '.datepick', '.sheet-panel', '.side-layout'].filter(s => rules.includes(s)), tables: (() => { const t = document.createElement('table'); t.className = 'tbl'; document.body.append(t); const v = getComputedStyle(t).borderCollapse; t.remove(); return v === 'collapse'; })(), sprite: !!document.getElementById('ds-icons'),
+    return { ...shown, tools: ['calendar', 'chart', 'drawer', 'busy', 'datePick', 'sortable', 'viewer', 'jobs'].filter(n => n in ds),
+      shared: ['sheet', 'picker', 'pills', 'switch', 'conn', 'conns', 'fields'].filter(n => typeof ds[n] === 'function').length,
+      // what the page's stylesheet holds, read from the file (a page cannot read the rules of a stylesheet of another origin)
+      sharedRules: ['.pill', '.sheet-panel', '.picker-opt', 'label.switch'].filter(s => dsCss.includes(s)).length,
+      rules: ['.cal-cell', '.datepick', '.side-layout'].filter(s => dsCss.includes(s)), tables: (() => { const t = document.createElement('table'); t.className = 'tbl'; document.body.append(t); const v = getComputedStyle(t).borderCollapse; t.remove(); return v === 'collapse'; })(), sprite: !!document.getElementById('ds-icons'),
       compact: getComputedStyle(document.querySelector('.tile dd')).fontSize };
-  });
+  }, read('dist/ds.css').replace(read('src/chosen.css').trim(), '').replace(/\/\*[\s\S]*?\*\//g, ''));
+  // (the chosen gold, src/chosen.css, closes both stylesheets on purpose: its .cal-cell.is-selected is not a tool's rule)
   await sel.click('#del button'); await sel.waitForTimeout(300);
   const selAsk = await sel.evaluate(() => !!document.querySelector('.dialog'));
   assert(selecta.toast && selecta.dialog && selAsk && !selecta.tools.length && !selecta.rules.length && !selecta.sprite
-      && selecta.tables && !asked.some(u => /ds-(tools|icons|photo)/.test(u)) && selecta.compact === '28px',
-    'une page de Selecta (ds.css et ds.js seuls) : la bulle, la fenêtre, le formulaire qui demande ; aucun outil, aucune règle des outils, aucun autre fichier ' + JSON.stringify(selecta));
+      && selecta.tables && !asked.some(u => /ds-(tools|icons|photo)/.test(u)) && selecta.compact === '28px' && selecta.shared === 7 && selecta.sharedRules === 4,
+    'une page de Selecta (ds.css et ds.js seuls) : la bulle, la fenêtre, le formulaire qui demande, la fenêtre du bas, le choix dans une liste et les réglages ; aucun outil, aucune règle des outils, aucun autre fichier ' + JSON.stringify(selecta));
 
   // ---------- a page of Bank's: the tools and the icons, each in its file ----------
   const bank = await b.newPage({ viewport: { width: 1280, height: 800 } });

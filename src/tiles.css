@@ -79,3 +79,8 @@
     font-variant-numeric: tabular-nums; white-space: nowrap; }
   .big-fig-note { margin-top: var(--big-fig-gap); color: var(--faint); font-size: var(--big-fig-note-size); letter-spacing: var(--big-fig-note-ls); }
   @media (hover: hover) { a.big-fig:hover .big-fig-label { color: var(--accent-text); } }
+/* a link of its own under it, closer to it than the rest (Bank's « Ce mois-ci : +2 100 € · −1 830 € », 4.25.0): dim,
+   in ink under the pointer: <a class="big-fig-link" href="#operations?periode=mois">… */
+  a.big-fig-link { display: block; margin: calc(-1 * var(--s-12)) 0 var(--s-16); text-align: center; text-decoration: none;
+    font: 500 var(--fs-13)/var(--lh-ui) var(--body); color: var(--dim); }
+  a.big-fig-link:hover { color: var(--ink); }
