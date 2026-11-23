@@ -602,6 +602,24 @@
     field.dispatchEvent(new Event("input", { bubbles: true }));
     field.focus();
   });
+  /* The « i » of a search field (.search-field > .search-info): a tap or a click keeps its help open (.is-open) until a tap
+     elsewhere or Escape; hover and focus show it already, by the stylesheet */
+  function searchHelp(info, on) {
+    var help = info && info.parentNode.querySelector(".search-help");
+    if (!help) return;
+    help.classList.toggle("is-open", on);
+    info.setAttribute("aria-expanded", on ? "true" : "false");
+  }
+  document.addEventListener("click", function (e) {
+    var info = e.target.closest && e.target.closest(".search-field > .search-info");
+    if (info) { searchHelp(info, !info.parentNode.querySelector(".search-help.is-open")); return; }
+    if (e.target.closest && e.target.closest(".search-help")) return;
+    [].forEach.call(document.querySelectorAll(".search-field > .search-help.is-open"), function (h) { searchHelp(h.parentNode.querySelector(".search-info"), false); });
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key !== "Escape") return;
+    [].forEach.call(document.querySelectorAll(".search-field > .search-help.is-open"), function (h) { searchHelp(h.parentNode.querySelector(".search-info"), false); });
+  });
   /* The chevron of a panel's line with lines under it (.side .frow > .filter-more): it shows or hides the .fsub that
      follows its line, and says so (aria-expanded). A page that draws its panel again keeps the state itself: its own
      click handler, on the panel, runs first and reads aria-expanded before it turns */

@@ -56,3 +56,15 @@
   .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols-phone, 2), minmax(0, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
 }
+/* A figure put forward, alone on its line and centred (Bank's « Tous les comptes », a workshop's price on the site): its
+   small label above it (.big-fig-label), the figure in gold (.big-fig-value), what it stands for under it
+   (.big-fig-note); the theme gives its font, Archivo heavy in Atelier, Gilda light and very large in Vitrine. A link
+   (a.big-fig) lights its label under the pointer.
+   <a class="big-fig" href="#"><span class="big-fig-label">Tous les comptes</span><span class="big-fig-value">12 345€</span></a> */
+  .big-fig { display: flex; flex-direction: column; align-items: center; padding: var(--big-fig-pt) 0 var(--big-fig-pb); color: inherit; text-decoration: none; }
+  .big-fig-label { margin-bottom: var(--big-fig-gap); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font);
+    letter-spacing: var(--ls-wide); text-transform: uppercase; }
+  .big-fig-value { color: var(--accent); font: var(--big-fig-weight) var(--big-fig-size)/var(--lh-tight) var(--display); letter-spacing: var(--big-fig-ls);
+    font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .big-fig-note { margin-top: var(--big-fig-gap); color: var(--faint); font-size: var(--big-fig-note-size); letter-spacing: var(--big-fig-note-ls); }
+  @media (hover: hover) { a.big-fig:hover .big-fig-label { color: var(--accent-text); } }

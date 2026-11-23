@@ -5,6 +5,9 @@
   .topbar { position: relative; z-index: var(--z-bar); background: var(--topbar-bg); border-bottom: 1px solid var(--line); box-shadow: var(--topbar-shadow);
     backdrop-filter: var(--topbar-blur); -webkit-backdrop-filter: var(--topbar-blur); }
   .topbar.is-site { --topbar-max: var(--page-site); }
+  /* a bar on the page's own ground rather than over a photo (Selecta's admin and galleries): solid, without the glass, its
+     soft shadow kept */
+  .topbar.is-solid { --topbar-bg: var(--panel); --topbar-blur: none; }
   .topbar-in { display: flex; align-items: center; justify-content: space-between; gap: var(--topbar-gap); max-width: var(--topbar-max, var(--page-max)); margin: 0 auto;
     padding: calc(var(--topbar-py) + var(--safe-top)) max(var(--topbar-px), var(--safe-right)) var(--topbar-py) max(var(--topbar-px), var(--safe-left)); }
   .topbar-brand { flex: none; color: var(--brand-color); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;

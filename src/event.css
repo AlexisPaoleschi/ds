@@ -141,9 +141,7 @@
   .pricing-header { margin-bottom: var(--s-48); }
   .price-display { display: flex; flex-direction: column; align-items: center; margin: var(--s-48) 0; padding: var(--s-48) 0;
     border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
-  .price-amount { font-family: var(--display); font-size: var(--fs-104); font-weight: 400; letter-spacing: var(--ls-038); line-height: var(--lh-tight);
-    color: var(--accent); }
-  .price-period { margin-top: var(--s-12); font-size: var(--fs-20); letter-spacing: var(--ls-050); color: var(--faint); }
+  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css) */
   .pricing-includes { margin: var(--s-48) 0; }
   .includes-title { margin-bottom: var(--s-40); font-family: var(--display); font-size: var(--text-xl); font-weight: 400; letter-spacing: var(--ls-083);
     color: var(--ink); }
@@ -237,7 +235,7 @@
     /* Typography */
     .section-text, .model-bio, .organizer-text, .day-description, .schedule-list li, .day-note, .info-list li, .include-item span, .pricing-note p, .companion-text, .payment-text, .faq-answer, .location-transport-note span, .location-dest-name { line-height: var(--lh-loose); }
     .section-text { text-align: left; }
-    .feature-text, .location-subtitle, .location-map-detail, .location-dest-time, .portfolio-subtitle, .gallery-subtitle, .price-period { font-size: var(--fs-14); }
+    .feature-text, .location-subtitle, .location-map-detail, .location-dest-time, .portfolio-subtitle, .gallery-subtitle { font-size: var(--fs-14); }
     .contact-link { font-size: var(--fs-16); }
     /* People */
     .model-name { font-size: var(--fs-26); }
@@ -271,7 +269,7 @@
     .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: var(--s-12); }
     .venue-gallery { margin-top: var(--s-60); padding-top: var(--s-40); }
     /* Pricing */
-    .price-amount { font-size: var(--fs-64); }
+    .price-display, .price-option { --big-fig-size: var(--fs-64); --big-fig-note-size: var(--fs-14); }
     .pricing-box, .booking-box { padding: var(--s-40) var(--s-24); }
     .pricing-note { padding: var(--s-24) var(--s-20); }
     /* FAQ */
@@ -334,8 +332,8 @@
   .price-display.is-pair { flex-direction: row; justify-content: center; gap: 0; }
   .price-option { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 0 var(--s-40); }
   .price-divider { width: 1px; height: 120px; background: color-mix(in srgb, var(--accent) 20%, transparent); flex-shrink: 0; }
-  .price-display.is-pair .price-amount { font-size: var(--fs-80); letter-spacing: var(--ls-050); }
-  .price-display.is-pair .price-period { color: var(--ink); }
+  .price-display.is-pair { --big-fig-size: var(--fs-80); --big-fig-ls: var(--ls-050); }
+  .price-display.is-pair .big-fig-note { color: var(--ink); }
   .price-label { margin-top: var(--s-8); font-size: var(--fs-14); font-weight: 300; letter-spacing: var(--ls-071); color: var(--faint); }
   /* two landscape photos side by side (.gallery-grid-duo), stacked on a phone.
      The doubled class keeps it above the gallery-grid media query overrides. */

@@ -1,4 +1,4 @@
-/* ds 4.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.15.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -137,6 +137,9 @@
 /* atelier: the default theme */
 :root, [data-theme="atelier"] {
   color-scheme: dark;
+  /* a figure put forward (.big-fig): Archivo heavy, the label above it 10px away, room above and under it */
+  --big-fig-size: var(--fs-display); --big-fig-weight: 800; --big-fig-ls: 0; --big-fig-gap: var(--s-10);
+  --big-fig-note-size: var(--fs-13); --big-fig-note-ls: 0; --big-fig-pt: var(--s-16); --big-fig-pb: var(--s-24);
   --bg: var(--night-900); --panel: var(--night-800); --panel-2: var(--night-700);
   --line: var(--night-600); --line-2: var(--night-500);
   --ink: var(--mist-100); --dim: var(--mist-300); --faint: var(--mist-500);
@@ -253,6 +256,10 @@
 /* vitrine: the public sites, alexispaoleschi.com and Selecta. Every value here is the site's own. */
 [data-theme="vitrine"] {
   color-scheme: light;
+  /* a figure put forward (.big-fig): the site's prices, Gilda light and very large (never wider than a phone allows), what
+     it stands for under it */
+  --big-fig-size: min(var(--fs-104), 15vw); --big-fig-weight: 400; --big-fig-ls: var(--ls-038); --big-fig-gap: var(--s-12);
+  --big-fig-note-size: var(--fs-20); --big-fig-note-ls: var(--ls-050); --big-fig-pt: 0; --big-fig-pb: 0;
   /* the site's grounds: a cream page, white cards and fields, beige bands */
   --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100); --row-lit: var(--band);
   /* every line in the site's soft gold; the full gold to underline */
@@ -431,6 +438,27 @@
     background: none; color: var(--dim); cursor: pointer; transition: color var(--t-fast) ease; }
   .search-field > .search-clear:hover, .search-field > .search-clear:active, .search-field > .search-clear:focus-visible { color: var(--accent); }
   .search-field > input:placeholder-shown ~ .search-clear { display: none; }
+/* What a search understands, under an « i » beside its cross (Bank's): <span class="search-field has-help"><input
+   aria-describedby="h"><button class="search-clear">…<button class="search-info" aria-expanded="false" aria-label="Aide"><svg
+   class="ico"><use href="#i-info"/></svg></button><span class="search-help" id="h" role="tooltip">…</span></span>. The help
+   opens under the field on hover, on focus or on a tap (ds.js sets .is-open), a strip above it keeping it open while the
+   mouse goes down to it; inside it, the forms and what they do as pairs (<dl>, a form in the mono, then its words) */
+  .search-field.has-help > input { padding-right: calc(var(--field-px) + 2 * var(--field-btn-h)); }
+  .search-field > .search-info { position: absolute; top: 0; bottom: 0; right: var(--s-4); display: flex; align-items: center; justify-content: center;
+    width: var(--field-btn-h); height: var(--field-btn-h); margin: auto 0; padding: 0; border: 0; border-radius: var(--r-m);
+    background: none; color: var(--dim); cursor: help; transition: color var(--t-fast) ease; }
+  .search-field > input:not(:placeholder-shown) ~ .search-info { right: calc(var(--s-4) + var(--field-btn-h)); }
+  .search-field > .search-info:hover, .search-field > .search-info:focus-visible, .search-field > .search-info[aria-expanded="true"] { color: var(--accent-text); }
+  .search-field > .search-help { display: none; position: absolute; top: calc(100% + var(--s-6)); right: 0; z-index: var(--z-over);
+    width: min(100%, var(--read-s)); box-sizing: border-box; padding: var(--s-12) var(--s-16); background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--r-l); box-shadow: var(--shadow-pop); color: var(--dim); font: 400 var(--fs-13)/var(--lh-ui) var(--body); }
+  .search-field > .search-help::before { content: ""; position: absolute; left: 0; right: 0; bottom: 100%; height: calc(var(--s-6) + 1px); }
+  .search-field > .search-info:hover ~ .search-help, .search-field > .search-info:focus-visible ~ .search-help,
+  .search-field > .search-help:hover, .search-field > .search-help.is-open { display: block; }
+  .search-help dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-6) var(--s-16); margin: 0; }
+  .search-help dt { font: 500 var(--fs-12)/var(--lh-ui) var(--mono); color: var(--ink); white-space: nowrap; }
+  .search-help dd { margin: 0; }
+  @media (max-width: 480px) { .search-help dl { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-2); } .search-help dd { margin-bottom: var(--s-6); } }
 
 /* a live thing's beat (a sync under way, a client looking at a gallery now): its mark fades and comes back. In ds.css,
    which every app loads, so that a page without the tools can use it (4.0.1) */
@@ -666,6 +694,8 @@
   .card { background: var(--card-bg); border: 1px solid var(--card-line); border-radius: var(--r-l); padding: var(--card-pad); box-shadow: var(--card-shadow); min-width: 0; }
   /* the gold line on top of a card, as on the site's event and newsletter cards */
   .card.is-ruled { border-top: 3px solid var(--accent); }
+  /* a card among many side by side (Bank's banks, each a card): on the lighter ground, a little tighter */
+  .card.is-raised { --card-bg: var(--panel-2); padding: var(--s-14) var(--s-16) var(--s-16); }
   /* a card you click rises a little */
   .card.is-link { color: inherit; text-decoration: none; transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
   @media (hover: hover) { .card.is-link:hover { transform: translateY(var(--card-lift)); box-shadow: var(--card-hover-shadow); } }
@@ -951,6 +981,18 @@
   .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols-phone, 2), minmax(0, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
 }
+/* A figure put forward, alone on its line and centred (Bank's « Tous les comptes », a workshop's price on the site): its
+   small label above it (.big-fig-label), the figure in gold (.big-fig-value), what it stands for under it
+   (.big-fig-note); the theme gives its font, Archivo heavy in Atelier, Gilda light and very large in Vitrine. A link
+   (a.big-fig) lights its label under the pointer.
+   <a class="big-fig" href="#"><span class="big-fig-label">Tous les comptes</span><span class="big-fig-value">12 345€</span></a> */
+  .big-fig { display: flex; flex-direction: column; align-items: center; padding: var(--big-fig-pt) 0 var(--big-fig-pb); color: inherit; text-decoration: none; }
+  .big-fig-label { margin-bottom: var(--big-fig-gap); color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font);
+    letter-spacing: var(--ls-wide); text-transform: uppercase; }
+  .big-fig-value { color: var(--accent); font: var(--big-fig-weight) var(--big-fig-size)/var(--lh-tight) var(--display); letter-spacing: var(--big-fig-ls);
+    font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .big-fig-note { margin-top: var(--big-fig-gap); color: var(--faint); font-size: var(--big-fig-note-size); letter-spacing: var(--big-fig-note-ls); }
+  @media (hover: hover) { a.big-fig:hover .big-fig-label { color: var(--accent-text); } }
 /* One bar per category, merchant or month (Bank: where the money goes, a category's subcategories): how much each one
    is against the biggest of the list. <span class="meter"><i style="width: 42%"></i></span>, in the accent, or in the
    item's own colour (--n). In a list's row (ul.rows) it takes a line of its own, under the row's words. */
@@ -1283,6 +1325,9 @@
   .topbar { position: relative; z-index: var(--z-bar); background: var(--topbar-bg); border-bottom: 1px solid var(--line); box-shadow: var(--topbar-shadow);
     backdrop-filter: var(--topbar-blur); -webkit-backdrop-filter: var(--topbar-blur); }
   .topbar.is-site { --topbar-max: var(--page-site); }
+  /* a bar on the page's own ground rather than over a photo (Selecta's admin and galleries): solid, without the glass, its
+     soft shadow kept */
+  .topbar.is-solid { --topbar-bg: var(--panel); --topbar-blur: none; }
   .topbar-in { display: flex; align-items: center; justify-content: space-between; gap: var(--topbar-gap); max-width: var(--topbar-max, var(--page-max)); margin: 0 auto;
     padding: calc(var(--topbar-py) + var(--safe-top)) max(var(--topbar-px), var(--safe-right)) var(--topbar-py) max(var(--topbar-px), var(--safe-left)); }
   .topbar-brand { flex: none; color: var(--brand-color); text-decoration: none; white-space: nowrap; transition: color var(--t-fast) ease;

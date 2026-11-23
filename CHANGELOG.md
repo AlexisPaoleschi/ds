@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.15.0 · 23 novembre 2026
+
+Les pièces génériques qu’une seule appli dessinait passent dans le design system, pour que les outils à venir les reprennent (la règle a changé : une pièce générique y va même si une seule appli s’en sert).
+
+- Nouveau `.big-fig` : un grand chiffre mis en avant, seul sur sa ligne et centré, sa petite étiquette au-dessus (`.big-fig-label`), le chiffre en or (`.big-fig-value`), ce qu’il représente dessous (`.big-fig-note`). En Atelier en Archivo gras (le total de tous les comptes de Bank), en Vitrine en Gilda fin et très grand (le prix d’un workshop sur le site, dont les classes `.price-amount` et `.price-period` disparaissent).
+- L’aide d’une recherche : un « i » à côté de la croix (`.search-field.has-help`, `.search-info`, `.search-help`), qui montre au survol ce que la recherche comprend et reste ouvert sur un clic ; `ds.js` l’ouvre, la ferme d’un clic ailleurs ou par Échap. C’était celle de Bank.
+- Nouveau `.topbar.is-solid` : la barre du haut sur le fond de la page plutôt que sur une photo, pleine, sans le verre (Selecta).
+- Nouveau `.card.is-raised` : une carte parmi d’autres côte à côte, sur le fond plus clair, un peu plus serrée (les banques de Bank).
+- Page vitrine : « Pièces génériques ».
+
 ## 4.14.0 · 23 novembre 2026
 
 Ce que Bank, Studio et Selecta dessinaient chacun à leur façon est maintenant une seule pièce du design system (le tour des différences du 23 novembre).
