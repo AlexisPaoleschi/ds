@@ -111,6 +111,9 @@
   /* a window (.sheet) on a computer, always of this size, at most 86% of the screen's height; a phone's is its width
      and 88% of its height */
   --sheet-w: var(--read-l); --sheet-h: 640px;
+  /* a panel under a button of the top bar (.pop-panel, Selecta's bell): its width on a computer and its highest; the
+     figure on such a button (.pop-count), a small round of this height */
+  --pop-w: 380px; --pop-h: min(70vh, 560px); --count-h: 16px;
   /* the tab bar at the bottom of a phone (the views of Bank and Studio), and the passing messages above it, as wide
      as each other; read by fixed elements, so 100% is the screen's width */
   --tabbar-w: min(calc(100% - 40px), 420px);

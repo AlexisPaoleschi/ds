@@ -1,5 +1,23 @@
 # Changelog
 
+## 4.20.0 · 23 novembre 2026
+
+Les gestes que chaque appli écrivait pour elle : annuler, chercher, filtrer, cocher, copier, ouvrir, une fenêtre sous un bouton, arriver et partir.
+
+- `ds.toast({key})` : une bulle par sujet ; la suivante avec la même clé change celle qui est là (l’attente devient sa réponse) au lieu de s’empiler.
+- `ds.undo({undo, redo, run, key})` : annuler et rétablir les changements de la page. Ctrl+Z (⌘Z), Ctrl+Maj+Z ou Ctrl+Y, sauf dans un champ ; les deux boutons, grisés quand ils n’ont rien à faire, disent ce qu’ils feraient ; « Annuler » puis « Rétablir » dans la bulle. L’appli ne fait que l’appel au serveur.
+- `ds.optimistic(id, {change, save, revert})` : une case cochée à l’instant, enregistrée ensuite, qui revient si le serveur refuse ; une à la fois par élément.
+- `ds.copy(texte)` et les boutons `[data-copy]` : copié dans le presse-papiers, « Copié » dans la bulle.
+- `ds.openAll(adresses, {ask})` : chaque lien dans son onglet ; au-delà de dix la page demande d’abord, et les onglets que le navigateur bloque sont comptés et dits.
+- `ds.pop(bouton, panneau)`, `.pop`, `.pop-panel`, `.pop-head`, `.pop-foot` et `.pop-count` : une fenêtre sous un bouton de la barre du haut, fermée par un clic ailleurs ou Échap (le focus revient au bouton), son chiffre « 99+ » au plus (`ds.pop.count`).
+- `ds.enter` et `ds.leave` : un élément qui arrive d’un peu plus haut ou une tuile qui s’efface en rétrécissant, à la durée du thème ; rien ne bouge quand l’appareil demande moins de mouvement.
+- `ds.redraw(holder, signature, build)` : redessiner seulement si ce qu’on montre a changé, en gardant le défilement et le focus.
+- `ds.highlight` (les mots cherchés allumés, `mark.hit`), `ds.suggest` (« Vouliez-vous dire… », le mot le plus proche) et `ds.text.exact`.
+- `ds.query` : le langage de recherche de Bank, pour toute liste (mots, « phrases », -sans, OU, parenthèses, champ:, montants, dates) ; Bank lui donne ses champs, et ses cas de test vérifient toujours qu’il dit la même chose que le serveur.
+- `ds.filters` (le panneau de filtres : « Tout », l’œil « Seulement », retenu sur l’appareil, et ses lignes en HTML) et `ds.filterChips` (les filtres en cours en pastilles dorées, « Tout effacer », `.filter-chips`).
+- Bank passe son annulation, sa bulle, sa recherche, son surlignage, son « vouliez-vous dire », son panneau de filtres et ses filtres en cours dessus ; Studio ses cases, ses onglets ouverts d’un coup, sa fenêtre des posts et ses filtres ; Selecta sa cloche, sa copie et ses tuiles qui partent : sa feuille de style dessine 240 déclarations elle-même au lieu de 267.
+- Page vitrine : « Gestes ».
+
 ## 4.19.0 · 23 novembre 2026
 
 Les titres, la tête d’une page, les listes et les champs que chaque appli dessinait pour elle.

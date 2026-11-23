@@ -71,3 +71,6 @@
   .side .frow button.filter-only { opacity: 0; }
   .side .frow:hover button.filter-only, .side .frow:focus-within button.filter-only { opacity: 1; }
   @media (hover: none) { .side .frow button.filter-only { opacity: .8; } }
+/* the filters in use above a list (ds.filterChips): gold pills with their cross, then « Tout effacer »; none, no row */
+  .filter-chips { display: flex; flex-wrap: wrap; gap: var(--s-6); margin: calc(-1 * var(--s-4)) 0 var(--s-12); }
+  .filter-chips[hidden] { display: none; }

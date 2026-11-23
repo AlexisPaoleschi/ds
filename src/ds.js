@@ -1,6 +1,7 @@
 /* Design system: the behaviour every app shares.
-   ds.toast({type, text, action, duration}) shows a passing message at the bottom right (above the tab bar on a phone)
-   and returns a handle to change it (update) or take it away (close).
+   ds.toast({type, text, action, duration, key}) shows a passing message at the bottom right (above the tab bar on a phone)
+   and returns a handle to change it (update) or take it away (close); a key keeps one bubble per subject: the next
+   message with the same key changes it (a wait that becomes its answer) instead of piling up.
    type: "good" (done, 4 s), "info" (5 s), "busy" (until changed), "bad" (stays until closed); an action keeps it 8 s.
    ds.confirm({title, text, ok, danger, value}) asks in a window instead of the browser's boxes (see below).
    ds.when(t), ds.ago(t) and ds.soon(t) say a time in words, in Paris's time; ds.date(t, style) writes a date;
@@ -62,9 +63,10 @@
   }
   function toast(opts) {
     opts = opts || {};
-    // the same words again change the message already there instead of piling up
-    for (var i = 0; i < live.length; i++) if (live[i].text === opts.text) return live[i].update(opts);
-    var el = document.createElement("div"), t = { el: el, text: opts.text, life: 0, timer: null, gone: false };
+    // the same subject (key: a wait that turns into its answer) or the same words again change the message already there
+    // instead of piling up
+    for (var i = 0; i < live.length; i++) if (opts.key ? live[i].key === opts.key : live[i].text === opts.text) return live[i].update(opts);
+    var el = document.createElement("div"), t = { el: el, key: opts.key || null, text: opts.text, life: 0, timer: null, gone: false };
     el.innerHTML = '<span class="mark" aria-hidden="true"></span><span class="txt"></span>' +
       '<button type="button" class="act" hidden></button><button type="button" class="toast-close" aria-label="' + words().close + '"></button>';
     // the sprite's cross, in the middle of its square, as every cross of the design system

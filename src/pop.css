@@ -1,0 +1,19 @@
+/* A panel under a button of the top bar (Selecta's bell, ds.pop): .pop holds the button and its panel (.pop-panel), its
+   head (.pop-head: a title and a quiet action), what it lists, its foot (.pop-foot: a link to everything); .pop-count is
+   the figure on the button, « 99+ » at most. On a phone the panel spans the screen under the bar; on a computer it is
+   --pop-w wide under its button. */
+  .pop-panel { position: absolute; top: 100%; right: var(--space-md); left: var(--space-md); z-index: var(--z-bar); display: flex; flex-direction: column;
+    max-height: var(--pop-h); overflow: hidden; background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-l); box-shadow: var(--shadow-pop); }
+  .pop-panel[hidden] { display: none; }
+  .pop-head { display: flex; align-items: center; justify-content: space-between; gap: var(--s-12); padding: var(--s-12) var(--space-md); border-bottom: 1px solid var(--line); }
+  .pop-head > button, .pop-foot { color: var(--accent-strong); font: 500 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: var(--ls-caps); text-transform: uppercase; text-decoration: none; }
+  .pop-head > button { padding: var(--s-4) 0; background: none; border: 0; cursor: pointer; }
+  .pop-head > button:disabled { color: var(--faint); cursor: default; }
+  .pop-foot { display: flex; align-items: center; justify-content: center; min-height: var(--touch-target); border-top: 1px solid var(--line); }
+  .pop-count { position: absolute; top: var(--s-6); right: var(--s-4); display: grid; place-items: center; min-width: var(--count-h); height: var(--count-h);
+    padding: 0 var(--s-4); color: var(--on-accent); background: var(--accent); border-radius: var(--r-l); font: 600 var(--fs-11)/var(--lh-tight) var(--body); letter-spacing: 0; pointer-events: none; }
+  .pop-count[hidden] { display: none; }
+@media (min-width: 769px) {
+  .pop { position: relative; }
+  .pop-panel { top: calc(100% + var(--s-8)); right: 0; left: auto; width: var(--pop-w); }
+}

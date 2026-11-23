@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr" data-theme="atelier">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ds · les gestes</title>
+<link rel="stylesheet" href="../dist/ds.css">
+<link rel="stylesheet" href="../dist/ds-tools.css">
+<script src="../dist/ds.js"></script>
+<script src="../dist/ds-tools.js"></script>
+</head>
+<body>
+<header class="topbar is-solid"><div class="topbar-in"><span class="topbar-brand">ds</span><nav class="topbar-nav">
+  <button class="btn is-icon" id="undo" type="button" disabled><svg class="ico" aria-hidden="true"><use href="#i-undo"/></svg></button>
+  <button class="btn is-icon" id="redo" type="button" disabled><svg class="ico" aria-hidden="true"><use href="#i-redo"/></svg></button>
+  <div class="pop" id="bell"><button class="topbar-icon" id="bell-b" type="button" aria-controls="bell-p">Cloche<span class="pop-count" id="bell-n" hidden>0</span></button>
+    <div class="pop-panel" id="bell-p" hidden><div class="pop-head"><span class="title-3">Notifications</span><button type="button" id="bell-all">Tout lire</button></div>
+      <ul class="rows"><li><span class="row-title">Léa a fini</span></li></ul><a class="pop-foot" href="#">Tout voir</a></div></div>
+</nav></div></header>
+<main class="page">
+  <input id="field" type="text">
+  <ul class="rows" id="hl"><li><span class="row-title">Café de la Gare</span><span class="row-note">un œuf, deux cafés</span></li><li><span class="row-title">Amazon Prime</span></li></ul>
+  <div id="list"><p id="one">un</p><p id="two">deux</p></div>
+  <div id="holder" style="height: 80px; overflow: auto"></div>
+  <aside class="side"><div id="filters"></div></aside>
+  <div id="chips" hidden></div>
+  <button type="button" id="copy" data-copy="#field" data-copy-said="Copié !">Copier</button>
+</main>
+<script>document.addEventListener("DOMContentLoaded", () => { window.ready = true; });</script>
+</body>
+</html>

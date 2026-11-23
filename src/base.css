@@ -7,6 +7,8 @@
   /* a field that cannot be changed (a finished selection), greyed; a textarea grows only downwards */
   :is(input:not([type=checkbox]):not([type=radio]), select, textarea):disabled { color: var(--faint); background: var(--band); cursor: not-allowed; }
   textarea { resize: vertical; }
+  /* what a search looked for, lit in a list (ds.highlight) */
+  mark.hit { background: var(--accent-soft); color: var(--accent-text); border-radius: var(--r-xs); }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */
   :where(input:not([type=checkbox], [type=radio], [type=range], [type=file], [type=color], [type=hidden], [type=image]), select:not([multiple], [size])) { box-sizing: border-box; height: var(--control-h); }
 /* a menu looks like every list that opens (a pill, a search's button, .combo): a field, the sprite's chevron on its

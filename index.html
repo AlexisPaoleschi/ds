@@ -18,6 +18,15 @@
   const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }]));
   ds.password("#demo-pw", { toggle: '[data-forms="show"]', generate: '[data-forms="gen"]' });
   ds.autosave("#demo-note", { note: '[data-forms="note"]', save: v => new Promise(ok => setTimeout(() => ok(v.trim()), 300)) });
+  const undo = ds.undo({ undo: "#g-undo", redo: "#g-redo", key: "showcase", keys: false, run: (step, redo) => new Promise(ok => setTimeout(ok, 400)) });
+  document.querySelector('[data-gestures="change"]').addEventListener("click", () => ds.toast({ key: "showcase", type: "good", text: "Catégorie enregistrée · Boulangerie Paul", action: undo.remember({ label: "Catégorie · Boulangerie Paul" }) }));
+  ds.pop("#g-bell", "#g-panel");
+  const search = ds.query({ every: ["name", "note"], values: x => [x.name, x.note].filter(Boolean) });
+  const items = [...document.querySelectorAll("#g-rows li")].map(li => ({ li, name: li.querySelector(".row-title").textContent, note: (li.querySelector(".row-note") || {}).textContent }));
+  const find = () => { const tree = search.parse(document.getElementById("g-q").value); items.forEach(x => { x.li.hidden = !search.match(tree, x); x.li.querySelectorAll("mark").forEach(m => m.replaceWith(m.textContent)); });
+    ds.highlight("#g-rows", ".row-title, .row-note", search.terms(tree));
+    const chips = search.terms(tree).map((t, i) => ({ key: String(i), label: "« " + t.v + " »" })); ds.filterChips("#g-chips", chips, { onClear: () => { document.getElementById("g-q").value = ""; find(); } }); };
+  document.getElementById("g-q").addEventListener("input", find); find();
   document.querySelectorAll('#forms-demo [aria-pressed]').forEach(b => b.addEventListener("click", () => b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true"))); });</script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
@@ -397,6 +406,21 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card" id="gestures-demo"><h3 class="ct">Gestes · 4.20.0</h3>
+      <p class="note">Ce que chaque appli écrivait pour elle : annuler, cocher tout de suite, copier, ouvrir plusieurs liens, une fenêtre sous un bouton, arriver et partir, redessiner sans perdre sa place, chercher et filtrer.</p>
+      <p><button class="btn is-icon" id="g-undo" type="button" disabled><svg class="ico" aria-hidden="true"><use href="#i-undo"/></svg></button>
+        <button class="btn is-icon" id="g-redo" type="button" disabled><svg class="ico" aria-hidden="true"><use href="#i-redo"/></svg></button>
+        <button class="btn is-act" type="button" data-gestures="change">Changer la catégorie</button>
+        <button class="btn" type="button" data-copy="IMG_0412.jpg OR IMG_0418.jpg" data-copy-said="Filtre Lightroom copié">Copier un filtre</button>
+        <span class="pop" style="display: inline-block"><button class="btn is-icon" type="button" id="g-bell" aria-label="Notifications"><svg class="ico" aria-hidden="true"><use href="#i-bell"/></svg><span class="pop-count" id="g-count">3</span></button>
+          <span class="pop-panel" id="g-panel" hidden><span class="pop-head"><span class="title-3">Notifications</span><button type="button">Tout lire</button></span>
+            <ul class="rows"><li class="is-unread"><span class="row-title">Camille a fini sa sélection<small>il y a 2 h</small></span></li></ul><a class="pop-foot" href="#">Tout voir</a></span></span></p>
+      <div class="filter-chips" id="g-chips"></div>
+      <span class="search-field"><input type="search" id="g-q" value="cafe -amazon" aria-label="Chercher"></span>
+      <ul class="rows" id="g-rows"><li><span class="row-title">Café de la Gare</span><span class="row-note">avec Léa</span></li><li><span class="row-title">Amazon Prime</span></li><li><span class="row-title">Boulangerie Paul</span><span class="row-note">un café</span></li></ul>
+      <p class="note" id="g-said"></p>
+      <p class="note">Aussi : ds.toast({key}) (une bulle par sujet), ds.optimistic, ds.openAll, ds.enter et ds.leave, ds.redraw, ds.suggest, ds.query (le langage de recherche de Bank), ds.filters (le panneau de filtres de Bank et Studio).</p>
+    </div>
     <div class="card" id="forms-demo"><h3 class="ct">Titres, listes et champs · 4.19.0</h3>
       <div class="page-head"><p class="eyebrow">Bonjour Camille</p><h2 class="title-1">Mes galeries</h2><button class="btn is-act" type="button">Nouvelle galerie</button></div>
       <p class="lede">Une phrase sous le titre, à la largeur de lecture : prends ton temps, rien ne part tant que tu n’as pas fini.</p>
