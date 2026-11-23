@@ -1,0 +1,58 @@
+<!--
+  The mail kit's parts (ds-mail), to copy into a mail: every value is mail.json's, written plainly because a mail
+  client reads no stylesheet and no CSS variable. {{…}} marks what the mail fills in. The parts, in order: the page and
+  its card ruled in gold on top; the brand; the title; a paragraph; a detail; a label over a list with its rules; the
+  button, drawn by a table cell so that Outlook gives it its colour and its room; the foot under the card, with the
+  networks and the unsubscribe link.
+-->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>{{title}}</title>
+</head>
+<body style="margin:0;padding:0;background:#f7f4ef;">
+<!-- the page -->
+<table border="0" cellpadding="0" cellspacing="0" role="presentation" style="background:#f7f4ef;" width="100%">
+  <tr>
+    <td align="center" style="padding:32px 16px;">
+      <!-- the card: white, its edge a gold line, ruled in gold on top -->
+      <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="max-width:560px;background:#ffffff;border:1px solid #efe6d2;border-top:3px solid #c9a961;" width="100%">
+        <!-- the brand -->
+        <tr><td style="padding:28px 32px 8px;font-family:Georgia,'Times New Roman',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#1a1a1a;">{{brand}}</td></tr>
+        <!-- the title -->
+        <tr><td style="padding:8px 32px 0;font-family:Georgia,'Times New Roman',serif;font-size:22px;line-height:1.35;color:#1a1a1a;">{{title}}</td></tr>
+        <!-- a paragraph -->
+        <tr><td style="padding:14px 32px 0;font-family:Helvetica,Arial,sans-serif;font-size:15px;line-height:1.7;color:#3a3a3a;">{{paragraph}}</td></tr>
+        <!-- a detail under the title -->
+        <tr><td style="padding:10px 32px 0;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#6b6b6b;">{{detail}}</td></tr>
+        <!-- a label over a list, each line under a gold rule -->
+        <tr><td style="padding:24px 32px 0;">
+          <p style="margin:0 0 10px;font-family:Helvetica,Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#b39654;">{{label}}</p>
+          <table border="0" cellpadding="0" cellspacing="0" role="presentation" width="100%">
+            <tr><td style="padding:10px 0;border-top:1px solid #efe6d2;font-family:Helvetica,Arial,sans-serif;font-size:14px;line-height:1.6;color:#1a1a1a;">
+              <span style="display:block;font-size:12px;color:#6b6b6b;">{{about}}</span><span style="white-space:pre-wrap;">{{line}}</span></td></tr>
+          </table>
+        </td></tr>
+        <!-- the button: a table cell carries its gold, so that Outlook (which ignores a link's padding and background)
+             draws it too -->
+        <tr><td style="padding:28px 32px 32px;">
+          <table border="0" cellpadding="0" cellspacing="0" role="presentation"><tr>
+            <td bgcolor="#c9a961" style="background:#c9a961;">
+              <a href="{{url}}" style="display:inline-block;padding:12px 28px;border:1px solid #c9a961;font-family:Helvetica,Arial,sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;color:#ffffff;">{{action}}</a>
+            </td>
+          </tr></table>
+        </td></tr>
+      </table>
+      <!-- the foot under the card: who writes, the networks, the way out -->
+      <p style="margin:16px 0 0;font-family:Helvetica,Arial,sans-serif;font-size:12px;line-height:1.6;color:#9a9a9a;">
+        {{signature}}<br/>
+        <a href="{{instagram}}" style="color:#b39654;text-decoration:none;">Instagram</a> &middot; <a href="{{site}}" style="color:#b39654;text-decoration:none;">{{siteName}}</a><br/>
+        <a href="{{unsubscribe}}" style="color:#9a9a9a;text-decoration:underline;">{{unsubscribeLabel}}</a>
+      </p>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

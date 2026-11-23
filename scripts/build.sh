@@ -37,6 +37,10 @@ head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, 
 # and the small tools every app wrote for itself (kit.js)
 { echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js src/gestures.js src/selection.js src/images.js; } > dist/ds.js
 { echo "$head"; cat $js_tools; } > dist/ds-tools.js
+# the mail kit (ds-mail): its values written plainly (a mail client reads no CSS variable) and its parts, for the mails
+# of Selecta and the site
+cp src/mail.json dist/ds-mail.json
+cp src/mail.html dist/ds-mail.html
 # the icons' sprite, put at the top of the page by a script of its own that the browser keeps: Bank and Studio link it
 # after ds.js, and their pages keep writing <use href="#i-name"/>
 { echo "$head"; cat src/icons.js; } > dist/ds-icons.js

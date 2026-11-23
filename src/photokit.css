@@ -61,7 +61,6 @@
 @media (max-width: 768px), (pointer: coarse) {
   button.box.on-photo { opacity: 1; }
   button.box.on-photo::after { content: ""; position: absolute; inset: calc((var(--ico-l) - var(--touch-target)) / 2); }
-  .tile-acts .btn { min-height: var(--touch-target); }
 }
   /* the gold ring of a chosen photo, inside its edge */
   .photogrid > .is-pickable::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; box-shadow: inset 0 0 0 0 var(--accent); transition: box-shadow var(--t-mid) ease; }

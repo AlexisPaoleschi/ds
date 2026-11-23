@@ -89,7 +89,8 @@ function wide() {
     const c = getComputedStyle(el); if (c.display === 'none' || c.visibility === 'hidden' || c.position === 'fixed') continue;
     const r = el.getBoundingClientRect(); if (!r.width || !r.height) continue;
     if ((r.right > W + 1 || r.left < -1) && !scrolls(el) && !el.closest('[aria-hidden=true], .visually-hidden')) out.push((el.className || el.tagName).toString().slice(0, 40));
-    if (el.matches('.btn, button, input:not([type=checkbox]):not([type=radio]):not([type=range]), select, .pill') && el.scrollWidth > el.clientWidth + 1 && c.textOverflow !== 'ellipsis' && !el.closest('.chart-heat-scroll, .chart-bars, .cal-cell'))
+    // (a button without words, a box on a photo with a finger's room around it, has nothing to cut)
+    if (el.matches('.btn, button, input:not([type=checkbox]):not([type=radio]):not([type=range]), select, .pill') && (el.textContent || el.value || '').trim() && el.scrollWidth > el.clientWidth + 1 && c.textOverflow !== 'ellipsis' && !el.closest('.chart-heat-scroll, .chart-bars, .cal-cell'))
       cut.push((el.textContent || el.value || el.className).trim().slice(0, 30));
   }
   return { scroll: document.documentElement.scrollWidth, out: out.slice(0, 6), cut: cut.slice(0, 6) };

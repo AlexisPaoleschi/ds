@@ -1,0 +1,32 @@
+{
+  "about": "The mail kit of ds: the design system's values written plainly, because a mail client reads no CSS variable (a mail's styles are inline, its layout tables). A mail is a white card ruled in gold on top, at most width wide, on the beige page; mail.html holds its parts. Selecta's mails and the site's take these values.",
+  "width": 560,
+  "colors": {
+    "page": "#f7f4ef",
+    "card": "#ffffff",
+    "line": "#efe6d2",
+    "gold": "#c9a961",
+    "goldText": "#b39654",
+    "ink": "#1a1a1a",
+    "text": "#3a3a3a",
+    "dim": "#6b6b6b",
+    "faint": "#9a9a9a",
+    "onGold": "#ffffff"
+  },
+  "colorNotes": {
+    "page": "--beige-100, the site's bands", "card": "--white", "line": "a gold line on white, the card's edge and a list's rules",
+    "gold": "--gold-500, the card's top rule and the button", "goldText": "--gold-600, a label or a link in gold",
+    "ink": "--coal-900, the brand and the title", "text": "a paragraph", "dim": "a detail under the title", "faint": "the foot under the card",
+    "onGold": "a button's words"
+  },
+  "fonts": {
+    "title": "Georgia,'Times New Roman',serif",
+    "text": "Helvetica,Arial,sans-serif",
+    "fontNotes": "Gilda Display and Urbanist, the site's fonts, are not in a mail client: Georgia and Helvetica take their place"
+  },
+  "sizes": { "brand": 13, "title": 22, "text": 15, "detail": 14, "note": 12, "label": 11, "button": 12 },
+  "lineHeights": { "title": 1.35, "text": 1.7, "detail": 1.6 },
+  "letterSpacing": { "brand": 3, "label": 2, "button": 2 },
+  "padding": { "page": "32px 16px", "card": 32, "buttonX": 28, "buttonY": 12 },
+  "rule": 3
+}

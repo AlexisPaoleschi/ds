@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.22.0 · 23 novembre 2026
+
+Le kit mail : un client mail ne lit ni feuille de style ni variable CSS, alors ds écrit ses valeurs en clair.
+
+- `ds-mail.json` : les couleurs de ds pour un mail (la page beige, la carte blanche, son filet doré, l’or, l’encre, le texte, le détail, le pied), ses polices (Georgia et Helvetica, à la place de Gilda et Urbanist qu’un client mail n’a pas), sa largeur (560 px), ses tailles, ses interlignes et ses marges.
+- `ds-mail.html` : les morceaux d’un mail à recopier, faits de ces valeurs : la page et sa carte au filet doré, le nom, le titre, un paragraphe, un détail, une étiquette sur une liste, le bouton dessiné par une cellule de tableau pour qu’Outlook lui donne sa couleur et sa place, le pied avec les réseaux et le désabonnement. `checks/mail.js` vérifie qu’ils n’écrivent que les valeurs du kit.
+- Selecta reçoit le kit avec ses autres fichiers (`ds-mail-X.json`) : ses deux mails en prennent le bouton, et `MailKitTest` vérifie qu’ils n’écrivent que ses couleurs, à sa largeur.
+- Les 23 mails de la newsletter du site gardent leur allure pour l’instant : les passer sur le kit les changerait, à revoir un par un.
+
 ## 4.21.0 · 23 novembre 2026
 
 Le kit photo : ce qu’une appli qui reçoit et montre des photos dessine autour d’elles (les galeries de Selecta).
