@@ -36,6 +36,14 @@
   ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
   /* a row's second line, under its title: a detail, smaller and faint */
   .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
+  /* the words as a bank or a server wrote them, under a row's name, in the fixed-width font (an operation's label) */
+  .row-label { color: var(--faint); display: block; font: 400 var(--fs-12)/var(--lh-ui) var(--mono); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  /* a note under a row, in gold italics (one's own words on an operation) */
+  .row-note { color: var(--accent-text); display: block; font: italic 500 var(--fs-13)/var(--lh-ui) var(--body); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  /* a small picture at the head of a row (a photo a note is about), square, its corners the row's */
+  .row-thumb { flex: none; width: var(--row-thumb, 48px); height: var(--row-thumb, 48px); object-fit: cover; border-radius: var(--r-s); background: var(--panel-2); }
+  /* rows under a row, indented (a trip's kinds of spending and their lines) */
+  ul.rows.is-tree > li > ul.rows { flex-basis: 100%; margin-left: var(--s-16); }
   /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
   ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
   /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */

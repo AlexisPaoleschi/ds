@@ -1,0 +1,16 @@
+/* Headings for a page's parts, the same in every app (the audit of 23 November 2026: Selecta wrote seven): .title-1 a
+   page's title, .title-2 a section, .title-3 a block (a column, a panel, a side panel), in the theme's titles' font, weight
+   and spacing; .is-caps writes one in capitals. A page's head (.page-head): its small gold word above (.eyebrow), its
+   title, what it does on the right on a computer; a sentence under it at reading width (.lede). The spaces that grow a
+   step on a computer (--space-md, --space-lg, --space-xl) set a page's room. */
+  .title-1, .title-2, .title-3 { margin: 0; min-width: 0; color: var(--ink); font-family: var(--title-font); font-weight: var(--head-weight);
+    letter-spacing: var(--heading-ls); line-height: var(--title-lh); overflow-wrap: anywhere; text-wrap: balance; }
+  .title-1 { font-size: var(--title-1-size); text-transform: var(--title-case); }
+  .title-2 { font-size: var(--title-2-size); }
+  .title-3 { font-size: var(--title-3-size); }
+  :is(.title-1, .title-2, .title-3).is-caps { text-transform: uppercase; }
+  .eyebrow { margin: 0 0 var(--s-6); color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font);
+    letter-spacing: var(--eyebrow-ls); text-transform: uppercase; }
+  .lede { max-width: var(--read-m); margin: 0 0 var(--space-lg); color: var(--lede-color); font-size: var(--lede-size); line-height: var(--text-lh); }
+  .page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-12) var(--s-16); margin-bottom: var(--space-lg); }
+  .page-head > .eyebrow { flex: 0 0 100%; margin: 0 0 calc(-1 * var(--s-8)); }

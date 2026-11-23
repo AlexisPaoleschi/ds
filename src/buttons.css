@@ -63,4 +63,6 @@
    up by what the line keeps under the capitals' middle, 0.06em (4.5.1 lifted the wheel by 0.1em, 0.5px too high),
    measured in Chromium on the showcase, Selecta's sign-in and the site */
   [data-theme="vitrine"] .btn.is-busy::after, [data-theme="vitrine"] .btn:not(.is-icon) > .ico { translate: 0 -0.06em; }
-
+/* a button that stays pressed among others (a filter, « Afficher » on a password): filled with the strong gold, after
+   every variant so that is-act does not cover it */
+.btn[aria-pressed="true"], [data-theme="vitrine"] .btn[aria-pressed="true"] { color: var(--on-accent); background: var(--accent-strong); border-color: var(--accent-strong); }

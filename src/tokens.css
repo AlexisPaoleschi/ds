@@ -162,6 +162,9 @@
   /* a short line beside something: a message, a passing message */
   --note-size: var(--fs-13);
   --stat-size: var(--fs-28); --stat-ls: var(--title-ls); --stat-gap: var(--s-24);
+  --title-1-size: var(--fs-28); --title-2-size: var(--fs-22); --title-3-size: var(--fs-17); --heading-ls: var(--title-ls);
+  --eyebrow-ls: var(--ls-brand); --lede-size: var(--fs-14); --lede-color: var(--dim); --check-size: var(--fs-14); --check-box: 16px;
+  --space-md: var(--s-16); --space-lg: var(--s-24); --space-xl: var(--s-32);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
   /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
@@ -275,6 +278,8 @@
   /* text: 16px, light, with room between the lines */
   --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
   --stat-size: var(--text-2xl); --stat-ls: var(--ls-loose);
+  --title-1-size: var(--text-2xl); --title-2-size: var(--text-xl); --title-3-size: var(--text-lg); --heading-ls: var(--ls-loose);
+  --eyebrow-ls: var(--ls-caps); --lede-size: var(--text-md); --lede-color: var(--ink); --check-box: 20px;
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
@@ -339,7 +344,8 @@
 }
 /* a computer, wider than a phone: the sizes by role grow a step */
 @media (min-width: 769px) {
-  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28); }
+  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28);
+    --space-md: var(--s-20); --space-lg: var(--s-32); --space-xl: var(--s-48); }
 }
 /* the site's smaller computers, tablets and phones */
 @media (max-width: 1024px) {

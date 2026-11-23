@@ -1,5 +1,18 @@
 # Changelog
 
+## 4.19.0 · 23 novembre 2026
+
+Les titres, la tête d’une page, les listes et les champs que chaque appli dessinait pour elle.
+
+- Les titres : `.title-1` (le titre d’une page), `.title-2` (une section), `.title-3` (un bloc), dans la police, la graisse et l’espacement des titres du thème, et `.is-caps` pour l’un d’eux en capitales. La tête d’une page (`.page-head`) : son petit mot doré au-dessus (`.eyebrow`), son titre, ce qu’elle fait à droite sur un ordinateur ; une phrase dessous à la largeur de lecture (`.lede`). Les trois espaces qui grandissent d’un cran sur un ordinateur (`--space-md`, `--space-lg`, `--space-xl`) sont ceux de ds.
+- Les champs hors d’une page de réglages : `.field-group` (le libellé, le champ sur toute la largeur, la ligne dessous), `.card.is-form` (un formulaire à la largeur de lecture), `.field-row` (un champ et ses boutons sur une ligne, en colonne sur un téléphone), `.check` et `.check-hint` (une case et ses mots, à hauteur de doigt), `fieldset.checks`, `.field-pair` (« du … au … »), `.pager` (les pages plus récentes et plus anciennes).
+- Un bouton qui reste enfoncé (`.btn[aria-pressed="true"]`, un filtre) : plein d’or, par-dessus `is-act`. Un champ qu’on ne peut pas changer est grisé ; une zone de texte ne grandit que vers le bas. Un champ dans la barre de la visionneuse s’écrit clair sur le voile sombre.
+- `ds.rows` : des lignes qu’on ouvre d’un clic n’importe où (sauf sur ce qu’elles contiennent d’autre à cliquer), d’Entrée ou d’Espace. `ds.password` : « Afficher » et « Générer » pour un mot de passe. `ds.autosave` : un champ qui s’enregistre quand on le quitte, s’il a changé, sa ligne dessous en rouge si ça n’a pas marché ; il envoie tout de suite ce que le champ contient, même si la page y montre aussitôt autre chose, et jamais deux fois le même texte.
+- Les totaux d’une carte (`.sum-head`, `.sum-line`, `.sum-link`, une banque et ses comptes), le total d’une section (`h4.sect > .sect-sum`), une carte en barre (`.card.is-bar`), un pli en tête de section (`details.fold.is-lead`).
+- Un tableau groupé par jour : `tr.tbl-group`, sa tête (`.tbl-group-head`) et son total (`.tbl-group-sum`), en cartes aussi. Les lignes : le libellé de la banque (`.row-label`), une note (`.row-note`), une vignette (`.row-thumb`), une liste dans une liste (`ul.rows.is-tree`).
+- Bank passe ses cartes de banques, ses jours d’opérations, ses libellés, ses notes et ses dates dessus ; Studio ses lignes de mois (`ds.rows`) et ses réglages (`ds.switch`, `ds.conns`, `ds.fields`) ; Selecta ses titres, ses formulaires, ses cases, ses plis, ses notes (`ds.autosave`) et ses mots de passe (`ds.password`) : sa feuille de style dessine 267 déclarations elle-même au lieu de 370.
+- Page vitrine : « Titres, listes et champs ».
+
 ## 4.18.0 · 23 novembre 2026
 
 Les constructeurs : ce que ds dessine mais que chaque appli écrivait à la main, balisage compris.

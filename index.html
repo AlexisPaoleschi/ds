@@ -15,7 +15,10 @@
   let tab = "x"; const tabs = () => ds.tabs('[data-build="tabs"]', [["x", "X"], ["bsky", "Bluesky"], ["ig", "Instagram"]], { value: tab, onPick: v => { tab = v; tabs(); } }); tabs();
   ds.tiles('[data-build="tiles"]', [{ label: "Abonnés", color: "--c-bleu", swatch: true, value: "1 234", unit: "payants", delta: "+12 en 7j", tone: "good", note: "@lea ↗", href: "https://x.com" },
     { label: "Ventes", value: "57", delta: "panier moyen 18€" }, { label: "Paliers", value: "3", kids: [ds.h("ul", { class: "tile-list" }, [ds.h("li", {}, [ds.h("span", { text: "Soutien" }), ds.h("b", { text: "12" })]), ds.h("li", {}, [ds.h("span", { text: "Collection" }), ds.h("b", { text: "4" })])])] }]);
-  const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }])); });</script>
+  const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }]));
+  ds.password("#demo-pw", { toggle: '[data-forms="show"]', generate: '[data-forms="gen"]' });
+  ds.autosave("#demo-note", { note: '[data-forms="note"]', save: v => new Promise(ok => setTimeout(() => ok(v.trim()), 300)) });
+  document.querySelectorAll('#forms-demo [aria-pressed]').forEach(b => b.addEventListener("click", () => b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true"))); });</script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
 <script src="demos/date.js" defer></script>
@@ -394,6 +397,31 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card" id="forms-demo"><h3 class="ct">Titres, listes et champs · 4.19.0</h3>
+      <div class="page-head"><p class="eyebrow">Bonjour Camille</p><h2 class="title-1">Mes galeries</h2><button class="btn is-act" type="button">Nouvelle galerie</button></div>
+      <p class="lede">Une phrase sous le titre, à la largeur de lecture : prends ton temps, rien ne part tant que tu n’as pas fini.</p>
+      <h3 class="title-2">Une section</h3><h4 class="title-3">Un bloc</h4><h4 class="title-3 is-caps">Un bloc en capitales</h4>
+      <form class="card is-ruled is-form" data-forms="form" onsubmit="return false">
+        <div class="field-group"><label class="field-label" for="demo-pw">Mot de passe</label>
+          <div class="field-row"><input id="demo-pw" type="password" autocomplete="new-password"><button class="btn is-act" type="button" data-forms="show">Afficher</button><button class="btn is-act" type="button" data-forms="gen">Générer</button></div>
+          <small class="field-note">Tu le donnes toi-même ; douze lettres au moins.</small></div>
+        <div class="field-group"><label class="field-label" for="demo-note">Un mot sur cette galerie</label><textarea id="demo-note" rows="2" placeholder="Enregistré quand tu quittes le champ"></textarea><p class="field-note" data-forms="note">Enregistré automatiquement.</p></div>
+        <fieldset class="checks"><legend class="field-label">Prévenir</legend><label class="check"><input type="checkbox" checked> Quand une sélection est finie</label><p class="check-hint">Un mail, une fois par sélection.</p><label class="check"><input type="checkbox"> Chaque nouvelle note</label></fieldset>
+        <div class="field-pair"><label for="demo-from">du</label><input id="demo-from" type="date" value="2026-11-01"><label for="demo-to">au</label><input id="demo-to" type="date" value="2026-11-30"></div>
+        <p><button class="btn is-act" type="button" aria-pressed="true">Choisies</button> <button class="btn is-act" type="button" aria-pressed="false">Avec une note</button></p>
+      </form>
+      <div class="card is-ruled"><a class="sum-head" href="#"><span class="sum-name">BoursoBank</span><span class="sum-fig">4 210,00€</span></a>
+        <a class="sum-line" href="#"><span class="sum-name">Compte courant</span><span class="sum-fig">3 120,00€</span></a><a class="sum-line" href="#"><span class="sum-name">Compte facture</span><span class="sum-fig">1 090,00€</span></a>
+        <a class="sum-link" href="#"><span><b>320,00€</b><small>à envoyer</small></span></a></div>
+      <h4 class="sect is-ruled">Factures<span class="sect-sum">ce mois <b>1 090,00€</b></span></h4>
+      <div class="tbl-wrap"><table class="tbl is-dense"><tbody>
+        <tr class="tbl-group"><td colspan="2"><span class="tbl-group-head"><span>Vendredi 6 novembre</span><span class="tbl-group-sum tone is-good">+1 200,00€</span></span></td></tr>
+        <tr><td class="tbl-name">Loyer studio<span class="row-label">PRLV SEPA STUDIO 1106</span><span class="row-note">Novembre, charges comprises</span></td><td class="is-num">−800,00€</td></tr>
+        <tr><td class="tbl-name">Patreon</td><td class="is-num">+2 000,00€</td></tr></tbody></table></div>
+      <ul class="rows is-tree"><li><span class="row-title">Shopping<small>3 sous-catégories</small></span><ul class="rows"><li><span class="row-title">Vêtements</span></li><li><span class="row-title">Cadeaux</span></li></ul></li></ul>
+      <nav class="pager"><a class="go-link" href="#">← Plus récentes</a><a class="go-link" href="#">Plus anciennes →</a></nav>
+      <p class="note">Aussi dans ds.js : ds.rows (des lignes qu’on ouvre d’un clic, d’Entrée ou d’Espace), ds.password (Afficher, Générer), ds.autosave (un champ enregistré quand on le quitte). Une carte en barre (.card.is-bar), un pli en tête (details.fold.is-lead), une vignette de ligne (.row-thumb), un champ dans la barre de la visionneuse.</p>
+    </div>
     <div class="card" id="build-demo"><h3 class="ct">Constructeurs · 4.18.0</h3>
       <p class="note">ds.card, ds.tile, ds.tiles, ds.tabs, ds.meter, ds.legend : les pièces que chaque appli écrivait à la main, construites par ds.</p>
       <div data-build="tabs"></div>

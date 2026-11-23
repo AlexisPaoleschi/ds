@@ -1,0 +1,26 @@
+/* A form's pieces outside a settings page (Selecta's admin, a sign-in): a field with its label above and its line under
+   it (.field-group: .field-label, the control, .field-note); a card holding a form at reading width (.card.is-form); a
+   field and its buttons on one line, in a column on a phone (.field-row); a box with its words (.check, a finger's height
+   on a touch screen, its hint under it, .check-hint) and a list of them (.checks, a fieldset whose legend is a .field-label, or a div); the
+   newer and older pages at the two ends of a list (.pager). A button that stays pressed is in buttons.css. */
+  .field-group { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
+  /* its control across the column; a date field without the phone's own frame, which would overflow the card (iOS) */
+  .field-group > :is(input, select, textarea) { width: 100%; }
+  .field-group input[type="date"] { max-width: 100%; text-align: left; -webkit-appearance: none; appearance: none; }
+  .field-group > .field-note { margin-top: 0; }
+  .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
+  .field-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
+  .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
+  .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--check-size); }
+  .check > input { flex: none; margin: 0; }
+  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--faint); font-size: var(--fs-13); }
+  @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
+  .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
+  .checks > legend { margin-bottom: var(--s-6); padding: 0; }
+  /* two fields side by side with their words (« du … au … »), one under the other on a phone */
+  .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
+  .field-pair > label { display: contents; color: var(--faint); font: 500 var(--fs-13)/var(--lh-tight) var(--body); }
+  .field-pair :is(input, select) { min-width: 0; }
+  @media (min-width: 769px) { .field-pair { grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); } }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-12); margin-top: var(--space-lg); }
+  .pager > :only-child { margin-left: auto; }

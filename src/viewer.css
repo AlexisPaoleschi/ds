@@ -48,6 +48,10 @@
   .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
   .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
     font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-036); }
+  /* a field in the bar (Selecta's note on a photo), light on the dark veil, and the line under it */
+  .viewer-bar :is(input:not([type=checkbox]):not([type=radio]), textarea) { width: 100%; color: var(--white); background: var(--overlay-black-soft); border-color: var(--viewer-line); }
+  .viewer-bar :is(input, textarea)::placeholder { color: var(--viewer-ink); }
+  .viewer-bar .field-note:not(.is-bad) { color: var(--viewer-ink); }
   @keyframes viewer-in { from { opacity: 0; } }
 @media (max-width: 768px) {
   .viewer-bar { padding-inline: var(--s-16); }

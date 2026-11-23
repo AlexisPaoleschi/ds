@@ -128,6 +128,45 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
     return [getComputedStyle(v).fontSize, getComputedStyle(l).textTransform, getComputedStyle(v).color !== getComputedStyle(document.querySelector('.stat-value')).color]; });
   assert(same(r, ['28px', 'uppercase', true]), 'the row of figures: its value large, its word in small capitals, the one that matters in gold', r);
 
+  // ds 4.19.0: headings, forms, lists
+  r = await p.evaluate(() => { const g = s => getComputedStyle(document.querySelector(s)); document.documentElement.setAttribute('data-theme', 'atelier');
+    const a = [g('.title-1').fontSize, g('.title-2').fontSize, g('.title-3').fontSize, g('.title-3').textTransform, g('.page-head').display, g('.page-head > .eyebrow').flexBasis];
+    document.documentElement.setAttribute('data-theme', 'vitrine');
+    const b = [g('.title-1').textTransform, g('.title-1').fontWeight, g('.lede').maxWidth, g('#pressed').borderColor === g('.btn[aria-pressed]').borderColor];
+    document.documentElement.setAttribute('data-theme', 'atelier'); return [a, b]; });
+  assert(same(r[0], ['28px', '22px', '17px', 'uppercase', 'flex', '100%']) && same(r[1].slice(0, 3), ['uppercase', '400', '640px']), 'three heading levels and a page head, in each theme', r);
+
+  r = await p.evaluate(async () => { const picks = []; ds.rows('#tb', { open: row => picks.push(row.dataset.k) });
+    const row = document.querySelector('#tb tr.is-link'); row.querySelector('td').click(); row.querySelector('button').click();
+    row.focus(); row.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true })); row.dispatchEvent(new KeyboardEvent('keydown', { key: ' ', bubbles: true }));
+    const pw = document.getElementById('pw'); ds.password(pw, { toggle: '#pw-t', generate: '#pw-g' });
+    document.getElementById('pw-t').click(); const shown = [pw.type, document.getElementById('pw-t').textContent];
+    document.getElementById('pw-t').click(); const hidden = pw.type; document.getElementById('pw-g').click();
+    const note = document.getElementById('note'), line = document.getElementById('note-n'); let fail = true;
+    const a = ds.autosave(note, { note: line, save: v => fail ? Promise.reject(new Error('x')) : Promise.resolve(v.trim() + '!') });
+    note.focus(); note.value = 'deux '; note.blur(); await new Promise(ok => setTimeout(ok, 30)); const failed = [line.classList.contains('is-bad'), line.textContent.startsWith('Pas enregistré')];
+    fail = false; note.dispatchEvent(new Event('input')); note.focus(); note.blur(); await new Promise(ok => setTimeout(ok, 30));
+    return [picks, shown, hidden, pw.value.length, pw.type, failed, note.value, line.classList.contains('is-bad'), line.textContent]; });
+  assert(same(r, [['a', 'a', 'a'], ['text', 'Masquer'], 'password', 16, 'text', [true, true], 'deux!', false, 'Enregistré tout seul quand vous quittez le champ.']),
+    'ds.rows (a click but not on its button, Enter, Space), ds.password, ds.autosave (its error, then saved and what the server kept)', r);
+
+  r = await p.evaluate(() => { const g = (s, k) => getComputedStyle(document.querySelector(s), k);
+    return [g('details.fold.is-lead > summary', '::before').content !== 'none', g('details.fold.is-lead > summary', '::after').content, g('h4.sect > .sect-sum').marginLeft !== '0px',
+      g('.tbl tr.tbl-group > td').borderBottomStyle, g('fieldset.checks').borderStyle, document.querySelector('.check').getBoundingClientRect().height > 0]; });
+  assert(same(r, [true, 'none', true, 'solid', 'none', true]), 'the fold with its chevron first, a section\'s sum, a group\'s row in a table, a list of boxes', r);
+
+  r = await p.evaluate(async () => { const box = document.getElementById('settings-demo'); let saved = null, changes = [];
+    const sw = ds.switch({ label: 'Lecture', on: true }, on => { saved = on; return Promise.reject(new Error('refusé')); }); box.append(sw);
+    const input = sw.querySelector('input'); input.click(); await new Promise(ok => setTimeout(ok, 30));
+    ds.conns(box, [{ name: 'Notion', tone: 'good', details: ['relié', { text: 'en échec', tone: 'bad' }], action: { href: 'https://notion.so', text: 'Ouvrir' } }]);
+    const c = box.querySelector('.conn');
+    const f = ds.fields(box, [{ group: 'Lecture', key: 'every', label: 'Toutes les', value: 5, default: 5, min: 1, max: 60, unit: 'min' }], { onChange: x => changes.push(x) });
+    const field = box.querySelector('input[type=number]'); field.value = '90'; field.dispatchEvent(new Event('input')); field.value = '10'; field.dispatchEvent(new Event('input'));
+    return [saved, input.checked, input.disabled, c.querySelectorAll('.det').length, c.querySelector('.det.is-bad') !== null, c.querySelector('a').target, c.querySelector('a').textContent,
+      changes.map(x => x.wrong), f.edited(), field.classList.contains('is-changed'), box.querySelector('.def').textContent]; });
+  assert(same(r, [false, true, false, 2, true, '_blank', 'Ouvrir ↗', [0, 1, 0], { every: '10' }, true, 'Par défaut 5 min, entre 1 et 60.']),
+    'ds.switch goes back when refused, ds.conns, ds.fields (changed, out of bounds)', r);
+
   assert(errors.length === 0, 'no error in the page', errors);
   await b.close(); server.close();
 })();

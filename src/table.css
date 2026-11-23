@@ -27,6 +27,12 @@
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
   .tbl .is-mid { color: var(--mid); }
+  /* a group's head over its rows (a day over its operations: its box for all of them, its name, what it comes to on the
+     right; ds.date(day, "heading")); a phone's cards take it as a heading */
+  .tbl tr.tbl-group > td { padding: var(--s-16) var(--s-8) var(--s-6); border-bottom: 1px solid var(--line-2); }
+  @media (hover: hover) { .tbl tbody tr.tbl-group:hover > td { background: none; } }
+  .tbl-group-head { display: flex; justify-content: space-between; gap: var(--s-12); color: var(--dim); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
+  .tbl-group-sum { font: 500 var(--fs-13)/var(--lh-tight) var(--mono); white-space: nowrap; }
   /* nothing yet (« jamais »): quieter than the row */
   .tbl .is-faint { color: var(--faint); }
   .tbl .tbl-ck { width: 28px; }
@@ -122,6 +128,11 @@
   .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
   .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
   .tbl.is-cards td[colspan] { grid-column: 1 / -1; }
+  /* a group's head among the cards: a heading on the page, not a card (its box on the left, its words across) */
+  .tbl.is-cards tbody tr.tbl-group { align-items: center; padding: var(--s-24) 0 var(--s-8); border: 0; background: none; box-shadow: none; }
+  .tbl.is-cards tbody tr.tbl-group:first-child { padding-top: var(--s-8); }
+  .tbl.is-cards tr.tbl-group > td { padding: 0; border: 0; }
+  .tbl.is-cards tr.tbl-group > td[colspan] { grid-column: main-start / end-end; grid-row: 1; }
   /* a cell named by its column: the name on the left, the value on the right */
   .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
   .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);

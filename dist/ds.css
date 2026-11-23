@@ -1,4 +1,4 @@
-/* ds 4.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.19.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -179,6 +179,9 @@
   /* a short line beside something: a message, a passing message */
   --note-size: var(--fs-13);
   --stat-size: var(--fs-28); --stat-ls: var(--title-ls); --stat-gap: var(--s-24);
+  --title-1-size: var(--fs-28); --title-2-size: var(--fs-22); --title-3-size: var(--fs-17); --heading-ls: var(--title-ls);
+  --eyebrow-ls: var(--ls-brand); --lede-size: var(--fs-14); --lede-color: var(--dim); --check-size: var(--fs-14); --check-box: 16px;
+  --space-md: var(--s-16); --space-lg: var(--s-24); --space-xl: var(--s-32);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
   /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
@@ -292,6 +295,8 @@
   /* text: 16px, light, with room between the lines */
   --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
   --stat-size: var(--text-2xl); --stat-ls: var(--ls-loose);
+  --title-1-size: var(--text-2xl); --title-2-size: var(--text-xl); --title-3-size: var(--text-lg); --heading-ls: var(--ls-loose);
+  --eyebrow-ls: var(--ls-caps); --lede-size: var(--text-md); --lede-color: var(--ink); --check-box: 20px;
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
@@ -356,7 +361,8 @@
 }
 /* a computer, wider than a phone: the sizes by role grow a step */
 @media (min-width: 769px) {
-  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28); }
+  :root { --text-md: var(--fs-16); --text-lg: var(--fs-20); --text-xl: var(--fs-24); --text-2xl: var(--fs-28);
+    --space-md: var(--s-20); --space-lg: var(--s-32); --space-xl: var(--s-48); }
 }
 /* the site's smaller computers, tablets and phones */
 @media (max-width: 1024px) {
@@ -390,6 +396,9 @@
   /* a field's text is centred in its height; only a textarea, which grows, takes room above and under its lines */
   textarea { padding-block: var(--field-py); }
   input::placeholder, textarea::placeholder { color: var(--faint); }
+  /* a field that cannot be changed (a finished selection), greyed; a textarea grows only downwards */
+  :is(input:not([type=checkbox]):not([type=radio]), select, textarea):disabled { color: var(--faint); background: var(--band); cursor: not-allowed; }
+  textarea { resize: vertical; }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */
   :where(input:not([type=checkbox], [type=radio], [type=range], [type=file], [type=color], [type=hidden], [type=image]), select:not([multiple], [size])) { box-sizing: border-box; height: var(--control-h); }
 /* a menu looks like every list that opens (a pill, a search's button, .combo): a field, the sprite's chevron on its
@@ -477,6 +486,48 @@
   :is(.tone, .delta).is-mid { color: var(--mid); }
   .tone.is-faint { color: var(--faint); }
   .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
+/* Headings for a page's parts, the same in every app (the audit of 23 November 2026: Selecta wrote seven): .title-1 a
+   page's title, .title-2 a section, .title-3 a block (a column, a panel, a side panel), in the theme's titles' font, weight
+   and spacing; .is-caps writes one in capitals. A page's head (.page-head): its small gold word above (.eyebrow), its
+   title, what it does on the right on a computer; a sentence under it at reading width (.lede). The spaces that grow a
+   step on a computer (--space-md, --space-lg, --space-xl) set a page's room. */
+  .title-1, .title-2, .title-3 { margin: 0; min-width: 0; color: var(--ink); font-family: var(--title-font); font-weight: var(--head-weight);
+    letter-spacing: var(--heading-ls); line-height: var(--title-lh); overflow-wrap: anywhere; text-wrap: balance; }
+  .title-1 { font-size: var(--title-1-size); text-transform: var(--title-case); }
+  .title-2 { font-size: var(--title-2-size); }
+  .title-3 { font-size: var(--title-3-size); }
+  :is(.title-1, .title-2, .title-3).is-caps { text-transform: uppercase; }
+  .eyebrow { margin: 0 0 var(--s-6); color: var(--accent-text); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font);
+    letter-spacing: var(--eyebrow-ls); text-transform: uppercase; }
+  .lede { max-width: var(--read-m); margin: 0 0 var(--space-lg); color: var(--lede-color); font-size: var(--lede-size); line-height: var(--text-lh); }
+  .page-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-12) var(--s-16); margin-bottom: var(--space-lg); }
+  .page-head > .eyebrow { flex: 0 0 100%; margin: 0 0 calc(-1 * var(--s-8)); }
+/* A form's pieces outside a settings page (Selecta's admin, a sign-in): a field with its label above and its line under
+   it (.field-group: .field-label, the control, .field-note); a card holding a form at reading width (.card.is-form); a
+   field and its buttons on one line, in a column on a phone (.field-row); a box with its words (.check, a finger's height
+   on a touch screen, its hint under it, .check-hint) and a list of them (.checks, a fieldset whose legend is a .field-label, or a div); the
+   newer and older pages at the two ends of a list (.pager). A button that stays pressed is in buttons.css. */
+  .field-group { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
+  /* its control across the column; a date field without the phone's own frame, which would overflow the card (iOS) */
+  .field-group > :is(input, select, textarea) { width: 100%; }
+  .field-group input[type="date"] { max-width: 100%; text-align: left; -webkit-appearance: none; appearance: none; }
+  .field-group > .field-note { margin-top: 0; }
+  .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
+  .field-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
+  .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
+  .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--check-size); }
+  .check > input { flex: none; margin: 0; }
+  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--faint); font-size: var(--fs-13); }
+  @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
+  .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
+  .checks > legend { margin-bottom: var(--s-6); padding: 0; }
+  /* two fields side by side with their words (« du … au … »), one under the other on a phone */
+  .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
+  .field-pair > label { display: contents; color: var(--faint); font: 500 var(--fs-13)/var(--lh-tight) var(--body); }
+  .field-pair :is(input, select) { min-width: 0; }
+  @media (min-width: 769px) { .field-pair { grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1fr); } }
+  .pager { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--s-12); margin-top: var(--space-lg); }
+  .pager > :only-child { margin-left: auto; }
 /* The page of an app (Bank, Studio): its reset, its header and the loading in it, the first loading over the page, the
    page's width and margins, the room of the phone's tab bar, words for screen readers only. */
   * { box-sizing: border-box; }
@@ -660,7 +711,9 @@
    up by what the line keeps under the capitals' middle, 0.06em (4.5.1 lifted the wheel by 0.1em, 0.5px too high),
    measured in Chromium on the showcase, Selecta's sign-in and the site */
   [data-theme="vitrine"] .btn.is-busy::after, [data-theme="vitrine"] .btn:not(.is-icon) > .ico { translate: 0 -0.06em; }
-
+/* a button that stays pressed among others (a filter, « Afficher » on a password): filled with the strong gold, after
+   every variant so that is-act does not cover it */
+.btn[aria-pressed="true"], [data-theme="vitrine"] .btn[aria-pressed="true"] { color: var(--on-accent); background: var(--accent-strong); border-color: var(--accent-strong); }
 /* The tabs: one choice among a few views or periods; a page's main views as a bar at the bottom of a phone. */
   .tabs { display: flex; gap: var(--s-4); background: var(--panel); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-2); width: fit-content; }
   .tabs button { min-height: var(--s-24); font: var(--label-weight) var(--fs-12)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; color: var(--faint); background: none; border: none; border-radius: var(--r-s); padding: var(--tab-py, var(--s-8)) var(--tab-px, var(--s-14)); cursor: pointer; }
@@ -791,6 +844,36 @@
   .acts > .btn { flex: 1 1 0; min-width: 0; gap: var(--s-4); padding-inline: var(--s-4); }
 }
 /* cards side by side as the width allows, each at least --grid-min (Bank's accounts, Studio's overview, Selecta's galleries) */
+  /* a card used as a bar (Selecta's selection, its panel, its state): the lightest shadow, its groups apart on a line, in
+     a column on a phone */
+  .card.is-bar { --card-shadow: var(--shadow-soft); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--s-12) var(--space-md); }
+  @media (max-width: 768px) { .card.is-bar { flex-direction: column; align-items: stretch; } }
+  /* a section that folds with its chevron before its title, in gold (Selecta's panels) */
+  details.fold.is-lead > summary::after { content: none; }
+  details.fold.is-lead > summary::before { content: ""; flex: none; width: var(--s-6); height: var(--s-6); margin-left: var(--s-2); border-top: 1.5px solid var(--accent-text);
+    border-right: 1.5px solid var(--accent-text); transform: rotate(45deg); transition: transform var(--t-mid) ease; }
+  details.fold.is-lead[open] > summary::before { transform: translateY(-28%) rotate(135deg); }
+  /* what a section comes to, on the right of its title (Bank's bills: « Prévu 1 234€ ») */
+  h4.sect > .sect-sum { display: inline-flex; align-items: baseline; gap: var(--s-6); margin-left: auto; color: var(--dim); font: 400 var(--fs-12)/var(--lh-tight) var(--body); letter-spacing: 0; text-transform: none; }
+  h4.sect > .sect-sum b { color: var(--ink); font: 600 var(--fs-12)/var(--lh-tight) var(--mono); }
+  /* a card's total and its lines (a bank and its accounts): .sum-head, its name in small capitals in its colour (--n) and
+     its figure large; .sum-line under it, a line's name and figure, quieter; .sum-link, a figure and its word aligned right
+     with its arrow (where the money goes at the month's end; is-bad in red); each may be a link, gold under the pointer */
+  :is(.sum-head, .sum-line) { display: flex; align-items: center; gap: var(--s-12); color: inherit; text-decoration: none; }
+  :is(.sum-head, .sum-line) > .sum-name { flex: 1; min-width: 0; }
+  .sum-head > .sum-name { color: var(--n, var(--accent-text)); font: 700 var(--fs-12)/var(--lh-tight) var(--display); letter-spacing: var(--ls-wide); text-transform: uppercase; }
+  .sum-head > .sum-fig { font: 700 var(--fs-display-2)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-line { padding: var(--s-10) 0 0 var(--s-14); }
+  .sum-line > .sum-name { color: var(--dim); font: 500 var(--fs-15)/var(--lh-ui) var(--body); }
+  .sum-line > .sum-fig { color: var(--dim); font: 600 var(--fs-17)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-link { display: flex; align-items: center; gap: var(--s-4); padding-top: var(--s-10); color: var(--faint); text-align: right; text-decoration: none; }
+  .sum-link > span { display: flex; flex-direction: column; align-items: flex-end; gap: var(--s-2); }
+  .sum-link b { color: var(--dim); font: 600 var(--fs-15)/var(--lh-tight) var(--display); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .sum-link small { font: 500 var(--fs-11)/var(--lh-tight) var(--body); white-space: nowrap; }
+  .sum-link > .ico { flex: none; width: var(--ico-s); height: var(--ico-s); }
+  .sum-link.is-bad :is(b, small) { color: var(--bad); }
+  @media (hover: hover) { a:is(.sum-head, .sum-line):hover > .sum-name { color: var(--accent); } .sum-link:hover :is(b, .ico) { color: var(--accent); } }
+  .sum-link:focus-visible b { color: var(--accent); }
   .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(var(--grid-min, 320px), 100%), 1fr)); gap: var(--s-12); }
   /* a card's title, then its lines of details (a place, a date), each with its icon */
   .card-title { margin: 0 0 var(--card-gap); color: var(--ink); font: var(--title-weight) var(--card-title-size)/var(--title-lh) var(--title-font);
@@ -940,6 +1023,10 @@
   .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
   .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--fs-14) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
     font: 300 var(--fs-14)/var(--lh-text) var(--body); letter-spacing: var(--ls-036); }
+  /* a field in the bar (Selecta's note on a photo), light on the dark veil, and the line under it */
+  .viewer-bar :is(input:not([type=checkbox]):not([type=radio]), textarea) { width: 100%; color: var(--white); background: var(--overlay-black-soft); border-color: var(--viewer-line); }
+  .viewer-bar :is(input, textarea)::placeholder { color: var(--viewer-ink); }
+  .viewer-bar .field-note:not(.is-bad) { color: var(--viewer-ink); }
   @keyframes viewer-in { from { opacity: 0; } }
 @media (max-width: 768px) {
   .viewer-bar { padding-inline: var(--s-16); }
@@ -1064,6 +1151,12 @@
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
   .tbl .is-mid { color: var(--mid); }
+  /* a group's head over its rows (a day over its operations: its box for all of them, its name, what it comes to on the
+     right; ds.date(day, "heading")); a phone's cards take it as a heading */
+  .tbl tr.tbl-group > td { padding: var(--s-16) var(--s-8) var(--s-6); border-bottom: 1px solid var(--line-2); }
+  @media (hover: hover) { .tbl tbody tr.tbl-group:hover > td { background: none; } }
+  .tbl-group-head { display: flex; justify-content: space-between; gap: var(--s-12); color: var(--dim); font: 600 var(--fs-13)/var(--lh-tight) var(--body); }
+  .tbl-group-sum { font: 500 var(--fs-13)/var(--lh-tight) var(--mono); white-space: nowrap; }
   /* nothing yet (« jamais »): quieter than the row */
   .tbl .is-faint { color: var(--faint); }
   .tbl .tbl-ck { width: 28px; }
@@ -1159,6 +1252,11 @@
   .tbl.is-cards td.tbl-main { grid-column: main; grid-row: 1; }
   .tbl.is-cards td.tbl-end { grid-column: end; grid-row: 1; }
   .tbl.is-cards td[colspan] { grid-column: 1 / -1; }
+  /* a group's head among the cards: a heading on the page, not a card (its box on the left, its words across) */
+  .tbl.is-cards tbody tr.tbl-group { align-items: center; padding: var(--s-24) 0 var(--s-8); border: 0; background: none; box-shadow: none; }
+  .tbl.is-cards tbody tr.tbl-group:first-child { padding-top: var(--s-8); }
+  .tbl.is-cards tr.tbl-group > td { padding: 0; border: 0; }
+  .tbl.is-cards tr.tbl-group > td[colspan] { grid-column: main-start / end-end; grid-row: 1; }
   /* a cell named by its column: the name on the left, the value on the right */
   .tbl.is-cards td[data-label] { display: flex; align-items: baseline; justify-content: space-between; gap: var(--s-8); }
   .tbl.is-cards td[data-label]::before { content: attr(data-label); color: var(--faint);
@@ -1212,6 +1310,14 @@
   ul.rows > li.is-busy { opacity: var(--o-busy); transition: opacity var(--t-fast) ease; }
   /* a row's second line, under its title: a detail, smaller and faint */
   .row-title small { color: var(--faint); display: block; font: 500 var(--fs-12)/var(--lh-ui) var(--body); margin-top: var(--s-2); }
+  /* the words as a bank or a server wrote them, under a row's name, in the fixed-width font (an operation's label) */
+  .row-label { color: var(--faint); display: block; font: 400 var(--fs-12)/var(--lh-ui) var(--mono); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  /* a note under a row, in gold italics (one's own words on an operation) */
+  .row-note { color: var(--accent-text); display: block; font: italic 500 var(--fs-13)/var(--lh-ui) var(--body); margin-top: var(--s-2); overflow-wrap: anywhere; }
+  /* a small picture at the head of a row (a photo a note is about), square, its corners the row's */
+  .row-thumb { flex: none; width: var(--row-thumb, 48px); height: var(--row-thumb, 48px); object-fit: cover; border-radius: var(--r-s); background: var(--panel-2); }
+  /* rows under a row, indented (a trip's kinds of spending and their lines) */
+  ul.rows.is-tree > li > ul.rows { flex-basis: 100%; margin-left: var(--s-16); }
   /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
   ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
   /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */

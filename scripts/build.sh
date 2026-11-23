@@ -8,7 +8,7 @@ version=$(cat VERSION)
 # spinner), the controls, the surfaces, the data, the public pieces, the pages; the chosen gold closes the list, so
 # that it wins over the controls' hover; the tables are in ds.css, for Selecta's lists too (their behaviours, sorting and
 # picking rows, stay in ds-tools.js)
-foundation="src/fonts.css src/tokens.css src/base.css src/page.css"
+foundation="src/fonts.css src/tokens.css src/base.css src/heads.css src/forms.css src/page.css"
 marks="src/marks.css"
 controls="src/buttons.css src/tabs.css"
 surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/viewer.css"
@@ -35,7 +35,7 @@ head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, 
 { echo "$head"; cat $tools_controls $tools_surfaces $tools_data $tools_pages $states; } > dist/ds-tools.css
 # the script every app links: the core, the shared behaviours (the bubble, the window, dates and figures, the server)
 # and the small tools every app wrote for itself (kit.js)
-{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js; } > dist/ds.js
+{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js; } > dist/ds.js
 { echo "$head"; cat $js_tools; } > dist/ds-tools.js
 # the icons' sprite, put at the top of the page by a script of its own that the browser keeps: Bank and Studio link it
 # after ds.js, and their pages keep writing <use href="#i-name"/>
