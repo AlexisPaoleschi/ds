@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.27.1 · 23 novembre 2026
+
+- Pour toutes les applis : le texte garde sa taille quand un téléphone se tourne (`text-size-adjust`), et une image, une vidéo ou un canevas ne dépasse jamais sa place. Studio et Selecta l’écrivaient eux-mêmes.
+- Une page peut régler la taille et l’interligne de son texte par deux jetons, `--text-size` et `--text-lh`, que le `body` de ds lit (Selecta : 15px puis 16px sur un ordinateur, interligne 1,8).
+- La page vitrine reprend toute la largeur : la règle de la page d’une galerie (4.26.0) ne vise plus que `main.page`, la balise de Selecta, et plus le `div.page` de la vitrine.
+- La cloche de Selecta : ses lignes ne sont plus soulignées, leur titre devient doré au survol, comme une ligne de liste.
+- En Vitrine, tout ce qui appartient à un formulaire est en moyen (500) : l’aide sous une case à cocher (`.check-hint`) est dessinée comme la ligne sous un champ, et les mots de la case passent en moyen ; seul le texte autour reste léger.
+
 ## 4.27.0 · 23 novembre 2026
 
 - Un message durable d’erreur (`.msg.is-bad`) s’écrit en rouge, dans tous les thèmes, et plus seulement dans son cadre rosé : ce que Selecta faisait seul devient la règle (Bank, Studio et le site aussi).

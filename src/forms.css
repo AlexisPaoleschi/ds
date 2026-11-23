@@ -13,7 +13,12 @@
   .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
   .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--check-size); }
   .check > input { flex: none; margin: 0; }
-  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--faint); font-size: var(--fs-13); }
+  /* in Vitrine, what belongs to a form (a label, the line under a field, a box's words, its hint, a button) is medium; only
+     the text around it is light */
+  :where([data-theme="vitrine"]) .check { font-weight: var(--label-weight); }
+  /* the hint under a box is drawn as the line under a field (.field-note): one look for both */
+  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--dim);
+    font: var(--field-note-weight) var(--field-note-size)/var(--field-note-lh) var(--body); letter-spacing: var(--field-note-ls); }
   @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
   .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }

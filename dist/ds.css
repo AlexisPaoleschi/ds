@@ -1,4 +1,4 @@
-/* ds 4.27.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.27.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -540,7 +540,12 @@
   .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
   .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--check-size); }
   .check > input { flex: none; margin: 0; }
-  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--faint); font-size: var(--fs-13); }
+  /* in Vitrine, what belongs to a form (a label, the line under a field, a box's words, its hint, a button) is medium; only
+     the text around it is light */
+  :where([data-theme="vitrine"]) .check { font-weight: var(--label-weight); }
+  /* the hint under a box is drawn as the line under a field (.field-note): one look for both */
+  .check-hint { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); color: var(--dim);
+    font: var(--field-note-weight) var(--field-note-size)/var(--field-note-lh) var(--body); letter-spacing: var(--field-note-ls); }
   @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
   .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
@@ -555,6 +560,10 @@
    page's width and margins, the room of the phone's tab bar, words for screen readers only. */
   * { box-sizing: border-box; }
   [hidden] { display: none !important; }
+  /* the text keeps its size when a phone turns sideways, and a picture never runs wider than its room (4.27.1: Selecta's
+     and Studio's, every app's) */
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  img, video, canvas { max-width: 100%; }
   body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--body); font-size: var(--text-size); font-weight: var(--text-weight); line-height: var(--text-lh); -webkit-font-smoothing: antialiased; }
   a { color: inherit; }
   .ico { width: var(--ico-m); height: var(--ico-m); flex: 0 0 auto; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -1997,7 +2006,7 @@
   .dropzone, .tile-acts, button.box.on-photo, .photogrid > .is-pickable::after, .thumb-x { transition: none; }
 }
 /* The gallery kit (4.26.0): what an app that shows a photographer's galleries to clients draws, taken from Selecta as it
-   drew it, so that nothing moved on its pages. Its page (.page) and its sign-in page (.auth-page, .auth-form);
+   drew it, so that nothing moved on its pages. Its page (main.page: a <main> only, so that no other page's .page takes its width) and its sign-in page (.auth-page, .auth-form);
    the galleries waiting (.pending-gallery-*: the name over the whole card row, its clients that fold); a row's error
    (.row-error), an address's last part (.slug-value), a figure in a line (.metric-inline); a cover's buttons while it
    works (.cover-preview); a toolbar's quiet icon (.toolbar-icon); the client's tiles to choose from (.photo-select-*)
@@ -2006,9 +2015,9 @@
    photos (.photo-note-*, .notes-none, .notes-count); the bell's notices (.bell-*); a slider between two icons
    (.settings-zoom), a setting said in a sentence (.settings-fact), a filter of notices (.notification-filter); a
    gallery's cover with no photo yet (.gallery-cover). */
-.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space-lg); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-lg); padding-left: calc(var(--space-md) + var(--safe-left)); }
+main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space-lg); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-lg); padding-left: calc(var(--space-md) + var(--safe-left)); }
 @media (min-width: 769px) {
-  .page { padding-top: var(--space-xl); padding-right: calc(var(--space-lg) + var(--safe-right)); padding-bottom: var(--space-xl); padding-left: calc(var(--space-lg) + var(--safe-left)); }
+  main.page { padding-top: var(--space-xl); padding-right: calc(var(--space-lg) + var(--safe-right)); padding-bottom: var(--space-xl); padding-left: calc(var(--space-lg) + var(--safe-left)); }
 }
 @media (hover: hover) {
   .panel-head:hover h2 { color: var(--accent); }
@@ -2097,7 +2106,9 @@
 .notes-count { font-weight: 500; color: var(--ink); }
 /* --- Bell, notifications page, settings screen. The bell is the design system's panel under a button of the top bar
    (.pop, .pop-panel, .pop-head, .pop-foot, its figure .pop-count); Selecta draws only its lines. */
-.topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); letter-spacing: normal; text-transform: none; text-align: left; }
+.topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); letter-spacing: normal; text-transform: none; text-align: left; color: inherit; text-decoration: none; }
+/* a line that opens its gallery is not underlined: its title turns gold under the mouse, as a row of a list does */
+@media (hover: hover) { a.bell-item-body:hover .bell-item-title { color: var(--accent-text); } }
 .topbar-nav .bell-item-read { flex: none; width: var(--touch-target); height: var(--touch-target); }
 .bell-list { flex: 1; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
 .bell-item { position: relative; display: flex; align-items: flex-start; border-bottom: 1px solid var(--line); }
