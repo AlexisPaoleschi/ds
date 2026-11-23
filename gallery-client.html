@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+
+<html data-theme="vitrine" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<!-- CSRF token for the AJAX toggle, same pattern as the admin side. -->
+
+
+<title>La galerie d’une cliente : ses photos, ses cœurs, son choix · Kit galerie · Design system</title>
+
+
+
+<!-- The design system comes first, Selecta's own styles after it (see CLAUDE.md). -->
+<link href="dist/ds.css" rel="stylesheet"/>
+<script defer="defer" src="dist/ds.js"></script>
+<script defer="defer" src="dist/ds-photo.js"></script>
+
+
+
+
+
+
+
+
+<meta content="noindex" name="robots"/><style>/* Selecta's own placement (its stylesheets), around the design system's pieces */
+/* Selecta's own tokens, on top of the design system's (static/ds/, github.com/AlexisPaoleschi/ds).
+   Colours, text, spaces, corners, layers, durations, shadows and the page width all come from the design system;
+   only what it has no name for lives here, and always made of its tokens. */
+
+:root {
+    /* The three spaces that grow on a computer (--space-md, --space-lg, --space-xl) are the design system's, from 4.19.0. */
+
+    /* The four text sizes that grow one step on a computer (--text-md, --text-lg, --text-xl, --text-2xl) are the
+       design system's, from 2.39.0. */
+
+    /* One height for every control (a select, an input and a button have three different line boxes): Vitrine's
+       --control-h, 45px, the design system's. */
+
+    /* The design system's lasting message (.msg) in Selecta's text size and room. */
+    --msg-size: var(--fs-14);
+    --msg-py: var(--s-12);
+    --msg-px: var(--s-20);
+
+    /* The design system's line under a field (.field-note), where a refusal is written: in Selecta's text. */
+    --field-note-size: var(--fs-14);
+    --field-note-weight: 300;
+    --field-note-lh: var(--lh-ui);
+    --field-note-ls: normal;
+
+    /* The touch target, the veils over a photo and the notch's insets are the design system's (--touch-target,
+       --overlay-*, --safe-*). */
+}
+
+
+/* Document-level reset, loaded by every page right after tokens.css, after the design system. */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    /* clip and not hidden: hidden makes a scroll container, which would break the sticky selection panel. */
+    overflow-x: clip;
+}
+
+
+img,
+video,
+canvas {
+    max-width: 100%;
+}
+
+
+/* --- Selecta on the design system: its components, in the Vitrine theme (its soft gold line, --line, is Selecta's),
+   with Selecta's capitals. */
+
+/* Buttons: the design system's, in Vitrine's capitals; Selecta's height: as tall as a field, not the site's 63px. Its
+   small button's size is set in tokens.css. */
+.btn {
+    --btn-h: var(--control-h);
+    line-height: var(--lh-ui);
+}
+
+/* A lasting message: the design system's, in Selecta's weight and spacing (its size and room in tokens.css); a refusal
+   is written in red. */
+.msg {
+    font-weight: 500;
+    letter-spacing: var(--ls-loose);
+}
+
+.msg.is-bad {
+    color: var(--bad);
+}
+
+
+/* Authenticated areas: top bar, page container, tables, forms, cards. */
+body { display: flex; flex-direction: column; margin: 0; /* dvh, not vh: 100vh counts the browser chrome a phone does not show. */ min-height: 100vh; min-height: 100dvh; font-family: var(--body); font-size: var(--text-md); font-weight: 300; line-height: var(--lh-loose); color: var(--ink); background-color: var(--bg); }
+body > main { flex: 1; width: 100%; }
+.page-header { display: flex; flex-direction: column; align-items: flex-start; flex-wrap: wrap; gap: var(--s-12); margin-bottom: var(--space-lg); }
+@media (min-width: 769px) {
+  .page-header { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-md); }
+}
+/* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
+.dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
+.dashboard-card p { margin: 0; }
+/* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
+.tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
+.dashboard-section { margin-top: var(--space-xl); }
+.dashboard-section h2, .panel-head h2, .page > h2 { margin: 0 0 var(--space-md); }
+.page > h2 { margin-top: var(--space-md); }
+.panel { margin-top: var(--space-md); }
+.panel > .panel-head { display: flex; align-items: center; gap: var(--s-12); margin-bottom: var(--space-md); cursor: pointer; list-style: none; }
+.panel:not([open]) > .panel-head { margin-bottom: 0; }
+.panel-head::-webkit-details-marker { display: none; }
+.panel-head h2 { margin: 0; }
+/* a gallery waiting: the design system's card row that opens (ul.rows.is-cards > li.is-link, lit under the pointer),
+   its name and its clients on a line, its progress under them */
+ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--s-4) var(--space-md); }
+.pending-gallery-clients { position: relative; z-index: 1; }
+/* the design system's section that folds (details.fold), its chevron and its marker as it draws them; its line only as
+   wide as its words, on the right of a computer's row */
+.pending-gallery-clients > details > summary { display: inline-flex; width: fit-content; white-space: nowrap; }
+@media (min-width: 769px) {
+  .pending-gallery-clients { grid-column: 2; grid-row: 1; justify-self: end; max-width: 24rem; text-align: right; }
+  .pending-gallery-row:has(.pending-gallery-clients > details[open]) .pending-gallery-name, .pending-gallery-clients:has(> details[open]) { align-self: start; }
+}
+/* the quiet lines (a gallery's progress, a count, a hint, an empty bell) are the design system's .note.is-faint, in its
+   size for Vitrine; each rule below keeps only their place */
+.pending-gallery-progress { grid-column: 1 / -1; margin: 0; }
+.selection-cell { min-width: 130px; }
+.selection-cell-count { display: block; margin: 0; white-space: nowrap; }
+.selection-cell-value { display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
+@media (min-width: 769px) {
+  .selection-cell-value { display: block; }
+}
+/* --- The design system's tables (.tbl.is-cards): a row's buttons stack on a phone card, side by side on a computer;
+   a gallery's selection, its count and its bar on one line. */
+.tbl td.row-actions { display: flex; flex-direction: column; align-items: stretch; gap: var(--s-12); }
+.tbl td.row-actions .btn { width: 100%; }
+.selection-cell .meter { flex: 1; min-width: 40px; }
+@media (min-width: 769px) {
+  .tbl td.row-actions { display: table-cell; }
+  /* Inline, not flex: display:flex on a <td> drops its table-cell box and the
+       cell stops sharing its row height. */
+  .tbl .row-actions > form, .tbl .row-actions > details { display: inline-block; vertical-align: middle; }
+  .tbl td.row-actions .btn { width: auto; }
+  .tbl .row-actions > * + * { margin-left: var(--s-12); }
+  .selection-cell .meter { margin-top: var(--s-6); }
+}
+.section-actions { margin-bottom: var(--s-12); }
+/* A button whose form has gone: it spins until the page changes (confirm-submit.js). */
+.detail-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: var(--space-lg); }
+.detail-column { display: flex; flex-direction: column; min-width: 0; }
+.detail-column > .form-card, .detail-column > .export-card { flex: 1; max-width: none; margin-bottom: 0; }
+/* The design system's form card (.card.is-form): its column, its gaps and its reading width; Selecta adds the room under it. */
+.form-card { margin-bottom: var(--space-xl); }
+.card.form-card--inline { flex-direction: row; flex-wrap: wrap; align-items: flex-end; max-width: none; }
+.form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
+/* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
+.msg { margin: 0 0 var(--space-md); }
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+@media (min-width: 769px) {
+  .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
+}
+.photo-grid-toolbar .grid-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-12); }
+@media (min-width: 769px) {
+  .photo-grid-toolbar #bulk-delete { margin-right: auto; }
+}
+.danger-action { margin-bottom: var(--space-md); }
+.cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
+/* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
+.gallery-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--space-lg); }
+.gallery-card-progress { margin: 0; }
+.selection-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-bottom: var(--space-md); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+@media (min-width: 769px) {
+  .selection-toolbar { flex-direction: row; align-items: center; gap: var(--space-lg); }
+}
+.selection-toolbar-group { display: flex; align-items: center; gap: var(--s-12); }
+.selection-toolbar-group .btn { flex: 1; }
+@media (min-width: 769px) {
+  .selection-toolbar-group .btn { flex: 0 0 auto; }
+}
+.selection-stats { margin-right: auto; }
+.display-controls { display: flex; align-items: center; gap: var(--space-md); }
+@media (min-width: 769px) {
+  .display-controls { gap: var(--space-lg); }
+}
+.display-control { display: flex; align-items: center; min-width: 0; gap: var(--s-12); }
+.display-control:last-child { flex: 1 1 auto; }
+.display-control:last-child .zoom-slider { flex: 1; width: auto; min-width: 0; }
+@media (min-width: 769px) {
+  .display-control:last-child { flex: 0 0 auto; }
+  /* Basis, not width: the design system sets the slider's width. */
+  .display-control:last-child .zoom-slider { flex: 0 0 120px; }
+}
+.selection-hint { margin: 0 0 var(--space-md); }
+.gallery-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); align-items: start; }
+@media (min-width: 1025px) {
+  .gallery-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+}
+.selection-panel { order: -1; display: flex; flex-direction: column; gap: var(--s-12); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+@media (min-width: 1025px) {
+  .selection-panel { position: sticky; top: var(--space-md); order: 0; max-height: calc(100vh - var(--space-xl)); }
+}
+.selection-panel-count { margin: var(--s-4) 0 0; }
+.selection-panel-item { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: var(--s-12); scroll-snap-align: start; cursor: zoom-in; }
+@media (min-width: 1025px) {
+  .selection-panel-item { flex: 0 0 auto; }
+  .selection-panel-name { display: block; }
+}
+/* the arrows halfway down the photo's room, not the screen's: they take the stage's grid area, over Selecta's bar */
+#lightbox .viewer-prev, #lightbox .viewer-next { grid-area: 1 / 1 / 2 / 2; }
+.export-card { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-m); margin-bottom: var(--space-xl); }
+.export-options { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); }
+.export-card .btn { align-self: stretch; }
+@media (min-width: 769px) {
+  .export-card .btn { align-self: flex-start; }
+}
+.clients-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.clients-card > * { margin-top: 0; margin-bottom: 0; }
+.gallery-note { margin-top: var(--space-lg); margin-bottom: var(--space-lg); }
+.gallery-note-label { margin-bottom: var(--s-6); }
+.lightbox-comment { margin-top: var(--s-12); }
+.photo-comment-marker { position: absolute; top: var(--s-8); left: var(--s-8); pointer-events: none; }
+.selection-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-12) var(--space-md); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+.selection-status-text { flex: 1 1 240px; margin: 0; }
+.selection-status form { display: flex; flex: 1 1 100%; }
+.selection-status .btn { flex: 1; }
+@media (min-width: 769px) {
+  .selection-status form { flex: none; }
+}
+.client-response { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.client-response > * { margin-top: 0; margin-bottom: 0; }
+.client-response .export-card { max-width: none; margin-bottom: 0; }
+.client-response h3, .photo-notes h3, .detail-column-title { margin: 0 0 var(--s-12); }
+.response-block { display: flex; flex-direction: column; min-width: 0; }
+.response-block > .export-card, .response-block > .client-note-body { flex: 1; }
+.photo-notes { margin-top: var(--space-lg); }
+/* a client's note on a photo: the design system's card row (ul.rows.is-cards), the photo then the note */
+ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: var(--space-md); }
+.photo-note-body { flex: 1; min-width: 0; }
+.photo-note-kept { flex: 0 0 auto; align-self: center; margin-right: var(--s-8); }
+.page-greeting { flex: 0 0 100%; margin: 0 0 var(--s-4); }
+.notes-cell { white-space: nowrap; }
+.notes-gallery-marker { display: inline-block; margin-right: var(--s-6); /* on the middle of the count beside it: figures are as high as capitals, where middle is the small letters' (icon audit, 22 November 2026) */ vertical-align: calc((1cap - var(--pip-size, 7px)) / 2); }
+.photo-grid.filter-commented .photo-tile:not(.has-comment), .photo-grid.filter-selected .photo-tile:not(.is-selected) { display: none; }
+.notification-group + .notification-group { margin-top: var(--space-lg); }
+/* a day's heading over its notices, the first card row's own room under it (ul.rows.is-cards) */
+.notification-group h2 { margin: 0 0 var(--s-4); }
+.pending-gallery-activity { grid-column: 1 / -1; margin: 0; }
+@media (min-width: 769px) {
+  .pending-gallery-progress { grid-column: 1; }
+  .pending-gallery-activity { grid-column: 2; text-align: right; }
+}
+/* A text keeps its reading width, on the left like the title above it. */
+.client-welcome { margin: 0 0 var(--space-lg); white-space: pre-line; }
+/* the settings' cards across the page, not at the reading width of a form card */
+.card.settings-card { max-width: none; margin-bottom: var(--space-md); }
+.settings-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--space-md); }
+.settings-control { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-6); }
+.settings-zoom .zoom-slider { flex: 1; }
+.settings-secondary-action { margin-bottom: var(--space-md); }
+.settings-subtitle { margin: var(--space-lg) 0 var(--s-12); }
+.settings-subtitle ~ .tbl-wrap, .settings-subtitle ~ .empty-note { margin-bottom: var(--space-md); }
+.gallery-activity { gap: var(--s-12); }
+/* the gallery's activity: the design system's rows (ul.rows), one not read yet with its gold dot (li.is-unread), a
+   client selecting right now with the dot breathing (li.is-live) */
+/* the way to the whole history: the design system's (.go-link), at the card's foot */
+.gallery-activity > .go-link { align-self: flex-start; margin-top: auto; }
+/* --- The design system's top bar, solid (.topbar.is-solid: its white panel under a soft shadow), in Selecta's height and
+   spacing: its name in the display font's capitals, a little spaced. */
+.topbar { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-size: var(--text-lg); --brand-ls: var(--ls-loose); --brand-color: var(--ink); }
+.topbar-nav form { display: flex; }
+@media (min-width: 769px) {
+  .topbar { --topbar-px: var(--space-lg); }
+}
+@media (max-width: 480px) {
+  .topbar { --topbar-gap: var(--s-8); }
+}
+@media (min-width: 769px) {
+  .tbl th:not(:first-child), .tbl td:not(:first-child) { text-align: center; }
+}
+@media (min-width: 769px) {
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); --hero-t-size: var(--fs-36); }
+}
+/* A phone's table card: a cell's name on the left, all it holds together on the right (a gallery's notes, its count
+   and its bar). */
+@media (max-width: 768px) {
+  .tbl.is-cards td[data-label] { justify-content: flex-start; align-items: center; }
+  .tbl.is-cards td[data-label]::before { margin-right: auto; }
+  .tbl.is-cards td.selection-cell .selection-cell-value { flex: 0 1 60%; }
+}
+/* The design system's way back (.back-link), as far from what follows as Selecta's was: its own room (6px above and
+   under) is taken from the gap. */
+.back-link { margin-bottom: calc(var(--space-md) - var(--s-12)); }
+
+/* The design system's footer (.site-footer), in Selecta's letter spacing, clear of the notch and the home indicator;
+   its contact links (an icon then the words, as tall as a finger) are the design system's. */
+.site-footer {
+    --footer-ls: var(--ls-loose);
+    padding-right: calc(var(--s-20) + var(--safe-right));
+    padding-bottom: calc(var(--footer-py) + var(--safe-bottom));
+    padding-left: calc(var(--s-20) + var(--safe-left));
+}
+
+
+/* one link under the other on a phone */
+@media (max-width: 768px) {
+    .site-footer nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+}
+</style></head>
+<body data-image-urls="/client/galleries/1/image-urls"><!-- the showcase's copy of Selecta's client-galleries-1: made by scripts/gallery-pages.py, do not edit it -->
+<header class="topbar is-solid">
+<div class="topbar-in">
+<a class="topbar-brand" href="#">selecta</a>
+<nav class="topbar-nav">
+<nav aria-label="Langue" class="tabs lang-switch">
+<a href="#" title="English">EN</a>
+<a aria-current="page" href="#" title="Français">FR</a>
+</nav>
+<!-- Admin pages only: AdminPageAdvice puts the count in their model and nowhere else. -->
+<form action="#" method="post">
+<button class="topbar-icon" title="Déconnexion" type="submit">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-logout"></use></svg>
+<span class="visually-hidden">Déconnexion</span>
+</button>
+</form>
+</nav>
+</div>
+</header>
+<!-- The design system's short cover, its words at the bottom; without a photo, Selecta's beige (app.css). -->
+<header class="hero is-short is-bottom gallery-cover">
+<img alt="Mariage Léa et Hugo" class="hero-img" data-signed-image="cover" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/>
+<div class="hero-in">
+<h1 class="hero-t">Mariage Léa et Hugo</h1>
+<p class="hero-meta">12 septembre 2026</p>
+</div>
+</header>
+<main class="page">
+<a class="back-link" href="#">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-left"></use></svg> <span>Mes galeries</span></a>
+<div class="card selection-toolbar">
+<div class="stats selection-stats">
+<div class="stat">
+<span class="stat-value">36</span> <span class="stat-label">Photos</span>
+</div>
+<div class="stat is-accent">
+<span class="stat-value" id="selection-count">9</span> <span class="stat-label">Sélectionnées</span>
+</div>
+<div class="stat">
+<span class="stat-value">40</span> <span class="stat-label">Maximum</span>
+</div>
+</div>
+<div class="display-controls">
+<div class="display-control">
+<div aria-label="Affichage" class="tabs is-icons" id="layout-switch" role="group">
+<button aria-label="Grille" aria-pressed="true" data-layout="grid" title="Grille" type="button">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-gallery"></use></svg>
+</button>
+<button aria-label="Mosaïque" aria-pressed="false" data-layout="masonry" title="Mosaïque" type="button">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-layout"></use></svg>
+</button>
+</div>
+</div>
+<div class="display-control">
+<label class="toolbar-icon photogrid-zoom" for="zoom-slider" title="Taille des photos">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-search"></use></svg>
+<span class="visually-hidden">Taille des photos</span> </label> <input aria-valuetext="4 colonnes" class="zoom-slider" id="zoom-slider" max="3" min="0" step="1" type="range" value="2"/>
+</div>
+</div>
+<div class="selection-toolbar-group">
+<form action="#" method="post">
+<button class="btn is-save" type="submit">Terminer ma sélection</button>
+</form>
+</div>
+</div>
+<section class="field-group gallery-note" data-comment-url="/client/galleries/1/comment" data-str-autosave="Enregistré tout seul quand vous quittez le champ." data-str-error="Cette note n'a pas pu être enregistrée." data-str-saved="Enregistré." id="gallery-note">
+<label class="title-3 gallery-note-label" for="gallery-comment">Un mot sur cette galerie</label> <textarea id="gallery-comment" maxlength="2000" placeholder="Ce que vous souhaitez dire au photographe sur l'ensemble de la séance…" rows="2">Merci pour ces photos magnifiques.</textarea>
+<p class="field-note" id="gallery-comment-status">Enregistré tout seul quand vous quittez le champ.</p>
+</section>
+<p class="note is-faint selection-hint">Cliquez sur une photo pour l'agrandir, double-cliquez pour l'ajouter à votre sélection.</p>
+<div class="gallery-layout">
+<div class="photo-select-grid photogrid is-flush" data-comment-url-template="/client/galleries/1/photos/PHOTO_ID/comment" data-default-layout="grid" data-default-zoom="2" data-icon-close="/ds/icons-4.26.0.svg#i-close" data-locked="false" data-max="40" data-preview-url-template="/client/galleries/1/photos/PHOTO_ID/preview" data-str-count-capped-template="{0} / {1} photo(s) sélectionnée(s)" data-str-count-uncapped-template="{0} photo(s) sélectionnée(s)" data-str-generic="Une erreur est survenue, réessayez." data-str-limit="Vous avez atteint le nombre maximum de photos sélectionnables." data-str-locked="Votre sélection est terminée, rouvrez-la pour la modifier." data-str-preview-error="Impossible d'afficher cette photo en grand, réessayez." data-str-reopen="Rouvrir" data-str-select="Sélectionner cette photo" data-str-unselect="Retirer cette photo de la sélection" data-toggle-url-template="/client/galleries/1/photos/PHOTO_ID/toggle" id="photo-select-grid" style="--tile: 190px;">
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="0" data-photo-comment="Celle-ci en noir et blanc, s'il te plaît !" data-photo-id="1" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="1" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1000.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+<span class="pip is-ringed photo-comment-marker" title="Cette photo porte une note"></span>
+</div>
+<div class="photo-select-tile is-pickable" data-index="1" data-photo-id="2" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="2" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1001.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="2" data-photo-id="3" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="3" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1002.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="3" data-photo-id="4" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="4" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1003.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="4" data-photo-id="5" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="5" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1004.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="5" data-photo-id="6" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="6" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1005.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="6" data-photo-id="7" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="7" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1006.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="7" data-photo-id="8" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="8" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1007.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="8" data-photo-id="9" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="9" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1008.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="9" data-photo-id="10" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="10" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1009.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="10" data-photo-id="11" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="11" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1010.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="11" data-photo-id="12" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="12" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1011.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="12" data-photo-id="13" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="13" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1012.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="13" data-photo-id="14" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="14" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1013.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="14" data-photo-id="15" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="15" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1014.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="15" data-photo-id="16" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="16" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1015.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="16" data-photo-id="17" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="17" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1016.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="17" data-photo-id="18" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="18" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1017.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="18" data-photo-id="19" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="19" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1018.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="19" data-photo-id="20" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="20" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1019.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="20" data-photo-id="21" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="21" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1020.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="21" data-photo-id="22" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="22" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1021.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="22" data-photo-id="23" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="23" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1022.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="23" data-photo-id="24" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="24" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1023.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="24" data-photo-id="25" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="25" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1024.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="25" data-photo-id="26" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="26" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1025.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="26" data-photo-id="27" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="27" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1026.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="27" data-photo-id="28" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="28" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1027.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="28" data-photo-id="29" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="29" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1028.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="29" data-photo-id="30" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="30" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1029.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="30" data-photo-id="31" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="31" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1030.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="31" data-photo-id="32" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="32" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1031.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable is-selected is-picked" data-index="32" data-photo-id="33" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="33" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1032.jpg</span>
+<button class="like-btn liked" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="33" data-photo-id="34" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="34" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1033.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="34" data-photo-id="35" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="35" height="400" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="600"/> <span class="photo-select-name">IMG_1034.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<div class="photo-select-tile is-pickable" data-index="35" data-photo-id="36" data-photo-name="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" role="button" tabindex="0" title="Agrandir cette photo">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" data-signed-image="36" height="600" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" width="400"/> <span class="photo-select-name">IMG_1035.jpg</span>
+<button class="like-btn" title="Sélectionner cette photo" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+</div>
+<!-- Server-rendered, not built by JS: the selection is the one thing here that must survive the script not running. -->
+<aside class="card is-ruled selection-panel" id="selection-panel">
+<div class="selection-panel-head">
+<h2 class="title-3 is-caps selection-panel-title">Ma sélection</h2>
+<p class="note is-faint selection-panel-count" id="selection-panel-count">9 / 40 photo(s) sélectionnée(s)</p>
+</div>
+<p class="empty-note" hidden="" id="selection-panel-empty">Aucune photo sélectionnée pour le moment.</p>
+<ul class="selection-panel-list" id="selection-panel-list">
+<li class="selection-panel-item" data-index="0" data-photo-id="1">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="1" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1000.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="4" data-photo-id="5">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="5" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1004.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="8" data-photo-id="9">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="9" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1008.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="12" data-photo-id="13">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="13" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1012.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="16" data-photo-id="17">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="17" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1016.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="20" data-photo-id="21">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="21" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1020.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="24" data-photo-id="25">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="25" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1024.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="28" data-photo-id="29">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="29" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1028.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+<li class="selection-panel-item" data-index="32" data-photo-id="33">
+<img alt="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E" class="selection-panel-thumb" data-signed-image="33" loading="lazy" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23d8c39a'/%3E%3Cstop offset='1' stop-color='%238a7550'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='1200' height='800' fill='url(%23g)'/%3E%3C/svg%3E"/> <span class="selection-panel-name">IMG_1032.jpg</span>
+<button class="thumb-x selection-panel-remove" title="Retirer cette photo de la sélection" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-close"></use></svg></button>
+</li>
+</ul>
+</aside>
+</div>
+</main>
+<footer class="site-footer">
+<p>© 2026 Alexis Paoleschi – Nude Art Photographer</p>
+<nav>
+<a class="footer-link" href="#" rel="noopener noreferrer" target="_blank">alexispaoleschi.com</a>
+</nav>
+</footer>
+<!--
+  The design system's viewer (ds.viewer, ds-photo.js), with Selecta's bar under the photo: the name, the heart, the
+  note. The <img> has no src until a photo is opened: preview URLs are fetched one at a time, never rendered next to
+  the thumbnails. ds.viewer adds the spinner, and the count « 3 / 24 » over the photo's foot, read out as it changes.
+-->
+<div aria-label="Photos de la galerie" class="viewer" hidden="" id="lightbox">
+<div class="viewer-veil"></div>
+<div class="viewer-stage">
+<img alt="" id="lightbox-image"/>
+</div>
+<button aria-label="Fermer" class="viewer-btn viewer-close" title="Fermer" type="button"></button>
+<button aria-label="Photo précédente" class="viewer-btn viewer-prev" title="Photo précédente" type="button"></button>
+<button aria-label="Photo suivante" class="viewer-btn viewer-next" title="Photo suivante" type="button"></button>
+<div class="viewer-bar is-tools lightbox-bar">
+<div class="viewer-tools">
+<span class="viewer-name" id="lightbox-name"></span>
+<button class="like-btn lightbox-like" id="lightbox-like" type="button"><svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-heart"></use></svg></button>
+</div>
+<p class="viewer-hint">Flèches pour naviguer, espace pour sélectionner, Échap pour fermer.</p>
+<div class="lightbox-comment">
+<label class="visually-hidden" for="lightbox-comment">Note sur cette photo</label> <textarea id="lightbox-comment" maxlength="2000" placeholder="Une consigne sur cette photo…" rows="2"></textarea>
+<p class="field-note" id="lightbox-comment-status">Enregistré tout seul quand vous quittez le champ.</p>
+</div>
+</div>
+</div>
+<div class="toasts"><div aria-live="polite" class="visually-hidden" role="status"></div><div aria-live="assertive" class="visually-hidden" role="alert"></div></div></body></html>

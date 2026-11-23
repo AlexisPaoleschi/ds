@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html data-theme="vitrine" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<!-- The retry buttons of the storage failures send the token as a header, from these tags. -->
+
+
+<title>Les réglages · Kit galerie · Design system</title>
+
+
+
+<!-- The design system comes first, Selecta's own styles after it (see CLAUDE.md). -->
+<link href="dist/ds.css" rel="stylesheet"/>
+<script defer="defer" src="dist/ds.js"></script>
+
+
+
+
+
+
+
+<meta content="noindex" name="robots"/><style>/* Selecta's own placement (its stylesheets), around the design system's pieces */
+/* Selecta's own tokens, on top of the design system's (static/ds/, github.com/AlexisPaoleschi/ds).
+   Colours, text, spaces, corners, layers, durations, shadows and the page width all come from the design system;
+   only what it has no name for lives here, and always made of its tokens. */
+
+:root {
+    /* The three spaces that grow on a computer (--space-md, --space-lg, --space-xl) are the design system's, from 4.19.0. */
+
+    /* The four text sizes that grow one step on a computer (--text-md, --text-lg, --text-xl, --text-2xl) are the
+       design system's, from 2.39.0. */
+
+    /* One height for every control (a select, an input and a button have three different line boxes): Vitrine's
+       --control-h, 45px, the design system's. */
+
+    /* The design system's lasting message (.msg) in Selecta's text size and room. */
+    --msg-size: var(--fs-14);
+    --msg-py: var(--s-12);
+    --msg-px: var(--s-20);
+
+    /* The design system's line under a field (.field-note), where a refusal is written: in Selecta's text. */
+    --field-note-size: var(--fs-14);
+    --field-note-weight: 300;
+    --field-note-lh: var(--lh-ui);
+    --field-note-ls: normal;
+
+    /* The touch target, the veils over a photo and the notch's insets are the design system's (--touch-target,
+       --overlay-*, --safe-*). */
+}
+
+
+/* Document-level reset, loaded by every page right after tokens.css, after the design system. */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    /* clip and not hidden: hidden makes a scroll container, which would break the sticky selection panel. */
+    overflow-x: clip;
+}
+
+
+img,
+video,
+canvas {
+    max-width: 100%;
+}
+
+
+/* --- Selecta on the design system: its components, in the Vitrine theme (its soft gold line, --line, is Selecta's),
+   with Selecta's capitals. */
+
+/* Buttons: the design system's, in Vitrine's capitals; Selecta's height: as tall as a field, not the site's 63px. Its
+   small button's size is set in tokens.css. */
+.btn {
+    --btn-h: var(--control-h);
+    line-height: var(--lh-ui);
+}
+
+/* A lasting message: the design system's, in Selecta's weight and spacing (its size and room in tokens.css); a refusal
+   is written in red. */
+.msg {
+    font-weight: 500;
+    letter-spacing: var(--ls-loose);
+}
+
+.msg.is-bad {
+    color: var(--bad);
+}
+
+
+/* Authenticated areas: top bar, page container, tables, forms, cards. */
+body { display: flex; flex-direction: column; margin: 0; /* dvh, not vh: 100vh counts the browser chrome a phone does not show. */ min-height: 100vh; min-height: 100dvh; font-family: var(--body); font-size: var(--text-md); font-weight: 300; line-height: var(--lh-loose); color: var(--ink); background-color: var(--bg); }
+body > main { flex: 1; width: 100%; }
+.page-header { display: flex; flex-direction: column; align-items: flex-start; flex-wrap: wrap; gap: var(--s-12); margin-bottom: var(--space-lg); }
+@media (min-width: 769px) {
+  .page-header { flex-direction: row; align-items: baseline; justify-content: space-between; gap: var(--space-md); }
+}
+/* min(240px, 100%) in every auto-fit grid: a bare minimum wider than the container will not shrink. */
+.dashboard-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr)); gap: var(--space-lg); }
+.dashboard-card p { margin: 0; }
+/* The dashboard's figures: the design system's compact tiles, which Vitrine draws as the site's small cards. */
+.tiles.dashboard-metrics { margin: 0 0 var(--space-lg); }
+.dashboard-section { margin-top: var(--space-xl); }
+.dashboard-section h2, .panel-head h2, .page > h2 { margin: 0 0 var(--space-md); }
+.page > h2 { margin-top: var(--space-md); }
+.panel { margin-top: var(--space-md); }
+.panel > .panel-head { display: flex; align-items: center; gap: var(--s-12); margin-bottom: var(--space-md); cursor: pointer; list-style: none; }
+.panel:not([open]) > .panel-head { margin-bottom: 0; }
+.panel-head::-webkit-details-marker { display: none; }
+.panel-head h2 { margin: 0; }
+/* a gallery waiting: the design system's card row that opens (ul.rows.is-cards > li.is-link, lit under the pointer),
+   its name and its clients on a line, its progress under them */
+ul.rows.is-cards > li.pending-gallery-row { position: relative; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: var(--s-4) var(--space-md); }
+.pending-gallery-clients { position: relative; z-index: 1; }
+/* the design system's section that folds (details.fold), its chevron and its marker as it draws them; its line only as
+   wide as its words, on the right of a computer's row */
+.pending-gallery-clients > details > summary { display: inline-flex; width: fit-content; white-space: nowrap; }
+@media (min-width: 769px) {
+  .pending-gallery-clients { grid-column: 2; grid-row: 1; justify-self: end; max-width: 24rem; text-align: right; }
+  .pending-gallery-row:has(.pending-gallery-clients > details[open]) .pending-gallery-name, .pending-gallery-clients:has(> details[open]) { align-self: start; }
+}
+/* the quiet lines (a gallery's progress, a count, a hint, an empty bell) are the design system's .note.is-faint, in its
+   size for Vitrine; each rule below keeps only their place */
+.pending-gallery-progress { grid-column: 1 / -1; margin: 0; }
+.selection-cell { min-width: 130px; }
+.selection-cell-count { display: block; margin: 0; white-space: nowrap; }
+.selection-cell-value { display: flex; align-items: center; gap: var(--s-12); min-width: 0; }
+@media (min-width: 769px) {
+  .selection-cell-value { display: block; }
+}
+/* --- The design system's tables (.tbl.is-cards): a row's buttons stack on a phone card, side by side on a computer;
+   a gallery's selection, its count and its bar on one line. */
+.tbl td.row-actions { display: flex; flex-direction: column; align-items: stretch; gap: var(--s-12); }
+.tbl td.row-actions .btn { width: 100%; }
+.selection-cell .meter { flex: 1; min-width: 40px; }
+@media (min-width: 769px) {
+  .tbl td.row-actions { display: table-cell; }
+  /* Inline, not flex: display:flex on a <td> drops its table-cell box and the
+       cell stops sharing its row height. */
+  .tbl .row-actions > form, .tbl .row-actions > details { display: inline-block; vertical-align: middle; }
+  .tbl td.row-actions .btn { width: auto; }
+  .tbl .row-actions > * + * { margin-left: var(--s-12); }
+  .selection-cell .meter { margin-top: var(--s-6); }
+}
+.section-actions { margin-bottom: var(--s-12); }
+/* A button whose form has gone: it spins until the page changes (confirm-submit.js). */
+.detail-columns { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); gap: var(--space-lg); }
+.detail-column { display: flex; flex-direction: column; min-width: 0; }
+.detail-column > .form-card, .detail-column > .export-card { flex: 1; max-width: none; margin-bottom: 0; }
+/* The design system's form card (.card.is-form): its column, its gaps and its reading width; Selecta adds the room under it. */
+.form-card { margin-bottom: var(--space-xl); }
+.card.form-card--inline { flex-direction: row; flex-wrap: wrap; align-items: flex-end; max-width: none; }
+.form-card--inline .field-group { flex: 1; min-width: min(240px, 100%); }
+/* A lasting message (a finished selection, Brevo's state): the design system's, set apart from what follows. */
+.msg { margin: 0 0 var(--space-md); }
+.photo-grid-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-top: var(--space-md); }
+@media (min-width: 769px) {
+  .photo-grid-toolbar { flex-direction: row; align-items: center; justify-content: flex-end; gap: var(--space-lg); }
+}
+.photo-grid-toolbar .grid-filters { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-12); }
+@media (min-width: 769px) {
+  .photo-grid-toolbar #bulk-delete { margin-right: auto; }
+}
+.danger-action { margin-bottom: var(--space-md); }
+.cover-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.cover-preview-actions { position: absolute; right: var(--s-12); bottom: var(--s-12); z-index: 1; }
+/* the client's galleries: the design system's cards with a cover photo, as wide as the site's events */
+.gallery-card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--space-lg); }
+.gallery-card-progress { margin: 0; }
+.selection-toolbar { display: flex; flex-direction: column; flex-wrap: wrap; align-items: stretch; gap: var(--space-md); margin-bottom: var(--space-md); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+@media (min-width: 769px) {
+  .selection-toolbar { flex-direction: row; align-items: center; gap: var(--space-lg); }
+}
+.selection-toolbar-group { display: flex; align-items: center; gap: var(--s-12); }
+.selection-toolbar-group .btn { flex: 1; }
+@media (min-width: 769px) {
+  .selection-toolbar-group .btn { flex: 0 0 auto; }
+}
+.selection-stats { margin-right: auto; }
+.display-controls { display: flex; align-items: center; gap: var(--space-md); }
+@media (min-width: 769px) {
+  .display-controls { gap: var(--space-lg); }
+}
+.display-control { display: flex; align-items: center; min-width: 0; gap: var(--s-12); }
+.display-control:last-child { flex: 1 1 auto; }
+.display-control:last-child .zoom-slider { flex: 1; width: auto; min-width: 0; }
+@media (min-width: 769px) {
+  .display-control:last-child { flex: 0 0 auto; }
+  /* Basis, not width: the design system sets the slider's width. */
+  .display-control:last-child .zoom-slider { flex: 0 0 120px; }
+}
+.selection-hint { margin: 0 0 var(--space-md); }
+.gallery-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--space-lg); align-items: start; }
+@media (min-width: 1025px) {
+  .gallery-layout { grid-template-columns: minmax(0, 1fr) 300px; }
+}
+.selection-panel { order: -1; display: flex; flex-direction: column; gap: var(--s-12); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+@media (min-width: 1025px) {
+  .selection-panel { position: sticky; top: var(--space-md); order: 0; max-height: calc(100vh - var(--space-xl)); }
+}
+.selection-panel-count { margin: var(--s-4) 0 0; }
+.selection-panel-item { position: relative; display: flex; flex: 0 0 auto; align-items: center; gap: var(--s-12); scroll-snap-align: start; cursor: zoom-in; }
+@media (min-width: 1025px) {
+  .selection-panel-item { flex: 0 0 auto; }
+  .selection-panel-name { display: block; }
+}
+/* the arrows halfway down the photo's room, not the screen's: they take the stage's grid area, over Selecta's bar */
+#lightbox .viewer-prev, #lightbox .viewer-next { grid-area: 1 / 1 / 2 / 2; }
+.export-card { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-m); margin-bottom: var(--space-xl); }
+.export-options { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-md); }
+.export-card .btn { align-self: stretch; }
+@media (min-width: 769px) {
+  .export-card .btn { align-self: flex-start; }
+}
+.clients-card { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(280px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.clients-card > * { margin-top: 0; margin-bottom: 0; }
+.gallery-note { margin-top: var(--space-lg); margin-bottom: var(--space-lg); }
+.gallery-note-label { margin-bottom: var(--s-6); }
+.lightbox-comment { margin-top: var(--s-12); }
+.photo-comment-marker { position: absolute; top: var(--s-8); left: var(--s-8); pointer-events: none; }
+.selection-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-12) var(--space-md); /* a bar takes the site's lightest shadow */ --card-shadow: var(--shadow-soft); }
+.selection-status-text { flex: 1 1 240px; margin: 0; }
+.selection-status form { display: flex; flex: 1 1 100%; }
+.selection-status .btn { flex: 1; }
+@media (min-width: 769px) {
+  .selection-status form { flex: none; }
+}
+.client-response { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: var(--space-lg); align-items: stretch; margin-top: var(--space-md); }
+.client-response > * { margin-top: 0; margin-bottom: 0; }
+.client-response .export-card { max-width: none; margin-bottom: 0; }
+.client-response h3, .photo-notes h3, .detail-column-title { margin: 0 0 var(--s-12); }
+.response-block { display: flex; flex-direction: column; min-width: 0; }
+.response-block > .export-card, .response-block > .client-note-body { flex: 1; }
+.photo-notes { margin-top: var(--space-lg); }
+/* a client's note on a photo: the design system's card row (ul.rows.is-cards), the photo then the note */
+ul.rows.is-cards > li.photo-note { display: flex; align-items: flex-start; gap: var(--space-md); }
+.photo-note-body { flex: 1; min-width: 0; }
+.photo-note-kept { flex: 0 0 auto; align-self: center; margin-right: var(--s-8); }
+.page-greeting { flex: 0 0 100%; margin: 0 0 var(--s-4); }
+.notes-cell { white-space: nowrap; }
+.notes-gallery-marker { display: inline-block; margin-right: var(--s-6); /* on the middle of the count beside it: figures are as high as capitals, where middle is the small letters' (icon audit, 22 November 2026) */ vertical-align: calc((1cap - var(--pip-size, 7px)) / 2); }
+.photo-grid.filter-commented .photo-tile:not(.has-comment), .photo-grid.filter-selected .photo-tile:not(.is-selected) { display: none; }
+.notification-group + .notification-group { margin-top: var(--space-lg); }
+/* a day's heading over its notices, the first card row's own room under it (ul.rows.is-cards) */
+.notification-group h2 { margin: 0 0 var(--s-4); }
+.pending-gallery-activity { grid-column: 1 / -1; margin: 0; }
+@media (min-width: 769px) {
+  .pending-gallery-progress { grid-column: 1; }
+  .pending-gallery-activity { grid-column: 2; text-align: right; }
+}
+/* A text keeps its reading width, on the left like the title above it. */
+.client-welcome { margin: 0 0 var(--space-lg); white-space: pre-line; }
+/* the settings' cards across the page, not at the reading width of a form card */
+.card.settings-card { max-width: none; margin-bottom: var(--space-md); }
+.settings-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: var(--space-md); }
+.settings-control { display: flex; flex-direction: column; align-items: flex-start; gap: var(--s-6); }
+.settings-zoom .zoom-slider { flex: 1; }
+.settings-secondary-action { margin-bottom: var(--space-md); }
+.settings-subtitle { margin: var(--space-lg) 0 var(--s-12); }
+.settings-subtitle ~ .tbl-wrap, .settings-subtitle ~ .empty-note { margin-bottom: var(--space-md); }
+.gallery-activity { gap: var(--s-12); }
+/* the gallery's activity: the design system's rows (ul.rows), one not read yet with its gold dot (li.is-unread), a
+   client selecting right now with the dot breathing (li.is-live) */
+/* the way to the whole history: the design system's (.go-link), at the card's foot */
+.gallery-activity > .go-link { align-self: flex-start; margin-top: auto; }
+/* --- The design system's top bar, solid (.topbar.is-solid: its white panel under a soft shadow), in Selecta's height and
+   spacing: its name in the display font's capitals, a little spaced. */
+.topbar { --topbar-py: var(--s-12); --topbar-px: var(--space-md); --topbar-gap: var(--space-md); --brand-size: var(--text-lg); --brand-ls: var(--ls-loose); --brand-color: var(--ink); }
+.topbar-nav form { display: flex; }
+@media (min-width: 769px) {
+  .topbar { --topbar-px: var(--space-lg); }
+}
+@media (max-width: 480px) {
+  .topbar { --topbar-gap: var(--s-8); }
+}
+@media (min-width: 769px) {
+  .tbl th:not(:first-child), .tbl td:not(:first-child) { text-align: center; }
+}
+@media (min-width: 769px) {
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); --hero-t-size: var(--fs-36); }
+}
+/* A phone's table card: a cell's name on the left, all it holds together on the right (a gallery's notes, its count
+   and its bar). */
+@media (max-width: 768px) {
+  .tbl.is-cards td[data-label] { justify-content: flex-start; align-items: center; }
+  .tbl.is-cards td[data-label]::before { margin-right: auto; }
+  .tbl.is-cards td.selection-cell .selection-cell-value { flex: 0 1 60%; }
+}
+/* The design system's way back (.back-link), as far from what follows as Selecta's was: its own room (6px above and
+   under) is taken from the gap. */
+.back-link { margin-bottom: calc(var(--space-md) - var(--s-12)); }
+
+/* The design system's footer (.site-footer), in Selecta's letter spacing, clear of the notch and the home indicator;
+   its contact links (an icon then the words, as tall as a finger) are the design system's. */
+.site-footer {
+    --footer-ls: var(--ls-loose);
+    padding-right: calc(var(--s-20) + var(--safe-right));
+    padding-bottom: calc(var(--footer-py) + var(--safe-bottom));
+    padding-left: calc(var(--s-20) + var(--safe-left));
+}
+
+
+/* one link under the other on a phone */
+@media (max-width: 768px) {
+    .site-footer nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+}
+</style></head>
+<body><!-- the showcase's copy of Selecta's admin-settings: made by scripts/gallery-pages.py, do not edit it -->
+<header class="topbar is-solid">
+<div class="topbar-in">
+<a class="topbar-brand" href="#">selecta</a>
+<nav class="topbar-nav">
+<nav aria-label="Langue" class="tabs lang-switch">
+<a href="#" title="English">EN</a>
+<a aria-current="page" href="#" title="Français">FR</a>
+</nav>
+<!-- Admin pages only: AdminPageAdvice puts the count in their model and nowhere else. -->
+<div class="bell pop" data-read-all-url="/admin/notifications/read-all" data-read-url-template="/admin/notifications/ID/read" data-str-empty="Aucune notification pour l'instant." data-str-error="Impossible de charger les notifications." data-str-mark-read="Marquer comme lue" data-summary-url="/admin/notifications/summary" id="notification-bell">
+
+<button aria-controls="bell-panel" aria-expanded="false" aria-haspopup="true" class="topbar-icon bell-toggle" id="bell-toggle" title="Notifications" type="button">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-bell"></use></svg>
+<span class="visually-hidden">Notifications</span>
+<span class="pop-count bell-count" hidden="" id="bell-count">0</span>
+</button>
+<div class="pop-panel bell-panel" hidden="hidden" id="bell-panel">
+<div class="pop-head bell-panel-head">
+<span class="title-3 bell-panel-title">Notifications</span>
+<button class="bell-mark-all" disabled="" id="bell-mark-all" type="button">Tout marquer comme lu</button>
+</div>
+<ul class="bell-list" id="bell-list"></ul>
+<a class="pop-foot bell-see-all" href="#">Voir toutes les notifications</a>
+</div>
+</div>
+<a class="topbar-icon" href="#" title="Configuration">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-settings"></use></svg>
+<span class="visually-hidden">Configuration</span> </a>
+<form action="#" method="post">
+<button class="topbar-icon" title="Déconnexion" type="submit">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-logout"></use></svg>
+<span class="visually-hidden">Déconnexion</span>
+</button>
+</form>
+</nav>
+</div>
+</header>
+<main class="page">
+<a class="back-link" href="#">
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-arrow-left"></use></svg> <span>Espace admin</span></a>
+<div class="page-header">
+<h1 class="title-1">Configuration</h1>
+</div>
+<details class="panel fold is-lead" data-fold="selecta-settings-galleries" id="galleries" open="">
+<summary class="panel-head">
+<h2 class="title-2">Galeries</h2>
+</summary>
+<form action="#" class="card is-ruled is-form form-card settings-card" method="post">
+<div class="settings-row">
+<div class="field-group">
+<label class="field-label" for="defaultMaxSelectablePhotos">Photos incluses proposées à la création</label> <input id="defaultMaxSelectablePhotos" inputmode="numeric" min="1" name="defaultMaxSelectablePhotos" type="number" value=""/>
+<small class="field-note">Laissez vide pour ne rien proposer.</small>
+</div>
+<div class="field-group">
+<label class="field-label" for="defaultRawExtension">Extension RAW de l'export Lightroom</label> <input autocapitalize="characters" autocomplete="off" id="defaultRawExtension" maxlength="8" name="defaultRawExtension" pattern="\.?[A-Za-z0-9]{1,8}" required="required" spellcheck="false" type="text" value="CR3"/>
+</div>
+</div>
+<div class="acts">
+<button class="btn is-save" type="submit">Enregistrer</button>
+</div>
+</form>
+</details>
+<details class="panel fold is-lead" data-fold="selecta-settings-clients" id="clients" open="">
+<summary class="panel-head">
+<h2 class="title-2">Ce que voient les clients</h2>
+</summary>
+<form action="#" class="card is-ruled is-form form-card settings-card" method="post">
+<div class="field-group">
+<label class="field-label" for="clientWelcomeMessage">Mot d'accueil sur « Mes galeries »</label>
+<textarea id="clientWelcomeMessage" maxlength="1000" name="clientWelcomeMessage" rows="3"></textarea>
+<small class="field-note">Laissez vide pour ne rien afficher.</small>
+</div>
+<div class="settings-row">
+<div class="field-group">
+<label class="field-label" for="contactEmail">E-mail de contact</label> <input autocomplete="email" id="contactEmail" inputmode="email" name="contactEmail" type="email" value=""/>
+</div>
+<div class="field-group">
+<label class="field-label" for="contactPhone">Téléphone de contact</label> <input autocomplete="tel" id="contactPhone" inputmode="tel" maxlength="32" name="contactPhone" type="tel" value=""/>
+</div>
+</div>
+<small class="field-note">Affichés en bas des pages client.</small>
+<div class="settings-row">
+<div class="settings-control">
+<span class="field-label settings-label" id="layout-label">Affichage par défaut côté client</span>
+<div aria-labelledby="layout-label" class="tabs is-icons" role="radiogroup">
+<label title="Grille"> <input aria-label="Grille" checked="checked" class="visually-hidden" name="defaultClientLayout" type="radio" value="grid"/>
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-gallery"></use></svg>
+</label> <label title="Mosaïque"> <input aria-label="Mosaïque" class="visually-hidden" name="defaultClientLayout" type="radio" value="masonry"/>
+<svg aria-hidden="true" class="ico"><use href="dist/icons.svg#i-layout"></use></svg>
+</label>
+</div>
+<small class="field-note">Grille : des vignettes toutes de la même taille, recadrées, alignées en rangées. Mosaïque : chaque photo entière, dans ses proportions, en colonnes.</small>
+</div>
+<div class="settings-control">
+<label class="field-label settings-label" for="defaultClientZoom">Taille des photos par défaut côté client</label>
+<div class="settings-zoom">
+<svg aria-hidden="true" class="ico settings-zoom-icon"><use href="dist/icons.svg#i-search"></use></svg>
+<input class="zoom-slider" id="defaultClientZoom" max="4" min="1" name="defaultClientZoom" step="1" type="range" value="2"/>
+</div>
+<small class="field-note">La loupe que le client voit au-dessus de ses photos : à gauche, de petites vignettes et beaucoup de photos par ligne ; à droite, de grandes vignettes et moins de photos par ligne.</small>
+</div>
+</div>
+<small class="field-note">Un client qui choisit son propre affichage le garde : ces deux réglages ne valent que pour sa première visite.</small>
+<div class="acts">
+<button class="btn is-save" type="submit">Enregistrer</button>
+</div>
+</form>
+</details>
+<details class="panel fold is-lead" data-fold="selecta-settings-client-mails" id="client-mails" open="">
+<summary class="panel-head">
+<h2 class="title-2">Mails aux clients</h2>
+</summary>
+<form action="#" class="card is-ruled is-form form-card settings-card" method="post">
+<div class="checks">
+<label class="check"> <input name="clientMailWelcome" type="checkbox" value="true"/> <span>Mail de bienvenue à la création du compte</span> </label>
+<small class="check-hint">Envoyé quand vous créez le compte. Il donne l'adresse de connexion et le lien, jamais le mot de passe : vous le transmettez vous-même.</small>
+<label class="check"> <input name="clientMailPhotosReady" type="checkbox" value="true"/> <span>« Vos photos sont prêtes » quand une galerie est partagée</span> </label>
+<small class="check-hint">Envoyé quand vous associez le client à une galerie qui contient déjà des photos, une seule fois par galerie.</small>
+<label class="check"> <input name="clientMailReminder" type="checkbox" value="true"/> <span>Relance d'une sélection pas terminée</span> </label>
+<small class="check-hint">Une seule relance par galerie, quand la sélection n'est pas terminée et que personne n'y a touché depuis ce nombre de jours.</small>
+</div>
+<div class="field-group">
+<label class="field-label" for="clientMailReminderDays">Relancer au bout de (jours)</label> <input id="clientMailReminderDays" inputmode="numeric" max="90" min="1" name="clientMailReminderDays" required="required" type="number" value="7"/>
+<small class="field-note">1 client(s) recevrai(en)t la relance dès son activation avec ce délai.</small>
+</div>
+<small class="field-note">Brevo n'est pas configuré : rien ne part, même avec ces cases cochées.</small>
+<div class="acts">
+<button class="btn is-save" type="submit">Enregistrer</button>
+</div>
+</form>
+</details>
+<details class="panel fold is-lead" data-fold="selecta-settings-notifications" id="notifications" open="">
+<summary class="panel-head">
+<h2 class="title-2">Notifications</h2>
+</summary>
+<p class="msg is-bad">Brevo n'est pas configuré : définissez BREVO_API_KEY et BREVO_SENDER_EMAIL sur Render. Aucun mail ne part en attendant.</p>
+<form action="#" class="card is-ruled is-form form-card settings-card" method="post">
+<label class="check"> <input checked="checked" name="mailEnabled" type="checkbox" value="true"/> <span>M'envoyer un mail quand un client travaille sur une galerie</span> </label>
+<div class="field-group">
+<label class="field-label" for="mailRecipient">Adresse de destination</label>
+<input autocomplete="email" id="mailRecipient" inputmode="email" name="mailRecipient" type="email" value=""/>
+<small class="field-note">Laissez vide pour utiliser l'adresse de votre compte (admin@selecta.test).</small>
+</div>
+<div class="settings-row">
+<div class="field-group">
+<label class="field-label" for="mailQuietMinutes">Délai de calme (minutes)</label> <input id="mailQuietMinutes" inputmode="numeric" max="1440" min="5" name="mailQuietMinutes" required="required" type="number" value="30"/>
+<small class="field-note">Le mail part quand le client n'a plus rien fait depuis ce délai.</small>
+</div>
+<div class="field-group">
+<label class="field-label" for="mailMaxSessionMinutes">Plafond (minutes)</label>
+<input id="mailMaxSessionMinutes" inputmode="numeric" max="1440" min="5" name="mailMaxSessionMinutes" required="required" type="number" value="180"/>
+<small class="field-note">Il part quand même au bout de ce délai si le client ne s'arrête jamais.</small>
+</div>
+</div>
+<fieldset class="checks">
+<legend class="field-label">Ce qui envoie un mail</legend>
+<label class="check"> <input checked="checked" name="mailOnSelection" type="checkbox" value="true"/> <span>Les photos ajoutées ou retirées</span> </label> <label class="check"> <input checked="checked" name="mailOnComment" type="checkbox" value="true"/> <span>Les notes</span> </label> <label class="check"> <input checked="checked" name="mailOnCompletion" type="checkbox" value="true"/> <span>La fin de sélection, envoyée tout de suite</span> </label>
+</fieldset>
+<small class="field-note">La cloche reçoit tout, quels que soient ces réglages.</small>
+<div class="acts">
+<button class="btn is-save" type="submit">Enregistrer</button>
+</div>
+</form>
+</details>
+<details class="panel fold is-lead" data-fold="selecta-settings-storage" id="storage" open="">
+<summary class="panel-head">
+<h2 class="title-2">Stockage</h2>
+</summary>
+<form action="#" class="card is-ruled is-form form-card settings-card" method="post">
+<p class="settings-fact">Espace utilisé : 183,5 MB</p>
+<div class="field-group">
+<label class="field-label" for="storageAlertGigabytes">Prévenir au-delà de (Go)</label> <input id="storageAlertGigabytes" inputmode="numeric" min="1" name="storageAlertGigabytes" type="number" value=""/>
+<small class="field-note">Une notification et un mail, une seule fois tant que l'espace reste au-dessus.</small>
+</div>
+<div class="acts">
+<button class="btn is-save" type="submit">Enregistrer</button>
+</div>
+</form>
+<h3 class="title-3 settings-subtitle">Échecs de suppression Bunny</h3>
+<p class="empty-note is-box" id="deletion-failures-empty">Aucun échec en attente.</p>
+<div class="acts section-actions" hidden="hidden" id="deletion-failures-actions">
+<button class="btn is-act" data-retry-all-url="/admin/bunny-deletion-log/retry-all" id="retry-all-deletions" type="button">Tout réessayer</button>
+</div>
+<div class="tbl-wrap is-card">
+</div>
+</details>
+<details class="panel fold is-lead" data-fold="selecta-settings-security" id="security" open="">
+<summary class="panel-head">
+<h2 class="title-2">Sécurité</h2>
+</summary>
+<div class="card is-ruled is-form form-card settings-card">
+<dl class="facts">
+<div><dt>Session admin</dt>
+<dd>7 jours sans activité</dd></div>
+<div><dt>Session client</dt>
+<dd>30 jours sans activité</dd></div>
+<div><dt>Blocage du compte</dt>
+<dd>Après 5 échecs, pendant 15 min, doublé à chaque blocage suivant</dd></div>
+</dl>
+<small class="field-note">En lecture seule : une erreur ici pourrait vous enfermer dehors. Ces valeurs se changent dans la configuration de l'application.</small>
+</div>
+</details>
+</main>
+<footer class="site-footer">
+<p>© 2026 Alexis Paoleschi – Nude Art Photographer</p>
+<nav>
+<a class="footer-link" href="#" rel="noopener noreferrer" target="_blank">alexispaoleschi.com</a>
+</nav>
+</footer>
+<div class="toasts"><div aria-live="polite" class="visually-hidden" role="status"></div><div aria-live="assertive" class="visually-hidden" role="alert"></div></div></body></html>

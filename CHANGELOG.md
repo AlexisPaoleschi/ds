@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.26.0 · 23 novembre 2026
+
+Ce que Bank et Selecta dessinaient encore eux-mêmes passe dans ds : les trois applis ne dessinent plus rien à elles (Bank 0, Studio 1, Selecta 0, au lieu de 34 et 26, 19, 135).
+
+- Les réglages de Bank : `.pair` (une règle : ce qu’elle reconnaît, où elle range, sa note dessous ; `.is-off` barrée quand elle est gardée sans servir), `.fold-t` et `.fold-d` (le titre en or d’un groupe qui se plie et sa phrase), `.groups` (des blocs l’un sous l’autre, séparés d’un filet), `.apart` (un bloc à part sous un filet), et dans un tableau `tr.is-cont` (une ligne qui continue celle du dessus).
+- Le kit galerie (`src/gallery.css`) : ce qu’une appli qui montre les galeries d’un photographe à ses clients dessine, repris de Selecta tel qu’il le dessinait (rien ne bouge sur ses pages, captures avant et après) : sa page (`.page`) et sa page de connexion (`.auth-page`), les galeries en attente, l’erreur d’une ligne, l’adresse d’une galerie, un chiffre dans une ligne, les boutons d’une couverture, l’icône discrète d’une barre d’outils, les tuiles à choisir et leur cœur (`.like-btn`, son battement), les photos choisies, l’export d’une sélection, la note d’une cliente et les notes sur les photos, les notifications de la cloche, un curseur entre deux icônes, le pied de page et ses liens de contact, la couverture d’une galerie sans photo. Le cœur prend les tailles des pictogrammes de ds (24 et 32px, au lieu de 26 et 32), et les photos choisies passent en colonne à 1024px comme le reste de ds.
+- La vitrine montre le kit galerie : une copie de chaque page de Selecta dessinée par `dist/` (`gallery-*.html`, faites par `scripts/gallery-pages.py`, ses photos remplacées par un fond doré) et une carte « Kit galerie » pour les états que ses données de démonstration n’ont pas. `checks/coverage.js` les parcourt.
+
 ## 4.25.0 · 23 novembre 2026
 
 La fenêtre, le choix dans une liste et les réglages passent dans les fichiers communs, et ds reprend ce que Bank et Studio dessinaient encore eux-mêmes.

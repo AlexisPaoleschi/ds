@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr" data-theme="vitrine">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Kit galerie · Design system</title>
+<link rel="stylesheet" href="dist/ds.css">
+<script src="dist/ds.js" defer></script>
+</head>
+<!-- The gallery kit (src/gallery.css) in the Vitrine theme, which Selecta wears: the states its demo data does not have,
+     and the way to a copy of each of its pages, drawn by ds (scripts/gallery-pages.py). -->
+<body>
+<main class="page">
+  <p><a class="back-link" href="index.html">Design system</a></p>
+    <div class="card" id="gallery-demo"><h3 class="ct">Kit galerie · ce qu’une appli de galeries dessine (Selecta)</h3>
+      <p class="note">Les pages de Selecta dessinées par ds : <a class="link" href="gallery-login.html">la connexion</a>, <a class="link" href="gallery-dashboard.html">le tableau de bord</a>,
+        <a class="link" href="gallery-list.html">les galeries</a>, <a class="link" href="gallery-detail.html">une galerie</a>, <a class="link" href="gallery-notices.html">les notifications</a>,
+        <a class="link" href="gallery-settings.html">les réglages</a>, <a class="link" href="gallery-client.html">la galerie d’une cliente</a>.</p>
+      <section class="hero is-short is-bottom gallery-cover gallery-cover--placeholder"><div class="hero-in"><h2 class="hero-t">Mariage à Lyon</h2></div></section>
+      <ul class="rows is-cards"><li class="pending-gallery-row"><a class="pending-gallery-name" href="#">Portraits d’hiver</a>
+        <div class="pending-gallery-clients pending-gallery-clients--empty">Aucune cliente pour l’instant</div></li></ul>
+      <p class="row-error">L’envoi vers le stockage a échoué : nouvel essai dans une minute.</p>
+      <p><a class="notification-filter" href="#">Seulement les non lues</a></p>
+      <ul class="bell-list"><li class="bell-item is-unread"><a class="bell-item-body" href="#"><span class="bell-item-title">Léa a fini sa sélection</span>
+        <span class="bell-item-detail">Mariage à Lyon · 42 photos</span><span class="bell-item-time">il y a 2 h</span></a><button class="bell-item-read" type="button" aria-label="Marquer comme lue"></button></li></ul>
+      <p class="bell-empty">Aucune notification.</p>
+    </div>
+</main>
+</body>
+</html>

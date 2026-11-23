@@ -26,7 +26,8 @@ const EXCEPT = {
 (async () => {
   await new Promise(ok => server.listen(0, '127.0.0.1', ok));
   const base = 'http://127.0.0.1:' + server.address().port, seen = new Set(), calls = new Set(), b = await chromium.launch();
-  const pages = ['index.html', 'settings.html', 'site.html', 'site-home.html', 'site-event.html', 'site-senegal.html', 'site-events.html', 'site-newsletter.html', 'site-doc.html'];
+  const pages = ['index.html', 'settings.html', 'site.html', 'site-home.html', 'site-event.html', 'site-senegal.html', 'site-events.html', 'site-newsletter.html', 'site-doc.html',
+    'gallery.html', 'gallery-login.html', 'gallery-dashboard.html', 'gallery-list.html', 'gallery-detail.html', 'gallery-notices.html', 'gallery-settings.html', 'gallery-client.html'];
   for (const page of pages) for (const w of [1440, 390]) {
     const p = await b.newPage({ viewport: { width: w, height: 900 } });
     await p.addInitScript(() => {

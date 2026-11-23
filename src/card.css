@@ -68,6 +68,10 @@
   /* sections that fold, one under the other (Bank's rules, by who made them): a line between them, room around each
      title: <div class="folds"><details class="fold">… */
   .folds > details.fold { border-top: 1px solid var(--line); }
+  /* a group's title in its summary, in gold (who made the rules), and what it is under it, before its lines (4.26.0):
+     <summary><span class="fold-t">Apprises</span><span class="fold-n">12</span></summary><p class="fold-d">… */
+  .fold-t { font: 700 var(--fs-13)/var(--lh-tight) var(--display); color: var(--accent); }
+  .fold-d { margin: 0 0 var(--s-6); font-size: var(--fs-13); color: var(--dim); }
   .folds > details.fold:first-child { border-top: none; }
   .folds > details.fold > summary { padding-block: var(--s-12); }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }

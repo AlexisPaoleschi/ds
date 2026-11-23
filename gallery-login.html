@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+
+<html data-theme="vitrine" lang="fr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>La connexion · Kit galerie · Design system</title>
+
+
+
+<!-- The design system comes first, Selecta's own styles after it (see CLAUDE.md). -->
+<link href="dist/ds.css" rel="stylesheet"/>
+<script defer="defer" src="dist/ds.js"></script>
+
+
+
+
+<meta content="noindex" name="robots"/><style>/* Selecta's own placement (its stylesheets), around the design system's pieces */
+/* Selecta's own tokens, on top of the design system's (static/ds/, github.com/AlexisPaoleschi/ds).
+   Colours, text, spaces, corners, layers, durations, shadows and the page width all come from the design system;
+   only what it has no name for lives here, and always made of its tokens. */
+
+:root {
+    /* The three spaces that grow on a computer (--space-md, --space-lg, --space-xl) are the design system's, from 4.19.0. */
+
+    /* The four text sizes that grow one step on a computer (--text-md, --text-lg, --text-xl, --text-2xl) are the
+       design system's, from 2.39.0. */
+
+    /* One height for every control (a select, an input and a button have three different line boxes): Vitrine's
+       --control-h, 45px, the design system's. */
+
+    /* The design system's lasting message (.msg) in Selecta's text size and room. */
+    --msg-size: var(--fs-14);
+    --msg-py: var(--s-12);
+    --msg-px: var(--s-20);
+
+    /* The design system's line under a field (.field-note), where a refusal is written: in Selecta's text. */
+    --field-note-size: var(--fs-14);
+    --field-note-weight: 300;
+    --field-note-lh: var(--lh-ui);
+    --field-note-ls: normal;
+
+    /* The touch target, the veils over a photo and the notch's insets are the design system's (--touch-target,
+       --overlay-*, --safe-*). */
+}
+
+
+/* Document-level reset, loaded by every page right after tokens.css, after the design system. */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+
+    /* clip and not hidden: hidden makes a scroll container, which would break the sticky selection panel. */
+    overflow-x: clip;
+}
+
+
+img,
+video,
+canvas {
+    max-width: 100%;
+}
+
+
+/* --- Selecta on the design system: its components, in the Vitrine theme (its soft gold line, --line, is Selecta's),
+   with Selecta's capitals. */
+
+/* Buttons: the design system's, in Vitrine's capitals; Selecta's height: as tall as a field, not the site's 63px. Its
+   small button's size is set in tokens.css. */
+.btn {
+    --btn-h: var(--control-h);
+    line-height: var(--lh-ui);
+}
+
+/* A lasting message: the design system's, in Selecta's weight and spacing (its size and room in tokens.css); a refusal
+   is written in red. */
+.msg {
+    font-weight: 500;
+    letter-spacing: var(--ls-loose);
+}
+
+.msg.is-bad {
+    color: var(--bad);
+}
+
+
+/* Authentication pages (login, change password), built on the design system and tokens.css. */
+body { margin: 0; /* dvh: with vh the page is taller than the screen and the footer never sits at its foot. */ min-height: 100vh; min-height: 100dvh; display: flex; flex-direction: column; /* its children take the whole width (the footer from edge to edge); the form stays in the middle by its own margins */ align-items: stretch; font-family: var(--body); font-size: var(--text-md); font-weight: 300; line-height: var(--lh-loose); color: var(--ink); background-color: var(--bg); }
+.auth-form { display: flex; flex-direction: column; gap: var(--space-md); }
+/* The design system's card title (.card-title), centred on the form. */
+.auth-form .card-title { text-align: center; }
+/* its labels: the design system's (.field-label) */
+/* A label over the design system's field, as it draws it; the column stretches the field across the form. */
+/* The design system's large button (.btn.is-large): the one thing to press on the page, across the form. */
+.auth-form .btn { width: 100%; margin-top: var(--s-8); }
+.auth-language-switch { display: flex; justify-content: center; margin-top: var(--space-lg); }
+
+/* The design system's footer (.site-footer), in Selecta's letter spacing, clear of the notch and the home indicator;
+   its contact links (an icon then the words, as tall as a finger) are the design system's. */
+.site-footer {
+    --footer-ls: var(--ls-loose);
+    padding-right: calc(var(--s-20) + var(--safe-right));
+    padding-bottom: calc(var(--footer-py) + var(--safe-bottom));
+    padding-left: calc(var(--s-20) + var(--safe-left));
+}
+
+
+/* one link under the other on a phone */
+@media (max-width: 768px) {
+    .site-footer nav {
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+}
+</style></head>
+<body><!-- the showcase's copy of Selecta's login: made by scripts/gallery-pages.py, do not edit it -->
+<main class="auth-page">
+<form action="#" class="card is-ruled auth-form" method="post">
+<h1 class="card-title">Connexion</h1>
+<!-- Shown on arrival in the design system's bubble (ds.js shows template[data-toast] itself), like the messages of fragments/toast.html. -->
+<div class="field-group">
+<label class="field-label" for="username">Adresse e-mail</label> <input autocapitalize="none" autocomplete="username" id="username" inputmode="email" name="username" required="required" spellcheck="false" type="email"/>
+</div>
+<div class="field-group">
+<label class="field-label" for="password">Mot de passe</label> <input autocomplete="current-password" id="password" name="password" required="required" type="password"/>
+</div>
+<button class="btn is-save is-large" type="submit">Se connecter</button>
+</form>
+<nav class="auth-language-switch">
+<nav aria-label="Langue" class="tabs lang-switch">
+<a href="#" title="English">EN</a>
+<a aria-current="page" href="#" title="Français">FR</a>
+</nav>
+</nav>
+</main>
+<footer class="site-footer">
+<p>© 2026 Alexis Paoleschi – Nude Art Photographer</p>
+<nav>
+<a class="footer-link" href="#" rel="noopener noreferrer" target="_blank">alexispaoleschi.com</a>
+</nav>
+</footer>
+<div class="toasts"><div aria-live="polite" class="visually-hidden" role="status"></div><div aria-live="assertive" class="visually-hidden" role="alert"></div></div></body></html>

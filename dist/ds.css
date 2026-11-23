@@ -1,4 +1,4 @@
-/* ds 4.25.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.26.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -930,6 +930,10 @@
   /* sections that fold, one under the other (Bank's rules, by who made them): a line between them, room around each
      title: <div class="folds"><details class="fold">… */
   .folds > details.fold { border-top: 1px solid var(--line); }
+  /* a group's title in its summary, in gold (who made the rules), and what it is under it, before its lines (4.26.0):
+     <summary><span class="fold-t">Apprises</span><span class="fold-n">12</span></summary><p class="fold-d">… */
+  .fold-t { font: 700 var(--fs-13)/var(--lh-tight) var(--display); color: var(--accent); }
+  .fold-d { margin: 0 0 var(--s-6); font-size: var(--fs-13); color: var(--dim); }
   .folds > details.fold:first-child { border-top: none; }
   .folds > details.fold > summary { padding-block: var(--s-12); }
   details.fold .fold-n { font: 500 var(--fs-12)/var(--lh-tight) var(--mono); color: var(--faint); letter-spacing: 0; text-transform: none; }
@@ -1355,6 +1359,8 @@
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  /* a row that goes on from the one above it (an operation's category under it, 4.26.0): no room above, close to it */
+  .tbl tr.is-cont > td { padding-top: 0; }
   .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   /* a dense table of figures (Studio's people, a column a network): tighter rows, its cells in the quieter mono, flush
      left; the name column stays in the words' font (.tbl-name) */
@@ -1599,6 +1605,31 @@
   .parts > div > span:last-child { font: 500 var(--fs-13)/var(--lh-text) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .parts > .is-head > span:last-child { font-weight: 600; color: var(--ink); }
   .parts > .is-good, .parts > .is-good > span:last-child { color: var(--good); }
+
+/* Lines of pairs (a rule: the merchant and where it goes, a note under it, 4.26.0): .pair, a hairline above it; .pair-k
+   what it is, bold, its <small> in mono; .pair-v where it goes, on the right (a.pair-v a link, in gold); .pair-n the note
+   under it, small and faint (.is-wide across the line); .pair.is-off a line kept but not used, struck through.
+   <div class="pair"><span class="pair-k">Super U <small>SUPER U</small></span><span class="pair-v">Courses</span><span class="pair-n">Dépense</span></div> */
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-2) var(--s-12); padding: var(--s-8) 0; border-top: 1px solid var(--line); }
+  .pair-k { min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .pair-k small { margin-left: var(--s-6); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--faint); }
+  .pair-v { text-align: right; color: var(--dim); }
+  a.pair-v { color: var(--accent); font-variant-numeric: tabular-nums; text-decoration: none; }
+  a.pair-v:hover { text-decoration: underline; }
+  .pair-n { font-size: var(--fs-12); color: var(--faint); }
+  .pair-n.is-wide { grid-column: 1 / -1; }
+  .pair.is-off :is(.pair-k, .pair-v) { color: var(--faint); text-decoration: line-through; }
+  .pair.is-off .pair-n { color: var(--mid); }
+@media (max-width: 768px) {
+  /* on a phone, one under the other, where it goes on the left */
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair-v { text-align: left; }
+}
+/* blocks one under the other, split by a hairline (a bank and its accounts): <div class="groups"><div>…</div><div>… ;
+   and a block set apart under a hairline (what was taken away, under the list): <div class="apart"> (4.26.0) */
+  .groups > * { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
+  .groups > :first-child { border-top: none; }
+  .apart { padding-top: var(--s-10); border-top: 1px solid var(--line); }
 /* The pieces of a public site, taken from alexispaoleschi.com: a badge, a section's head, the footer (the card's parts
    are in card.css).
    Selecta and the site use them; in atelier they take atelier's fonts and colours. */
@@ -1942,6 +1973,138 @@
 @media (prefers-reduced-motion: reduce) {
   .dropzone, .tile-acts, button.box.on-photo, .photogrid > .is-pickable::after, .thumb-x { transition: none; }
 }
+/* The gallery kit (4.26.0): what an app that shows a photographer's galleries to clients draws, taken from Selecta as it
+   drew it, so that nothing moved on its pages. Its page (.page) and its sign-in page (.auth-page, .auth-form);
+   the galleries waiting (.pending-gallery-*: the name over the whole card row, its clients that fold); a row's error
+   (.row-error), an address's last part (.slug-value), a figure in a line (.metric-inline); a cover's buttons while it
+   works (.cover-preview); a toolbar's quiet icon (.toolbar-icon); the client's tiles to choose from (.photo-select-*)
+   and their heart (.like-btn, .liked, .lightbox-like, its beat); the photos chosen (.selection-panel-*); the export of a
+   selection (.export-*); a tile with a note (.has-comment), the client's note (.client-note-body) and the notes on
+   photos (.photo-note-*, .notes-none, .notes-count); the bell's notices (.bell-*); a slider between two icons
+   (.settings-zoom), a setting said in a sentence (.settings-fact), a filter of notices (.notification-filter); a
+   gallery's cover with no photo yet (.gallery-cover). */
+.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space-lg); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-lg); padding-left: calc(var(--space-md) + var(--safe-left)); }
+@media (min-width: 769px) {
+  .page { padding-top: var(--space-xl); padding-right: calc(var(--space-lg) + var(--safe-right)); padding-bottom: var(--space-xl); padding-left: calc(var(--space-lg) + var(--safe-left)); }
+}
+@media (hover: hover) {
+  .panel-head:hover h2 { color: var(--accent); }
+}
+.pending-gallery-name { grid-column: 1; min-width: 0; overflow-wrap: anywhere; font-weight: 500; text-decoration: none; color: var(--ink); }
+.pending-gallery-name::after { content: ""; position: absolute; inset: 0; }
+.pending-gallery-name:hover { color: var(--accent); }
+.pending-gallery-clients { grid-column: 1 / -1; min-width: 0; font-size: var(--fs-14); color: var(--faint); text-align: left; }
+.pending-gallery-clients > details > summary:hover { color: var(--accent); }
+.pending-gallery-client-list { margin: var(--s-4) 0; padding: 0; list-style: none; overflow-wrap: break-word; }
+.pending-gallery-clients--empty { font-style: italic; }
+.row-error { font-size: var(--fs-14); color: var(--bad); }
+.slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--fs-14); color: var(--faint); }
+.metric-inline { font-size: var(--text-md); font-weight: 500; color: var(--ink); }
+.cover-preview.is-busy .cover-preview-actions { opacity: 0; pointer-events: none; }
+.toolbar-icon { display: flex; align-items: center; color: var(--faint); cursor: pointer; }
+.toolbar-icon svg { display: block; width: var(--ico-m); height: var(--ico-m); }
+.photo-select-tile { position: relative; overflow: hidden; background: var(--ink); cursor: zoom-in; transform-origin: top left; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+.photo-select-tile:focus-visible { outline: var(--focus); outline-offset: calc(-1 * var(--focus-offset)); }
+.photo-select-name { position: absolute; right: 0; bottom: 0; left: 0; z-index: 1; padding: var(--s-20) var(--s-10) calc(var(--s-14) / 2); overflow: hidden; font-size: var(--fs-11); font-weight: 400; text-overflow: ellipsis; white-space: nowrap; color: var(--white); text-shadow: var(--shadow-pop); background: linear-gradient(to top, var(--overlay-black-medium), transparent); pointer-events: none; letter-spacing: var(--ls-loose); }
+@media (hover: hover) {
+  .photo-select-tile:hover img { transform: scale(1.04); }
+}
+.like-btn { position: absolute; top: var(--s-12); right: var(--s-12); z-index: 1; width: 36px; height: 36px; padding: 0; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; filter: drop-shadow(var(--shadow-pop)); }
+/* the heart of the sprite, white over the photo, filled red once chosen */
+.like-btn .ico { width: var(--picto-s); height: var(--picto-s); color: var(--white); transition: transform var(--t-fast) ease; }
+.like-btn.liked .ico { color: var(--bad); fill: currentColor; }
+@media (hover: hover) {
+  .like-btn:hover .ico { transform: scale(1.1); }
+}
+.like-btn:active .ico { transform: scale(0.95); }
+.like-btn.lightbox-like .ico { width: var(--picto-m); height: var(--picto-m); }
+.like-btn.liked { animation: heartBeat calc(var(--t-mid) * 2) ease; }
+.like-btn:disabled { cursor: not-allowed; opacity: 0.6; }
+/* the photos chosen: a column of small photos with their names on a computer, a row of larger ones that scrolls sideways
+   on a phone and a tablet */
+.selection-panel-list { display: flex; flex-direction: column; gap: var(--s-6); margin: 0; padding: 0 var(--s-12) 0 0; overflow-x: hidden; overflow-y: auto; scroll-snap-type: none; scrollbar-gutter: stable; list-style: none; }
+.selection-panel-thumb { flex: 0 0 auto; width: 48px; height: 48px; object-fit: cover; }
+.selection-panel-name { display: none; flex: 1; min-width: 0; overflow: hidden; font-size: var(--fs-14); text-overflow: ellipsis; white-space: nowrap; color: var(--ink); }
+@media (max-width: 1024px) {
+  .selection-panel-list { flex-direction: row; gap: var(--s-12); padding: var(--s-10) var(--s-10) var(--s-4) 0; overflow-x: auto; overflow-y: hidden; scroll-snap-type: x proximity; -webkit-overflow-scrolling: touch; scrollbar-gutter: auto; }
+  .selection-panel-thumb { width: 84px; height: 84px; }
+}
+.like-btn.lightbox-like { position: static; width: 44px; height: 44px; }
+@keyframes heartBeat {
+    0% {
+        transform: scale(1);
+    }
+    25% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    75% {
+        transform: scale(1.15);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.export-count { margin: 0; font-size: var(--fs-14); letter-spacing: var(--ls-caps); text-transform: uppercase; color: var(--faint); }
+.export-option { display: flex; align-items: center; gap: var(--s-8); font-size: var(--fs-14); cursor: pointer; }
+/* A short field beside a label: 8px inside, for an extension to fit in its 90px. */
+.export-raw-extension { --field-py: var(--s-8); --field-px: var(--s-10); width: 90px; letter-spacing: var(--ls-caps); text-transform: uppercase; }
+.export-text { flex: 1; width: 100%; min-height: 96px; padding: var(--s-12) var(--s-14); font-family: var(--mono); line-height: var(--lh-text); resize: vertical; }
+@media (min-width: 769px) {
+  .export-text { font-size: var(--fs-14); }
+}
+/* --- Touch targets: 44px floor on coarse pointers. */
+@media (max-width: 768px), (pointer: coarse) {
+  .pending-gallery-name { display: flex; align-items: center; min-height: var(--touch-target); }
+  .pending-gallery-clients > details > summary { min-height: var(--touch-target); }
+  .toolbar-icon { justify-content: center; min-width: var(--touch-target); min-height: var(--touch-target); }
+  .like-btn { top: var(--s-8); right: var(--s-8); width: var(--touch-target); height: var(--touch-target); }
+  .export-option { min-height: var(--touch-target); }
+  .export-option input[type='checkbox'] { width: 20px; height: 20px; }
+  .export-raw-extension { min-height: var(--touch-target); }
+}
+.photo-tile.has-comment { box-shadow: inset 0 0 0 1px var(--accent-strong); }
+.client-note-body { flex: 1; margin: 0; padding: var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; background: var(--panel); border-left: 2px solid var(--accent-strong); border-radius: 0 var(--r-m) var(--r-m) 0; }
+.photo-note-thumb { flex: 0 0 auto; width: 72px; height: 72px; object-fit: cover; background: var(--ink); }
+.photo-note-name { margin: 0 0 var(--s-4); font-family: var(--mono); font-size: var(--fs-11); color: var(--accent-strong); overflow-wrap: anywhere; }
+.photo-note-text { margin: 0; font-size: var(--fs-14); line-height: var(--lh-text); color: var(--ink); white-space: pre-wrap; }
+.notes-none { color: var(--faint); }
+.notes-count { font-weight: 500; color: var(--ink); }
+/* --- Bell, notifications page, settings screen. The bell is the design system's panel under a button of the top bar
+   (.pop, .pop-panel, .pop-head, .pop-foot, its figure .pop-count); Selecta draws only its lines. */
+.topbar-nav .bell-item-body { display: flex; flex: 1; flex-direction: column; gap: var(--s-2); min-width: 0; padding: var(--s-12) var(--space-md); font-size: var(--fs-14); line-height: var(--lh-text); letter-spacing: normal; text-transform: none; text-align: left; }
+.topbar-nav .bell-item-read { flex: none; width: var(--touch-target); height: var(--touch-target); }
+.bell-list { flex: 1; margin: 0; padding: 0; overflow-y: auto; list-style: none; }
+.bell-item { position: relative; display: flex; align-items: flex-start; border-bottom: 1px solid var(--line); }
+.bell-item.is-unread { background: var(--accent-soft); }
+.bell-item-title { overflow-wrap: anywhere; color: var(--ink); }
+.bell-item.is-unread .bell-item-title { font-weight: 500; }
+.bell-item-detail, .bell-item-time { font-size: var(--fs-11); color: var(--faint); }
+.bell-item-read::before { content: ''; display: block; width: 8px; height: 8px; margin: auto; background: var(--accent); border-radius: 50%; }
+@media (hover: hover) {
+  .bell-item-read:hover::before { background: transparent; box-shadow: inset 0 0 0 1px var(--accent); }
+}
+.bell-empty { padding: var(--space-lg) var(--space-md); font-size: var(--fs-14); text-align: center; color: var(--faint); }
+/* a footer's contact link, its icon then its words, as tall as a finger */
+.site-footer .footer-link { display: inline-flex; align-items: center; min-height: var(--touch-target); }
+.footer-link .ico { flex: none; width: var(--ico-m); height: var(--ico-m); margin-right: var(--s-8); }
+.settings-zoom { display: flex; align-items: center; gap: var(--s-8); width: 100%; min-height: 30px; color: var(--faint); }
+.settings-zoom-icon { flex: none; width: var(--ico-m); height: var(--ico-m); }
+.settings-fact { margin: 0; font-size: var(--text-md); color: var(--ink); }
+.notification-filter { font-size: var(--fs-11); letter-spacing: var(--ls-caps); text-transform: uppercase; text-decoration: none; color: var(--accent-strong); }
+/* On a computer, Selecta's tables sit in a card of their own (the design system's .tbl-wrap.is-card: a white panel, its
+   column titles on the beige band, a row lit in beige under the pointer), every column after the first centred. */
+.tbl .slug-value { font-family: inherit; }
+/* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
+   title size, its date in the hero's own small capitals; without a photo, a beige light. */
+.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-t-size: var(--text-2xl); --hero-t-ls: var(--ls-loose); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+.gallery-cover--placeholder { background: linear-gradient(135deg, var(--band), var(--accent-soft)); }
+/* the sign-in page */
+.auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
+/* The design system's lasting message, centred in the form. */
+.auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
 /* The small pages of an app (privacy, terms, signed out): the app's name above a title, one column of text. */
   body.doc { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: var(--text-weight) var(--text-size)/var(--text-lh) var(--body); -webkit-font-smoothing: antialiased; }
   body.doc main { max-width: var(--read-m); margin: 0 auto; padding: var(--s-48) var(--s-16); }

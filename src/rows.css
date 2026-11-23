@@ -111,3 +111,28 @@
   .parts > div > span:last-child { font: 500 var(--fs-13)/var(--lh-text) var(--mono); font-variant-numeric: tabular-nums; white-space: nowrap; }
   .parts > .is-head > span:last-child { font-weight: 600; color: var(--ink); }
   .parts > .is-good, .parts > .is-good > span:last-child { color: var(--good); }
+
+/* Lines of pairs (a rule: the merchant and where it goes, a note under it, 4.26.0): .pair, a hairline above it; .pair-k
+   what it is, bold, its <small> in mono; .pair-v where it goes, on the right (a.pair-v a link, in gold); .pair-n the note
+   under it, small and faint (.is-wide across the line); .pair.is-off a line kept but not used, struck through.
+   <div class="pair"><span class="pair-k">Super U <small>SUPER U</small></span><span class="pair-v">Courses</span><span class="pair-n">Dépense</span></div> */
+  .pair { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: var(--s-2) var(--s-12); padding: var(--s-8) 0; border-top: 1px solid var(--line); }
+  .pair-k { min-width: 0; font-weight: 600; overflow-wrap: anywhere; }
+  .pair-k small { margin-left: var(--s-6); font: 500 var(--fs-11)/var(--lh-tight) var(--mono); color: var(--faint); }
+  .pair-v { text-align: right; color: var(--dim); }
+  a.pair-v { color: var(--accent); font-variant-numeric: tabular-nums; text-decoration: none; }
+  a.pair-v:hover { text-decoration: underline; }
+  .pair-n { font-size: var(--fs-12); color: var(--faint); }
+  .pair-n.is-wide { grid-column: 1 / -1; }
+  .pair.is-off :is(.pair-k, .pair-v) { color: var(--faint); text-decoration: line-through; }
+  .pair.is-off .pair-n { color: var(--mid); }
+@media (max-width: 768px) {
+  /* on a phone, one under the other, where it goes on the left */
+  .pair { grid-template-columns: minmax(0, 1fr); }
+  .pair-v { text-align: left; }
+}
+/* blocks one under the other, split by a hairline (a bank and its accounts): <div class="groups"><div>…</div><div>… ;
+   and a block set apart under a hairline (what was taken away, under the list): <div class="apart"> (4.26.0) */
+  .groups > * { border-top: 1px solid var(--line); padding: var(--s-4) 0; }
+  .groups > :first-child { border-top: none; }
+  .apart { padding-top: var(--s-10); border-top: 1px solid var(--line); }

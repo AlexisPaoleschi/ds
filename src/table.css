@@ -17,6 +17,8 @@
   .tbl th { padding: var(--s-8); border-bottom: 1px solid var(--line-2); text-align: left; vertical-align: middle; white-space: nowrap; color: var(--faint);
     font: var(--label-weight) var(--tbl-th-size)/var(--lh-tight) var(--label-font); letter-spacing: var(--tbl-th-ls); text-transform: uppercase; }
   .tbl td { padding: var(--s-8); border-top: 1px solid var(--line); vertical-align: middle; }
+  /* a row that goes on from the one above it (an operation's category under it, 4.26.0): no room above, close to it */
+  .tbl tr.is-cont > td { padding-top: 0; }
   .tbl .is-num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
   /* a dense table of figures (Studio's people, a column a network): tighter rows, its cells in the quieter mono, flush
      left; the name column stays in the words' font (.tbl-name) */
