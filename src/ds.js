@@ -635,6 +635,14 @@
     more.setAttribute("aria-expanded", String(open));
     if (sub && sub.classList.contains("fsub")) sub.hidden = !open;
   });
+  /* A tap on the tab already shown in an app's bar of tabs (.tabs.is-bar, its tab aria-selected), as a phone's apps do: the
+     page goes back to its top (« quand je clique sur un onglet alors que je suis déjà dessus, ça remonte tout en haut »,
+     23 November 2026). Read as the click starts (capture), before the page's own handler draws its tabs again. */
+  document.addEventListener("click", function (e) {
+    var tab = e.button === 0 && e.target.closest && e.target.closest('.tabs.is-bar [aria-selected="true"]');
+    if (!tab || (window.scrollY || document.documentElement.scrollTop) <= 0) return;
+    window.scrollTo({ top: 0, behavior: _.reduced() ? "auto" : "smooth" });
+  }, true);
   document.addEventListener("auxclick", function (e) {
     if (e.button !== 1) return;
     var r = rowHref(e);

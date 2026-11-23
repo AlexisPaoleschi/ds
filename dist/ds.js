@@ -1,4 +1,4 @@
-/* ds 4.23.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.24.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -827,6 +827,14 @@
     more.setAttribute("aria-expanded", String(open));
     if (sub && sub.classList.contains("fsub")) sub.hidden = !open;
   });
+  /* A tap on the tab already shown in an app's bar of tabs (.tabs.is-bar, its tab aria-selected), as a phone's apps do: the
+     page goes back to its top (« quand je clique sur un onglet alors que je suis déjà dessus, ça remonte tout en haut »,
+     23 November 2026). Read as the click starts (capture), before the page's own handler draws its tabs again. */
+  document.addEventListener("click", function (e) {
+    var tab = e.button === 0 && e.target.closest && e.target.closest('.tabs.is-bar [aria-selected="true"]');
+    if (!tab || (window.scrollY || document.documentElement.scrollTop) <= 0) return;
+    window.scrollTo({ top: 0, behavior: _.reduced() ? "auto" : "smooth" });
+  }, true);
   document.addEventListener("auxclick", function (e) {
     if (e.button !== 1) return;
     var r = rowHref(e);

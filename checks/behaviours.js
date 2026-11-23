@@ -81,6 +81,16 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   const bar = await p.evaluate(() => { const t = document.querySelector('.tabs.is-bar'), r = t.getBoundingClientRect(), ico = t.querySelector('.ico'), dot = t.querySelector('.tabn');
     return { fixed: getComputedStyle(t).position, bottom: Math.round(innerHeight - r.bottom), h: Math.round(r.height), ico: getComputedStyle(ico).display, dot: getComputedStyle(dot).position }; });
   assert(bar.fixed === 'fixed' && bar.bottom >= 14 && bar.h === 54 && bar.ico === 'block' && bar.dot === 'absolute', 'sur téléphone, les vues en barre en bas, icône au-dessus du nom ' + JSON.stringify(bar));
+  // a tap on the view already shown brings the page back to its top; a tap on another one leaves the page to the app
+  await p.evaluate(() => { document.body.style.minHeight = '4000px'; window.scrollTo(0, 1500); });
+  await p.waitForTimeout(100);
+  await p.evaluate(() => document.querySelectorAll('.tabs.is-bar button')[1].click());
+  await p.waitForTimeout(800);
+  const other = await p.evaluate(() => Math.round(scrollY));
+  await p.evaluate(() => document.querySelector('.tabs.is-bar [aria-selected="true"]').click());
+  await p.waitForTimeout(800);
+  const top = await p.evaluate(() => { const y = Math.round(scrollY); document.body.style.minHeight = ''; window.scrollTo(0, 0); return y; });
+  assert(other === 1500 && top === 0, 'sur téléphone, un tap sur la vue déjà ouverte remonte en haut de la page, pas sur une autre ' + JSON.stringify([other, top]));
   // the header's loading wheel: 0 %, climbing on its own, never back, 100 % then the tick
   await p.evaluate(() => ds.busy.start('Lecture des banques…', { expected: 400 }));
   const b1 = await p.evaluate(() => ({ on: ds.busy.active(), seen: getComputedStyle(document.querySelector('.busy')).visibility, bt: document.querySelector('.busy .busy-text').textContent }));

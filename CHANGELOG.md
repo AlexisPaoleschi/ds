@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.24.0 · 23 novembre 2026
+
+- Un tap sur la vue déjà ouverte dans la barre des vues d’une appli (`.tabs.is-bar`, l’onglet `aria-selected`) remonte en haut de la page, en douceur sauf si le mouvement est réduit, comme dans les applis d’un téléphone. Rien à faire dans les applis : `ds.js` l’écoute pour toute la page, avant que la page ne redessine ses onglets ; un tap sur une autre vue reste à l’appli. `checks/behaviours.js` le vérifie.
+
 ## 4.23.0 · 23 novembre 2026
 
 - `ds.verdict(holder, null, {words: true, text, note, title})` : un verdict encore à venir (un post prévu, pas encore sorti). Son mot en or à la place du chiffre (« Prévu »), sa petite ligne dessous (« dans 5j »), son bord en pointillé pour ne pas le prendre pour un verdict moyen, aussi large que les autres pour que la colonne reste alignée (`.verdict.is-soon`). Studio s’en sert pour la ligne d’un post prévu en haut de la liste d’une modèle, au lieu d’une quatrième case qui passait sur deux lignes sur un téléphone. La vitrine en montre un dans sa fenêtre de liste (X), et `checks/studio.js` le vérifie.
