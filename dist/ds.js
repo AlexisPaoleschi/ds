@@ -1,9 +1,10 @@
-/* ds 4.17.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
    handler would be blocked by a strict page), anything else as an attribute (an href or a src that would run a script
-   is left out); null and false are skipped, strings become text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
+   is left out); null and false are skipped, strings become text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite (ds.ico.html(name,
+   cls) the same as HTML).
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
    today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
    hour at Paris, 0 to 23, now when no date is given), addMonths(key or month, n) (a month "2026-11" moved by n months,
@@ -79,6 +80,8 @@
     });
     return node;
   }
+  // the same as HTML, for a page that writes strings
+  function icoHtml(name, cls) { return '<svg class="ico' + (cls ? " " + esc(cls) : "") + '" aria-hidden="true"><use href="#i-' + esc(name) + '"/></svg>'; }
   function ico(name, cls) {
     var svg = document.createElementNS(SVGNS, "svg"), use = document.createElementNS(SVGNS, "use");
     svg.setAttribute("class", "ico" + (cls ? " " + cls : ""));
@@ -183,6 +186,7 @@
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
+  ico.html = icoHtml;
   ds.day = day;
   ds.today = today;
 })();
@@ -563,7 +567,10 @@
   function cameBack() {
     var was = _.read(AFTER_LOGIN, true);
     _.write(AFTER_LOGIN, null, true);
-    if (!was || location.hash) return;
+    if (!was) return;
+    // another page of the app (its settings): opened instead, when this one was only where the sign-in came back to
+    if (was.charAt(0) === "/" && was.charAt(1) !== "/" && was.split("#")[0] !== location.pathname + location.search) { if (!location.hash) location.replace(was); return; }
+    if (location.hash) return;
     var hash = was.indexOf("#") >= 0 ? was.slice(was.indexOf("#")) : "";
     if (hash && was.split("#")[0] === location.pathname + location.search) {
       history.replaceState(null, "", hash);
@@ -690,7 +697,7 @@
       if (keep) _.write("ds-fold:" + key, v ? "1" : "0");
     }
     // a click on what the title holds that acts is that control's, not the fold's
-    function own(e) { var x = e.target.closest && e.target.closest(INTERACTIVE); return !x || x === head; }
+    function own(e) { var x = e.target.closest && e.target.closest(INTERACTIVE); return (!x || x === head) && !(e.target.closest && e.target.closest(".ct-tools")); }
     head.addEventListener("click", function (e) { if (own(e)) set(!on, true); });
     head.addEventListener("keydown", function (e) {
       if (e.target === head && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); set(!on, true); }
@@ -827,8 +834,8 @@
   /* ds.route(onRoute): the address after # as the page's state. « #analyse/patreon-alexis/derniers-membres?compte=hb » gives
      onRoute({parts: ["analyse", "patreon-alexis", "derniers-membres"], query: {compte: "hb"}}), at once and at every change
      (back, a link). ds.route.go(parts, query, {push}) writes it without the page jumping, replacing by default so that Back
-     does not walk through every filter. ds.seek(anchor) brings [data-anchor="anchor"] into view, opens the foldable sections
-     around it, and lights it a moment. Back from the sign-in page, the address left is found again (ds.api keeps it). */
+     does not walk through every filter; with push, a step of history of its own that the page follows (hashchange). ds.seek(anchor, {block}) brings [data-anchor="anchor"] (or the element given) into
+     view, at the top or {block: "center"} (a table's row), opens the foldable sections around it, and lights it a moment. Back from the sign-in page, the address left is found again (ds.api keeps it). */
   function parseRoute() {
     var raw = decodeURIComponent(location.hash.replace(/^#/, "")), q = raw.indexOf("?"), query = {};
     (q >= 0 ? raw.slice(q + 1) : "").split("&").forEach(function (pair) {
@@ -847,19 +854,22 @@
       .map(function (k) { return encodeURIComponent(k) + "=" + encodeURIComponent(query[k]); }).join("&");
     var hash = "#" + (parts || []).map(encodeURIComponent).join("/") + (q ? "?" + q : "");
     if (hash === location.hash) return;
-    history[(o && o.push) ? "pushState" : "replaceState"](null, "", hash === "#" ? location.pathname + location.search : hash);
+    // push: a step of its own in the history, the page told as by a link (hashchange); else the address changes quietly
+    if (o && o.push) { location.hash = hash; return; }
+    history.replaceState(null, "", hash === "#" ? location.pathname + location.search : hash);
   };
   route.read = parseRoute;
-  function seek(anchor) {
+  function seek(anchor, o) {
     var el = null;
-    try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
+    if (anchor && anchor.nodeType) el = anchor;
+    else try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
     if (!el) return false;
     for (var d = el.parentElement; d; d = d.parentElement) {
       if (d.tagName === "DETAILS") d.open = true;
       else if (d._dsFold && !d._dsFold.isOpen()) d._dsFold.open();
     }
     var still = _.reduced();
-    el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
+    el.scrollIntoView({ block: (o && o.block) || "start", behavior: still ? "auto" : "smooth" });
     el.classList.remove("is-lit");
     void el.offsetWidth;
     el.classList.add("is-lit");
@@ -1137,4 +1147,147 @@
   delta.html = function (n, o) { return '<span class="delta' + deltaTone(n, o) + '">' + ds.esc(deltaText(n, o)) + "</span>"; };
   delta.text = deltaText;
   ds.ext = ext; ds.delta = delta;
+})();
+/* Builders for pieces ds draws but each app wrote by hand, markup and all (the audit of 23 November 2026).
+   ds.tile({label, color, swatch, value, unit, delta, tone, note, href, kids, cls}): a full tile, its label (with its
+   colour's swatch when swatch is true; color is a token's name, "--c-bleu", or a value), its figure and unit, its change
+   under it (a text, a node or several, in tone "good", "bad" or "mid"), what is drawn under it (kids: a curve, a list),
+   its note (a link to another site with href). ds.tiles(holder, items, {cls}): a row of them (dl.tiles). ds.tile.html(o):
+   the same as HTML, for a page that writes strings (label, value and delta are then HTML).
+   ds.card({icon, title, kids, tools, fold, open, anchor, cls}): a card, its title with its icon and its tools on the
+   right (a period selector, tabs: using them never folds the card), folded and kept so under fold (a key), found by its
+   anchor (the title's slug unless given; ds.seek goes there).
+   ds.tabs(holder, items, {value, onPick, scroll, bar, label, key}): tabs, items [[value, label, icon]]; bar: the app's
+   bar of views (an icon, its word under it on a phone); scroll: they scroll sideways on a narrow screen, keep their place
+   when drawn again (key, or the holder) and bring the chosen one into view. The arrow keys, Home and End go from one to
+   the next, as a tab list does.
+   ds.meter(value, of, {label, color, cls}): a bar of value against of (.meter); ds.legend(items): the legend under a gauge,
+   [{label, value, color, open}] (open: the part still to come, a ring); both have .html(…) for strings.
+   ds.median(list) and ds.mean(list): of the figures in a list (null when there is none). */
+(function () {
+  "use strict";
+  var ds = window.ds, _ = ds._, h = ds.h;
+  function tone(c) { return c == null ? null : _.tone(c); }
+  function list(x) { return x == null ? [] : Array.isArray(x) ? x : [x]; }
+
+  /* ---------- tiles ---------- */
+  function tile(o) {
+    o = o || {};
+    var dd = h("dd", {}, [o.value == null ? "—" : String(o.value), o.unit != null ? h("span", { class: "tile-unit", text: o.unit }) : null]);
+    list(o.delta).forEach(function (d) {
+      dd.append(d && d.nodeType ? d : h("span", { class: "tile-delta" + (o.tone ? " is-" + o.tone : ""), text: d }));
+    });
+    var note = o.note == null ? null : o.href ? ds.ext(o.href, o.note, { cls: "tile-note" }) : h("span", { class: "tile-note", text: o.note });
+    return h("div", { class: "tile" + (o.cls ? " " + o.cls : ""), style: o.color ? "--n:" + tone(o.color) : null },
+      [h("dt", {}, [o.swatch ? h("i") : null, o.label]), dd].concat(list(o.kids), [note]));
+  }
+  tile.html = function (o) {
+    o = o || {};
+    var delta = list(o.delta).map(function (d) { return '<span class="tile-delta' + (o.tone ? " is-" + o.tone : "") + '">' + d + "</span>"; }).join("");
+    return '<div class="tile' + (o.cls ? " " + o.cls : "") + '"' + (o.color ? ' style="--n:' + ds.esc(tone(o.color)) + '"' : "") + "><dt>" + (o.swatch ? "<i></i>" : "") + o.label + "</dt><dd>" +
+      (o.value == null ? "—" : o.value) + (o.unit != null ? '<span class="tile-unit">' + ds.esc(o.unit) + "</span>" : "") + delta + "</dd>" +
+      (o.note != null ? '<span class="tile-note">' + o.note + "</span>" : "") + "</div>";
+  };
+  function tiles(holder, items, o) {
+    var box = h("dl", { class: "tiles" + (o && o.cls ? " " + o.cls : "") }, (items || []).filter(Boolean).map(function (x) { return x.nodeType ? x : tile(x); }));
+    holder = _.find(holder);
+    if (holder) { holder.textContent = ""; holder.append(box); }
+    return box;
+  }
+
+  /* ---------- cards ---------- */
+  function card(o) {
+    o = o || {};
+    var tools = o.tools ? h("span", { class: "ct-tools" }, list(o.tools)) : null;
+    var el = h(o.tag || "section", { class: "card" + (o.cls ? " " + o.cls : ""), "data-anchor": o.anchor || ds.text.slug(o.title) },
+      [h("h2", { class: "ct" }, [o.icon ? ds.ico(o.icon) : null, o.title, tools])].concat(list(o.kids)));
+    if (o.fold) ds.foldCard(el, o.fold, { open: o.open });
+    return el;
+  }
+
+  /* ---------- tabs ---------- */
+  var scrolled = {};
+  function tabs(holder, items, o) {
+    o = o || {};
+    holder = _.find(holder);
+    // drawn again in the same holder, the same tab list (its keys and its focus stay)
+    var memo = o.key || holder, nav = holder && (holder.classList.contains("tabs") ? holder : holder.querySelector(":scope > .tabs")) || h("div", {});
+    nav.className = "tabs" + (o.bar ? " is-bar" : "") + (o.scroll ? " is-scroll" : "") + (o.cls ? " " + o.cls : "");
+    nav.setAttribute("role", "tablist");
+    if (o.label) nav.setAttribute("aria-label", o.label);
+    nav.textContent = "";
+    function pick(v) { if (o.onPick) o.onPick(v); }
+    (items || []).forEach(function (x) {
+      var on = String(x[0]) === String(o.value);
+      nav.append(h("button", { type: "button", role: "tab", "aria-selected": on ? "true" : "false", tabindex: on ? null : "-1", "data-v": String(x[0]),
+        title: o.bar ? x[1] : null, "aria-label": o.bar ? x[1] : null, onclick: function () { if (!on) pick(x[0]); } },
+        o.bar ? [x[2] ? ds.ico(x[2]) : null, h("span", { class: "tab-label", text: x[1] })] : [x[2] ? ds.ico(x[2]) : null, x[1]]));
+    });
+    // none chosen: the first can still be reached with Tab
+    if (!nav.querySelector('[aria-selected="true"]') && nav.firstElementChild) nav.firstElementChild.removeAttribute("tabindex");
+    // the arrow keys, Home and End: from one tab to the next, chosen at once (a tab list's way)
+    if (!nav._dsTabs) {
+      nav._dsTabs = true;
+      nav.addEventListener("keydown", function (e) {
+        var all = [].slice.call(nav.querySelectorAll('[role="tab"]')), i = all.indexOf(document.activeElement);
+        if (i < 0) return;
+        var to = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : e.key === "Home" ? 0 : e.key === "End" ? all.length - 1 : null;
+        if (to == null) return;
+        e.preventDefault();
+        var b = all[(to + all.length) % all.length];
+        b.focus();
+        b.click();
+        var again = nav.querySelector('[data-v="' + b.getAttribute("data-v") + '"]');
+        if (again && again !== document.activeElement) again.focus();
+      });
+    }
+    if (o.scroll) {
+      nav.addEventListener("scroll", function () { if (memo) scrolled[memo.id || memo] = nav.scrollLeft; }, { passive: true });
+      requestAnimationFrame(function () {
+        if (memo && scrolled[memo.id || memo] != null) nav.scrollLeft = scrolled[memo.id || memo];
+        var b = nav.querySelector('[aria-selected="true"]');
+        if (!b || nav.scrollWidth <= nav.clientWidth) return;
+        var n = nav.getBoundingClientRect(), r = b.getBoundingClientRect();
+        if (r.left < n.left || r.right > n.right) nav.scrollLeft += r.left + r.width / 2 - (n.left + n.width / 2);
+      });
+    }
+    if (holder && holder !== nav && nav.parentNode !== holder) { holder.textContent = ""; holder.append(nav); }
+    return nav;
+  }
+
+  /* ---------- a gauge and its legend ---------- */
+  function share(value, of) { return Math.max(0, Math.min(100, of ? value / of * 100 : 0)); }
+  function meter(value, of, o) {
+    o = o || {};
+    return h("span", { class: "meter" + (o.cls ? " " + o.cls : ""), role: o.label ? "img" : null, "aria-label": o.label || null, style: o.color ? "--n:" + tone(o.color) : null },
+      [h("i", { style: "width:" + share(value, of).toFixed(1) + "%" })]);
+  }
+  meter.html = function (value, of, o) {
+    o = o || {};
+    return '<span class="meter' + (o.cls ? " " + ds.esc(o.cls) : "") + '"' + (o.label ? ' role="img" aria-label="' + ds.esc(o.label) + '"' : "") + (o.color ? ' style="--n:' + ds.esc(tone(o.color)) + '"' : "") +
+      '><i style="width:' + share(value, of).toFixed(1) + '%"></i></span>';
+  };
+  function legend(items) {
+    return h("div", { class: "chart-split-legend", "aria-hidden": "true" }, (items || []).map(function (x) {
+      return h("span", {}, [h("i", { class: "swatch" + (x.open ? " is-open" : ""), style: "--n:" + tone(x.color || "--accent") }), x.label, x.value != null ? h("b", { text: String(x.value) }) : null]);
+    }));
+  }
+  legend.html = function (items) {
+    return '<div class="chart-split-legend" aria-hidden="true">' + (items || []).map(function (x) {
+      return '<span><i class="swatch' + (x.open ? " is-open" : "") + '" style="--n:' + ds.esc(tone(x.color || "--accent")) + '"></i>' + ds.esc(x.label) +
+        (x.value != null ? " <b>" + ds.esc(x.value) + "</b>" : "") + "</span>";
+    }).join("") + "</div>";
+  };
+
+  /* ---------- a list's middle ---------- */
+  function figures(xs) { return (xs || []).filter(function (x) { return typeof x === "number" && !isNaN(x); }); }
+  function median(xs) {
+    var a = figures(xs).sort(function (x, y) { return x - y; });
+    if (!a.length) return null;
+    var m = Math.floor(a.length / 2);
+    return a.length % 2 ? a[m] : (a[m - 1] + a[m]) / 2;
+  }
+  function mean(xs) { var a = figures(xs); return a.length ? a.reduce(function (s, x) { return s + x; }, 0) / a.length : null; }
+
+  ds.tile = tile; ds.tiles = tiles; ds.card = card; ds.tabs = tabs; ds.meter = meter; ds.legend = legend; ds.median = median; ds.mean = mean;
 })();

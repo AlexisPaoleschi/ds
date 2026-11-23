@@ -375,7 +375,10 @@
   function cameBack() {
     var was = _.read(AFTER_LOGIN, true);
     _.write(AFTER_LOGIN, null, true);
-    if (!was || location.hash) return;
+    if (!was) return;
+    // another page of the app (its settings): opened instead, when this one was only where the sign-in came back to
+    if (was.charAt(0) === "/" && was.charAt(1) !== "/" && was.split("#")[0] !== location.pathname + location.search) { if (!location.hash) location.replace(was); return; }
+    if (location.hash) return;
     var hash = was.indexOf("#") >= 0 ? was.slice(was.indexOf("#")) : "";
     if (hash && was.split("#")[0] === location.pathname + location.search) {
       history.replaceState(null, "", hash);
@@ -502,7 +505,7 @@
       if (keep) _.write("ds-fold:" + key, v ? "1" : "0");
     }
     // a click on what the title holds that acts is that control's, not the fold's
-    function own(e) { var x = e.target.closest && e.target.closest(INTERACTIVE); return !x || x === head; }
+    function own(e) { var x = e.target.closest && e.target.closest(INTERACTIVE); return (!x || x === head) && !(e.target.closest && e.target.closest(".ct-tools")); }
     head.addEventListener("click", function (e) { if (own(e)) set(!on, true); });
     head.addEventListener("keydown", function (e) {
       if (e.target === head && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); set(!on, true); }
@@ -639,8 +642,8 @@
   /* ds.route(onRoute): the address after # as the page's state. « #analyse/patreon-alexis/derniers-membres?compte=hb » gives
      onRoute({parts: ["analyse", "patreon-alexis", "derniers-membres"], query: {compte: "hb"}}), at once and at every change
      (back, a link). ds.route.go(parts, query, {push}) writes it without the page jumping, replacing by default so that Back
-     does not walk through every filter. ds.seek(anchor) brings [data-anchor="anchor"] into view, opens the foldable sections
-     around it, and lights it a moment. Back from the sign-in page, the address left is found again (ds.api keeps it). */
+     does not walk through every filter; with push, a step of history of its own that the page follows (hashchange). ds.seek(anchor, {block}) brings [data-anchor="anchor"] (or the element given) into
+     view, at the top or {block: "center"} (a table's row), opens the foldable sections around it, and lights it a moment. Back from the sign-in page, the address left is found again (ds.api keeps it). */
   function parseRoute() {
     var raw = decodeURIComponent(location.hash.replace(/^#/, "")), q = raw.indexOf("?"), query = {};
     (q >= 0 ? raw.slice(q + 1) : "").split("&").forEach(function (pair) {
@@ -659,19 +662,22 @@
       .map(function (k) { return encodeURIComponent(k) + "=" + encodeURIComponent(query[k]); }).join("&");
     var hash = "#" + (parts || []).map(encodeURIComponent).join("/") + (q ? "?" + q : "");
     if (hash === location.hash) return;
-    history[(o && o.push) ? "pushState" : "replaceState"](null, "", hash === "#" ? location.pathname + location.search : hash);
+    // push: a step of its own in the history, the page told as by a link (hashchange); else the address changes quietly
+    if (o && o.push) { location.hash = hash; return; }
+    history.replaceState(null, "", hash === "#" ? location.pathname + location.search : hash);
   };
   route.read = parseRoute;
-  function seek(anchor) {
+  function seek(anchor, o) {
     var el = null;
-    try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
+    if (anchor && anchor.nodeType) el = anchor;
+    else try { el = document.querySelector('[data-anchor="' + (window.CSS && CSS.escape ? CSS.escape(anchor) : anchor) + '"]'); } catch (e) {}
     if (!el) return false;
     for (var d = el.parentElement; d; d = d.parentElement) {
       if (d.tagName === "DETAILS") d.open = true;
       else if (d._dsFold && !d._dsFold.isOpen()) d._dsFold.open();
     }
     var still = _.reduced();
-    el.scrollIntoView({ block: "start", behavior: still ? "auto" : "smooth" });
+    el.scrollIntoView({ block: (o && o.block) || "start", behavior: still ? "auto" : "smooth" });
     el.classList.remove("is-lit");
     void el.offsetWidth;
     el.classList.add("is-lit");

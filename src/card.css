@@ -36,6 +36,13 @@
   /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
      control rather than the title's capitals; on a narrow line it goes under the title */
   .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
+  /* a card title with its tools (a period selector, tabs; ds.card): they go under the title on a narrow screen, the fold's
+     chevron just after them, and a folded card hides them (its chevron back on the right) */
+  .ct:has(> .ct-tools) { row-gap: var(--s-8); }
+  .ct.fold:has(> .ct-tools)::after { margin-left: var(--s-4); }
+  .ct-tools :is(.tabs, .periodpick) { margin: 0; }
+  .card.is-folded > .ct > .ct-tools { display: none; }
+  .card.is-folded > .ct.fold:has(> .ct-tools)::after { margin-left: auto; }
   /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
   .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
   .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }

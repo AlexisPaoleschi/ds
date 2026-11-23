@@ -1,4 +1,4 @@
-/* ds 4.17.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -379,6 +379,10 @@
     fetchLogs(key);
   };
   window.ds.jobs = jobs;
+  // how much work a kind of loading took last time on this device (Studio counts rows read): expect(kind, guess) gives
+  // the larger of the two, remember(kind, units) keeps it once the loading is done
+  busy.expect = function (kind, guess) { var w = window.ds.store.get("ds-busy-work", {}) || {}; return Math.max(+w[kind] || 0, guess || 0); };
+  busy.remember = function (kind, units) { var w = window.ds.store.get("ds-busy-work", {}) || {}; w[kind] = units; window.ds.store.set("ds-busy-work", w); };
   window.ds.busy = busy;
   window.ds.trouble = trouble;
 })();
@@ -1609,6 +1613,12 @@
   periodPick.stored = function (key, options, fallback) {
     var v = window.ds.store.get(key);
     return options.some(function (x) { return String(x[0]) === String(v); }) ? options.filter(function (x) { return String(x[0]) === String(v); })[0][0] : fallback;
+  };
+  // the level a ratio gets, "good", "mid" or "bad", with the verdict's own thresholds (1.2 and 0.8 unless given)
+  verdict.level = function (ratio, o) {
+    if (ratio == null || isNaN(ratio)) return null;
+    o = o || {};
+    return ratio >= (o.high || 1.2) ? "good" : ratio >= (o.low || 0.8) ? "mid" : "bad";
   };
   window.ds.periodPick = periodPick;
 })();

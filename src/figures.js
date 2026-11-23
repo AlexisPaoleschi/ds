@@ -131,5 +131,11 @@
     var v = window.ds.store.get(key);
     return options.some(function (x) { return String(x[0]) === String(v); }) ? options.filter(function (x) { return String(x[0]) === String(v); })[0][0] : fallback;
   };
+  // the level a ratio gets, "good", "mid" or "bad", with the verdict's own thresholds (1.2 and 0.8 unless given)
+  verdict.level = function (ratio, o) {
+    if (ratio == null || isNaN(ratio)) return null;
+    o = o || {};
+    return ratio >= (o.high || 1.2) ? "good" : ratio >= (o.low || 0.8) ? "mid" : "bad";
+  };
   window.ds.periodPick = periodPick;
 })();

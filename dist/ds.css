@@ -1,4 +1,4 @@
-/* ds 4.17.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -178,6 +178,7 @@
   --text-size: var(--fs-15); --text-weight: 400; --text-lh: var(--lh-text);
   /* a short line beside something: a message, a passing message */
   --note-size: var(--fs-13);
+  --stat-size: var(--fs-28); --stat-ls: var(--title-ls); --stat-gap: var(--s-24);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
   /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
@@ -290,6 +291,7 @@
   --label-font: var(--body); --label-weight: 500;
   /* text: 16px, light, with room between the lines */
   --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
+  --stat-size: var(--text-2xl); --stat-ls: var(--ls-loose);
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
@@ -473,6 +475,7 @@
   :is(.tone, .delta).is-good { color: var(--good); }
   :is(.tone, .delta).is-bad { color: var(--bad); }
   :is(.tone, .delta).is-mid { color: var(--mid); }
+  .tone.is-faint { color: var(--faint); }
   .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
 /* The page of an app (Bank, Studio): its reset, its header and the loading in it, the first loading over the page, the
    page's width and margins, the room of the phone's tab bar, words for screen readers only. */
@@ -565,6 +568,8 @@
   .pip, .filter-pip, .newver-pip, .tabs .tabn {
     flex: none; box-sizing: border-box; width: var(--pip-size, 7px); height: var(--pip-size, 7px); border-radius: 50%; background: var(--accent); }
   .newver-pip { outline: 2px solid var(--panel); }
+  /* on a photo, a light ring keeps it seen (a note left on a photo, Selecta) */
+  .pip.is-ringed { box-shadow: 0 0 0 var(--s-2) var(--overlay-white-strong); }
 /* The spinner, for every wait, drawn once: a ring (--spin-ring) whose top quarter (--spin-top, the gold) turns at one
    speed (--spin-time), its size --spin-size: 16px in a line, 28px on a photo's tile, 60px for a whole page; the small
    ones of a message's action (11px), a passing message (12px), a button at work (13px, in its text's colour so that it
@@ -737,6 +742,13 @@
   /* what acts on a card's or a section's title line (a button, a month's arrows, tabs): on its right, in the words of a
      control rather than the title's capitals; on a narrow line it goes under the title */
   .ct > .ct-tools, h4.sect > .ct-tools { cursor: default; letter-spacing: 0; margin-left: auto; text-transform: none; }
+  /* a card title with its tools (a period selector, tabs; ds.card): they go under the title on a narrow screen, the fold's
+     chevron just after them, and a folded card hides them (its chevron back on the right) */
+  .ct:has(> .ct-tools) { row-gap: var(--s-8); }
+  .ct.fold:has(> .ct-tools)::after { margin-left: var(--s-4); }
+  .ct-tools :is(.tabs, .periodpick) { margin: 0; }
+  .card.is-folded > .ct > .ct-tools { display: none; }
+  .card.is-folded > .ct.fold:has(> .ct-tools)::after { margin-left: auto; }
   /* a card's title too long for what it holds on its line: its letters closer, then smaller, only as much as needed (ds.js) */
   .ct.ct-fit-1 { letter-spacing: var(--ls-077); }
   .ct.ct-fit-2 { font-size: var(--fs-12); letter-spacing: var(--ls-083); }
@@ -950,6 +962,17 @@
   .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
   .tile .tile-delta.is-bad { color: var(--bad); }
   .tile .tile-delta.is-mid { color: var(--mid); }
+  /* a short list inside a tile, a word and its figure on each line (Studio's members by tier) */
+  .tile .tile-list { border-top: 1px solid var(--line); display: grid; gap: var(--s-4); list-style: none; margin: var(--s-12) 0 0; padding: var(--s-10) 0 0; }
+  .tile .tile-list li { color: var(--dim); display: flex; font-size: var(--fs-13); gap: var(--s-10); justify-content: space-between; }
+  .tile .tile-list b { color: var(--ink); font: 600 var(--fs-13)/var(--lh-ui) var(--mono); font-variant-numeric: tabular-nums; }
+  /* figures in a row, without boxes: each its value in the titles' font, its word under it in small capitals; .is-accent
+     for the one that matters (Selecta's gallery: photos, chosen, still to choose) */
+  .stats { align-items: flex-end; display: flex; flex-wrap: wrap; gap: var(--s-16) var(--stat-gap); }
+  .stat { display: flex; flex-direction: column; line-height: var(--lh-ui); }
+  .stat-value { color: var(--ink); font: var(--head-weight) var(--stat-size)/var(--lh-ui) var(--title-font); font-variant-numeric: tabular-nums; letter-spacing: var(--stat-ls); }
+  .stat-label { color: var(--faint); font: var(--label-weight) var(--fs-11)/var(--lh-tight) var(--label-font); letter-spacing: var(--label-ls); text-transform: uppercase; }
+  .stat.is-accent .stat-value { color: var(--accent-text); }
   /* the compact form: small figures at the top of a screen (Bank's operations and trips) */
   .tiles.is-compact { background: none; border: 0; border-radius: 0; gap: var(--s-8); margin-top: 0; overflow: visible; }
   .tiles.is-compact .tile { background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-m); padding: var(--s-10) var(--s-12); }
@@ -1040,6 +1063,9 @@
   /* money in and money out, what is fresh and what is late */
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
+  .tbl .is-mid { color: var(--mid); }
+  /* nothing yet (« jamais »): quieter than the row */
+  .tbl .is-faint { color: var(--faint); }
   .tbl .tbl-ck { width: 28px; }
   /* a row's box on its row's middle, not on the line of its own cell (icon audit, 22 November 2026); a phone's cards keep
      theirs, already right (below) */

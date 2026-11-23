@@ -1,4 +1,4 @@
-// The small tools every app wrote for itself (ds 4.17.0), in a real browser: ds.text, the words (plural, count, list,
+// The small tools every app wrote for itself (ds 4.17.0) and the builders (4.18.0), in a real browser: ds.text, the words (plural, count, list,
 // duration, every, since), ds.date's relative and heading styles, ds.day's months and differences, ds.store, ds.poll and
 // ds.onSeen, ds.boot, ds.ext and a safe ds.h, ds.delta and the tones, the quiet note in each theme.
 // usage: node checks/kit.js (Playwright installed); it serves the repository itself on a free port
@@ -88,6 +88,45 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
   r = await p.evaluate(() => { document.documentElement.lang = 'en'; const t = ds.day.today();
     return [ds.plural(0, 'item'), ds.list(['A', 'B', 'C']), ds.duration(456), ds.every(7200), ds.date(ds.day.add(t, 3), 'relative'), ds.date(t, 'heading')]; });
   assert(same(r, ['items', 'A, B, and C', '1 year and 3 months', 'every 2h', 'in 3 days', 'Today']), 'the words in English', r);
+
+  // ds 4.18.0: the builders
+  r = await p.evaluate(() => { document.documentElement.lang = 'fr'; const box = document.getElementById('build');
+    const t = ds.tile({ label: 'Abonnés', color: '--c-bleu', swatch: true, value: '1 234', unit: 'payants', delta: '+12 en 7j', tone: 'good', note: '@lea ↗', href: 'https://x.com/lea' });
+    const row = ds.tiles(box, [t, { label: 'Ventes', value: 3 }]);
+    return [row.tagName, row.className, t.style.getPropertyValue('--n').trim(), t.querySelector('dt i') !== null, t.querySelector('dd').firstChild.textContent, t.querySelector('.tile-unit').textContent,
+      t.querySelector('.tile-delta').className, t.querySelector('a.tile-note').target, row.children.length, box.firstElementChild === row,
+      ds.tile.html({ label: 'Solde', value: '12,00€', delta: 'fin novembre' })]; });
+  assert(same(r, ['DL', 'tiles', 'var(--c-bleu)', true, '1 234', 'payants', 'tile-delta is-good', '_blank', 2, true,
+    '<div class="tile"><dt>Solde</dt><dd>12,00€<span class="tile-delta">fin novembre</span></dd></div>']), 'ds.tile, ds.tiles and ds.tile.html', r);
+
+  r = await p.evaluate(async () => { const box = document.getElementById('build'); box.textContent = '';
+    const tools = ds.h('button', { type: 'button', text: 'Outil' }); const c = ds.card({ icon: 'rise', title: 'Ce qui rapporte', tools: [tools], fold: 'kit-card', kids: [ds.h('p', { text: 'corps' })] });
+    box.append(c); const head = c.querySelector('.ct');
+    const toolsBox = c.querySelector('.ct-tools'); toolsBox.click(); const afterTools = c.classList.contains('is-folded');
+    head.click(); const folded = c.classList.contains('is-folded'); const hidden = getComputedStyle(toolsBox).display;
+    head.click(); return [c.tagName, c.dataset.anchor, head.querySelector('.ico') !== null, afterTools, folded, hidden, c.classList.contains('is-folded')]; });
+  assert(same(r, ['SECTION', 'ce-qui-rapporte', true, false, true, 'none', false]), 'ds.card: icon, anchor, tools that never fold it, hidden when folded', r);
+
+  r = await p.evaluate(async () => { const box = document.getElementById('build'); box.textContent = ''; const picks = [];
+    let value = 'a'; const draw = () => ds.tabs(box, [['a', 'Agenda', 'cal'], ['b', 'Analyse', 'rise'], ['c', 'Comptes']], { value, onPick: v => { picks.push(v); value = v; draw(); } });
+    const nav = draw(); nav.querySelector('[data-v="a"]').focus();
+    nav.dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true })); await new Promise(ok => setTimeout(ok, 20));
+    const n2 = box.querySelector('.tabs'); n2.querySelector('[data-v="b"]').focus(); n2.dispatchEvent(new KeyboardEvent('keydown', { key: 'End', bubbles: true }));
+    const n3 = box.querySelector('.tabs');
+    return [n3.getAttribute('role'), [...n3.children].map(b => b.getAttribute('aria-selected') + ':' + (b.getAttribute('tabindex') || '0')), picks, document.activeElement.dataset.v, box.querySelectorAll('.tabs').length,
+      ds.tabs(null, [['x', 'Vues', 'eye']], { value: 'x', bar: true }).querySelector('.tab-label').textContent]; });
+  assert(same(r, ['tablist', ['false:-1', 'false:-1', 'true:0'], ['b', 'c'], 'c', 1, 'Vues']), 'ds.tabs: one tab list, the chosen one reached by Tab, the arrows and End choose', r);
+
+  r = await p.evaluate(() => { const m = ds.meter(30, 120, { label: '25 %', color: '--c-vert' }); const l = ds.legend([{ label: 'Payé', value: '12€' }, { label: 'Reste', value: '3€', open: true }]);
+    return [m.className, m.getAttribute('aria-label'), m.firstChild.style.width, m.style.getPropertyValue('--n').trim(), ds.meter.html(50, 200), l.children.length, l.querySelector('.is-open') !== null, ds.legend.html([{ label: 'A', value: 1 }]),
+      ds.median([3, 1, 2]), ds.median([4, 1, 3, 2]), ds.median([]), ds.mean([1, 2, 'x', 3]), ds.ico.html('eye')]; });
+  assert(same(r, ['meter', '25 %', '25%', 'var(--c-vert)', '<span class="meter"><i style="width:25.0%"></i></span>', 2, true,
+    '<div class="chart-split-legend" aria-hidden="true"><span><i class="swatch" style="--n:var(--accent)"></i>A <b>1</b></span></div>', 2, 2.5, null, 2, '<svg class="ico" aria-hidden="true"><use href="#i-eye"/></svg>']),
+    'ds.meter, ds.legend, ds.median, ds.mean, ds.ico.html', r);
+
+  r = await p.evaluate(() => { const v = document.getElementById('acc'), l = v.nextElementSibling;
+    return [getComputedStyle(v).fontSize, getComputedStyle(l).textTransform, getComputedStyle(v).color !== getComputedStyle(document.querySelector('.stat-value')).color]; });
+  assert(same(r, ['28px', 'uppercase', true]), 'the row of figures: its value large, its word in small capitals, the one that matters in gold', r);
 
   assert(errors.length === 0, 'no error in the page', errors);
   await b.close(); server.close();

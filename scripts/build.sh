@@ -35,7 +35,7 @@ head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, 
 { echo "$head"; cat $tools_controls $tools_surfaces $tools_data $tools_pages $states; } > dist/ds-tools.css
 # the script every app links: the core, the shared behaviours (the bubble, the window, dates and figures, the server)
 # and the small tools every app wrote for itself (kit.js)
-{ echo "$head"; cat src/core.js src/ds.js src/kit.js; } > dist/ds.js
+{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js; } > dist/ds.js
 { echo "$head"; cat $js_tools; } > dist/ds-tools.js
 # the icons' sprite, put at the top of the page by a script of its own that the browser keeps: Bank and Studio link it
 # after ds.js, and their pages keep writing <use href="#i-name"/>

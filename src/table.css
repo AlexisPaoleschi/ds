@@ -26,6 +26,9 @@
   /* money in and money out, what is fresh and what is late */
   .tbl .is-good { color: var(--good); }
   .tbl .is-bad { color: var(--bad); }
+  .tbl .is-mid { color: var(--mid); }
+  /* nothing yet (« jamais »): quieter than the row */
+  .tbl .is-faint { color: var(--faint); }
   .tbl .tbl-ck { width: 28px; }
   /* a row's box on its row's middle, not on the line of its own cell (icon audit, 22 November 2026); a phone's cards keep
      theirs, already right (below) */

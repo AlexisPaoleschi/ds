@@ -2,7 +2,8 @@
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
    handler would be blocked by a strict page), anything else as an attribute (an href or a src that would run a script
-   is left out); null and false are skipped, strings become text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
+   is left out); null and false are skipped, strings become text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite (ds.ico.html(name,
+   cls) the same as HTML).
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
    today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
    hour at Paris, 0 to 23, now when no date is given), addMonths(key or month, n) (a month "2026-11" moved by n months,
@@ -78,6 +79,8 @@
     });
     return node;
   }
+  // the same as HTML, for a page that writes strings
+  function icoHtml(name, cls) { return '<svg class="ico' + (cls ? " " + esc(cls) : "") + '" aria-hidden="true"><use href="#i-' + esc(name) + '"/></svg>'; }
   function ico(name, cls) {
     var svg = document.createElementNS(SVGNS, "svg"), use = document.createElementNS(SVGNS, "use");
     svg.setAttribute("class", "ico" + (cls ? " " + cls : ""));
@@ -182,6 +185,7 @@
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
+  ico.html = icoHtml;
   ds.day = day;
   ds.today = today;
 })();

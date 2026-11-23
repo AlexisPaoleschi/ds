@@ -89,4 +89,5 @@
   :is(.tone, .delta).is-good { color: var(--good); }
   :is(.tone, .delta).is-bad { color: var(--bad); }
   :is(.tone, .delta).is-mid { color: var(--mid); }
+  .tone.is-faint { color: var(--faint); }
   .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }

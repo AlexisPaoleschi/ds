@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.18.0 · 23 novembre 2026
+
+Les constructeurs : ce que ds dessine mais que chaque appli écrivait à la main, balisage compris.
+
+- `ds.card` : une carte, son icône, son titre, ses outils à droite (un choix de période, des onglets) qui ne la plient jamais, pliée et retenue sous une clé ; une carte pliée cache ses outils.
+- `ds.tile`, `ds.tiles` et `ds.tile.html` : une tuile complète, son libellé et sa pastille, son chiffre, sa variation dans son ton, ce qui se dessine dessous, sa note ou son lien.
+- `ds.tabs` : des onglets, ceux de la barre d’une appli (une icône, son mot) ou ceux qui défilent de côté et gardent leur place ; les flèches, Début et Fin vont de l’un à l’autre.
+- `ds.meter` et `ds.legend` (et leurs `.html`) : une jauge et la légende dessous.
+- `.stats` et `.stat` : quelques chiffres en ligne, sans boîte (la sélection de Selecta) ; `.tile-list` : une petite liste dans une tuile (les paliers de Studio).
+- `ds.median`, `ds.mean`, `ds.verdict.level` (les seuils du verdict, 1,2 et 0,8), `ds.ico.html`, `ds.busy.expect` et `ds.busy.remember` (le travail qu’a pris le dernier chargement).
+- `ds.seek` prend aussi un élément et `{block: "center"}` ; `ds.route.go(…, {push: true})` fait un pas d’historique que la page suit.
+- Le retour après la connexion ouvre aussi une autre page de l’appli (les réglages de Studio).
+- Les tons d’un tableau : `.is-mid` et `.is-faint` (« jamais ») ; `.tone.is-faint` ; `.pip.is-ringed` sur une photo.
+- Page vitrine : « Constructeurs ».
+
 ## 4.17.0 · 23 novembre 2026
 
 Les petits outils que chaque appli avait écrits pour elle (l’audit du 23 novembre) : une seule copie, dans `ds.js`.

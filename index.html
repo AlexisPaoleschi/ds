@@ -11,7 +11,11 @@
 <script src="dist/ds-tools.js" defer></script>
 <script src="dist/ds-photo.js" defer></script>
 <script src="demos/bank.js" defer></script>
-<script>document.addEventListener("DOMContentLoaded", () => { const t = ds.day.today(); document.querySelector('[data-kit="relative"]').textContent = ds.date(ds.day.add(t, 3), "relative"); document.querySelector('[data-kit="heading"]').textContent = ds.date(ds.day.add(t, -1), "heading") + " · " + ds.date("2026-11-06", "heading"); });</script>
+<script>document.addEventListener("DOMContentLoaded", () => { const t = ds.day.today(); document.querySelector('[data-kit="relative"]').textContent = ds.date(ds.day.add(t, 3), "relative"); document.querySelector('[data-kit="heading"]').textContent = ds.date(ds.day.add(t, -1), "heading") + " · " + ds.date("2026-11-06", "heading");
+  let tab = "x"; const tabs = () => ds.tabs('[data-build="tabs"]', [["x", "X"], ["bsky", "Bluesky"], ["ig", "Instagram"]], { value: tab, onPick: v => { tab = v; tabs(); } }); tabs();
+  ds.tiles('[data-build="tiles"]', [{ label: "Abonnés", color: "--c-bleu", swatch: true, value: "1 234", unit: "payants", delta: "+12 en 7j", tone: "good", note: "@lea ↗", href: "https://x.com" },
+    { label: "Ventes", value: "57", delta: "panier moyen 18€" }, { label: "Paliers", value: "3", kids: [ds.h("ul", { class: "tile-list" }, [ds.h("li", {}, [ds.h("span", { text: "Soutien" }), ds.h("b", { text: "12" })]), ds.h("li", {}, [ds.h("span", { text: "Collection" }), ds.h("b", { text: "4" })])])] }]);
+  const m = document.querySelector('[data-build="meter"]'); m.append(ds.meter(640, 1000, { label: "64 %" }), ds.legend([{ label: "Payé", value: "640€" }, { label: "À venir", value: "360€", open: true }])); });</script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
 <script src="demos/date.js" defer></script>
@@ -390,6 +394,13 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card" id="build-demo"><h3 class="ct">Constructeurs · 4.18.0</h3>
+      <p class="note">ds.card, ds.tile, ds.tiles, ds.tabs, ds.meter, ds.legend : les pièces que chaque appli écrivait à la main, construites par ds.</p>
+      <div data-build="tabs"></div>
+      <div data-build="tiles"></div>
+      <div class="stats"><div class="stat"><span class="stat-value">36</span><span class="stat-label">Photos</span></div><div class="stat is-accent"><span class="stat-value">9</span><span class="stat-label">Choisies</span></div><div class="stat"><span class="stat-value">40</span><span class="stat-label">Maximum</span></div></div>
+      <div data-build="meter"></div>
+    </div>
     <div class="card"><h3 class="ct">Petits outils · 4.17.0</h3>
       <p>Ce mois-ci : <span class="tone is-good">+2 140,00€</span> · <span class="tone is-bad">−1 312,40€</span>, abonnés <span class="delta is-good">+12</span> en 7j, <span class="delta is-bad">−3</span> en 30j, <span class="delta">±0</span> hier.</p>
       <p class="note">Une note sous un bloc, à la taille de son thème.</p>

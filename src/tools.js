@@ -378,6 +378,10 @@
     fetchLogs(key);
   };
   window.ds.jobs = jobs;
+  // how much work a kind of loading took last time on this device (Studio counts rows read): expect(kind, guess) gives
+  // the larger of the two, remember(kind, units) keeps it once the loading is done
+  busy.expect = function (kind, guess) { var w = window.ds.store.get("ds-busy-work", {}) || {}; return Math.max(+w[kind] || 0, guess || 0); };
+  busy.remember = function (kind, units) { var w = window.ds.store.get("ds-busy-work", {}) || {}; w[kind] = units; window.ds.store.set("ds-busy-work", w); };
   window.ds.busy = busy;
   window.ds.trouble = trouble;
 })();

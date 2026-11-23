@@ -13,6 +13,8 @@
   .pip, .filter-pip, .newver-pip, .tabs .tabn {
     flex: none; box-sizing: border-box; width: var(--pip-size, 7px); height: var(--pip-size, 7px); border-radius: 50%; background: var(--accent); }
   .newver-pip { outline: 2px solid var(--panel); }
+  /* on a photo, a light ring keeps it seen (a note left on a photo, Selecta) */
+  .pip.is-ringed { box-shadow: 0 0 0 var(--s-2) var(--overlay-white-strong); }
 /* The spinner, for every wait, drawn once: a ring (--spin-ring) whose top quarter (--spin-top, the gold) turns at one
    speed (--spin-time), its size --spin-size: 16px in a line, 28px on a photo's tile, 60px for a whole page; the small
    ones of a message's action (11px), a passing message (12px), a button at work (13px, in its text's colour so that it

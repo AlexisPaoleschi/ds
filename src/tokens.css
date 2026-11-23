@@ -161,6 +161,7 @@
   --text-size: var(--fs-15); --text-weight: 400; --text-lh: var(--lh-text);
   /* a short line beside something: a message, a passing message */
   --note-size: var(--fs-13);
+  --stat-size: var(--fs-28); --stat-ls: var(--title-ls); --stat-gap: var(--s-24);
   /* the ground of a band across the page (a footer), of a box in the page (a message), of a line around what floats */
   --band: var(--panel); --box-bg: var(--panel-2); --pop-line: var(--line-2);
   /* the ground of a table's row under the pointer: a touch of ink here, the band in vitrine */
@@ -273,6 +274,7 @@
   --label-font: var(--body); --label-weight: 500;
   /* text: 16px, light, with room between the lines */
   --text-size: var(--fs-16); --text-weight: 300; --text-lh: var(--lh-airy); --note-size: var(--fs-14);
+  --stat-size: var(--text-2xl); --stat-ls: var(--ls-loose);
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
