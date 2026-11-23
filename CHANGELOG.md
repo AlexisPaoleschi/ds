@@ -1,5 +1,20 @@
 # Changelog
 
+## 4.17.0 · 23 novembre 2026
+
+Les petits outils que chaque appli avait écrits pour elle (l’audit du 23 novembre) : une seule copie, dans `ds.js`.
+
+- `ds.text` : `fold` (accents et majuscules à part), `matches` (tous les mots d’une recherche), `compare` (l’ordre de la langue de la page, « Élodie » avec les E, « 10 » après « 9 »), `slug`. Le sélecteur et le tri des tableaux s’en servent.
+- Les mots : `ds.plural`, `ds.count` (« 3 opérations »), `ds.list` (« Léa, Irina et Zoé »), `ds.duration` (« 1 an et 3 mois »), `ds.every` (« toutes les 2h »), `ds.since` (« 2h05 »), et deux styles pour `ds.date` : `"relative"` (« dans 3 jours », « hier ») et `"heading"` (« Vendredi 6 novembre » au-dessus de ses lignes).
+- Les jours : `ds.day.addMonths`, `ds.day.monthEnd`, `ds.day.diff`, que le choix de dates utilise aussi.
+- La mémoire de l’appareil : `ds.store.get` et `ds.store.set` (en JSON, sans jamais casser dans une fenêtre privée) ; `ds.periodPick` retient son choix avec `key` et le relit avec `ds.periodPick.stored`.
+- `ds.poll` relit tant que la page est vue (jamais deux fois en même temps, de nouveau dès qu’on revient) ; `ds.onSeen` quand on revient sur la page.
+- `ds.boot` pilote l’écran du premier chargement : ce qu’il lit, son fondu, son échec et son « Réessayer ».
+- `ds.ext` : un lien vers un autre site, seulement en https ; `ds.h` laisse tomber une adresse qui lancerait un script.
+- Les tons hors des tableaux et des tuiles (`.tone.is-good`, `is-bad`, `is-mid`) et une variation signée dans son ton (`.delta`, `ds.delta`), « ±0 » sans ton.
+- `.note` suit la taille de son thème (14 px en Vitrine) ; `.note.is-faint` est plus discrète encore. Les petites phrases grises de Selecta passent dessus.
+- Page vitrine : « Petits outils ».
+
 ## 4.16.0 · 23 novembre 2026
 
 Les dernières pièces génériques que les applis dessinaient encore elles-mêmes.

@@ -28,8 +28,8 @@
     en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
   });
   function words() { return _.words(WORDS); }
-  function store(key, v) { _.write(key, JSON.stringify(v)); }
-  function stored(key) { try { return JSON.parse(_.read(key)); } catch (e) { return null; } }
+  function store(key, v) { window.ds.store.set(key, v); }
+  function stored(key) { return window.ds.store.get(key, null); }
 
   // a cell's place in its row, its colspans counted, and the cell at that place in another row
   function place(cell) {
@@ -53,7 +53,6 @@
     var n = raw.replace(/[\s  €%]/g, "").replace(/^\+/, "").replace(/^[−–]/, "-").replace(",", ".");
     return /^-?\d+(\.\d+)?$/.test(n) ? parseFloat(n) : raw;
   }
-  var collator = new Intl.Collator("fr", { sensitivity: "base", numeric: true });
   var ISO = /^\d{4}-\d{2}(-\d{2})?/;
 
   function sortable(table, o) {
@@ -98,7 +97,7 @@
         var list = [].slice.call(body.rows).map(function (r, i) { return { r: r, v: value(cellAt(r, at)), i: i }; });
         list.sort(function (a, z) {
           if (a.v == null || z.v == null) return a.v == null && z.v == null ? a.i - z.i : a.v == null ? 1 : -1;
-          var c = typeof a.v === "number" && typeof z.v === "number" ? a.v - z.v : collator.compare(String(a.v), String(z.v));
+          var c = typeof a.v === "number" && typeof z.v === "number" ? a.v - z.v : window.ds.text.compare(String(a.v), String(z.v));
           // the same value: as they came
           return c ? c * way : a.i - z.i;
         });

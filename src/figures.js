@@ -8,11 +8,11 @@
      tone}]: tone "good", "bad" or "mid" colours the figure.
    ds.verdict(holder, ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(holder, options, {value, onPick, label, tabs}): a period selector: buttons on a computer, the design
+   ds.periodPick(holder, options, {value, onPick, label, tabs, key}): a period selector: buttons on a computer, the design
      system's menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value,
      label]]; with tabs, a phone keeps the buttons too, the tabs that scroll sideways (.tabs.is-scroll), the lit one
      brought into view (a person's networks, like the analysis's tabs above them in Studio); value: the one lit;
-     onPick(value) is called with the chosen one, the selector lights it itself. Called again on the same holder, it
+     key keeps the choice on the device (ds.store), periodPick.stored(key, options, fallback) reads it back at the start; onPick(value) is called with the chosen one, the selector lights it itself. Called again on the same holder, it
      gives the same selector back, lit on the value given. */
 (function () {
   "use strict";
@@ -103,6 +103,7 @@
       var opt = options.filter(function (x) { return String(x[0]) === String(v); })[0];
       if (!opt) return;
       light(opt[0]);
+      if (o.key) window.ds.store.set(o.key, opt[0]);
       if (pick) pick(opt[0]);
     }
     options.forEach(function (x) {
@@ -125,5 +126,10 @@
   window.ds.rank = rank;
   window.ds.minitiles = minitiles;
   window.ds.verdict = verdict;
+  // the choice kept on the device under that key, when it is still one of the options; fallback otherwise
+  periodPick.stored = function (key, options, fallback) {
+    var v = window.ds.store.get(key);
+    return options.some(function (x) { return String(x[0]) === String(v); }) ? options.filter(function (x) { return String(x[0]) === String(v); })[0][0] : fallback;
+  };
   window.ds.periodPick = periodPick;
 })();

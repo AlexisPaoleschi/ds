@@ -48,7 +48,7 @@
   document.addEventListener("DOMContentLoaded", function () { pills(); });
 
   var made = 0;
-  function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  var fold = window.ds.text.fold;
   function picker(holder, items, o) {
     holder = find(holder);
     if (!holder) return null;

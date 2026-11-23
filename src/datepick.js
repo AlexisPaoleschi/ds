@@ -51,10 +51,9 @@
 
   // the days are Paris's days, counted at noon UTC so that no clock change moves them (ds.day)
   function pad(n) { return String(n).padStart(2, "0"); }
-  function daysBetween(a, b) { return Math.round((at(b) - at(a)) / 864e5); }
-  function monthLen(ym) { return new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate(); }
+  var daysBetween = window.ds.day.diff, addMonths = window.ds.day.addMonths;
+  function monthLen(ym) { return +window.ds.day.monthEnd(ym).slice(8, 10); }
   function monthIndex(ym) { return +ym.slice(0, 4) * 12 + +ym.slice(5, 7) - 1; }
-  function addMonths(ym, n) { var m = monthIndex(ym) + n; return Math.floor(m / 12) + "-" + pad(m % 12 + 1); }
   function date(t, style) { return window.ds.date(t, style); }
   function dayText(key, year) { return date(key, year ? { day: "numeric", month: "short", year: "numeric" } : "day"); }
 

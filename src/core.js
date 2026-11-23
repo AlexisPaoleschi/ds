@@ -1,11 +1,14 @@
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
-   handler would be blocked by a strict page), anything else as an attribute; null and false are skipped, strings become
-   text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
+   handler would be blocked by a strict page), anything else as an attribute (an href or a src that would run a script
+   is left out); null and false are skipped, strings become text. ds.esc(text) makes a text harmless in HTML written as a string. ds.ico(name, cls) is an icon of the sprite.
    ds.day works with Paris's days, written "2026-11-09" and counted at noon UTC so that no clock change moves them:
    today(), key(date), at(key) (its Date), add(key, n), weekStart(key) (its Monday), format(key, options), hour(date) (the
-   hour at Paris, 0 to 23, now when no date is given).
+   hour at Paris, 0 to 23, now when no date is given), addMonths(key or month, n) (a month "2026-11" moved by n months,
+   or a day moved by n months and kept inside its month: the 31st of January plus one month is the 28th or 29th of
+   February), monthEnd(month or key) (the month's last day, "2026-11-30") and diff(from, to) (the days from one to the
+   other, negative when to comes first).
    On an iPhone or an iPad, the page's viewport gets maximum-scale=1 so that touching a field never zooms (pinching still does).
    For ds's own modules, ds._: english(), words(table), table(own) (a module's words over the shared ones), el(name, cls,
    kids) (kids: a text, a node or a list), find(element or selector), read(key, session) and write(key, value, session)
@@ -65,6 +68,8 @@
       else if (k === "text") node.textContent = v;
       else if (k === "style") node.setAttribute("style", v);
       else if (k.slice(0, 2) === "on" && typeof v === "function") node.addEventListener(k.slice(2), v);
+      // an address that would run a script is left out (a link built from data: a note, a merchant's site)
+      else if (/^(href|src|action|formaction)$/.test(k) && /^\s*(javascript|vbscript|data:text\/html)/i.test(String(v).replace(/[\u0000-\u001f]/g, ""))) continue;
       else node.setAttribute(k, v === true ? "" : v);
     }
     (kids || []).forEach(function (c) {
@@ -121,8 +126,22 @@
     add: add,
     weekStart: function (k) { return add(k, -((at(k).getUTCDay() + 6) % 7)); },
     format: function (k, o) { return intl("DateTimeFormat", english() ? "en-GB" : "fr-FR", Object.assign({ timeZone: "UTC" }, o)).format(at(k)); },
-    hour: function (d) { return +intl("DateTimeFormat", "en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); }
+    hour: function (d) { return +intl("DateTimeFormat", "en-GB", { timeZone: TZ, hour: "numeric", hourCycle: "h23" }).format(d || new Date()); },
+    addMonths: addMonths,
+    monthEnd: monthEnd,
+    diff: function (from, to) { return Math.round((at(to) - at(from)) / 864e5); }
   };
+  // a month moved by n months ("2026-11", -1 gives "2026-10"); a day keeps its number, or its month's last day
+  function addMonths(k, n) {
+    var m = new Date(Date.UTC(+k.slice(0, 4), +k.slice(5, 7) - 1 + n, 1)).toISOString().slice(0, 7);
+    if (k.length === 7) return m;
+    var end = monthEnd(m);
+    return m + "-" + String(Math.min(+k.slice(8, 10), +end.slice(8, 10))).padStart(2, "0");
+  }
+  function monthEnd(k) {
+    var d = new Date(Date.UTC(+k.slice(0, 4), +k.slice(5, 7), 0));
+    return d.toISOString().slice(0, 10);
+  }
 
   // the layers over the page, the last one on top
   var FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';

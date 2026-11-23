@@ -1,4 +1,4 @@
-/* ds 4.16.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.17.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The tools' behaviours, Bank's and Studio's only, in dist/ds-tools.js, which a page links after ds.js (it uses its
    ds.toast and ds.api, and the core's helpers): ds.drawer(holder, {onChange}) runs a page's filters drawer;
    ds.status(holder, {…}) draws the state of its sources; ds.jobs(holder, jobs) draws the syncs of a settings page;
@@ -465,8 +465,8 @@
     en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
   });
   function words() { return _.words(WORDS); }
-  function store(key, v) { _.write(key, JSON.stringify(v)); }
-  function stored(key) { try { return JSON.parse(_.read(key)); } catch (e) { return null; } }
+  function store(key, v) { window.ds.store.set(key, v); }
+  function stored(key) { return window.ds.store.get(key, null); }
 
   // a cell's place in its row, its colspans counted, and the cell at that place in another row
   function place(cell) {
@@ -490,7 +490,6 @@
     var n = raw.replace(/[\s  €%]/g, "").replace(/^\+/, "").replace(/^[−–]/, "-").replace(",", ".");
     return /^-?\d+(\.\d+)?$/.test(n) ? parseFloat(n) : raw;
   }
-  var collator = new Intl.Collator("fr", { sensitivity: "base", numeric: true });
   var ISO = /^\d{4}-\d{2}(-\d{2})?/;
 
   function sortable(table, o) {
@@ -535,7 +534,7 @@
         var list = [].slice.call(body.rows).map(function (r, i) { return { r: r, v: value(cellAt(r, at)), i: i }; });
         list.sort(function (a, z) {
           if (a.v == null || z.v == null) return a.v == null && z.v == null ? a.i - z.i : a.v == null ? 1 : -1;
-          var c = typeof a.v === "number" && typeof z.v === "number" ? a.v - z.v : collator.compare(String(a.v), String(z.v));
+          var c = typeof a.v === "number" && typeof z.v === "number" ? a.v - z.v : window.ds.text.compare(String(a.v), String(z.v));
           // the same value: as they came
           return c ? c * way : a.i - z.i;
         });
@@ -1488,11 +1487,11 @@
      tone}]: tone "good", "bad" or "mid" colours the figure.
    ds.verdict(holder, ratio, {words, high, low}): a judgement of a figure against the usual one: « ×1,4 », green from high (1.2),
      yellow from low (0.8), red under it; with words, « fort », « moyen » or « faible » under it. null keeps its room.
-   ds.periodPick(holder, options, {value, onPick, label, tabs}): a period selector: buttons on a computer, the design
+   ds.periodPick(holder, options, {value, onPick, label, tabs, key}): a period selector: buttons on a computer, the design
      system's menu on a phone (768px and less, « 1 an ▾ », the same .pill as a month's or a sort's). options: [[value,
      label]]; with tabs, a phone keeps the buttons too, the tabs that scroll sideways (.tabs.is-scroll), the lit one
      brought into view (a person's networks, like the analysis's tabs above them in Studio); value: the one lit;
-     onPick(value) is called with the chosen one, the selector lights it itself. Called again on the same holder, it
+     key keeps the choice on the device (ds.store), periodPick.stored(key, options, fallback) reads it back at the start; onPick(value) is called with the chosen one, the selector lights it itself. Called again on the same holder, it
      gives the same selector back, lit on the value given. */
 (function () {
   "use strict";
@@ -1583,6 +1582,7 @@
       var opt = options.filter(function (x) { return String(x[0]) === String(v); })[0];
       if (!opt) return;
       light(opt[0]);
+      if (o.key) window.ds.store.set(o.key, opt[0]);
       if (pick) pick(opt[0]);
     }
     options.forEach(function (x) {
@@ -1605,6 +1605,11 @@
   window.ds.rank = rank;
   window.ds.minitiles = minitiles;
   window.ds.verdict = verdict;
+  // the choice kept on the device under that key, when it is still one of the options; fallback otherwise
+  periodPick.stored = function (key, options, fallback) {
+    var v = window.ds.store.get(key);
+    return options.some(function (x) { return String(x[0]) === String(v); }) ? options.filter(function (x) { return String(x[0]) === String(v); })[0][0] : fallback;
+  };
   window.ds.periodPick = periodPick;
 })();
 /* The behaviour of src/pick.css.
@@ -1657,7 +1662,7 @@
   document.addEventListener("DOMContentLoaded", function () { pills(); });
 
   var made = 0;
-  function fold(t) { return String(t == null ? "" : t).normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  var fold = window.ds.text.fold;
   function picker(holder, items, o) {
     holder = find(holder);
     if (!holder) return null;
@@ -1980,10 +1985,9 @@
 
   // the days are Paris's days, counted at noon UTC so that no clock change moves them (ds.day)
   function pad(n) { return String(n).padStart(2, "0"); }
-  function daysBetween(a, b) { return Math.round((at(b) - at(a)) / 864e5); }
-  function monthLen(ym) { return new Date(Date.UTC(+ym.slice(0, 4), +ym.slice(5, 7), 0)).getUTCDate(); }
+  var daysBetween = window.ds.day.diff, addMonths = window.ds.day.addMonths;
+  function monthLen(ym) { return +window.ds.day.monthEnd(ym).slice(8, 10); }
   function monthIndex(ym) { return +ym.slice(0, 4) * 12 + +ym.slice(5, 7) - 1; }
-  function addMonths(ym, n) { var m = monthIndex(ym) + n; return Math.floor(m / 12) + "-" + pad(m % 12 + 1); }
   function date(t, style) { return window.ds.date(t, style); }
   function dayText(key, year) { return date(key, year ? { day: "numeric", month: "short", year: "numeric" } : "day"); }
 

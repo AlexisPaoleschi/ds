@@ -11,6 +11,7 @@
 <script src="dist/ds-tools.js" defer></script>
 <script src="dist/ds-photo.js" defer></script>
 <script src="demos/bank.js" defer></script>
+<script>document.addEventListener("DOMContentLoaded", () => { const t = ds.day.today(); document.querySelector('[data-kit="relative"]').textContent = ds.date(ds.day.add(t, 3), "relative"); document.querySelector('[data-kit="heading"]').textContent = ds.date(ds.day.add(t, -1), "heading") + " · " + ds.date("2026-11-06", "heading"); });</script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
 <script src="demos/date.js" defer></script>
@@ -389,6 +390,14 @@
     <div class="card"><h3 class="ct">Revenus · Patreon Alexis</h3><div data-studio="bars"></div></div>
     <div class="card"><h3 class="ct">Rythme de publication · Instagram</h3><div data-studio="heat"></div></div>
     <div class="card"><h3 class="ct">Ce qui a marché</h3><div data-studio="worked"></div></div>
+    <div class="card"><h3 class="ct">Petits outils · 4.17.0</h3>
+      <p>Ce mois-ci : <span class="tone is-good">+2 140,00€</span> · <span class="tone is-bad">−1 312,40€</span>, abonnés <span class="delta is-good">+12</span> en 7j, <span class="delta is-bad">−3</span> en 30j, <span class="delta">±0</span> hier.</p>
+      <p class="note">Une note sous un bloc, à la taille de son thème.</p>
+      <p class="note is-faint">Plus discrète encore : un compte, un état, « 9 / 40 photos ».</p>
+      <dl class="facts" id="kit-demo"><div><dt>ds.date relative</dt><dd data-kit="relative"></dd></div><div><dt>ds.date heading</dt><dd data-kit="heading"></dd></div>
+        <div><dt>ds.duration</dt><dd>1 an et 3 mois</dd></div><div><dt>ds.every</dt><dd>toutes les 2h</dd></div><div><dt>ds.list</dt><dd>Léa, Irina et Zoé</dd></div></dl>
+      <p class="note">Aussi dans ds.js : ds.text (fold, matches, compare, slug), ds.plural, ds.count, ds.since, ds.day.addMonths, monthEnd, diff, ds.store, ds.poll, ds.onSeen, ds.boot, ds.ext ; ds.periodPick retient son choix avec key.</p>
+    </div>
     <div class="card is-raised"><h3 class="ct">Pièces génériques · 4.15.0</h3>
       <a class="big-fig" href="#"><span class="big-fig-label">Tous les comptes</span><span class="big-fig-value">12 345,67€</span></a>
       <label class="field-label" for="demo-mail">Adresse e-mail</label><input id="demo-mail" type="email" placeholder="nom@exemple.fr">

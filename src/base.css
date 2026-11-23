@@ -84,3 +84,9 @@
 /* a live thing's beat (a sync under way, a client looking at a gallery now): its mark fades and comes back. In ds.css,
    which every app loads, so that a page without the tools can use it (4.0.1) */
 @keyframes pulse { 50% { opacity: .35; } }
+/* a figure's tone in a sentence or a row, outside a table or a tile: .tone.is-good (money in, a rise), .is-bad, .is-mid;
+   a change, signed and in its tone (ds.delta): .delta, its figures aligned and a little bolder, on one line */
+  :is(.tone, .delta).is-good { color: var(--good); }
+  :is(.tone, .delta).is-bad { color: var(--bad); }
+  :is(.tone, .delta).is-mid { color: var(--mid); }
+  .delta { font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; }
