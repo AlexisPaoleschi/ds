@@ -66,6 +66,14 @@
   function verdict(holder, ratio, o) {
     o = o || {};
     var w = words(), high = o.high || 1.2, low = o.low || 0.8;
+    // a verdict still to come (a post planned, not out yet): a word in gold in its place (o.text, « Prévu »), its small
+    // line under it in the tall one (o.note, « dans 5j »), as large as the others so that the column stays in line
+    if ((ratio == null || isNaN(ratio)) && o.text) {
+      var soon = el("span", "verdict is-soon" + (o.words ? " is-tall" : ""), o.text);
+      if (o.words && o.note) soon.append(el("small", "", o.note));
+      if (o.title) soon.title = o.title;
+      return put(holder, soon);
+    }
     if (ratio == null || isNaN(ratio)) return put(holder, el("span", "verdict is-none" + (o.words ? " is-tall" : "")));
     var level = ratio >= high ? "good" : ratio >= low ? "mid" : "bad";
     var v = el("span", "verdict is-" + level + (o.words ? " is-tall" : ""), "×" + window.ds.number(Math.round(ratio * 10) / 10, Math.round(ratio * 10) % 10 ? 1 : 0));

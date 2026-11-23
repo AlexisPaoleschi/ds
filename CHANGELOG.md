@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.23.0 · 23 novembre 2026
+
+- `ds.verdict(holder, null, {words: true, text, note, title})` : un verdict encore à venir (un post prévu, pas encore sorti). Son mot en or à la place du chiffre (« Prévu »), sa petite ligne dessous (« dans 5j »), son bord en pointillé pour ne pas le prendre pour un verdict moyen, aussi large que les autres pour que la colonne reste alignée (`.verdict.is-soon`). Studio s’en sert pour la ligne d’un post prévu en haut de la liste d’une modèle, au lieu d’une quatrième case qui passait sur deux lignes sur un téléphone. La vitrine en montre un dans sa fenêtre de liste (X), et `checks/studio.js` le vérifie.
+
 ## 4.22.2 · 23 novembre 2026
 
 - Sous un titre souligné (`h4.sect.is-ruled`), juste après lui ou en haut de la liste d’une fenêtre dont le haut finit par lui, la première ligne de `ul.rows` garde sa place au-dessus, comme les suivantes sous leur filet : elle touchait presque le trait (les posts d’une modèle dans Studio). `checks/showcase.js` le mesure.

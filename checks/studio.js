@@ -234,8 +234,13 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(rk.cols === 3 && rk.rows === 4 && rk.top === 3 && rk.n === '1234' && rk.share === '0.667' && rk.href === '_blank' && rk.note === '30 jours' && rk.plain === 0
     && rk.verdict === 'verdict is-good' && rk.empty === 'Rien sur cette période.' && rk.side === 'column', 'les classements côte à côte : la place, les trois premiers en or, la barre de part, sans place, vide');
   const vd = await p.evaluate(() => verdicts.map(v => [v.className, v.textContent]));
-  assert(JSON.stringify(vd) === JSON.stringify([['verdict is-good', '×1,4'], ['verdict is-mid', '×1'], ['verdict is-bad', '×0,6'], ['verdict is-good is-tall', '×1,3fort'], ['verdict is-none', '']]),
-    'les verdicts : vert, jaune, rouge, avec leur mot, et la place gardée sans chiffre ' + JSON.stringify(vd));
+  assert(JSON.stringify(vd) === JSON.stringify([['verdict is-good', '×1,4'], ['verdict is-mid', '×1'], ['verdict is-bad', '×0,6'], ['verdict is-good is-tall', '×1,3fort'], ['verdict is-none', ''],
+    ['verdict is-soon is-tall', 'Prévudans 5j']]),
+    'les verdicts : vert, jaune, rouge, avec leur mot, la place gardée sans chiffre, et celui à venir ' + JSON.stringify(vd));
+  // the one still to come: in gold, as large as a tall one beside it
+  const soon = await p.evaluate(() => { const a = verdicts[3].getBoundingClientRect(), b = verdicts[5].getBoundingClientRect(), c = getComputedStyle(verdicts[5]);
+    return [Math.round(a.width) === Math.round(b.width), c.color === getComputedStyle(document.documentElement).getPropertyValue('--accent-text').trim() || c.color, verdicts[5].title]; });
+  assert(soon[0] && soon[2] === 'prévu le 28 novembre', 'un verdict à venir : son mot en or, aussi large qu’un grand verdict ' + JSON.stringify(soon));
   const mt = await p.evaluate(() => { const box = document.querySelector('#mini .minitiles'), t = box.querySelector('.tile');
     return { n: box.querySelectorAll('.tile').length, flow: getComputedStyle(box).gridAutoFlow, tiles: box.matches('dl.tiles.is-compact.is-fit'),
       unit: !!t.querySelector('dd .tile-unit'), note: !!box.querySelector('.tile .tile-note'), widths: [...box.querySelectorAll('.tile')].map(x => Math.round(x.getBoundingClientRect().width)) }; });

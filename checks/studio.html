@@ -71,7 +71,8 @@
       ds.rank(null, [{ name: "Série", sub: "9 posts", value: ds.verdict(null, 1.3) }], { title: "Par type", plain: true }),
       ds.rank(null, [], { title: "Vide" }));
     ds.minitiles(document.getElementById("mini"), [{ label: "Médiane", value: "1 240", unit: "vues", note: "48 posts" }, { label: "Posts", value: "4,5" }, { label: "Gagnés", value: "+86" }, { label: "Payants", value: "+3" }]);
-    window.verdicts = [ds.verdict(null, 1.43), ds.verdict(null, 1), ds.verdict(null, 0.62), ds.verdict(null, 1.25, { words: true }), ds.verdict(null, null)];
+    window.verdicts = [ds.verdict(null, 1.43), ds.verdict(null, 1), ds.verdict(null, 0.62), ds.verdict(null, 1.25, { words: true }), ds.verdict(null, null),
+      ds.verdict(null, null, { words: true, text: "Prévu", note: "dans 5j", title: "prévu le 28 novembre" })];
     document.getElementById("verdicts").append(...verdicts);
     window.periods = [];
     ds.periodPick(document.getElementById("period"), [[30, "30 jours"], [90, "90 jours"], [365, "1 an"], [0, "Tout"]], { value: 90, onPick: v => periods.push(v) });

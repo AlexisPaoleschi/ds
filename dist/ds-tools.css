@@ -1,4 +1,4 @@
-/* ds 4.22.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.23.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The pill: a short menu that says its choice (« 12 mois », « Récentes d’abord »), drawn as every list that opens: a
    field's frame and ground, the sprite's chevron on its right (4.7.0). The real <select> lies over it,
    unseen, so that a tap opens the phone's own picker and the keyboard works as on any menu:
@@ -442,6 +442,9 @@
   .verdict.is-good { color: var(--good); background: var(--good-soft); border-color: var(--good-line); }
   .verdict.is-mid { color: var(--mid); background: var(--mid-soft); border-color: var(--mid-line); }
   .verdict.is-bad { color: var(--bad); background: var(--bad-soft); border-color: var(--bad-line); }
+  /* one still to come (ds.verdict(null, null, {text: "Prévu"})): the word in gold, as large as the others, its edge dashed
+     so that it is not taken for a middling one at a glance */
+  .verdict.is-soon { color: var(--accent-text); background: var(--accent-soft); border-color: var(--accent-line); border-style: dashed; }
   .verdict.is-none { visibility: hidden; }
   /* vitrine writes a success in dark gold, close to its yellow: the strong verdict is filled, as its badges are */
   [data-theme="vitrine"] .verdict.is-good { color: var(--on-accent); background: var(--good); border-color: var(--good); }

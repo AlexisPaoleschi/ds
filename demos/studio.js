@@ -104,10 +104,17 @@
     var counts = { patreon: 24, x: 3, bluesky: 1, instagram: 0 }, s = ds.sheet(el);
     function draw(net) {
       var items = [];
+      // on X, a post planned, not out yet: its line on top, its verdict still to come
+      if (net === "x") {
+        var plan = node("li"), pt = node("span", "row-title", "La série d’hiver · Irina");
+        pt.append(node("small", null, ds.date(addDays(today, 5), "row")));
+        plan.append(pt, ds.verdict(null, null, { words: true, text: "Prévu", note: "dans 5j", title: "prévu le " + ds.date(addDays(today, 5), { day: "numeric", month: "long" }) }));
+        items.push(plan);
+      }
       for (var i = 0; i < counts[net]; i++) {
         var li = node("li"), t = node("span", "row-title", pick(KINDS, i + net.length) + " · Irina");
         t.append(node("small", null, ds.date(addDays(today, -i * 9 - 2), { day: "numeric", month: "short", year: "numeric" })));
-        li.append(t, node("span", "row-value", "×" + (0.4 + rnd(i + 3) * 2).toFixed(1).replace(".", ",")));
+        li.append(t, ds.verdict(null, 0.4 + rnd(i + 3) * 2, { words: true }));
         items.push(li);
       }
       if (!items.length) items.push(node("li", "empty-note", "Aucun post Instagram pour l’instant."));
