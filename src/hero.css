@@ -55,6 +55,8 @@
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
   .hero.is-band .hero-meta { font-style: italic; }
+  /* a line under the title that is a whole sentence: text, not spaced capitals */
+  .hero .hero-meta.is-text { font: var(--type-text-weight) var(--type-text-size)/var(--lh-relaxed) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }

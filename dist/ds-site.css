@@ -1,4 +1,4 @@
-/* ds 5.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -153,7 +153,7 @@
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--type-title-1-font);
     font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
-  .signup-banner-subtitle { font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight); line-height: var(--lh-loose); color: var(--faint); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .signup-banner-subtitle { font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-loose); color: var(--dim); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .signup-banner-form { flex: 1; min-width: 0; }
   .signup-banner-field { display: flex; gap: var(--s-12); }
   /* the newsletter's banner: its field written as long as the design system's field rule, so that the site's field keeps its own size; its text is the
@@ -260,8 +260,8 @@
     pointer-events: none; }
   .location-title { margin-bottom: var(--s-8); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
     text-align: center; color: var(--accent); text-transform: var(--type-title-2-case); }
-  .location-subtitle { margin-bottom: var(--s-40); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight); font-style: italic;
-    line-height: var(--lh-relaxed); text-align: center; color: var(--faint); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .location-subtitle { margin-bottom: var(--s-40); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); font-style: italic;
+    line-height: var(--lh-relaxed); text-align: center; color: var(--faint); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .location-map-container { position: relative; display: flex; align-items: center; justify-content: center; gap: var(--s-48); margin: var(--s-40) 0; }
   .location-map-item { position: relative; z-index: var(--z-raise); text-align: center; }
   .location-pin { position: relative; display: flex; align-items: center; justify-content: center; width: 80px; height: 80px;
@@ -364,7 +364,7 @@
   .sold-out-banner { display: none; }
   body[data-sold-out] .sold-out-banner { display: flex; align-items: center; justify-content: center;
     padding: var(--s-18) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
-  .sold-out-label { font-family: var(--type-caps-font); font-size: var(--type-caps-size); font-weight: var(--type-caps-weight); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case);
+  .sold-out-label { font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case);
     color: var(--white); }
   /* Payment */
   .payment-info { margin-top: var(--s-48); padding: var(--s-32); background: transparent; border: 1px solid var(--line); }

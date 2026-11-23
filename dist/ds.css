@@ -1,4 +1,4 @@
-/* ds 5.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -565,7 +565,7 @@
      undo and redo) stays in its place, greyed further (--o-off), and does not light up */
   :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
   :where(header.top) .btn.is-icon:disabled { opacity: var(--o-off); }
-  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   /* ds.busy puts the class loading on header.top while something loads; .busy-text says what, for screen readers only */
@@ -658,7 +658,7 @@
    too, darkened in vitrine so that it reads on white (--tint-ink, as a tile's label). A link
    (a.tag) shows its edge in full on hover; an icon in it is the small one. */
   .tag { --a: var(--accent); display: inline-flex; align-items: center; gap: var(--s-4); box-sizing: border-box; padding: var(--s-2) var(--s-6);
-    font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); text-decoration: none; white-space: nowrap;
+    font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); text-decoration: none; white-space: nowrap;
     color: color-mix(in oklab, var(--a) var(--tint-ink), var(--ink)); background: color-mix(in srgb, var(--a) var(--soft-mix), transparent);
     border: 1px solid color-mix(in srgb, var(--a) var(--line-mix), transparent); border-radius: var(--r-s); }
   .tag.is-good { --a: var(--good); }
@@ -1254,7 +1254,7 @@
   .tile .tile-delta { display: block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); margin-top: var(--s-6); color: var(--dim); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: var(--type-strong-weight); }
   .tile .tile-delta.is-good { color: var(--good); }
-  .tile .tile-note { display: inline-block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .tile .tile-note { display: inline-block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--type-caption-font); color: var(--faint); margin-top: var(--s-8); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
   .tile .tile-delta.is-bad { color: var(--bad); }
   .tile .tile-delta.is-mid { color: var(--mid); }
@@ -1508,7 +1508,7 @@
   .row-place { font-size: var(--type-small-size); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a heading over a group of rows inside the list (a year over its trips): small capitals, without the rows' line, what
      the group comes to on its right */
-  ul.rows > li.rows-head { border: 0; color: var(--faint); display: flex; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--type-smallcaps-ls); padding: var(--s-24) 0 var(--s-2); text-transform: var(--type-smallcaps-case); }
+  ul.rows > li.rows-head { border: 0; color: var(--dim); display: flex; font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); gap: var(--s-12); justify-content: space-between; letter-spacing: var(--type-small-ls); padding: var(--s-24) 0 var(--s-2); text-transform: var(--type-small-case); }
   ul.rows > li.rows-head:first-child { padding-top: var(--s-4); }
   /* rows drawn as small cards (a trip, and what it is made of under it): each on the lighter ground, apart from the
      next, its name and its figure a step larger */
@@ -1557,7 +1557,7 @@
   .tint { color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink), var(--ink)); }
   .who { background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); color: color-mix(in oklab, var(--n, var(--accent)) var(--tint-ink-on-tint), var(--ink)); flex: 0 0 auto; font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); padding: var(--s-2) var(--s-6); text-transform: var(--type-smallcaps-case); }
   /* never cut over lines: on a narrow line it goes under what it follows (.sum-line wraps) */
-  .late-tag { flex: none; white-space: nowrap; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .late-tag { flex: none; white-space: nowrap; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); color: var(--bad); background: var(--bad-soft); border: 1px solid var(--bad-line); padding: var(--s-2) var(--s-6); border-radius: var(--r-s); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* a list's line: its date or time, and its amount or figure */
   .row-date { color: var(--dim); flex: 0 0 auto; font-variant-numeric: tabular-nums; min-width: 7ch; font: var(--type-small-weight) var(--type-small-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .row-value { color: var(--ink); font-variant-numeric: tabular-nums; font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); min-width: 86px; text-align: right; margin-left: auto; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
@@ -1714,6 +1714,8 @@
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
   .hero.is-band .hero-meta { font-style: italic; }
+  /* a line under the title that is a whole sentence: text, not spaced capitals */
+  .hero .hero-meta.is-text { font: var(--type-text-weight) var(--type-text-size)/var(--lh-relaxed) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }
@@ -2205,7 +2207,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
   :where(.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   :where(.settings) .field input.is-changed { border-color: var(--accent); }
   :where(.settings) .field input[aria-invalid="true"] { background: var(--bad-soft); border-color: var(--bad); }
-  :where(.settings) .field .unit { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); width: 5.6em; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  :where(.settings) .field .unit { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); width: 5.6em; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   :where(.settings) .field .def { white-space: nowrap; }
   :where(.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
   /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
@@ -2220,7 +2222,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
   :where(.settings) .conn .det.is-bad { color: var(--bad); }
   :where(.settings) .conn a { color: var(--accent-text); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--type-strong-font); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   :where(.settings) .conn a:hover { text-decoration: underline; }
-  :where(.settings) .mem { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  :where(.settings) .mem { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   :where(.settings) .err { color: var(--bad); font-size: var(--type-small-size); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   :where(.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: var(--s-6); overflow: hidden; }
   :where(.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--type-caption-size); gap: var(--s-10); justify-content: space-between; padding: var(--s-8) var(--s-12); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }

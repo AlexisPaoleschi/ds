@@ -8,7 +8,7 @@
   .tile .tile-delta { display: block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); margin-top: var(--s-6); color: var(--dim); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tile .tile-delta:is(.is-good, .is-bad, .is-mid) { font-weight: var(--type-strong-weight); }
   .tile .tile-delta.is-good { color: var(--good); }
-  .tile .tile-note { display: inline-block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--mono); color: var(--faint); margin-top: var(--s-8); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .tile .tile-note { display: inline-block; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--type-caption-font); color: var(--faint); margin-top: var(--s-8); text-decoration: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .tile a.tile-note:hover, .tile a.tile-note:focus-visible { color: var(--ink); text-decoration: underline; }
   .tile .tile-delta.is-bad { color: var(--bad); }
   .tile .tile-delta.is-mid { color: var(--mid); }

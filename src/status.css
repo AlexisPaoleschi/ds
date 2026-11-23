@@ -12,7 +12,7 @@
   details.status li.is-late .status-state, details.status li.is-late .status-state .ico { color: var(--mid); }
   details.status .status-detail { grid-column: 2 / -1; color: var(--faint); font-size: var(--type-small-size); margin-top: calc(-1 * var(--s-2)); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   details.status li:not(.is-late) .status-detail { display: none; }
-  details.status .status-every { color: var(--faint); font-family: var(--mono); font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  details.status .status-every { color: var(--faint); font-family: var(--type-caption-font); font-size: var(--type-caption-size); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   details.status li.status-link { display: block; padding-top: var(--s-4); border-top: 1px solid var(--line); }
   details.status li.status-link a { color: var(--accent-text); text-decoration: none; font-weight: var(--type-strong-weight); }
   /* an app's footer, at the end of its page (.wrap): the state of its sources on one line, which shrinks rather than wraps;

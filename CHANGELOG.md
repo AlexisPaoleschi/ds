@@ -1,5 +1,14 @@
 # Changelog
 
+## 5.2.0 · 24 novembre 2026
+
+Après l’étude du texte de Bank, de Studio et du site, page par page :
+
+- Le mono ne sert plus qu’aux chiffres (montants, dates, nombres) et à ce qui se copie tel quel (le libellé brut d’une banque, une commande à taper dans la recherche, un journal, une erreur technique). Les mots prennent la police de leur rôle : une étiquette (`.tag`, `.late-tag`), la fréquence d’une source (`.status-every`), la note d’une case (`.tile .tile-note`, comme dans une liste de cases), les mots d’un graphique (`.chart-now-l`, `.chart-ref-l`, les mois et les jours du calendrier), l’unité d’un réglage (`.field .unit`), la mémoire du serveur (`.mem`) et le chargement (`header.top .busy`, ses chiffres restent en mono).
+- Un nom dans une légende de graphique s’écrit en légende (12px), partout : le camembert (`.chart-donut-l`) comme la barre et les colonnes, au lieu du petit texte demi-gras.
+- Une tête de groupe s’écrit pareil dans une liste et dans un tableau : petit texte demi-gras, tel qu’il est écrit (`ul.rows > li.rows-head`, avant en petites capitales), comme les jours du tableau des opérations.
+- Le site : la phrase du bandeau d’inscription (`.signup-banner-subtitle`) est un texte, comme sur la page de la newsletter ; la phrase sous « Getting there » (`.location-subtitle`) aussi, toujours en italique ; une ligne de couverture qui est une phrase entière prend `.hero-meta.is-text` ; « Sold out » (`.sold-out-label`) s’écrit en petites capitales, comme l’étiquette de la carte.
+
 ## 5.1.0 · 23 novembre 2026
 
 - Un titre coupé sur deux lignes se lit comme un seul titre : en Vitrine, ses lignes sont espacées de 1,3 au lieu de 1,8, et l’écart rendu au-dessus et au-dessous, si bien qu’un titre d’une ligne garde exactement sa place (`.title-1`, `.title-2`, `.title-3`, `.card-title`). Deux jetons le disent, `--title-wrap-lh` et `--title-wrap-pad` ; en Atelier, rien ne change.

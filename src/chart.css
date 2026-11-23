@@ -22,9 +22,9 @@
   .chart-area.is-ahead { fill: color-mix(in srgb, var(--n, var(--accent)) 5%, transparent); }
   .chart-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1px dashed var(--line-2); pointer-events: none; }
   .chart-now-l { position: absolute; bottom: 100%; left: 0; transform: translateX(-50%); padding-bottom: var(--s-2); color: var(--dim);
-    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-ref { stroke: var(--dim); stroke-width: 1; stroke-dasharray: 4 3; }
-  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-ref-l { position: absolute; left: 0; transform: translateY(calc(-100% - var(--s-2))); color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); white-space: nowrap; pointer-events: none; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-mark, .chart-dot { position: absolute; box-sizing: border-box; width: 8px; height: 8px; margin: calc(-1 * var(--s-4)) 0 0 calc(-1 * var(--s-4)); border-radius: 50%;
     background: var(--panel); border: 2px solid var(--n, var(--accent)); }
   .chart-dot { background: var(--n, var(--accent)); pointer-events: none; }
@@ -83,11 +83,11 @@
   .chart-heat-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: var(--s-4); contain: inline-size; }
   .chart-heat-year { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); min-width: 740px; }
   .chart-heat-year + .chart-heat-year { margin-top: var(--s-14); }
-  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-heat-dow { display: grid; grid-template-rows: 16px repeat(7, minmax(0, 1fr)); row-gap: var(--heat-gap); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-year.has-below .chart-heat-dow { grid-template-rows: 16px repeat(7, minmax(0, 1fr)) 34px; }
   .chart-heat-dow span { display: flex; align-items: center; }
   .chart-heat-months, .chart-heat-days, .chart-heat-below { display: grid; grid-template-columns: repeat(53, minmax(0, 1fr)); column-gap: var(--heat-gap); }
-  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .chart-heat-months { align-items: end; height: 16px; margin-bottom: var(--heat-gap); padding-bottom: var(--s-4); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); white-space: nowrap; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-heat-days { grid-auto-flow: column; grid-template-rows: repeat(7, auto); row-gap: var(--heat-gap); }
   .heat-day { display: block; aspect-ratio: 1; background: color-mix(in srgb, var(--n, var(--accent)) var(--tint-soft), transparent); border-radius: var(--r-s); }
   .heat-day.is-1 { background: color-mix(in srgb, var(--n, var(--accent)) 60%, transparent); }
@@ -145,7 +145,7 @@
   button.chart-donut-row { cursor: pointer; }
   /* what the chosen row opens, under it, the row's line over it */
   .chart-donut-open { min-width: 0; padding: var(--s-4) 0 var(--s-16); }
-  .chart-donut-l { min-width: 0; color: var(--ink); font-weight: var(--type-strong-weight); overflow-wrap: anywhere; }
+  .chart-donut-l { min-width: 0; color: var(--ink); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); overflow-wrap: anywhere; }
   /* a word under a row's name (a row's note): grey, or red when it says what rose, green what fell */
   .chart-donut-n { display: block; margin-top: var(--s-2); color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   .chart-donut-n.is-bad { color: var(--bad); } .chart-donut-n.is-good { color: var(--good); }

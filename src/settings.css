@@ -45,7 +45,7 @@
   :where(.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   :where(.settings) .field input.is-changed { border-color: var(--accent); }
   :where(.settings) .field input[aria-invalid="true"] { background: var(--bad-soft); border-color: var(--bad); }
-  :where(.settings) .field .unit { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); width: 5.6em; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  :where(.settings) .field .unit { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); width: 5.6em; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   :where(.settings) .field .def { white-space: nowrap; }
   :where(.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }
   /* the bar's message is a line of text, not the lasting message's box: empty, it shows nothing; filled, the bar keeps its height */
@@ -60,7 +60,7 @@
   :where(.settings) .conn .det.is-bad { color: var(--bad); }
   :where(.settings) .conn a { color: var(--accent-text); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--type-strong-font); grid-column: 2; grid-row: 1 / span 2; text-decoration: none; white-space: nowrap; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   :where(.settings) .conn a:hover { text-decoration: underline; }
-  :where(.settings) .mem { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  :where(.settings) .mem { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-text) var(--type-caption-font); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   :where(.settings) .err { color: var(--bad); font-size: var(--type-small-size); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   :where(.settings) .logbox { background: var(--bg); border-radius: var(--r-m); border: 1px solid var(--line-2); grid-column: 1 / -1; margin-top: var(--s-6); overflow: hidden; }
   :where(.settings) .loghead { align-items: center; border-bottom: 1px solid var(--line); color: var(--dim); display: flex; font-size: var(--type-caption-size); gap: var(--s-10); justify-content: space-between; padding: var(--s-8) var(--s-12); font-family: var(--type-caption-font); font-weight: var(--type-caption-weight); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }

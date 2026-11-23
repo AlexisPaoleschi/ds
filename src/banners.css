@@ -30,7 +30,7 @@
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--type-title-1-font);
     font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); color: var(--ink); }
   .signup-banner-title::after { content: ''; position: absolute; bottom: 0; left: 0; width: 48px; height: 1px; background: var(--accent); }
-  .signup-banner-subtitle { font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight); line-height: var(--lh-loose); color: var(--faint); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .signup-banner-subtitle { font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-loose); color: var(--dim); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .signup-banner-form { flex: 1; min-width: 0; }
   .signup-banner-field { display: flex; gap: var(--s-12); }
   /* the newsletter's banner: its field written as long as the design system's field rule, so that the site's field keeps its own size; its text is the

@@ -19,7 +19,7 @@
      undo and redo) stays in its place, greyed further (--o-off), and does not light up */
   :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
   :where(header.top) .btn.is-icon:disabled { opacity: var(--o-off); }
-  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--mono); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   @keyframes spin { to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   /* ds.busy puts the class loading on header.top while something loads; .busy-text says what, for screen readers only */
