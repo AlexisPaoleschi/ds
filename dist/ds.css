@@ -1,4 +1,4 @@
-/* ds 4.15.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 4.16.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -138,6 +138,7 @@
 :root, [data-theme="atelier"] {
   color-scheme: dark;
   /* a figure put forward (.big-fig): Archivo heavy, the label above it 10px away, room above and under it */
+  --field-label-size: var(--fs-11);
   --big-fig-size: var(--fs-display); --big-fig-weight: 800; --big-fig-ls: 0; --big-fig-gap: var(--s-10);
   --big-fig-note-size: var(--fs-13); --big-fig-note-ls: 0; --big-fig-pt: var(--s-16); --big-fig-pb: var(--s-24);
   --bg: var(--night-900); --panel: var(--night-800); --panel-2: var(--night-700);
@@ -258,6 +259,7 @@
   color-scheme: light;
   /* a figure put forward (.big-fig): the site's prices, Gilda light and very large (never wider than a phone allows), what
      it stands for under it */
+  --field-label-size: var(--fs-14);
   --big-fig-size: min(var(--fs-104), 15vw); --big-fig-weight: 400; --big-fig-ls: var(--ls-038); --big-fig-gap: var(--s-12);
   --big-fig-note-size: var(--fs-20); --big-fig-note-ls: var(--ls-050); --big-fig-pt: 0; --big-fig-pb: 0;
   /* the site's grounds: a cream page, white cards and fields, beige bands */
@@ -416,6 +418,9 @@
   :where([data-theme="vitrine"]) p { color: var(--dim); }
   :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: 400; text-decoration: underline; transition: color var(--t-fast) ease; }
   @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
+/* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
+  .field-label { display: block; color: var(--faint); font-family: var(--label-font); font-size: var(--field-label-size); font-weight: var(--label-weight);
+    letter-spacing: var(--label-ls); text-transform: uppercase; }
 /* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
    .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
   .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);
@@ -1054,6 +1059,12 @@
   .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
   /* the arrow's room is kept in every title, so that the columns do not move when another one sorts */
   .tbl th .sort::after { content: "\00a0"; content: "\00a0" / ""; display: inline-block; min-width: 0.75em; }
+  /* a row of column groups over the titles (Studio's « Dernière publication », « Visibilité », « Argent »): quieter, one
+     continuous line under it over every column but the first (the names), an unnamed group included, the titles under
+     it a little apart */
+  .tbl thead tr.is-group th { padding-bottom: var(--s-6); border-bottom: 0; color: var(--dim); }
+  .tbl thead tr.is-group th:not(:first-child) { border-bottom: 1px solid var(--line); }
+  .tbl thead tr.is-group + tr th { padding-top: var(--s-8); }
   /* over figures, the arrow goes before the title, whose words stay in line with the figures under it */
   .tbl th.is-num .sort { flex-direction: row-reverse; }
   /* the arrow is not read out: aria-sort says it */
@@ -1171,6 +1182,11 @@
   ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
   /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
   ul.rows li.is-link { cursor: pointer; }
+  /* a card row that opens as a whole (a notification): its title's link covers the card, what else in it a click
+     reaches (a fold, another link) above it: <li class="is-link"><span class="row-title"><a href>…</a><small>…</small>… */
+  ul.rows.is-cards > li.is-link:has(.row-title > a) { position: relative; }
+  ul.rows.is-cards > li.is-link .row-title > a::after { content: ""; inset: 0; position: absolute; }
+  ul.rows.is-cards > li.is-link:has(.row-title > a) :is(a, button, summary, input, select, label):not(.row-title > a) { position: relative; z-index: 1; }
   /* a row whose name is a link and whose second line holds other links (a post's, then who is on it): the title's
      link in the row's ink, gold under the pointer: <span class="row-title"><a href>…</a><small>…</small></span> */
   .row-title > a { color: inherit; text-decoration: none; }

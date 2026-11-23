@@ -1,5 +1,15 @@
 # Changelog
 
+## 4.16.0 · 23 novembre 2026
+
+Les dernières pièces génériques que les applis dessinaient encore elles-mêmes.
+
+- Un tableau peut avoir une ligne de groupes de colonnes au-dessus de ses titres (`.tbl thead tr.is-group`) : plus discrète, un trait continu dessous sur toutes les colonnes sauf la première, les titres un peu plus bas. Le tableau des modèles de Studio l’utilise ; son tri passe entièrement par celui du design system (la flèche garde sa place, son anneau de focus est celui de partout).
+- Nouveau `.field-label` : le libellé au-dessus d’un champ, dans les petites capitales du thème (`--field-label-size`, 14 px en Vitrine). La connexion de Selecta l’utilise.
+- Les notes d’un client sur une photo et les photos en cours d’envoi de Selecta sont des lignes-cartes du design system (`ul.rows.is-cards`).
+- Une ligne-carte qui s’ouvre et dont le titre est un lien s’ouvre d’un clic n’importe où sur la carte (`ul.rows.is-cards > li.is-link`, `.row-title > a`) ; ce qu’elle contient d’autre qu’on clique (un pli, un autre lien) reste au-dessus. La page des notifications de Selecta passe sur ces lignes : un point doré pour ce qui n’est pas lu, le détail et l’heure sous le titre, comme l’activité d’une galerie.
+- Page vitrine : la ligne de groupes dans le tableau serré, un libellé de champ, une ligne-carte qui s’ouvre.
+
 ## 4.15.0 · 23 novembre 2026
 
 Les pièces génériques qu’une seule appli dessinait passent dans le design system, pour que les outils à venir les reprennent (la règle a changé : une pièce générique y va même si une seule appli s’en sert).

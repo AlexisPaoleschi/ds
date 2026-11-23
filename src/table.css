@@ -53,6 +53,12 @@
   .tbl th .sort:hover, .tbl th[aria-sort="ascending"] .sort, .tbl th[aria-sort="descending"] .sort { color: var(--ink); }
   /* the arrow's room is kept in every title, so that the columns do not move when another one sorts */
   .tbl th .sort::after { content: "\00a0"; content: "\00a0" / ""; display: inline-block; min-width: 0.75em; }
+  /* a row of column groups over the titles (Studio's « Dernière publication », « Visibilité », « Argent »): quieter, one
+     continuous line under it over every column but the first (the names), an unnamed group included, the titles under
+     it a little apart */
+  .tbl thead tr.is-group th { padding-bottom: var(--s-6); border-bottom: 0; color: var(--dim); }
+  .tbl thead tr.is-group th:not(:first-child) { border-bottom: 1px solid var(--line); }
+  .tbl thead tr.is-group + tr th { padding-top: var(--s-8); }
   /* over figures, the arrow goes before the title, whose words stay in line with the figures under it */
   .tbl th.is-num .sort { flex-direction: row-reverse; }
   /* the arrow is not read out: aria-sort says it */

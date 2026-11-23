@@ -34,6 +34,9 @@
   :where([data-theme="vitrine"]) p { color: var(--dim); }
   :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: 400; text-decoration: underline; transition: color var(--t-fast) ease; }
   @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
+/* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
+  .field-label { display: block; color: var(--faint); font-family: var(--label-font); font-size: var(--field-label-size); font-weight: var(--label-weight);
+    letter-spacing: var(--label-ls); text-transform: uppercase; }
 /* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
    .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
   .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);

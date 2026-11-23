@@ -40,6 +40,11 @@
   ul.rows li.is-done :is(.row-date, .row-title, .row-value) { color: var(--faint); }
   /* a row that opens something (a sheet, a trip): its title in gold under the pointer, as a link's */
   ul.rows li.is-link { cursor: pointer; }
+  /* a card row that opens as a whole (a notification): its title's link covers the card, what else in it a click
+     reaches (a fold, another link) above it: <li class="is-link"><span class="row-title"><a href>…</a><small>…</small>… */
+  ul.rows.is-cards > li.is-link:has(.row-title > a) { position: relative; }
+  ul.rows.is-cards > li.is-link .row-title > a::after { content: ""; inset: 0; position: absolute; }
+  ul.rows.is-cards > li.is-link:has(.row-title > a) :is(a, button, summary, input, select, label):not(.row-title > a) { position: relative; z-index: 1; }
   /* a row whose name is a link and whose second line holds other links (a post's, then who is on it): the title's
      link in the row's ink, gold under the pointer: <span class="row-title"><a href>…</a><small>…</small></span> */
   .row-title > a { color: inherit; text-decoration: none; }
