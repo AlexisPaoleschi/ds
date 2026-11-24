@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.3.0 · 24 novembre 2026
+
+- Une ligne qui passe sur deux sur un téléphone, à l’endroit choisi (`.phone-break`) : ce qui suit commence une ligne à soi, et le séparateur juste avant (`.sep`, un « · ») disparaît ; plus large, tout reste sur une ligne. Bank s’en sert sous le nom d’un voyage : les dates et le nombre de jours, puis la dépense par jour et le nombre d’opérations.
+
 ## 5.2.0 · 24 novembre 2026
 
 Après l’étude du texte de Bank, de Studio et du site, page par page :

@@ -78,3 +78,9 @@
   :root:not([data-theme="vitrine"]) { scrollbar-gutter: stable; }
 /* words for screen readers only, kept out of sight */
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* a line that goes on two on a phone, where its writer chose: what follows starts a line of its own, and the separator
+   before it (.sep, a « · ») goes; wider, all of it stays on one line */
+@media (max-width: 768px) {
+  .phone-break { display: block; }
+  .phone-break > .sep { display: none; }
+}

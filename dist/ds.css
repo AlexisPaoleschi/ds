@@ -1,4 +1,4 @@
-/* ds 5.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -624,6 +624,12 @@
   :root:not([data-theme="vitrine"]) { scrollbar-gutter: stable; }
 /* words for screen readers only, kept out of sight */
   .visually-hidden { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+/* a line that goes on two on a phone, where its writer chose: what follows starts a line of its own, and the separator
+   before it (.sep, a « · ») goes; wider, all of it stays on one line */
+@media (max-width: 768px) {
+  .phone-break { display: block; }
+  .phone-break > .sep { display: none; }
+}
 /* The small marks, each drawn once.
    The swatch: the small square of an item's colour (--n), a bank, a category, an agenda, a network: .swatch, and the same
    square wherever ds shows one (a filter's, the calendar's .cal-mark, a chart's key, a tile's title, a picker's
