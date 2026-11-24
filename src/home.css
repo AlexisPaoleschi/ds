@@ -94,8 +94,10 @@
     white-space: nowrap; color: var(--accent); }
   .gallery-description { font-family: var(--type-small-font); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls);
     color: var(--overlay-white-strong); text-transform: var(--type-small-case); }
-  .gallery-publication { font-family: var(--type-small-font); font-size: var(--type-small-size); font-weight: var(--type-small-weight); font-style: italic; letter-spacing: var(--type-small-ls);
+  .gallery-publication { font-family: var(--type-small-font); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls);
     color: var(--overlay-white-medium); text-transform: var(--type-small-case); }
+  /* the magazine's name, a title of a work, in italics */
+  .gallery-publication cite { font-style: italic; }
   /* Media queries - Portrait */
   @media (max-width: 768px) {
     .scroll-dots { right: 16px; gap: var(--s-12); }

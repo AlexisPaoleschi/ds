@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.7.0 · 24 novembre 2026
+
+- L’italique a un sens, jamais un rôle de décor : une citation (`.testimonial-text`), une note (`.row-note`), la phrase d’un bandeau photo (`.hero.is-band .hero-meta`) et le titre d’une œuvre (`.gallery-publication cite`). Les autres textes se redressent : la phrase sous « Getting there » (`.location-subtitle`), le lieu sous la carte (`.location-map-detail`), la remarque d’un jour du programme (`.day-note`), les sous-titres de galerie et de portfolio (`.gallery-subtitle`, `.portfolio-subtitle`, qui étaient en capitales et en italique), la publication d’une série (seul le nom du magazine reste en italique) et la ligne d’une galerie sans client de Selecta (`.pending-gallery-clients--empty`). `node checks/roles.js` le vérifie.
+- En Vitrine, un bouton doré qui a fini (désactivé, comme « Subscribed » après une inscription) garde son or, pâli : ses lettres blanches restaient sur du blanc.
+- Un téléphone tenu à l’horizontale (jusqu’à 956px de large) garde, dans le kit du site, la taille de téléphone du titre de couverture (48px) et du chapô (16px), comme celles du grand titre et du titre 1 : la couverture d’une page d’événement tient dans sa hauteur, son bouton ne sort plus de l’écran.
+- L’icône de Bluesky (`#i-bsky`) est le papillon officiel, pris chez Simple Icons comme ceux de X et de Patreon : celui dessiné à la main était trop plat (18 de large pour 12 de haut, le vrai fait 600 sur 530).
+
 ## 5.6.0 · 24 novembre 2026
 
 - Plus aucun multiplicateur : `--photo-scale` (5.4.0, 5.5.0) disparaît, et les tailles qu’il donnait deviennent trois rôles nommés, montrés sur la vitrine et vérifiés comme les autres. Le texte a seize rôles :

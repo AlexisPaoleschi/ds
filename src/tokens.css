@@ -358,10 +358,15 @@
 @media (max-width: 768px) {
   /* Atelier: a little less room inside a card on a phone, where the width is short (Bank's, 2026) */
   :root { --card-pad: var(--s-14); }
-  /* a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in capitals still holds:
-     30px at 375px) and a page's title one step smaller, in both themes */
+  /* Vitrine on a phone: badges, the footer and cards a little tighter */
+  [data-theme="vitrine"] { --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
+}
+/* the sizes of the text on a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in
+   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title and its lead smaller, in both
+   themes (held sideways, the site kit gives a phone the same: sitebase.css, 5.7.0) */
+@media (max-width: 768px) {
   :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; --type-lead-size: 16px; }
-  [data-theme="vitrine"] { --type-title-1-size: 24px; --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
+  [data-theme="vitrine"] { --type-title-1-size: 24px; }
 }
 @media (max-width: 480px) {
   [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --field-btn-h: 29px;

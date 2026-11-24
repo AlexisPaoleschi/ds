@@ -19,6 +19,25 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
 const ROLES = ['display', 'cover', 'cover-line', 'title-1', 'title-2', 'title-3', 'figure', 'subtitle', 'lead', 'text', 'strong', 'small', 'caption', 'caps', 'smallcaps', 'button'];
 const PARTS = ['font', 'size', 'weight', 'ls', 'case'];
 
+// italics carry a meaning, never a look (5.7.0): someone speaking (a quote), one's own words (a note), the line of a photo
+// band, the title of a work. Every rule that puts a text in italics is one of these
+const ITALIC = ['.hero.is-band .hero-meta', '.testimonial-text', '.row-note', '.gallery-publication cite'];
+function italicFaults() {
+  const faults = [];
+  const dir = path.join(root, 'src');
+  for (const f of fs.readdirSync(dir).filter(f => f.endsWith('.css'))) {
+    const css = fs.readFileSync(path.join(dir, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
+    const rx = /([^{};]+)\{([^{}]*)\}/g;
+    let m;
+    while ((m = rx.exec(css))) {
+      const sel = m[1].trim().replace(/\s+/g, ' ');
+      if (sel.startsWith('@font-face')) continue;
+      if (/(^|;)\s*font-style\s*:\s*(italic|oblique)|(^|;)\s*font\s*:[^;]*\b(italic|oblique)\b/.test(m[2]) && !ITALIC.includes(sel)) faults.push(f + ' ' + sel);
+    }
+  }
+  return faults;
+}
+
 // the sources: each text declaration and what it is made of
 function sourceFaults() {
   const faults = [];
@@ -58,6 +77,8 @@ function tokenFaults() {
 
 server.listen(0, async () => {
   const base = 'http://127.0.0.1:' + server.address().port;
+  const ital = italicFaults();
+  assert(!ital.length, 'l’italique seulement pour une citation, une note, la phrase d’un bandeau photo et le titre d’une œuvre ' + JSON.stringify(ital));
   const src = sourceFaults();
   assert(!src.length, 'dans les sources, chaque taille, graisse, espacement, casse et police vient d’un rôle ' + JSON.stringify(src.slice(0, 12)));
   const tok = tokenFaults();

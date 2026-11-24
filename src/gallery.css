@@ -21,7 +21,6 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .pending-gallery-clients { grid-column: 1 / -1; min-width: 0; font-size: var(--type-small-size); color: var(--faint); text-align: left; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .pending-gallery-clients > details > summary:hover { color: var(--accent); }
 .pending-gallery-client-list { margin: var(--s-4) 0; padding: 0; list-style: none; overflow-wrap: break-word; }
-.pending-gallery-clients--empty { font-style: italic; }
 .row-error { font-size: var(--type-small-size); color: var(--bad); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--type-small-size); color: var(--faint); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .cover-preview.is-busy .cover-preview-actions { opacity: 0; pointer-events: none; }

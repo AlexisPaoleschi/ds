@@ -48,6 +48,8 @@
 [data-theme="vitrine"] .btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
 [data-theme="vitrine"] .btn.is-danger { color: var(--bad); background: var(--btn-bg); border-color: var(--bad); }
 [data-theme="vitrine"] .btn:disabled:not(.is-busy) { background: var(--btn-bg); border-color: var(--line); opacity: .6; }
+/* a save button that is done (« Subscribed ») keeps its gold, faded: its white words on the white of the others would vanish */
+[data-theme="vitrine"] .btn.is-save:disabled:not(.is-busy) { background: var(--accent); border-color: var(--accent); }
 [data-theme="vitrine"] .btn:active { transform: none; }
 @media (hover: hover) {
   [data-theme="vitrine"] .btn:not(:disabled):hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); transform: translateY(var(--btn-lift)); box-shadow: var(--shadow-pop); filter: none; }

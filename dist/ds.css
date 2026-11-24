@@ -1,4 +1,4 @@
-/* ds 5.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -375,10 +375,15 @@
 @media (max-width: 768px) {
   /* Atelier: a little less room inside a card on a phone, where the width is short (Bank's, 2026) */
   :root { --card-pad: var(--s-14); }
-  /* a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in capitals still holds:
-     30px at 375px) and a page's title one step smaller, in both themes */
+  /* Vitrine on a phone: badges, the footer and cards a little tighter */
+  [data-theme="vitrine"] { --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
+}
+/* the sizes of the text on a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in
+   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title and its lead smaller, in both
+   themes (held sideways, the site kit gives a phone the same: sitebase.css, 5.7.0) */
+@media (max-width: 768px) {
   :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; --type-lead-size: 16px; }
-  [data-theme="vitrine"] { --type-title-1-size: 24px; --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
+  [data-theme="vitrine"] { --type-title-1-size: 24px; }
 }
 @media (max-width: 480px) {
   [data-theme="vitrine"] { --btn-l-h: 59px; --btn-l-px: var(--s-24); --btn-px: var(--s-20); --field-btn-h: 29px;
@@ -730,6 +735,8 @@
 [data-theme="vitrine"] .btn.is-save { color: var(--on-accent); background: var(--accent); border-color: var(--accent); }
 [data-theme="vitrine"] .btn.is-danger { color: var(--bad); background: var(--btn-bg); border-color: var(--bad); }
 [data-theme="vitrine"] .btn:disabled:not(.is-busy) { background: var(--btn-bg); border-color: var(--line); opacity: .6; }
+/* a save button that is done (« Subscribed ») keeps its gold, faded: its white words on the white of the others would vanish */
+[data-theme="vitrine"] .btn.is-save:disabled:not(.is-busy) { background: var(--accent); border-color: var(--accent); }
 [data-theme="vitrine"] .btn:active { transform: none; }
 @media (hover: hover) {
   [data-theme="vitrine"] .btn:not(:disabled):hover { color: var(--on-accent); background: var(--accent); border-color: var(--accent); transform: translateY(var(--btn-lift)); box-shadow: var(--shadow-pop); filter: none; }
@@ -2025,7 +2032,6 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .pending-gallery-clients { grid-column: 1 / -1; min-width: 0; font-size: var(--type-small-size); color: var(--faint); text-align: left; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .pending-gallery-clients > details > summary:hover { color: var(--accent); }
 .pending-gallery-client-list { margin: var(--s-4) 0; padding: 0; list-style: none; overflow-wrap: break-word; }
-.pending-gallery-clients--empty { font-style: italic; }
 .row-error { font-size: var(--type-small-size); color: var(--bad); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .slug-value { overflow-wrap: anywhere; font-family: var(--mono); font-size: var(--type-small-size); color: var(--faint); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
 .cover-preview.is-busy .cover-preview-actions { opacity: 0; pointer-events: none; }

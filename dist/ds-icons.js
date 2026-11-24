@@ -1,4 +1,4 @@
-/* ds 5.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The icons of the apps, one sprite for all of them: <svg class="ico" aria-hidden="true"><use href="#i-wallet"/></svg>.
    Each is drawn on a 24 grid; .ico gives the stroke, its width and its colour (currentColor), and a brand's logo is
    filled with that colour. This script, dist/ds-icons.js, a file of its own that the browser keeps from one visit to
@@ -6,7 +6,7 @@
    app's older copy of the same icons can stay until it goes, the first one is used. A page without it points at the
    same icons in dist/icons.svg: <use href="icons-X.Y.Z.svg#i-wallet"/>.
    The first 39, Bank's and Studio's first, were drawn by hand; they are now Lucide's under the same names (the plane
-   first: the one drawn by hand leaned, its tail off the plane's axis), save the three brands' (Instagram, Bluesky, X),
+   first: the one drawn by hand leaned, its tail off the plane's axis), save the brands' (Instagram, X; Bluesky's butterfly, first drawn by hand too flat, is Simple Icons' since 5.7.0),
    Lucide drawing no brand. The others come from Lucide (lucide.dev) too and, for the brands' logos,
    from Simple Icons (simpleicons.org), whose notices follow.
 
@@ -56,7 +56,7 @@
   var sprite = `
   <symbol id="i-alert" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
   <symbol id="i-book" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="M15 13a3 3 0 1 0-6 0"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><circle cx="12" cy="8" r="2"/></symbol>
-  <symbol id="i-bsky" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="M12 11.5C10.5 8.4 7.4 5 4.9 5 3.5 5 3 6 3 7.4c0 2.1 1 4.6 3.6 5.1-2.1.7-2.6 2.6-1.1 3.9 1.9 1.7 4.6.3 6.5-3.4 1.9 3.7 4.6 5.1 6.5 3.4 1.5-1.3 1-3.2-1.1-3.9 2.6-.5 3.6-3 3.6-5.1C21 6 20.5 5 19.1 5c-2.5 0-5.6 3.4-7.1 6.5z"/></symbol>
+  <symbol id="i-bsky" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path fill="currentColor" stroke="none" transform="translate(2.4 2.4) scale(.8)" d="M5.202 2.857C7.954 4.922 10.913 9.11 12 11.358c1.087-2.247 4.046-6.436 6.798-8.501C20.783 1.366 24 .213 24 3.883c0 .732-.42 6.156-.667 7.037-.856 3.061-3.978 3.842-6.755 3.37 4.854.826 6.089 3.562 3.422 6.299-5.065 5.196-7.28-1.304-7.847-2.97-.104-.305-.152-.448-.153-.327 0-.121-.05.022-.153.327-.568 1.666-2.782 8.166-7.847 2.97-2.667-2.737-1.432-5.473 3.422-6.3-2.777.473-5.899-.308-6.755-3.369C.42 10.04 0 4.615 0 3.883c0-3.67 3.217-2.517 5.202-1.026"/></symbol>
   <symbol id="i-cal" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="M8 2v3"/><path d="M16 2v3"/><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/></symbol>
   <symbol id="i-cam" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z"/><circle cx="12" cy="13" r="3"/></symbol>
   <symbol id="i-chart" data-group="Les premières, de Bank et Studio" viewBox="0 0 24 24"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></symbol>
