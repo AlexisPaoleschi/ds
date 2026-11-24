@@ -219,6 +219,8 @@
   .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight);
     letter-spacing: var(--type-text-ls); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); text-transform: var(--type-text-case); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-16); }
+  /* the photographer's own links (a site, Patreon), centred under the portfolio's grid */
+  .portfolio-links { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-24); margin-top: var(--s-40); }
   .portfolio-item { position: relative; aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   /* Venue Gallery */
   .venue-gallery { margin-top: var(--s-80); padding-top: var(--s-60); border-top: 2px solid var(--line); }

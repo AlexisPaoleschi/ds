@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.17.0 · 24 novembre 2026
+
+- Sous le portfolio d’une page d’événement, les liens du photographe (son site, son Patreon) se centrent sous la grille (`.portfolio-links`) : quand deux personnes organisent, leurs liens communs restent à côté d’eux (`.organizer-links`), ceux du photographe vont avec ses photos. La vitrine le montre.
+
 ## 5.16.0 · 24 novembre 2026
 
 - Un nouveau rôle de texte, le prix (`--type-price-*`) : en Vitrine, la police des titres à 70px (40px sur un téléphone, debout ou couché), entre le titre de couverture (84px) et le grand titre (56px) ; en Atelier, 56px. Le prix d’une page d’événement (`.price-display .big-fig-value`) le prend au lieu du titre de couverture. Le texte a seize rôles ; `node checks/roles.js` les vérifie, la vitrine les montre.
