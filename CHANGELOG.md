@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.5.0 · 24 novembre 2026
+
+- Sur une couverture aussi haute que l’écran (`.hero.is-full`, la page d’un événement), les mots grandissent comme sur un bandeau : le titre et le lieu ×1,5 (84px et 24px), la date, en texte tel qu’il est écrit, ×1,25 (20px ; 16px sur un téléphone). Le bouton garde la taille des boutons du site.
+
 ## 5.4.0 · 24 novembre 2026
 
 - Un mot sur une photo aussi large que l’écran grandit : il garde la police, la graisse, la casse et l’espacement de son rôle, et sa taille est multipliée par `--photo-scale`. Sur un bandeau photo du site (`.hero.is-band`), le titre ×1,15 (64px, comme avant la 5.0.0) et la phrase dessous, en texte italique, ×1,25 (20px ; 16px sur un téléphone). `node checks/roles.js` lit le rôle d’un tel mot à sa taille d’origine. `.hero-meta.is-text` (5.2.0) n’existe plus : toute phrase d’un bandeau est un texte.
