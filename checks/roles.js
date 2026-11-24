@@ -1,10 +1,9 @@
-// ds 5.0, thirteen text roles and nothing else. In the sources: every size, weight, letter spacing, case and font of a
+// ds 5.0, sixteen text roles and nothing else. In the sources: every size, weight, letter spacing, case and font of a
 // rule comes from a role (var(--type-…)), a figure's mono (var(--mono)) or the logo's own (var(--brand-…), on .brand and
-// .topbar-brand alone), or inherits; the raw values live in tokens.css, thirteen roles in each theme. On the screen: every
+// .topbar-brand alone), or inherits; the raw values live in tokens.css, sixteen roles in each theme. On the screen: every
 // text the showcase draws, in both themes, wears the size, the spacing and the case of one role of its theme, in that
 // role's weight or the strong weight (a word put forward), in its font or in mono; the logo, and a tile's figure made
-// smaller to fit its tile (ds.fitFigures), are the only ones apart; a word on a photo as wide as the screen is its role
-// grown by --photo-scale.
+// smaller to fit its tile (ds.fitFigures), are the only ones apart.
 // usage: node checks/roles.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -17,7 +16,7 @@ const server = http.createServer((req, res) => {
   fs.createReadStream(file).pipe(res);
 });
 const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.exitCode = 1; } else console.log('ok  ', what); };
-const ROLES = ['display', 'title-1', 'title-2', 'title-3', 'figure', 'subtitle', 'text', 'strong', 'small', 'caption', 'caps', 'smallcaps', 'button'];
+const ROLES = ['display', 'cover', 'cover-line', 'title-1', 'title-2', 'title-3', 'figure', 'subtitle', 'lead', 'text', 'strong', 'small', 'caption', 'caps', 'smallcaps', 'button'];
 const PARTS = ['font', 'size', 'weight', 'ls', 'case'];
 
 // the sources: each text declaration and what it is made of
@@ -37,8 +36,7 @@ function sourceFaults() {
         const [, prop, val] = mm;
         // what may stand in it: a role's, mono, a line height in a shorthand, italic, and the words that change nothing
         const brand = /(^|[\s,])\.(top)?bar-brand|(^|[\s,])\.brand\b/.test(sel) || /\.topbar-brand|\.brand\b/.test(sel);
-        // a word on a photo as wide as the screen: its role's size times --photo-scale (5.4.0)
-        let rest = val.replace(/calc\(\s*var\(--type-[a-z0-9-]+-size\)\s*\*\s*var\(--photo-scale\)\s*\)/g, '').replace(/var\(--type-[a-z0-9-]+\)/g, '').replace(/var\(--mono\)/g, '');
+        let rest = val.replace(/var\(--type-[a-z0-9-]+\)/g, '').replace(/var\(--mono\)/g, '');
         if (brand) rest = rest.replace(/var\(--brand-[a-z]+\)/g, '');
         if (prop === 'font') rest = rest.replace(/\/\s*(var\(--[a-z0-9-]*lh[a-z0-9-]*\)|[\d.]+|normal)/g, '').replace(/\bitalic\b/g, '');
         if (prop === 'text-transform') rest = rest.replace(/\b(none|capitalize)\b/g, '').replace(/\buppercase\b/g, /::first-letter/.test(sel) || brand ? '' : 'uppercase');
@@ -49,7 +47,7 @@ function sourceFaults() {
   }
   return faults;
 }
-// tokens.css: each theme gives the thirteen roles their five parts, and no other role is made
+// tokens.css: each theme gives the sixteen roles their five parts, and no other role is made
 function tokenFaults() {
   const css = fs.readFileSync(path.join(root, 'src/tokens.css'), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const made = new Set([...css.matchAll(/--type-([a-z0-9-]+)-(font|size|weight|ls|case)\s*:/g)].map(x => x[1]));
@@ -63,7 +61,7 @@ server.listen(0, async () => {
   const src = sourceFaults();
   assert(!src.length, 'dans les sources, chaque taille, graisse, espacement, casse et police vient d’un rôle ' + JSON.stringify(src.slice(0, 12)));
   const tok = tokenFaults();
-  assert(!tok.length, 'treize rôles, chacun avec sa police, sa taille, sa graisse, son espacement et sa casse ' + JSON.stringify(tok));
+  assert(!tok.length, 'seize rôles, chacun avec sa police, sa taille, sa graisse, son espacement et sa casse ' + JSON.stringify(tok));
   const browser = await chromium.launch();
   const pages = fs.readdirSync(root).filter(f => f.endsWith('.html') && !f.startsWith('mail'));
   const off = {}, seen = { atelier: new Set(), vitrine: new Set() };
@@ -96,8 +94,7 @@ server.listen(0, async () => {
         // a tile's figure made smaller to fit its tile
         if (el.closest('dd[style*="font-size"], .big-fig-value[style*="font-size"]')) continue;
         const th = el.closest('[data-theme]')?.dataset.theme || 'atelier';
-        // a word on a photo as wide as the screen is its role grown by --photo-scale: its role is read at its own size
-        const cs = getComputedStyle(el), raw = parseFloat(cs.fontSize), fs = raw / (parseFloat(cs.getPropertyValue('--photo-scale')) || 1);
+        const cs = getComputedStyle(el), raw = parseFloat(cs.fontSize), fs = raw;
         const look = looks[th];
         const same = x => Math.abs(x.size - fs) < .5 && Math.abs(lsOf(x.ls) - em(cs.letterSpacing, raw)) < .006
           && (x.case === cs.textTransform || (x.case === 'none' && cs.textTransform === 'capitalize'));
@@ -114,9 +111,9 @@ server.listen(0, async () => {
     await p.close();
   }
   const list = Object.entries(off).map(([k, v]) => k + ' (' + [...v].slice(0, 3).join(', ') + ')');
-  assert(!list.length, 'chaque texte de la vitrine, dans les deux thèmes, sur un ordinateur et un téléphone, porte l’un des treize rôles de son thème ' + JSON.stringify(list.slice(0, 25)) + (list.length > 25 ? ' … ' + list.length : ''));
+  assert(!list.length, 'chaque texte de la vitrine, dans les deux thèmes, sur un ordinateur et un téléphone, porte l’un des seize rôles de son thème ' + JSON.stringify(list.slice(0, 25)) + (list.length > 25 ? ' … ' + list.length : ''));
   for (const th of ['atelier', 'vitrine'])
-    assert(ROLES.every(r => seen[th].has(r)), `la vitrine montre les treize rôles en ${th} ` + JSON.stringify(ROLES.filter(r => !seen[th].has(r))));
+    assert(ROLES.every(r => seen[th].has(r)), `la vitrine montre les seize rôles en ${th} ` + JSON.stringify(ROLES.filter(r => !seen[th].has(r))));
   await browser.close();
   server.close();
 });

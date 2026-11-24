@@ -54,21 +54,13 @@
   .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
-  /* words on a photo as wide as the screen grow: they keep their role's font, weight, case and spacing, and its size is
-     multiplied by --photo-scale (5.4.0). On a band, the title by 1.15 and the sentence under it, text in italics, by
-     1.25 (by 1 on a phone) */
-  .hero.is-band .hero-t { --photo-scale: 1.15; font-size: calc(var(--type-display-size) * var(--photo-scale)); }
-  .hero.is-band .hero-meta { --photo-scale: 1.25; font: italic var(--type-text-weight) calc(var(--type-text-size) * var(--photo-scale))/var(--lh-relaxed) var(--type-text-font);
-    letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  /* on a cover as tall as the screen (an event's page), the title and the place by 1.5, the date, text as written, by
-     1.25 (by 1 on a phone); its buttons keep the site's size */
-  .hero.is-full .hero-t { --photo-scale: 1.5; font-size: calc(var(--type-display-size) * var(--photo-scale)); }
-  .hero.is-full .hero-sub { --photo-scale: 1.5; font-size: calc(var(--type-subtitle-size) * var(--photo-scale)); }
-  .hero.is-full .hero-meta { --photo-scale: 1.25; font: var(--type-text-weight) calc(var(--type-text-size) * var(--photo-scale))/var(--lh-loose) var(--type-text-font);
-    letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  @media (max-width: 768px) {
-    .hero.is-band .hero-meta, .hero.is-full .hero-meta { --photo-scale: 1; }
-  }
+  /* a band's sentence is a lead, in italics */
+  .hero.is-band .hero-meta { font: italic var(--type-lead-weight) var(--type-lead-size)/var(--lh-relaxed) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); }
+  /* a cover as tall as the screen (an event's page): its title, its place and its date take the cover's roles; its
+     buttons keep the site's size */
+  .hero.is-full .hero-t { font: var(--type-cover-weight) var(--type-cover-size)/var(--hero-t-lh) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
+  .hero.is-full .hero-sub { font: var(--type-cover-line-weight) var(--type-cover-line-size)/var(--lh-loose) var(--type-cover-line-font); letter-spacing: var(--type-cover-line-ls); text-transform: var(--type-cover-line-case); }
+  .hero.is-full .hero-meta { font: var(--type-lead-weight) var(--type-lead-size)/var(--lh-loose) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }

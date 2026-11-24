@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.6.0 · 24 novembre 2026
+
+- Plus aucun multiplicateur : `--photo-scale` (5.4.0, 5.5.0) disparaît, et les tailles qu’il donnait deviennent trois rôles nommés, montrés sur la vitrine et vérifiés comme les autres. Le texte a seize rôles :
+  - le titre de couverture (`--type-cover-*`) : le titre d’une couverture plein écran, la page d’un événement (84px en Vitrine, 48px sur un téléphone) ;
+  - la ligne de couverture (`--type-cover-line-*`) : son lieu, en capitales espacées (24px) ;
+  - le chapô (`--type-lead-*`) : une phrase courte sous un grand titre, la date d’une couverture et la phrase d’un bandeau photo, en italique (20px, 16px sur un téléphone).
+- Le titre d’un bandeau photo redevient un grand titre (56px).
+
 ## 5.5.0 · 24 novembre 2026
 
 - Sur une couverture aussi haute que l’écran (`.hero.is-full`, la page d’un événement), les mots grandissent comme sur un bandeau : le titre et le lieu ×1,5 (84px et 24px), la date, en texte tel qu’il est écrit, ×1,25 (20px ; 16px sur un téléphone). Le bouton garde la taille des boutons du site.
