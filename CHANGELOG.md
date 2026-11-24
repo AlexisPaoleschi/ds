@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.8.0 · 24 novembre 2026
+
+- Une phrase grise sous un titre redevient du texte, comme le site l’écrivait (sans capitales ni espacement) : sous « What Photographers Say » (`.testimonials-banner-subtitle`), « Portfolio Highlights » (`.portfolio-subtitle`) et « Explore the Venue » (`.gallery-subtitle`). Le sous-titre reste la ligne dorée en capitales (un lieu).
+- En Vitrine, les lettres s’espacent comme sur le site d’origine : 0,1 em pour le grand titre, les titres 1 et 2, le titre de couverture et le chapô (0,08 em et 0 avant), 0,18 em pour un bouton (0,12), 0,15 em pour les capitales et les petites capitales (0,12), 0,17 em pour le sous-titre (0,19), 0,07 em pour le petit texte et la légende (0,04 et 0). Atelier ne change pas.
+- Une marge de côté pour tous les blocs d’une page du site (`--site-gutter` : 40px, 24px sur une tablette ou un téléphone couché, 16px sur un téléphone) : le bandeau de la newsletter, les cartes d’événement, les témoignages, les réseaux et les sections d’une page d’événement s’alignent sur les mêmes bords (1120px dans les 1200px de la page ; le bandeau de la newsletter allait à 1200px, les sections d’un événement à 1104px).
+- Une page de texte (`body.doc` : des conditions, une autorisation, une politique de confidentialité) a une colonne de 720px (608px avant).
+
 ## 5.7.0 · 24 novembre 2026
 
 - L’italique a un sens, jamais un rôle de décor : une citation (`.testimonial-text`), une note (`.row-note`), la phrase d’un bandeau photo (`.hero.is-band .hero-meta`) et le titre d’une œuvre (`.gallery-publication cite`). Les autres textes se redressent : la phrase sous « Getting there » (`.location-subtitle`), le lieu sous la carte (`.location-map-detail`), la remarque d’un jour du programme (`.day-note`), les sous-titres de galerie et de portfolio (`.gallery-subtitle`, `.portfolio-subtitle`, qui étaient en capitales et en italique), la publication d’une série (seul le nom du magazine reste en italique) et la ligne d’une galerie sans client de Selecta (`.pending-gallery-clients--empty`). `node checks/roles.js` le vérifie.

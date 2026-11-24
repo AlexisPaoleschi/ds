@@ -3,7 +3,7 @@
   /* Hero: the design system's page hero (.hero), on the site's photo under a light veil */
   .events-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Main */
-  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
+  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--site-gutter); }
   /* Grid */
   .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--s-40);
     margin-top: calc(var(--s-32) * 2); margin-bottom: var(--s-80); }
@@ -30,7 +30,6 @@
   .event-card-price { font-family: var(--type-figure-font); font-size: var(--type-figure-size); font-weight: var(--type-figure-weight); letter-spacing: var(--type-figure-ls); color: var(--ink); text-transform: var(--type-figure-case); }
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
-    .events-main { padding: 0 var(--s-24); }
     .events-grid { gap: var(--s-32); margin-top: var(--s-48); margin-bottom: var(--s-60); }
   }
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */

@@ -1,9 +1,14 @@
-/* ds 5.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
    prompt to turn a phone upright, the gold subtitle and divider, the footer held sideways, the gold link chips. */
   * { margin: 0; padding: 0; box-sizing: border-box; }
+  /* the site's side margin, one for every block of a page, so that their texts and cards keep the same edges: 40px on a
+     computer (1120px inside the 1200px of the page), 24px on a tablet or a phone held sideways, 16px on a phone (5.8.0) */
+  :root { --site-gutter: var(--s-40); }
+  @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) { :root { --site-gutter: var(--s-24); } }
+  @media (max-width: 480px) { :root { --site-gutter: var(--s-16); } }
   body { font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-loose); overflow-x: hidden;
     -webkit-text-size-adjust: 100%; text-size-adjust: 100%; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* a phone held sideways is still a phone here: the big title, a page's title, a cover's title and its lead keep their
@@ -126,7 +131,7 @@
    links are the site's, written by its own scripts). */
   /* the bands at the foot of the site's pages (its networks, its testimonials): the outer wrapper takes the page's column,
      the inner one carries the border (1120px); their titles alike */
-  .social-banner, .testimonials-banner { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
+  .social-banner, .testimonials-banner { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--site-gutter); }
   .social-banner-inner, .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
   .social-banner-inner--no-border { border-top: none; }
   .social-banner-box { max-width: var(--read-s); margin: 0 auto; text-align: center; }
@@ -137,18 +142,16 @@
   .social-banner-icon { width: var(--ico-m); height: var(--ico-m); }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .social-banner, .testimonials-banner { padding: 0 var(--s-24); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-60) 0; }
     .social-banner-links { gap: var(--s-16); }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .social-banner, .testimonials-banner { padding: 0 var(--s-16); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-48) 0; }
   }
-  .signup-banner { padding: var(--s-40); background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
+  .signup-banner { padding: var(--s-40) 0; background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
   .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: var(--page-site);
-    margin: 0 auto; }
+    margin: 0 auto; padding: 0 var(--site-gutter); }
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
   .signup-banner-icon { flex-shrink: 0; width: var(--picto-l); height: var(--picto-l); color: var(--accent); }
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--type-title-1-font);
@@ -172,19 +175,19 @@
   /* its message: the design system's line under a field (.field-note.is-reserved, is-good or is-bad) */
   /* Responsive - Large tablet / landscape phone */
   @media (max-width: 1024px) {
-    .signup-banner { padding: var(--s-36) var(--s-24); }
+    .signup-banner { padding: var(--s-36) 0; }
     .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .signup-banner { padding: var(--s-28) var(--s-24); }
+    .signup-banner { padding: var(--s-28) 0; }
     .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .signup-banner { padding: var(--s-24) var(--s-16); }
+    .signup-banner { padding: var(--s-24) 0; }
     .signup-banner-text { gap: var(--s-14); }
     .signup-banner-icon { width: var(--picto-m); height: var(--picto-m); }
     .signup-banner-field { flex-direction: column; gap: var(--s-12); }
@@ -197,7 +200,7 @@
    The photo bands between the sections are the design system's (.hero.is-band.is-parallax). */
   /* The photo bands between the sections: the design system's (.hero.is-band.is-parallax); each page gives their photos */
   /* Content Sections */
-  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
+  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--site-gutter); background-color: var(--white); }
   .dark-section { background: var(--band); }
   .pricing-section { background: var(--white); }
   .elegant-box { padding: var(--s-80) var(--s-48); background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
@@ -400,16 +403,16 @@
   .organizer-portfolio { margin: var(--s-80) 0 0; padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .portfolio-title { margin-bottom: var(--s-12); font-family: var(--type-title-1-font); font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls);
     text-align: center; text-transform: var(--type-title-1-case); color: var(--ink); }
-  .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight);
-    letter-spacing: var(--type-subtitle-ls); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); text-transform: var(--type-subtitle-case); }
+  .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight);
+    letter-spacing: var(--type-text-ls); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); text-transform: var(--type-text-case); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-16); }
   .portfolio-item { position: relative; aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   /* Venue Gallery */
   .venue-gallery { margin-top: var(--s-80); padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .gallery-heading { margin-bottom: var(--s-16); font-family: var(--type-display-font); font-size: var(--type-display-size); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-ls);
     text-align: center; text-transform: var(--type-display-case); color: var(--ink); }
-  .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight);
-    letter-spacing: var(--type-subtitle-ls); text-align: center; color: var(--faint); text-transform: var(--type-subtitle-case); }
+  .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight);
+    letter-spacing: var(--type-text-ls); text-align: center; color: var(--faint); text-transform: var(--type-text-case); }
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s-16); }
   .gallery-item { position: relative; aspect-ratio: 4/3; }
   /* less motion: a photo neither rises nor zooms under the pointer (the durations are already nothing, see tokens.css) */
@@ -420,7 +423,7 @@
   /* Media Queries */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     /* Sections */
-    .content-section { padding: var(--s-40) var(--s-16); }
+    .content-section { padding: var(--s-40) var(--site-gutter); }
     .elegant-box { padding: var(--s-40) var(--s-16); }
     .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) var(--s-28); }
     .highlight-text { display: none; }
@@ -479,7 +482,7 @@
     /* the photo bands: a phone's sizes, the screen's whole height */
     .hero.parallax-section { --hero-h: 100vh; }
     /* Sections */
-    .content-section { padding: var(--s-48) var(--s-32); }
+    .content-section { padding: var(--s-48) var(--site-gutter); }
     .elegant-box { padding: var(--s-48) var(--s-32); }
     .highlight-box { margin: var(--s-40) 0 0; padding: var(--s-28) var(--s-32); }
     .highlight-text { display: block; }
@@ -690,7 +693,7 @@
   /* Hero: the design system's page hero (.hero), on the site's photo under a light veil */
   .events-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Main */
-  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
+  .events-main { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--site-gutter); }
   /* Grid */
   .events-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(480px, 100%), 1fr)); gap: var(--s-40);
     margin-top: calc(var(--s-32) * 2); margin-bottom: var(--s-80); }
@@ -717,7 +720,6 @@
   .event-card-price { font-family: var(--type-figure-font); font-size: var(--type-figure-size); font-weight: var(--type-figure-weight); letter-spacing: var(--type-figure-ls); color: var(--ink); text-transform: var(--type-figure-case); }
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
-    .events-main { padding: 0 var(--s-24); }
     .events-grid { gap: var(--s-32); margin-top: var(--s-48); margin-bottom: var(--s-60); }
   }
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */
@@ -792,7 +794,7 @@
 /* The site kit: the testimonials' banner (the events list): the photographers' words, each in the design system's card. */
   /* its wrapper, its inner border and its title are the bands' (banners.css) */
   .testimonials-banner-head { max-width: var(--read-s); margin: 0 auto var(--s-48); text-align: center; }
-  .testimonials-banner-subtitle { font-family: var(--type-subtitle-font); font-weight: var(--type-subtitle-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-subtitle-size); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .testimonials-banner-subtitle { font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--s-32); }
   .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: var(--s-36) var(--s-32);
     transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }

@@ -4,7 +4,7 @@
    The photo bands between the sections are the design system's (.hero.is-band.is-parallax). */
   /* The photo bands between the sections: the design system's (.hero.is-band.is-parallax); each page gives their photos */
   /* Content Sections */
-  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--s-48); background-color: var(--white); }
+  .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--site-gutter); background-color: var(--white); }
   .dark-section { background: var(--band); }
   .pricing-section { background: var(--white); }
   .elegant-box { padding: var(--s-80) var(--s-48); background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
@@ -207,16 +207,16 @@
   .organizer-portfolio { margin: var(--s-80) 0 0; padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .portfolio-title { margin-bottom: var(--s-12); font-family: var(--type-title-1-font); font-size: var(--type-title-1-size); font-weight: var(--type-title-1-weight); letter-spacing: var(--type-title-1-ls);
     text-align: center; text-transform: var(--type-title-1-case); color: var(--ink); }
-  .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight);
-    letter-spacing: var(--type-subtitle-ls); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); text-transform: var(--type-subtitle-case); }
+  .portfolio-subtitle { margin-bottom: var(--s-24); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight);
+    letter-spacing: var(--type-text-ls); line-height: var(--lh-relaxed); text-align: center; color: var(--faint); text-transform: var(--type-text-case); }
   .portfolio-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-16); }
   .portfolio-item { position: relative; aspect-ratio: 3/4; box-shadow: var(--shadow-card); }
   /* Venue Gallery */
   .venue-gallery { margin-top: var(--s-80); padding-top: var(--s-60); border-top: 2px solid var(--line); }
   .gallery-heading { margin-bottom: var(--s-16); font-family: var(--type-display-font); font-size: var(--type-display-size); font-weight: var(--type-display-weight); letter-spacing: var(--type-display-ls);
     text-align: center; text-transform: var(--type-display-case); color: var(--ink); }
-  .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight);
-    letter-spacing: var(--type-subtitle-ls); text-align: center; color: var(--faint); text-transform: var(--type-subtitle-case); }
+  .gallery-subtitle { margin-bottom: var(--s-24); font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight);
+    letter-spacing: var(--type-text-ls); text-align: center; color: var(--faint); text-transform: var(--type-text-case); }
   .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--s-16); }
   .gallery-item { position: relative; aspect-ratio: 4/3; }
   /* less motion: a photo neither rises nor zooms under the pointer (the durations are already nothing, see tokens.css) */
@@ -227,7 +227,7 @@
   /* Media Queries */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     /* Sections */
-    .content-section { padding: var(--s-40) var(--s-16); }
+    .content-section { padding: var(--s-40) var(--site-gutter); }
     .elegant-box { padding: var(--s-40) var(--s-16); }
     .highlight-box { margin: var(--s-32) 0 0; padding: var(--s-24) var(--s-28); }
     .highlight-text { display: none; }
@@ -286,7 +286,7 @@
     /* the photo bands: a phone's sizes, the screen's whole height */
     .hero.parallax-section { --hero-h: 100vh; }
     /* Sections */
-    .content-section { padding: var(--s-48) var(--s-32); }
+    .content-section { padding: var(--s-48) var(--site-gutter); }
     .elegant-box { padding: var(--s-48) var(--s-32); }
     .highlight-box { margin: var(--s-40) 0 0; padding: var(--s-28) var(--s-32); }
     .highlight-text { display: block; }

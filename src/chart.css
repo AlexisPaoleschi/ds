@@ -48,7 +48,7 @@
   /* a column keeps its share of the chart: its figure and its name may overflow it, its bar never */
   .chart-bar { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-rows: var(--bars-h) auto; gap: var(--s-6); justify-items: center; min-width: 0;
     padding: 0; background: none; border: 0; color: inherit; font: inherit; }
-  button.chart-bar { cursor: pointer; }
+  button.chart-bar { cursor: pointer; letter-spacing: inherit; }
   .chart-bar-area { display: flex; align-items: flex-end; justify-content: center; width: 100%; height: 100%; border-bottom: 1px solid var(--line-2); }
   .chart-bar-fill { position: relative; width: 70%; max-width: 40px; min-height: 2px; }
   .chart-bars.is-dense .chart-bar-fill { width: 78%; }

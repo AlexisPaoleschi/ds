@@ -2,7 +2,7 @@
    links are the site's, written by its own scripts). */
   /* the bands at the foot of the site's pages (its networks, its testimonials): the outer wrapper takes the page's column,
      the inner one carries the border (1120px); their titles alike */
-  .social-banner, .testimonials-banner { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--s-40); }
+  .social-banner, .testimonials-banner { max-width: var(--page-site); margin: 0 auto; padding: 0 var(--site-gutter); }
   .social-banner-inner, .testimonials-banner-inner { padding: var(--s-80) 0; border-top: 1px solid var(--line); }
   .social-banner-inner--no-border { border-top: none; }
   .social-banner-box { max-width: var(--read-s); margin: 0 auto; text-align: center; }
@@ -13,18 +13,16 @@
   .social-banner-icon { width: var(--ico-m); height: var(--ico-m); }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .social-banner, .testimonials-banner { padding: 0 var(--s-24); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-60) 0; }
     .social-banner-links { gap: var(--s-16); }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .social-banner, .testimonials-banner { padding: 0 var(--s-16); }
     .social-banner-inner, .testimonials-banner-inner { padding: var(--s-48) 0; }
   }
-  .signup-banner { padding: var(--s-40); background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
+  .signup-banner { padding: var(--s-40) 0; background: var(--band); border-top: 1px solid var(--line); box-shadow: var(--shadow-soft); }
   .signup-banner-inner { display: flex; align-items: center; justify-content: space-between; gap: calc(var(--s-60) * 2); max-width: var(--page-site);
-    margin: 0 auto; }
+    margin: 0 auto; padding: 0 var(--site-gutter); }
   .signup-banner-text { display: flex; align-items: center; gap: var(--s-20); flex-shrink: 0; max-width: 480px; }
   .signup-banner-icon { flex-shrink: 0; width: var(--picto-l); height: var(--picto-l); color: var(--accent); }
   .signup-banner-title { position: relative; margin-bottom: var(--s-18); padding-bottom: var(--s-12); font-family: var(--type-title-1-font);
@@ -48,19 +46,19 @@
   /* its message: the design system's line under a field (.field-note.is-reserved, is-good or is-bad) */
   /* Responsive - Large tablet / landscape phone */
   @media (max-width: 1024px) {
-    .signup-banner { padding: var(--s-36) var(--s-24); }
+    .signup-banner { padding: var(--s-36) 0; }
     .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Tablet */
   @media (max-width: 768px) {
-    .signup-banner { padding: var(--s-28) var(--s-24); }
+    .signup-banner { padding: var(--s-28) 0; }
     .signup-banner-inner { flex-direction: column; align-items: stretch; gap: var(--s-28); }
     .signup-banner-form { max-width: none; }
   }
   /* Responsive - Mobile */
   @media (max-width: 480px) {
-    .signup-banner { padding: var(--s-24) var(--s-16); }
+    .signup-banner { padding: var(--s-24) 0; }
     .signup-banner-text { gap: var(--s-14); }
     .signup-banner-icon { width: var(--picto-m); height: var(--picto-m); }
     .signup-banner-field { flex-direction: column; gap: var(--s-12); }

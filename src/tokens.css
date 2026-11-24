@@ -270,22 +270,22 @@
   --t-fast: .3s; --t-mid: .4s; --t-slow: .5s;
   /* Text: Gilda Display for titles and figures, never bold, a little spaced, the big ones in capitals; Urbanist for the
      rest, light for running text, medium for what belongs to a form and for a word put forward */
-  --type-display-size: 56px; --type-display-weight: 400; --type-display-ls: .08em; --type-display-case: uppercase;
-  --type-title-1-size: 28px; --type-title-1-weight: 400; --type-title-1-ls: .08em; --type-title-1-case: uppercase;
-  --type-title-2-size: 24px; --type-title-2-weight: 400; --type-title-2-ls: .08em; --type-title-2-case: none;
+  --type-display-size: 56px; --type-display-weight: 400; --type-display-ls: .1em; --type-display-case: uppercase;
+  --type-title-1-size: 28px; --type-title-1-weight: 400; --type-title-1-ls: .1em; --type-title-1-case: uppercase;
+  --type-title-2-size: 24px; --type-title-2-weight: 400; --type-title-2-ls: .1em; --type-title-2-case: none;
   --type-title-3-size: 20px; --type-title-3-weight: 400; --type-title-3-ls: .08em; --type-title-3-case: none;
   --type-figure-size: 28px; --type-figure-weight: 400; --type-figure-ls: .08em; --type-figure-case: none;
-  --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: .19em; --type-subtitle-case: uppercase;
-  --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: .08em; --type-cover-case: uppercase;
+  --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: .17em; --type-subtitle-case: uppercase;
+  --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: .1em; --type-cover-case: uppercase;
   --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: .19em; --type-cover-line-case: uppercase;
-  --type-lead-size: 20px; --type-lead-weight: 300; --type-lead-ls: 0; --type-lead-case: none;
+  --type-lead-size: 20px; --type-lead-weight: 300; --type-lead-ls: .1em; --type-lead-case: none;
   --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: 0; --type-text-case: none;
   --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: 0; --type-strong-case: none;
-  --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: .04em; --type-small-case: none;
-  --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: 0; --type-caption-case: none;
-  --type-caps-size: 14px; --type-caps-weight: 500; --type-caps-ls: .12em; --type-caps-case: uppercase;
-  --type-smallcaps-font: var(--body); --type-smallcaps-size: 12px; --type-smallcaps-weight: 500; --type-smallcaps-ls: .12em; --type-smallcaps-case: uppercase;
-  --type-button-size: 14px; --type-button-weight: 500; --type-button-ls: .12em; --type-button-case: uppercase;
+  --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: .07em; --type-small-case: none;
+  --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: .07em; --type-caption-case: none;
+  --type-caps-size: 14px; --type-caps-weight: 500; --type-caps-ls: .15em; --type-caps-case: uppercase;
+  --type-smallcaps-font: var(--body); --type-smallcaps-size: 12px; --type-smallcaps-weight: 500; --type-smallcaps-ls: .15em; --type-smallcaps-case: uppercase;
+  --type-button-size: 14px; --type-button-weight: 500; --type-button-ls: .18em; --type-button-case: uppercase;
   /* the site's big cards take a page's title */
   --type-card-title-font: var(--type-title-1-font); --type-card-title-size: var(--type-title-1-size); --type-card-title-weight: var(--type-title-1-weight);
   --type-card-title-ls: var(--type-title-1-ls); --type-card-title-case: var(--type-title-1-case);

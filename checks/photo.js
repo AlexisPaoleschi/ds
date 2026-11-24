@@ -275,7 +275,7 @@ function stylesheets() {
   assert(/height: 6px/.test(rail.track) && /border-radius: calc\(var\(--s-6\) \/ 2\)/.test(rail.track) && /var\(--accent-soft\)/.test(rail.track) && /var\(--zoom-track\)/.test(rail.track) && !/gradient/.test(rail.track)
     && /width: 18px/.test(rail.thumb) && rail.fill === '',
     'le zoom, la barre de Selecta : un rail de 6px aux bouts ronds, un fond d’or très pâle, un bord doux, sans or qui le remplit ; un curseur de 18px ' + JSON.stringify(rail));
-  assert(vi.font === 'Gilda Display' && vi.caps === 'uppercase' && vi.white && vi.veil && vi.covers && vi.sub && vi.back.icon && vi.back.color && vi.back.ls === '1.44px' && vi.over.edge && vi.over.radius === '0px',
+  assert(vi.font === 'Gilda Display' && vi.caps === 'uppercase' && vi.white && vi.veil && vi.covers && vi.sub && vi.back.icon && vi.back.color && vi.back.ls === '1.8px' && vi.over.edge && vi.over.radius === '0px',
     'Vitrine : le titre en Gilda Display, en capitales ; le lien retour en petites capitales, le bouton sur la photo aux angles carrés ' + JSON.stringify(vi));
   await p.emulateMedia({ reducedMotion: 'reduce' });
   const calm = await looks();

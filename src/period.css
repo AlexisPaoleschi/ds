@@ -5,6 +5,7 @@
   .periodtitle { display: inline-flex; align-items: baseline; gap: var(--s-8); min-width: 0; min-height: var(--s-24); padding: 0; background: none; border: 0; color: var(--ink); cursor: pointer; text-align: left;
     font: var(--type-title-1-weight) var(--type-title-1-size)/var(--title-lh) var(--type-title-1-font); letter-spacing: var(--type-title-1-ls); text-transform: var(--type-title-1-case); }
   .periodtitle h3 { margin: 0; font: inherit; letter-spacing: inherit; text-transform: capitalize; }
+  [data-theme="vitrine"] .periodtitle :is(h3, .periodtitle-year) { text-transform: var(--type-title-1-case); }
   .periodtitle:hover, .periodtitle:hover h3 { color: var(--accent-text); }
   .periodtitle .periodtitle-year { color: var(--faint); }
   .periodtitle :is(.caret, .chev):not(.ico) { align-self: center; color: var(--faint); font: var(--type-text-weight) var(--type-text-size)/var(--lh-tight) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }

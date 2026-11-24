@@ -1,7 +1,7 @@
 /* The site kit: the testimonials' banner (the events list): the photographers' words, each in the design system's card. */
   /* its wrapper, its inner border and its title are the bands' (banners.css) */
   .testimonials-banner-head { max-width: var(--read-s); margin: 0 auto var(--s-48); text-align: center; }
-  .testimonials-banner-subtitle { font-family: var(--type-subtitle-font); font-weight: var(--type-subtitle-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-subtitle-size); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .testimonials-banner-subtitle { font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--faint); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .testimonials-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: var(--s-32); }
   .testimonial-card { display: flex; flex-direction: column; gap: var(--s-20); padding: var(--s-36) var(--s-32);
     transition: transform var(--t-mid) ease, box-shadow var(--t-mid) ease; }
