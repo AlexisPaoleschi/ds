@@ -36,6 +36,11 @@
   body.doc .doc-sign-field-line { flex: 1; border-bottom: 1px solid var(--faint); }
   body.doc .doc-foot { margin-top: var(--s-48); padding-top: var(--s-20); text-align: center; border-top: 1px solid var(--line); }
   body.doc .doc-foot p { margin: 0 0 var(--s-4); font-size: var(--type-small-size); color: var(--faint); font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  /* on a phone, a legal page's paragraphs, lists and notice are justified, no word cut, like the site's running text
+     (5.18.0); a page of text is in ds.css, so the phone is the apps' one, upright */
+  @media (max-width: 768px) {
+    body.doc .doc-section :is(p, li, .doc-notice) { text-align: justify; text-align-last: left; hyphens: manual; }
+  }
   body.doc.is-legal { page: legal; }
   @page legal { margin-top: 20mm; margin-bottom: 20mm; }
   @media print {

@@ -27,7 +27,7 @@ tools_data="src/status.css src/figures.css src/chart.css src/calendar.css"
 js_tools="src/tools.js src/query.js src/table.js src/calendar.js src/chart.js src/figures.js src/reorder.js src/datepick.js src/live.js"
 js_photo="src/viewer.js src/photogrid.js src/photokit.js"
 # the site kit: what alexispaoleschi.com shares between its pages and no app needs, in files of their own
-css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css src/home.css src/eventslist.css src/newsletter.css src/testimonials.css"
+css_site="src/sitebase.css src/sitebar.css src/banners.css src/event.css src/home.css src/eventslist.css src/newsletter.css src/testimonials.css src/sitetext.css"
 js_site="src/site.js"
 head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */"
 { echo "$head"; cat $foundation $marks $controls $surfaces $data $public $pages $states; } > dist/ds.css

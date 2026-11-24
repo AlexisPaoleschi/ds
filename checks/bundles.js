@@ -20,7 +20,7 @@ const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 
 // the screen widths: 480, 768 and 1024px, 769 for « wider than a phone », 1280 for a very large screen; 956px only in
 // the site kit, for a phone held sideways (orientation: landscape)
-const SITE_KIT = ['sitebase', 'sitebar', 'banners', 'event', 'home', 'eventslist', 'newsletter', 'testimonials'];
+const SITE_KIT = ['sitebase', 'sitebar', 'banners', 'event', 'home', 'eventslist', 'newsletter', 'testimonials', 'sitetext'];
 function widths() {
   const wrong = [];
   for (const f of fs.readdirSync(path.join(root, 'src')).filter(f => f.endsWith('.css'))) {

@@ -1,4 +1,4 @@
-/* ds 5.17.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -834,4 +834,12 @@
   /* Responsive - Mobile */
   @media (max-width: 480px) {
     .testimonial-card { padding: var(--s-28) var(--s-24); }
+  }
+/* The site's running text on a phone: what reads from the left is justified, so that a narrow column keeps straight
+   edges, and no word is ever cut at a line's end (5.18.0). Last in the site kit, so that it wins over each piece's own
+   phone rule; what is centred (a cover, a title's line, a model's words) stays centred. */
+  @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
+    .section-text, .info-box.is-left p, .organizer-text, .day-description, .day-note, .info-list li span, .companion-text,
+    .payment-text, .faq-answer, .location-transport-note span, .event-card-description, .signup-banner-subtitle,
+    .testimonial-text { text-align: justify; text-align-last: left; hyphens: manual; }
   }

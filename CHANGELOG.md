@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.18.0 · 24 novembre 2026
+
+- Sur un téléphone, debout ou couché, le texte courant du site qui se lit depuis la gauche est justifié, sans jamais couper un mot en fin de ligne (`src/sitetext.css`, à la fin du kit du site) : les paragraphes d’une page d’événement, le programme, la FAQ, le paiement, la note sur le transport, la liste de ce qui est compris, les cartes et les témoignages de la liste des événements, la phrase des bandeaux d’inscription, et les pages légales (`body.doc`). La présentation des organisateurs passe de centrée à justifiée. Ce qui est centré le reste (une couverture, la ligne sous un titre, les mots d’un modèle). Rien ne change sur un ordinateur.
+
 ## 5.17.2 · 24 novembre 2026
 
 - Sur un téléphone, dans l’encadré « Getting there » d’une page d’événement, la carte de l’aéroport ou de la gare (`.location-map-destinations`) prend toute la largeur de l’encadré, comme la note sur le transport en dessous, au lieu de se resserrer au milieu.
