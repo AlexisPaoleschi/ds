@@ -1,4 +1,4 @@
-/* ds 5.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.14.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -2140,7 +2140,13 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
    column titles on the beige band, a row lit in beige under the pointer), every column after the first centred. */
 /* Selecta's gallery cover: the design system's short hero (.hero.is-short.is-bottom) at Selecta's heights, room and
    title size, its date in the hero's own small capitals; without a photo, a beige light. */
-.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: var(--space-md); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+.hero.gallery-cover { --hero-h: 220px; --hero-pad: var(--space-md); --hero-pad-end: var(--space-md); --hero-side: 0px; --hero-in-max: var(--page-max); --hero-in-pad: 0 var(--space-md); --hero-veil: linear-gradient(to top, var(--overlay-black-medium), transparent 60%); background: var(--band); }
+/* its words start where the page's column does (main.page: --page-max, the same room on each side), so its title has
+   the column's width before it wraps */
+.hero.gallery-cover .hero-in { margin-inline: auto; }
+@media (min-width: 769px) {
+  .hero.gallery-cover { --hero-in-pad: 0 var(--space-lg); }
+}
 .gallery-cover--placeholder { background: linear-gradient(135deg, var(--band), var(--accent-soft)); }
 /* the sign-in page */
 .auth-page { width: 100%; max-width: calc(420px + 2 * var(--space-md)); margin: auto; padding-top: calc(var(--space-md) + var(--safe-top)); padding-right: calc(var(--space-md) + var(--safe-right)); padding-bottom: var(--space-md); padding-left: calc(var(--space-md) + var(--safe-left)); }
@@ -2148,7 +2154,7 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
 .auth-form .msg { margin: 0; justify-content: center; text-align: center; line-height: var(--lh-ui); }
 /* a gallery's cover on a computer: taller, more room, a larger title */
 @media (min-width: 769px) {
-  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); --hero-side: var(--space-lg); }
+  .hero.gallery-cover { --hero-h: 320px; --hero-pad: var(--space-lg); --hero-pad-end: var(--space-lg); }
 }
 /* The small pages of an app (privacy, terms, signed out): the app's name above a title, one column of text. */
   body.doc { margin: 0; min-height: 100vh; background: var(--bg); color: var(--ink); font: var(--type-text-weight) var(--type-text-size)/var(--text-lh) var(--type-text-font); -webkit-font-smoothing: antialiased; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }

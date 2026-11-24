@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.14.1 · 24 novembre 2026
+
+- La couverture d’une galerie de Selecta (`.hero.gallery-cover`) aligne ses mots sur la colonne de la page (`main.page` : `--page-max`, la même marge de chaque côté), comme le lien « Mes galeries » et les cartes en dessous, et donne à son titre toute la largeur de cette colonne : il partait 90px plus à gauche sur un grand écran et passait à la ligne à 720px.
+
 ## 5.14.0 · 24 novembre 2026
 
 - La phrase d’un bandeau photo (`.hero.is-band .hero-meta`) prend le sous-titre doré, en capitales espacées comme le lieu d’une couverture, en lignes de même longueur. Il lui faut quelques mots : sur le site, les six bandeaux de Lyon et du Sénégal ont désormais une phrase courte (« Three models · Three styles »), chaque groupe de mots soudé par des espaces insécables.
