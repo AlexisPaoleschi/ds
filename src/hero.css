@@ -54,9 +54,15 @@
   .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
-  .hero.is-band .hero-meta { font-style: italic; }
-  /* a line under the title that is a whole sentence: text, not spaced capitals */
-  .hero .hero-meta.is-text { font: var(--type-text-weight) var(--type-text-size)/var(--lh-relaxed) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  /* words on a photo as wide as the screen grow: they keep their role's font, weight, case and spacing, and its size is
+     multiplied by --photo-scale (5.4.0). On a band, the title by 1.15 and the sentence under it, text in italics, by
+     1.25 (by 1 on a phone) */
+  .hero.is-band .hero-t { --photo-scale: 1.15; font-size: calc(var(--type-display-size) * var(--photo-scale)); }
+  .hero.is-band .hero-meta { --photo-scale: 1.25; font: italic var(--type-text-weight) calc(var(--type-text-size) * var(--photo-scale))/var(--lh-relaxed) var(--type-text-font);
+    letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  @media (max-width: 768px) {
+    .hero.is-band .hero-meta { --photo-scale: 1; }
+  }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }

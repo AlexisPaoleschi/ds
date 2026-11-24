@@ -3,7 +3,8 @@
 // .topbar-brand alone), or inherits; the raw values live in tokens.css, thirteen roles in each theme. On the screen: every
 // text the showcase draws, in both themes, wears the size, the spacing and the case of one role of its theme, in that
 // role's weight or the strong weight (a word put forward), in its font or in mono; the logo, and a tile's figure made
-// smaller to fit its tile (ds.fitFigures), are the only ones apart.
+// smaller to fit its tile (ds.fitFigures), are the only ones apart; a word on a photo as wide as the screen is its role
+// grown by --photo-scale.
 // usage: node checks/roles.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -36,7 +37,8 @@ function sourceFaults() {
         const [, prop, val] = mm;
         // what may stand in it: a role's, mono, a line height in a shorthand, italic, and the words that change nothing
         const brand = /(^|[\s,])\.(top)?bar-brand|(^|[\s,])\.brand\b/.test(sel) || /\.topbar-brand|\.brand\b/.test(sel);
-        let rest = val.replace(/var\(--type-[a-z0-9-]+\)/g, '').replace(/var\(--mono\)/g, '');
+        // a word on a photo as wide as the screen: its role's size times --photo-scale (5.4.0)
+        let rest = val.replace(/calc\(\s*var\(--type-[a-z0-9-]+-size\)\s*\*\s*var\(--photo-scale\)\s*\)/g, '').replace(/var\(--type-[a-z0-9-]+\)/g, '').replace(/var\(--mono\)/g, '');
         if (brand) rest = rest.replace(/var\(--brand-[a-z]+\)/g, '');
         if (prop === 'font') rest = rest.replace(/\/\s*(var\(--[a-z0-9-]*lh[a-z0-9-]*\)|[\d.]+|normal)/g, '').replace(/\bitalic\b/g, '');
         if (prop === 'text-transform') rest = rest.replace(/\b(none|capitalize)\b/g, '').replace(/\buppercase\b/g, /::first-letter/.test(sel) || brand ? '' : 'uppercase');
@@ -94,15 +96,16 @@ server.listen(0, async () => {
         // a tile's figure made smaller to fit its tile
         if (el.closest('dd[style*="font-size"], .big-fig-value[style*="font-size"]')) continue;
         const th = el.closest('[data-theme]')?.dataset.theme || 'atelier';
-        const cs = getComputedStyle(el), fs = parseFloat(cs.fontSize);
+        // a word on a photo as wide as the screen is its role grown by --photo-scale: its role is read at its own size
+        const cs = getComputedStyle(el), raw = parseFloat(cs.fontSize), fs = raw / (parseFloat(cs.getPropertyValue('--photo-scale')) || 1);
         const look = looks[th];
-        const same = x => Math.abs(x.size - fs) < .5 && Math.abs(lsOf(x.ls) - em(cs.letterSpacing, fs)) < .006
+        const same = x => Math.abs(x.size - fs) < .5 && Math.abs(lsOf(x.ls) - em(cs.letterSpacing, raw)) < .006
           && (x.case === cs.textTransform || (x.case === 'none' && cs.textTransform === 'capitalize'));
         // its role's own weight first, then any role's look in the strong weight
         const hit = look.find(x => same(x) && cs.fontWeight === x.weight) || look.find(x => same(x) && cs.fontWeight === look.strong);
         // two roles may look alike in a theme (Vitrine's buttons and capitals): the text shows both
         if (hit) look.filter(x => same(x) && x.weight === hit.weight).forEach(x => used.push(th + ' ' + x.r));
-        else out.push(`${th} ${el.tagName.toLowerCase()}${el.classList.length ? '.' + [...el.classList].join('.') : ''} ${fs}px ${cs.fontWeight} ${em(cs.letterSpacing, fs)}em ${cs.textTransform} « ${el.textContent.trim().slice(0, 24)} »`);
+        else out.push(`${th} ${el.tagName.toLowerCase()}${el.classList.length ? '.' + [...el.classList].join('.') : ''} ${fs}px ${cs.fontWeight} ${em(cs.letterSpacing, raw)}em ${cs.textTransform} « ${el.textContent.trim().slice(0, 24)} »`);
       }
       return { out, used };
     }, [ROLES]);

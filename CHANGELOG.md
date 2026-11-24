@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.4.0 · 24 novembre 2026
+
+- Un mot sur une photo aussi large que l’écran grandit : il garde la police, la graisse, la casse et l’espacement de son rôle, et sa taille est multipliée par `--photo-scale`. Sur un bandeau photo du site (`.hero.is-band`), le titre ×1,15 (64px, comme avant la 5.0.0) et la phrase dessous, en texte italique, ×1,25 (20px ; 16px sur un téléphone). `node checks/roles.js` lit le rôle d’un tel mot à sa taille d’origine. `.hero-meta.is-text` (5.2.0) n’existe plus : toute phrase d’un bandeau est un texte.
+- Les points forts d’une page d’événement (`.highlight-text`, `.highlight-list`) s’écrivent en capitales (14px), et tiennent sur une ligne sur un ordinateur.
+- La phrase du transport sous « Getting there » (`.location-transport-note`) est un texte (16px), comme le site l’écrivait.
+
 ## 5.3.0 · 24 novembre 2026
 
 - Une ligne qui passe sur deux sur un téléphone, à l’endroit choisi (`.phone-break`) : ce qui suit commence une ligne à soi, et le séparateur juste avant (`.sep`, un « · ») disparaît ; plus large, tout reste sur une ligne. Bank s’en sert sous le nom d’un voyage : les dates et le nombre de jours, puis la dépense par jour et le nombre d’opérations.

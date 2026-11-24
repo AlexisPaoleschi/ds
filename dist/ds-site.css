@@ -1,4 +1,4 @@
-/* ds 5.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -216,14 +216,15 @@
   }
   /* Highlight */
   .highlight-box { margin: var(--s-48) 0 0; padding: var(--s-32) var(--s-40); background: var(--accent-soft); border-left: 2px solid var(--accent); }
-  .highlight-text { font-family: var(--type-subtitle-font); font-weight: var(--type-subtitle-weight); letter-spacing: var(--type-subtitle-ls); text-align: center; text-transform: var(--type-subtitle-case);
-    color: var(--accent); font-size: var(--type-subtitle-size); }
+  /* the highlights, in capitals: on a computer they hold on one line */
+  .highlight-text { font-family: var(--type-caps-font); font-weight: var(--type-caps-weight); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); text-align: center;
+    color: var(--accent); font-size: var(--type-caps-size); }
   /* a bullet sits on the small letters' middle: up to the capitals' (icon audit, 22 November 2026) */
-  .highlight-separator { display: inline-block; font-weight: var(--type-subtitle-weight); color: var(--accent); translate: 0 -0.05em; font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  .highlight-separator { display: inline-block; color: var(--accent); translate: 0 -0.05em; font-family: var(--type-caps-font); font-weight: var(--type-caps-weight); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); font-size: var(--type-caps-size); }
   .highlight-line { display: inline-block; }
   .highlight-list { display: none; flex-direction: column; gap: var(--s-12); margin: 0; padding: 0; list-style: none; }
-  .highlight-list li { position: relative; padding: var(--s-8) 0; padding-left: var(--s-24); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size);
-    font-weight: var(--type-subtitle-weight); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); color: var(--accent); }
+  .highlight-list li { position: relative; padding: var(--s-8) 0; padding-left: var(--s-24); font-size: var(--type-caps-size);
+    font-family: var(--type-caps-font); font-weight: var(--type-caps-weight); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); color: var(--accent); }
   /* each line's arrow: the design system's icon (<svg class="ico"><use href="…icons-X.Y.Z.svg#i-arrow-right"/></svg>), on its first line */
   :is(.highlight-list, .schedule-list) li > .ico { position: absolute; left: 0; top: calc(var(--s-8) + (1lh - 14px) / 2); width: var(--ico-sm); height: var(--ico-sm); color: var(--accent); }
   /* CTA */
@@ -306,7 +307,7 @@
   .location-transport-note { display: flex; align-items: center; gap: var(--s-12); margin-top: var(--s-32);
     padding: var(--s-20) var(--s-28); background: var(--accent-soft); border: 1px solid var(--line); }
   .transport-note-icon { flex-shrink: 0; width: var(--picto-s); height: var(--picto-s); color: var(--accent); stroke-width: 1; }
-  .location-transport-note span { font-family: var(--type-small-font); font-weight: var(--type-small-weight); color: var(--dim); font-size: var(--type-small-size); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .location-transport-note span { color: var(--dim); }
   /* Schedule */
   .schedule-container { margin: var(--s-48) 0; }
   .schedule-day { margin-bottom: var(--s-32); padding: var(--s-40); background: var(--accent-soft); border-left: 2px solid var(--line); }
