@@ -54,8 +54,8 @@
   .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
-  /* a band's sentence is a lead, in italics */
-  .hero.is-band .hero-meta { font: italic var(--type-lead-weight) var(--type-lead-size)/var(--lh-relaxed) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); }
+  /* a band's sentence is a lead, upright, its lines of one length */
+  .hero.is-band .hero-meta { font: var(--type-lead-weight) var(--type-lead-size)/var(--lh-relaxed) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); text-wrap: balance; }
   /* a cover as tall as the screen (an event's page): its title, its place and its date take the cover's roles; its
      buttons keep the site's size */
   .hero.is-full .hero-t { font: var(--type-cover-weight) var(--type-cover-size)/var(--hero-t-lh) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }

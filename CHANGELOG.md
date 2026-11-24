@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.13.0 · 24 novembre 2026
+
+- En Vitrine, le chapô (`--type-lead-*`) prend la police des titres, droite, sans espace entre les lettres, en graisse normale (20px, 16px sur un téléphone) : la phrase d’un bandeau photo (« Three exceptional artists… ») et la date d’une couverture d’événement. La phrase d’un bandeau n’est plus en italique et ses lignes ont la même longueur ; `node checks/roles.js` ne la compte plus parmi les italiques permis.
+
 ## 5.12.0 · 24 novembre 2026
 
 - Dans la visionneuse, la position (« 2 / 9 », `.viewer-count`) quitte le bas de la photo pour le coin en bas à droite, sous la flèche suivante, dans la même pastille.

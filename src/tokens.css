@@ -280,7 +280,7 @@
   --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
   --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: var(--track-m); --type-cover-case: uppercase;
   --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
-  --type-lead-size: 20px; --type-lead-weight: 300; --type-lead-ls: var(--track-m); --type-lead-case: none;
+  --type-lead-font: var(--display); --type-lead-size: 20px; --type-lead-weight: 400; --type-lead-ls: var(--track-0); --type-lead-case: none;
   --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: var(--track-0); --type-text-case: none;
   --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: var(--track-0); --type-strong-case: none;
   --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: var(--track-s); --type-small-case: none;
