@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.14.0 · 24 novembre 2026
+
+- La phrase d’un bandeau photo (`.hero.is-band .hero-meta`) prend le sous-titre doré, en capitales espacées comme le lieu d’une couverture, en lignes de même longueur. Il lui faut quelques mots : sur le site, les six bandeaux de Lyon et du Sénégal ont désormais une phrase courte (« Three models · Three styles »), chaque groupe de mots soudé par des espaces insécables.
+- Le chapô ne sert plus qu’à la date sous le titre d’une couverture.
+
 ## 5.13.0 · 24 novembre 2026
 
 - En Vitrine, le chapô (`--type-lead-*`) prend la police des titres, droite, sans espace entre les lettres, en graisse normale (20px, 16px sur un téléphone) : la phrase d’un bandeau photo (« Three exceptional artists… ») et la date d’une couverture d’événement. La phrase d’un bandeau n’est plus en italique et ses lignes ont la même longueur ; `node checks/roles.js` ne la compte plus parmi les italiques permis.

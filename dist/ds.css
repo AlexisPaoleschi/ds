@@ -1,4 +1,4 @@
-/* ds 5.13.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.14.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1739,13 +1739,13 @@
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-sub-gap: var(--s-16); }
-  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title, a line
-     in italics under it */
+  /* a photo band between two sections of a page (the site's event pages): 60% of the screen's height, its title, a few
+     words in gold under it */
   .hero.is-band { --hero-h: 60vh; --hero-pad: 0px; --hero-pad-end: 0px; --hero-side: 0px; --hero-in-max: var(--read-xl); --hero-in-pad: var(--s-20);
     --hero-t-gap: var(--s-24); --hero-rule: none; --hero-rule-gap: 0px;
     --hero-meta-gap: var(--s-40); }
-  /* a band's sentence is a lead, upright, its lines of one length */
-  .hero.is-band .hero-meta { font: var(--type-lead-weight) var(--type-lead-size)/var(--lh-relaxed) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); text-wrap: balance; }
+  /* a band's sentence: a few words in gold capitals, as a cover's place, its lines of one length */
+  .hero.is-band .hero-meta { font: var(--type-subtitle-weight) var(--type-subtitle-size)/var(--lh-loose) var(--type-subtitle-font); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); color: var(--accent); text-wrap: balance; }
   /* a cover as tall as the screen (an event's page): its title, its place and its date take the cover's roles; its
      buttons keep the site's size */
   .hero.is-full .hero-t { font: var(--type-cover-weight) var(--type-cover-size)/var(--hero-t-lh) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
