@@ -1,4 +1,4 @@
-/* ds 5.14.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.15.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -149,7 +149,7 @@
 :root, [data-theme] {
   /* the gaps between letters: five, and every text role of either theme takes one of them, none other (5.9.0) */
   --track-0: 0; --track-s: .04em; --track-m: .1em; --track-l: .15em; --track-xl: .18em;
-  /* Text: sixteen roles and no other size, weight or letter spacing, in ds or in an app (5.0.0, 5.6.0). Each has one font, one
+  /* Text: fifteen roles and no other size, weight or letter spacing, in ds or in an app (5.0.0, 5.6.0, 5.15.0). Each has one font, one
      size, one weight, one spacing and one case, which the theme sets; a component picks a role, never a size. A word in a
      role may be in mono (a figure, a date) or take the strong weight (a word put forward); its line height stays the
      component's. Atelier's: Archivo for titles and figures, IBM Plex Sans for the rest.
@@ -163,11 +163,10 @@
   --type-figure-font: var(--display); --type-figure-size: 28px; --type-figure-weight: 700; --type-figure-ls: var(--track-0); --type-figure-case: none;
   /* the spaced line under a big title */
   --type-subtitle-font: var(--body); --type-subtitle-size: 15px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
-  /* a cover as tall as the screen (the site's event pages): its title, the line under it (a place), then a lead, a short
-     sentence under a big title (a cover's date, a photo band's sentence); smaller on a phone, below */
+  /* a cover as tall as the screen (the site's event pages): its title and the line under it (a place); its title smaller
+     on a phone, below */
   --type-cover-font: var(--display); --type-cover-size: 64px; --type-cover-weight: 800; --type-cover-ls: var(--track-0); --type-cover-case: none;
   --type-cover-line-font: var(--body); --type-cover-line-size: 20px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
-  --type-lead-font: var(--body); --type-lead-size: 18px; --type-lead-weight: 400; --type-lead-ls: var(--track-0); --type-lead-case: none;
   /* sentences, lists, a table's cells, a field's value; then a name, a row's title, a box's words */
   --type-text-font: var(--body); --type-text-size: 15px; --type-text-weight: 400; --type-text-ls: var(--track-0); --type-text-case: none;
   --type-strong-font: var(--body); --type-strong-size: 15px; --type-strong-weight: 600; --type-strong-ls: var(--track-0); --type-strong-case: none;
@@ -297,7 +296,6 @@
   --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
   --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: var(--track-m); --type-cover-case: uppercase;
   --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
-  --type-lead-font: var(--display); --type-lead-size: 20px; --type-lead-weight: 400; --type-lead-ls: var(--track-0); --type-lead-case: none;
   --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: var(--track-0); --type-text-case: none;
   --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: var(--track-0); --type-strong-case: none;
   --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: var(--track-s); --type-small-case: none;
@@ -381,10 +379,10 @@
   [data-theme="vitrine"] { --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
 }
 /* the sizes of the text on a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in
-   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title and its lead smaller, in both
+   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title smaller, in both
    themes (held sideways, the site kit gives a phone the same: sitebase.css, 5.7.0) */
 @media (max-width: 768px) {
-  :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; --type-lead-size: 16px; }
+  :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; }
   [data-theme="vitrine"] { --type-title-1-size: 24px; }
 }
 @media (max-width: 480px) {
@@ -1746,11 +1744,12 @@
     --hero-meta-gap: var(--s-40); }
   /* a band's sentence: a few words in gold capitals, as a cover's place, its lines of one length */
   .hero.is-band .hero-meta { font: var(--type-subtitle-weight) var(--type-subtitle-size)/var(--lh-loose) var(--type-subtitle-font); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); color: var(--accent); text-wrap: balance; }
-  /* a cover as tall as the screen (an event's page): its title, its place and its date take the cover's roles; its
-     buttons keep the site's size */
+  /* a cover as tall as the screen (an event's page): its title and its place take the cover's roles, its date the
+     subtitle's spaced capitals, in white under the gold place, so that the three read as one block; its buttons keep the
+     site's size */
   .hero.is-full .hero-t { font: var(--type-cover-weight) var(--type-cover-size)/var(--hero-t-lh) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
   .hero.is-full .hero-sub { font: var(--type-cover-line-weight) var(--type-cover-line-size)/var(--lh-loose) var(--type-cover-line-font); letter-spacing: var(--type-cover-line-ls); text-transform: var(--type-cover-line-case); }
-  .hero.is-full .hero-meta { font: var(--type-lead-weight) var(--type-lead-size)/var(--lh-loose) var(--type-lead-font); letter-spacing: var(--type-lead-ls); text-transform: var(--type-lead-case); }
+  .hero.is-full .hero-meta { font: var(--type-subtitle-weight) var(--type-subtitle-size)/var(--lh-loose) var(--type-subtitle-font); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
   /* Selecta's gallery cover: low, its words close together */
   .hero.is-short { --hero-h: clamp(220px, 34vh, 320px); --hero-pad: var(--s-32); --hero-side: var(--s-32);
     --hero-t-lh: var(--lh-ui); --hero-t-gap: 0px; --hero-rule: none; --hero-rule-gap: 0px; --hero-meta-gap: 0px; }

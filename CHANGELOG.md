@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.15.0 · 24 novembre 2026
+
+- Le prix d’une page d’événement (`.price-display .big-fig-value`) prend le titre de couverture, 84px (48px sur un téléphone) au lieu de 56px : la taille du titre de la couverture, la plus grande du site.
+- La date sous le titre d’une couverture d’événement (`.hero.is-full .hero-meta`) prend le sous-titre, en capitales espacées, en blanc sous le lieu doré : le titre, le lieu et la date se lisent comme un seul bloc.
+- Le chapô (`--type-lead-*`) est retiré : il ne servait plus qu’à cette date. Le texte a quinze rôles ; `node checks/roles.js` les vérifie, la vitrine les montre.
+- La case « Bring a Companion » d’une page d’événement (`.companion-info`) prend celle des conditions de paiement (`.payment-info`) : un trait fin autour d’un titre doré et de mots alignés à gauche, sans fond beige.
+- La vitrine montre le titre de couverture avant le grand titre, le plus grand en premier.
+
 ## 5.14.1 · 24 novembre 2026
 
 - La couverture d’une galerie de Selecta (`.hero.gallery-cover`) aligne ses mots sur la colonne de la page (`main.page` : `--page-max`, la même marge de chaque côté), comme le lien « Mes galeries » et les cartes en dessous, et donne à son titre toute la largeur de cette colonne : il partait 90px plus à gauche sur un grand écran et passait à la ligne à 720px.

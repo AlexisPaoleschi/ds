@@ -150,7 +150,9 @@
   .pricing-header { margin-bottom: var(--s-48); }
   .price-display { display: flex; flex-direction: column; align-items: center; margin: var(--s-48) 0; padding: var(--s-48) 0;
     border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
-  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css) */
+  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price as big
+     as a cover's title (84px, 48px on a phone), the biggest the site writes */
+  .price-display .big-fig-value { font: var(--type-cover-weight) var(--type-cover-size)/var(--lh-tight) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
   .pricing-includes { margin: var(--s-48) 0; }
   .includes-title { margin-bottom: var(--s-40); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
     color: var(--ink); text-transform: var(--type-title-2-case); }
@@ -161,11 +163,9 @@
   .include-item span { font-weight: var(--type-text-weight); text-align: left; color: var(--dim); font-family: var(--type-text-font); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .pricing-note { margin: var(--s-40) 0; padding: var(--s-32); background: var(--accent-soft); border: 1px solid var(--line); }
   .pricing-note p { margin: 0; line-height: var(--lh-airy); color: var(--dim); }
-  /* Companion */
-  .companion-info { margin: var(--s-40) 0; padding: var(--s-40); text-align: center; background: var(--accent-soft); border: 1px solid var(--line); }
-  .companion-title { margin-bottom: var(--s-20); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
-    text-transform: var(--type-title-2-case); color: var(--accent); }
-  .companion-text { max-width: 700px; margin: 0 auto; font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  /* Companion: the same box as the payment terms (below), a thin line around a gold title and words aligned left, though
+     the pricing box centres its own */
+  .companion-info { margin: var(--s-40) 0; text-align: left; }
   /* Booking & Contact */
   .booking-box { padding: var(--s-80) var(--s-48); }
   .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-48) 0; }
@@ -183,11 +183,12 @@
     padding: var(--s-18) var(--s-48); margin-bottom: var(--s-48); background: var(--bad); }
   .sold-out-label { font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case);
     color: var(--white); }
-  /* Payment */
-  .payment-info { margin-top: var(--s-48); padding: var(--s-32); background: transparent; border: 1px solid var(--line); }
-  .payment-title { margin-bottom: var(--s-20); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
+  /* Payment, and the companion's box: a thin line around a gold title and words aligned left */
+  .payment-info { margin-top: var(--s-48); }
+  .companion-info, .payment-info { padding: var(--s-32); background: transparent; border: 1px solid var(--line); }
+  .companion-title, .payment-title { margin-bottom: var(--s-20); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
     color: var(--accent); text-transform: var(--type-title-2-case); }
-  .payment-text { color: var(--dim); }
+  .companion-text, .payment-text { color: var(--dim); }
   /* FAQ */
   .faq-section { padding-bottom: var(--s-80); }
   .faq-container { margin-top: var(--s-48); }
@@ -286,8 +287,7 @@
     .contact-card { padding: var(--s-32) var(--s-24); }
     .contact-methods { grid-template-columns: 1fr; }
     /* Companion & Payment */
-    .companion-info { padding: var(--s-24) var(--s-20); }
-    .payment-info { padding: var(--s-24) var(--s-20); }
+    .companion-info, .payment-info { padding: var(--s-24) var(--s-20); }
     /* Transport */
     .location-transport-note { padding: var(--s-16) var(--s-20); }
   }

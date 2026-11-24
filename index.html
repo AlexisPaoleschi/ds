@@ -132,7 +132,7 @@
     <h2 class="ct">Règles</h2>
     <ul>
       <li><b>Couleurs.</b> Toutes ici. Une appli ne nomme qu’un jeton (<code>var(--c-bleu)</code>, <code>var(--good)</code>…), jamais un code couleur. <code>--good</code>, <code>--bad</code> et <code>--mid</code> sont réservés aux entrées, aux sorties et aux alertes ; le rouge, le vert et le jaune de la palette nomment une banque, une catégorie ou un agenda.</li>
-      <li><b>Texte.</b> Seize rôles et aucune autre taille, graisse ou espacement de lettres : grand titre, titre et ligne de couverture (la page d’un événement), chapô (une phrase courte sous un grand titre), titres 1 à 3, chiffre, sous-titre, texte, texte fort, petit texte, légende, capitales, petites capitales et bouton. Un composant choisit un rôle, jamais une taille ; un mot peut passer en mono (un chiffre) ou prendre la graisse du texte fort. L’italique a un sens, jamais un rôle de décor : une citation (un témoignage), une note (celle d’une opération) et le titre d’une œuvre (<cite>Marley Magazine</cite>). Sur un téléphone, debout ou couché, le texte garde ses tailles de téléphone. Cinq écarts entre les lettres, et chaque rôle en prend un : aucun, petit (0,04 em), moyen (0,10 em), large (0,15 em) et très large (0,18 em).</li>
+      <li><b>Texte.</b> Quinze rôles et aucune autre taille, graisse ou espacement de lettres : grand titre, titre et ligne de couverture (la page d’un événement), titres 1 à 3, chiffre, sous-titre, texte, texte fort, petit texte, légende, capitales, petites capitales et bouton. Un composant choisit un rôle, jamais une taille ; un mot peut passer en mono (un chiffre) ou prendre la graisse du texte fort. L’italique a un sens, jamais un rôle de décor : une citation (un témoignage), une note (celle d’une opération) et le titre d’une œuvre (<cite>Marley Magazine</cite>). Sur un téléphone, debout ou couché, le texte garde ses tailles de téléphone. Cinq écarts entre les lettres, et chaque rôle en prend un : aucun, petit (0,04 em), moyen (0,10 em), large (0,15 em) et très large (0,18 em).</li>
       <li><b>Réglages.</b> Interlignes, marges, arrondis, superpositions, durées et ombres sont des jetons. Les largeurs d’écran sont les trois mêmes partout : 480, 768 et 1024px.</li>
       <li><b>Boutons.</b> Gris pour aller ailleurs, or pour agir, or plein pour enregistrer, rouge pour supprimer. Un seul bouton plein par écran.</li>
       <li><b>Angles nets.</b> 4, 6 ou 8px dans Atelier, jamais plus ; carrés dans Vitrine, comme alexispaoleschi.com.</li>
@@ -152,7 +152,7 @@
       <div data-icons></div>
     </div>
     <div class="card"><h3 class="ct">Rôles de texte et espaces</h3>
-      <div class="scale" data-roles="display:Grand titre cover:Lyon cover-line:Somone lead:Un chapô title-1:Titre 1 title-2:Titre 2 title-3:Titre 3 figure:12 480 subtitle:Sous-titre text:Texte strong:Texte fort small:Petit texte caption:Légende caps:Capitales smallcaps:Petites capitales button:Bouton"></div>
+      <div class="scale" data-roles="cover:Lyon display:Grand titre cover-line:Somone title-1:Titre 1 title-2:Titre 2 title-3:Titre 3 figure:12 480 subtitle:Sous-titre text:Texte strong:Texte fort small:Petit texte caption:Légende caps:Capitales smallcaps:Petites capitales button:Bouton"></div>
       <div class="scale" style="margin-top: var(--s-14)" data-sp="2 4 6 8 10 12 14 16 20 24 32 48"></div>
       <div class="boxes" style="margin-top: var(--s-14)">
         <div style="border-radius: var(--r-s)">--r-s</div><div style="border-radius: var(--r-m)">--r-m</div><div style="border-radius: var(--r-l)">--r-l</div>
@@ -603,7 +603,7 @@
     node.querySelector(".t-name small").textContent = what;
     for (const t of node.querySelector("[data-swatches]").dataset.swatches.split(" "))
       node.querySelector("[data-swatches]").insertAdjacentHTML("beforeend", `<div><i style="background:var(${t})"></i><span>${t}</span></div>`);
-    // the sixteen text roles, each drawn by its own tokens
+    // the fifteen text roles, each drawn by its own tokens
     for (const [r, words] of node.querySelector("[data-roles]").dataset.roles.match(/[a-z0-9-]+:[^:]+?(?= [a-z0-9-]+:|$)/g).map(x => x.split(":")))
       node.querySelector("[data-roles]").insertAdjacentHTML("beforeend", `<div><code>${r}</code><span class="role-x" style="font: var(--type-${r}-weight) var(--type-${r}-size)/var(--lh-tight) var(--type-${r}-font); letter-spacing: var(--type-${r}-ls); text-transform: var(--type-${r}-case)">${words}</span></div>`);
     for (const n of node.querySelector("[data-sp]").dataset.sp.split(" "))
