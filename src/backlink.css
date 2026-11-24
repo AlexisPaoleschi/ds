@@ -1,7 +1,8 @@
 /* The way back, « ← Galeries », anywhere in a page: <a class="back-link"> with the sprite's arrow,
    <svg class="ico" aria-hidden="true"><use href="#i-arrow-left"/></svg>, then a few capitals. Quiet until the pointer
    comes: it turns gold and its arrow steps back (Selecta's). Over a photo (.on-photo: a hero's corner) it is the site's
-   floating button instead, white with a soft gold edge, over a blur. The settings' .back stays the settings' own. */
+   floating button instead, white with a soft gold edge, over a blur; the bar's way back (.topbar-back) takes the same
+   frame, so that it looks the same at the top of the page and in the bar (5.19.1). The settings' .back stays the settings' own. */
   .back-link { display: inline-flex; align-items: center; gap: var(--s-8); padding: var(--s-6) 0; color: var(--faint); text-decoration: none;
     font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); white-space: nowrap;
     transition: color var(--t-fast) ease, background-color var(--t-fast) ease, border-color var(--t-fast) ease, transform var(--t-fast) ease, box-shadow var(--t-fast) ease; }

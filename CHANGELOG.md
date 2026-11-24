@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.19.1 · 24 novembre 2026
+
+- Le lien retour de la barre (`.topbar-back`) prend le cadre de celui de la photo d’en-tête (`.back-link.on-photo`) : blanc, un fin bord doré et une ombre douce, doré au survol. Le retour aux événements a la même allure en haut de la page et dans la barre.
+
 ## 5.19.0 · 24 novembre 2026
 
 - Le lien retour d’une page d’événement revient dans la barre qui apparaît en descendant, pour qu’on puisse revenir aux événements sans remonter tout en haut. Sur un ordinateur, « ← Events » se tient tout à gauche de la barre blanche, au bord de l’écran, quand il y a la place, le reste de la barre gardant sa place au-dessus de la page ; sur un écran plus étroit, il vient juste avant le nom de l’événement (`.topbar.has-back`, `.back-link.topbar-back`, dans `src/topbar.css`). Sur un téléphone, il est en tête du menu, « ← All events », plus discret que les parties de la page (`.mobile-menu-link.is-back`). `ds-site.js` les écrit tous deux depuis `<div id="back-button">`, les mots du menu venant de `data-menu-label`. La vitrine les montre ; `node checks/site.js` vérifie sa place à 1720, 1280, 1024 et 800px.

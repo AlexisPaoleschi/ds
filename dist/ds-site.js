@@ -1,4 +1,4 @@
-/* ds 5.19.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.19.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -198,7 +198,7 @@
    Hidden, the bar and the closed menu cannot be reached with Tab; the menu's button says whether it is open, opening it
    takes the keyboard to its first link, and Escape or the veil take it back to the button.
    <div id="back-button" data-href data-label> becomes the way back over the hero's photo (.back-link.on-photo); with a
-   bar, the same way back is at the bar's far left on a computer (.topbar-back) and first in its phone menu, in the words
+   bar, the same way back, framed alike, is at the bar's far left on a computer (.topbar-back) and first in its phone menu, in the words
    of data-menu-label if it has them (« All events »), so that it is at hand however far down the page (5.19.0).
    window.hideLoader() takes the page loader (.page-loader, written in the page so that it shows at once) away; it goes
    by itself after 5s if a page never calls it.
@@ -273,7 +273,7 @@
     var way = document.getElementById("back-button"), wayBar = "", wayMenu = "";
     if (way) {
       var wayHref = esc(way.dataset.href || "/");
-      wayBar = '<a class="back-link topbar-back is-wide" href="' + wayHref + '">' + icon("arrow-left") + " " + esc(way.dataset.label || "Back") + "</a>";
+      wayBar = '<a class="back-link on-photo topbar-back is-wide" href="' + wayHref + '">' + icon("arrow-left") + " " + esc(way.dataset.label || "Back") + "</a>";
       wayMenu = '<a class="mobile-menu-link is-back" href="' + wayHref + '">' + icon("arrow-left") + " " +
         esc(way.dataset.menuLabel || way.dataset.label || "Back") + "</a>";
     }

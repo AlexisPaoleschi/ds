@@ -70,13 +70,13 @@ function stylesheets() {
     visible: document.querySelector('.sticky-nav').classList.contains('is-visible') }));
   assert(built.bar && built.links === 2 && built.menu === 3 && built.cta === 'Book Now', 'the bar and its phone menu are built from <div id="nav">');
   // the page's way back, in the bar and first in the menu, in the menu's own words (5.19.0)
-  const way = await phone.evaluate(() => ({ bar: (document.querySelector('.sticky-nav.has-back > a.back-link.topbar-back.is-wide') || {}).textContent,
+  const way = await phone.evaluate(() => ({ bar: (document.querySelector('.sticky-nav.has-back > a.back-link.on-photo.topbar-back.is-wide') || {}).textContent,
     barHref: (document.querySelector('.topbar-back') || { getAttribute: () => '' }).getAttribute('href'),
     menu: (document.querySelector('.mobile-menu-links > .mobile-menu-link:first-child.is-back') || {}).textContent,
     arrow: !!document.querySelector('.mobile-menu-link.is-back use[href$="#i-arrow-left"]'),
     shown: getComputedStyle(document.querySelector('.topbar-back')).display }));
   assert(way.bar && way.bar.trim() === 'Events' && way.barHref === '/' && way.menu && way.menu.trim() === 'All events' && way.arrow && way.shown === 'none',
-    'the way back is at the bar\'s far left, hidden on a phone, and first in its menu, in data-menu-label\'s words ' + JSON.stringify(way));
+    'the way back is at the bar\'s far left, framed as over the photo, hidden on a phone, and first in its menu, in data-menu-label\'s words ' + JSON.stringify(way));
   // the bar's action spaced as every button (the button role, the large gap in Vitrine since 5.9.0: .15em, 2.1px at 14px)
   const ctaLs = await phone.evaluate(() => getComputedStyle(document.querySelector('.sticky-nav .btn')).letterSpacing);
   assert(ctaLs === '2.1px', 'the bar\'s « Book Now » spaced as every button ' + ctaLs);
