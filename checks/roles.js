@@ -72,6 +72,8 @@ function tokenFaults() {
   const made = new Set([...css.matchAll(/--type-([a-z0-9-]+)-(font|size|weight|ls|case)\s*:/g)].map(x => x[1]));
   const faults = [...made].filter(r => !ROLES.includes(r) && r !== 'card-title').map(r => 'un rôle de trop : ' + r);
   for (const r of ROLES) for (const p of PARTS) if (!css.includes(`--type-${r}-${p}:`)) faults.push(`--type-${r}-${p} manque`);
+  // five gaps between letters, and every role takes one of them (5.9.0)
+  for (const m of css.matchAll(/--type-([a-z0-9-]+)-ls\s*:\s*([^;]+);/g)) if (m[1] !== 'card-title' && !/^var\(--track-(0|s|m|l|xl)\)$/.test(m[2].trim())) faults.push(`--type-${m[1]}-ls hors des cinq écarts : ${m[2].trim()}`);
   return faults;
 }
 

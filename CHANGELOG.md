@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.9.0 · 24 novembre 2026
+
+- Cinq écarts entre les lettres et aucun autre (`--track-0`, `--track-s`, `--track-m`, `--track-l`, `--track-xl` : 0, 0,04, 0,10, 0,15 et 0,18 em) ; chaque rôle en prend un dans chaque thème, et `node checks/roles.js` refuse toute autre valeur.
+  - Vitrine : titres, titre de couverture, chiffre et chapô à 0,10 em ; boutons, capitales et petites capitales à 0,15 em (0,18 et 0,15 avant) ; sous-titre et ligne de couverture à 0,18 em (0,17 et 0,19) ; petit texte à 0,04 em (0,07) ; légende et texte sans écart (0,07 et 0).
+  - Atelier : les titres sans écart (−0,015 em avant), les capitales et petites capitales à 0,10 em (0,12), le sous-titre et la ligne de couverture à 0,18 em (0,19).
+
 ## 5.8.1 · 24 novembre 2026
 
 - Dans un tableau serré (`.tbl.is-dense`, les personnes de Studio), une cellule qui dit quelque chose reprend sa couleur : vert, rouge ou orange (`.is-good`, `.is-bad`, `.is-mid`), or (`.tone.is-gold`, un jour prévu), encre (`.tone.is-ink`). Le gris de ses cellules les couvrait depuis 4.14.0.

@@ -1,4 +1,4 @@
-/* ds 5.8.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.9.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -147,37 +147,39 @@
    Declared again on every element that sets a theme, so that they follow that theme's fonts and colours.
    These are atelier's; vitrine changes the ones it needs in its own block below. */
 :root, [data-theme] {
+  /* the gaps between letters: five, and every text role of either theme takes one of them, none other (5.9.0) */
+  --track-0: 0; --track-s: .04em; --track-m: .1em; --track-l: .15em; --track-xl: .18em;
   /* Text: sixteen roles and no other size, weight or letter spacing, in ds or in an app (5.0.0, 5.6.0). Each has one font, one
      size, one weight, one spacing and one case, which the theme sets; a component picks a role, never a size. A word in a
      role may be in mono (a figure, a date) or take the strong weight (a word put forward); its line height stays the
      component's. Atelier's: Archivo for titles and figures, IBM Plex Sans for the rest.
      The big title: a cover, a very big figure (smaller on a phone, below) */
-  --type-display-font: var(--display); --type-display-size: 50px; --type-display-weight: 800; --type-display-ls: 0; --type-display-case: none;
+  --type-display-font: var(--display); --type-display-size: 50px; --type-display-weight: 800; --type-display-ls: var(--track-0); --type-display-case: none;
   /* a page's title (22px on a phone), a section's or a window's, a block's (a small tile's figure, a fold's title) */
-  --type-title-1-font: var(--display); --type-title-1-size: 28px; --type-title-1-weight: 800; --type-title-1-ls: -.015em; --type-title-1-case: none;
-  --type-title-2-font: var(--display); --type-title-2-size: 22px; --type-title-2-weight: 800; --type-title-2-ls: -.015em; --type-title-2-case: none;
-  --type-title-3-font: var(--display); --type-title-3-size: 17px; --type-title-3-weight: 700; --type-title-3-ls: -.015em; --type-title-3-case: none;
+  --type-title-1-font: var(--display); --type-title-1-size: 28px; --type-title-1-weight: 800; --type-title-1-ls: var(--track-0); --type-title-1-case: none;
+  --type-title-2-font: var(--display); --type-title-2-size: 22px; --type-title-2-weight: 800; --type-title-2-ls: var(--track-0); --type-title-2-case: none;
+  --type-title-3-font: var(--display); --type-title-3-size: 17px; --type-title-3-weight: 700; --type-title-3-ls: var(--track-0); --type-title-3-case: none;
   /* a tile's figure, a price, a year */
-  --type-figure-font: var(--display); --type-figure-size: 28px; --type-figure-weight: 700; --type-figure-ls: 0; --type-figure-case: none;
+  --type-figure-font: var(--display); --type-figure-size: 28px; --type-figure-weight: 700; --type-figure-ls: var(--track-0); --type-figure-case: none;
   /* the spaced line under a big title */
-  --type-subtitle-font: var(--body); --type-subtitle-size: 15px; --type-subtitle-weight: 400; --type-subtitle-ls: .19em; --type-subtitle-case: uppercase;
+  --type-subtitle-font: var(--body); --type-subtitle-size: 15px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
   /* a cover as tall as the screen (the site's event pages): its title, the line under it (a place), then a lead, a short
      sentence under a big title (a cover's date, a photo band's sentence); smaller on a phone, below */
-  --type-cover-font: var(--display); --type-cover-size: 64px; --type-cover-weight: 800; --type-cover-ls: 0; --type-cover-case: none;
-  --type-cover-line-font: var(--body); --type-cover-line-size: 20px; --type-cover-line-weight: 400; --type-cover-line-ls: .19em; --type-cover-line-case: uppercase;
-  --type-lead-font: var(--body); --type-lead-size: 18px; --type-lead-weight: 400; --type-lead-ls: 0; --type-lead-case: none;
+  --type-cover-font: var(--display); --type-cover-size: 64px; --type-cover-weight: 800; --type-cover-ls: var(--track-0); --type-cover-case: none;
+  --type-cover-line-font: var(--body); --type-cover-line-size: 20px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
+  --type-lead-font: var(--body); --type-lead-size: 18px; --type-lead-weight: 400; --type-lead-ls: var(--track-0); --type-lead-case: none;
   /* sentences, lists, a table's cells, a field's value; then a name, a row's title, a box's words */
-  --type-text-font: var(--body); --type-text-size: 15px; --type-text-weight: 400; --type-text-ls: 0; --type-text-case: none;
-  --type-strong-font: var(--body); --type-strong-size: 15px; --type-strong-weight: 600; --type-strong-ls: 0; --type-strong-case: none;
+  --type-text-font: var(--body); --type-text-size: 15px; --type-text-weight: 400; --type-text-ls: var(--track-0); --type-text-case: none;
+  --type-strong-font: var(--body); --type-strong-size: 15px; --type-strong-weight: 600; --type-strong-ls: var(--track-0); --type-strong-case: none;
   /* a detail (the line under a field, a place, a note, a chip), then what is packed tight (a calendar, a chart, a unit) */
-  --type-small-font: var(--body); --type-small-size: 13px; --type-small-weight: 400; --type-small-ls: 0; --type-small-case: none;
-  --type-caption-font: var(--body); --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: 0; --type-caption-case: none;
+  --type-small-font: var(--body); --type-small-size: 13px; --type-small-weight: 400; --type-small-ls: var(--track-0); --type-small-case: none;
+  --type-caption-font: var(--body); --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: var(--track-0); --type-caption-case: none;
   /* capitals (a menu's links, a card's details), small capitals (a field's label, the head of a section, a card or a
      table, a tab, a badge) */
-  --type-caps-font: var(--body); --type-caps-size: 13px; --type-caps-weight: 500; --type-caps-ls: .12em; --type-caps-case: uppercase;
-  --type-smallcaps-font: var(--display); --type-smallcaps-size: 11px; --type-smallcaps-weight: 700; --type-smallcaps-ls: .12em; --type-smallcaps-case: uppercase;
+  --type-caps-font: var(--body); --type-caps-size: 13px; --type-caps-weight: 500; --type-caps-ls: var(--track-m); --type-caps-case: uppercase;
+  --type-smallcaps-font: var(--display); --type-smallcaps-size: 11px; --type-smallcaps-weight: 700; --type-smallcaps-ls: var(--track-m); --type-smallcaps-case: uppercase;
   /* a button's words */
-  --type-button-font: var(--body); --type-button-size: 13px; --type-button-weight: 600; --type-button-ls: 0; --type-button-case: none;
+  --type-button-font: var(--body); --type-button-size: 13px; --type-button-weight: 600; --type-button-ls: var(--track-0); --type-button-case: none;
   /* a card's title is a block's here, a page's on the site's big cards (vitrine below) */
   --type-card-title-font: var(--type-title-3-font); --type-card-title-size: var(--type-title-3-size); --type-card-title-weight: var(--type-title-3-weight);
   --type-card-title-ls: var(--type-title-3-ls); --type-card-title-case: var(--type-title-3-case);
@@ -287,27 +289,27 @@
   --t-fast: .3s; --t-mid: .4s; --t-slow: .5s;
   /* Text: Gilda Display for titles and figures, never bold, a little spaced, the big ones in capitals; Urbanist for the
      rest, light for running text, medium for what belongs to a form and for a word put forward */
-  --type-display-size: 56px; --type-display-weight: 400; --type-display-ls: .1em; --type-display-case: uppercase;
-  --type-title-1-size: 28px; --type-title-1-weight: 400; --type-title-1-ls: .1em; --type-title-1-case: uppercase;
-  --type-title-2-size: 24px; --type-title-2-weight: 400; --type-title-2-ls: .1em; --type-title-2-case: none;
-  --type-title-3-size: 20px; --type-title-3-weight: 400; --type-title-3-ls: .08em; --type-title-3-case: none;
-  --type-figure-size: 28px; --type-figure-weight: 400; --type-figure-ls: .08em; --type-figure-case: none;
-  --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: .17em; --type-subtitle-case: uppercase;
-  --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: .1em; --type-cover-case: uppercase;
-  --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: .19em; --type-cover-line-case: uppercase;
-  --type-lead-size: 20px; --type-lead-weight: 300; --type-lead-ls: .1em; --type-lead-case: none;
-  --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: 0; --type-text-case: none;
-  --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: 0; --type-strong-case: none;
-  --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: .07em; --type-small-case: none;
-  --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: .07em; --type-caption-case: none;
-  --type-caps-size: 14px; --type-caps-weight: 500; --type-caps-ls: .15em; --type-caps-case: uppercase;
-  --type-smallcaps-font: var(--body); --type-smallcaps-size: 12px; --type-smallcaps-weight: 500; --type-smallcaps-ls: .15em; --type-smallcaps-case: uppercase;
-  --type-button-size: 14px; --type-button-weight: 500; --type-button-ls: .18em; --type-button-case: uppercase;
+  --type-display-size: 56px; --type-display-weight: 400; --type-display-ls: var(--track-m); --type-display-case: uppercase;
+  --type-title-1-size: 28px; --type-title-1-weight: 400; --type-title-1-ls: var(--track-m); --type-title-1-case: uppercase;
+  --type-title-2-size: 24px; --type-title-2-weight: 400; --type-title-2-ls: var(--track-m); --type-title-2-case: none;
+  --type-title-3-size: 20px; --type-title-3-weight: 400; --type-title-3-ls: var(--track-m); --type-title-3-case: none;
+  --type-figure-size: 28px; --type-figure-weight: 400; --type-figure-ls: var(--track-m); --type-figure-case: none;
+  --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
+  --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: var(--track-m); --type-cover-case: uppercase;
+  --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
+  --type-lead-size: 20px; --type-lead-weight: 300; --type-lead-ls: var(--track-m); --type-lead-case: none;
+  --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: var(--track-0); --type-text-case: none;
+  --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: var(--track-0); --type-strong-case: none;
+  --type-small-size: 13px; --type-small-weight: 500; --type-small-ls: var(--track-s); --type-small-case: none;
+  --type-caption-size: 12px; --type-caption-weight: 400; --type-caption-ls: var(--track-0); --type-caption-case: none;
+  --type-caps-size: 14px; --type-caps-weight: 500; --type-caps-ls: var(--track-l); --type-caps-case: uppercase;
+  --type-smallcaps-font: var(--body); --type-smallcaps-size: 12px; --type-smallcaps-weight: 500; --type-smallcaps-ls: var(--track-l); --type-smallcaps-case: uppercase;
+  --type-button-size: 14px; --type-button-weight: 500; --type-button-ls: var(--track-l); --type-button-case: uppercase;
   /* the site's big cards take a page's title */
   --type-card-title-font: var(--type-title-1-font); --type-card-title-size: var(--type-title-1-size); --type-card-title-weight: var(--type-title-1-weight);
   --type-card-title-ls: var(--type-title-1-ls); --type-card-title-case: var(--type-title-1-case);
   /* the site's name in 20px Gilda (17px on a phone), in ink */
-  --brand-size: 20px; --brand-weight: 400; --brand-ls: .1em; --brand-color: var(--ink);
+  --brand-size: 20px; --brand-weight: 400; --brand-ls: var(--track-m); --brand-color: var(--ink);
   /* titles, and running text, with room between their lines */
   --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --text-lh: var(--lh-airy);
   --title-wrap-lh: var(--lh-ui); --title-wrap-pad: calc((var(--lh-loose) - var(--lh-ui)) * .5em);
