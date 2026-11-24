@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.17.2 · 24 novembre 2026
+
+- Sur un téléphone, dans l’encadré « Getting there » d’une page d’événement, la carte de l’aéroport ou de la gare (`.location-map-destinations`) prend toute la largeur de l’encadré, comme la note sur le transport en dessous, au lieu de se resserrer au milieu.
+
 ## 5.17.1 · 24 novembre 2026
 
 - Les liens du photographe (`.portfolio-links`) passent au-dessus du portfolio, sous son titre, pour qu’on les voie avant les photos plutôt qu’après la grille.

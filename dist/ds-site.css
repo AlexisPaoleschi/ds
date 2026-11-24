@@ -1,4 +1,4 @@
-/* ds 5.17.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.17.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -469,6 +469,8 @@
     .location-map-container { flex-direction: column; gap: var(--s-32); }
     .location-map-item { display: none; }
     .location-map-connector { display: none; }
+    /* the places to come from take the box's whole width, like the transport note under them */
+    .location-map-destinations { align-self: stretch; }
     .location-info-map { margin: var(--s-20) 0 0; padding: var(--s-32) var(--s-24); }
     /* Schedule */
     .schedule-day { padding: var(--s-24) var(--s-20); }
@@ -519,6 +521,7 @@
     .contact-methods { grid-template-columns: repeat(2, 1fr); }
     /* Location */
     .location-map-container { flex-direction: row; gap: var(--s-32); }
+    .location-map-destinations { align-self: auto; }
     .location-map-item { display: block; }
     .location-map-connector { display: block; }
     .location-info-map { margin: var(--s-40) 0 0; padding: var(--s-48) var(--s-40); }
