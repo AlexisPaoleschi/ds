@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.12.0 · 24 novembre 2026
+
+- Dans la visionneuse, la position (« 2 / 9 », `.viewer-count`) quitte le bas de la photo pour le coin en bas à droite, sous la flèche suivante, dans la même pastille.
+- Une appli qui a sa barre d’outils sous la photo (Selecta) met la position dans ses outils, à côté du cœur : la même pastille, à un autre endroit (`.viewer-tools .viewer-count`). La vitrine le montre.
+
 ## 5.11.0 · 24 novembre 2026
 
 - Les modèles d’une page d’événement alternent : un sur deux a son portrait à droite, son nom, sa description, ses liens et ses vignettes à gauche. Sur un téléphone, rien ne change.

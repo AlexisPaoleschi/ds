@@ -1,4 +1,4 @@
-/* ds 5.11.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.12.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -242,7 +242,7 @@
     img.decoding = "async";
     var spin = stage.querySelector(".spinner") || make("span", "spinner is-medium on-photo", stage);
     spin.setAttribute("aria-hidden", "true");
-    // in the stage, the count sits over the photo's foot, above an app's bar when there is one
+    // the count: where the app put it (Selecta's, beside the heart), or in the stage's bottom right corner
     var count = el.querySelector(".viewer-count") || make("div", "viewer-count", stage);
     count.setAttribute("aria-live", "polite");
     var c = { el: el, veil: veil, stage: stage, img: img, spin: spin, count: count, items: [], at: 0, opts: {}, token: 0, cache: {}, keep: [], before: null, isOpen: false,
