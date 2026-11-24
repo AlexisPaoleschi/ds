@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.19.0 · 24 novembre 2026
+
+- Le lien retour d’une page d’événement revient dans la barre qui apparaît en descendant, pour qu’on puisse revenir aux événements sans remonter tout en haut. Sur un ordinateur, « ← Events » se tient tout à gauche de la barre blanche, au bord de l’écran, quand il y a la place, le reste de la barre gardant sa place au-dessus de la page ; sur un écran plus étroit, il vient juste avant le nom de l’événement (`.topbar.has-back`, `.back-link.topbar-back`, dans `src/topbar.css`). Sur un téléphone, il est en tête du menu, « ← All events », plus discret que les parties de la page (`.mobile-menu-link.is-back`). `ds-site.js` les écrit tous deux depuis `<div id="back-button">`, les mots du menu venant de `data-menu-label`. La vitrine les montre ; `node checks/site.js` vérifie sa place à 1720, 1280, 1024 et 800px.
+
 ## 5.18.0 · 24 novembre 2026
 
 - Sur un téléphone, debout ou couché, le texte courant du site qui se lit depuis la gauche est justifié, sans jamais couper un mot en fin de ligne (`src/sitetext.css`, à la fin du kit du site) : les paragraphes d’une page d’événement, le programme, la FAQ, le paiement, la note sur le transport, la liste de ce qui est compris, les cartes et les témoignages de la liste des événements, la phrase des bandeaux d’inscription, et les pages légales (`body.doc`). La présentation des organisateurs passe de centrée à justifiée. Ce qui est centré le reste (une couverture, la ligne sous un titre, les mots d’un modèle). Rien ne change sur un ordinateur.

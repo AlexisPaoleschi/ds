@@ -1,4 +1,4 @@
-/* ds 5.18.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.19.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -197,7 +197,9 @@
    page a link to #something scrolls there smoothly (at once when the device asks for less motion), just below the bar.
    Hidden, the bar and the closed menu cannot be reached with Tab; the menu's button says whether it is open, opening it
    takes the keyboard to its first link, and Escape or the veil take it back to the button.
-   <div id="back-button" data-href data-label> becomes the way back over the hero's photo (.back-link.on-photo).
+   <div id="back-button" data-href data-label> becomes the way back over the hero's photo (.back-link.on-photo); with a
+   bar, the same way back is at the bar's far left on a computer (.topbar-back) and first in its phone menu, in the words
+   of data-menu-label if it has them (« All events »), so that it is at hand however far down the page (5.19.0).
    window.hideLoader() takes the page loader (.page-loader, written in the page so that it shows at once) away; it goes
    by itself after 5s if a page never calls it.
    window.dsLandscapeWarning = true, set before this script, puts the prompt to turn a phone upright over the page held
@@ -267,15 +269,23 @@
     var ctaHref = esc(target.dataset.ctaHref || "#booking"), ctaLabel = esc(target.dataset.ctaLabel || "Book Now");
     var navLinks = links.map(function (l) { return '<a class="topbar-link" href="' + esc(l.href) + '">' + esc(l.label) + "</a>"; }).join(" ");
     var menuLinks = links.map(function (l) { return '<a class="mobile-menu-link" href="' + esc(l.href) + '">' + esc(l.label) + "</a>"; }).join(" ");
+    // the page's way back, if it has one: at the bar's far left, and first in the menu
+    var way = document.getElementById("back-button"), wayBar = "", wayMenu = "";
+    if (way) {
+      var wayHref = esc(way.dataset.href || "/");
+      wayBar = '<a class="back-link topbar-back is-wide" href="' + wayHref + '">' + icon("arrow-left") + " " + esc(way.dataset.label || "Back") + "</a>";
+      wayMenu = '<a class="mobile-menu-link is-back" href="' + wayHref + '">' + icon("arrow-left") + " " +
+        esc(way.dataset.menuLabel || way.dataset.label || "Back") + "</a>";
+    }
     target.outerHTML =
-      '<nav class="topbar is-site sticky-nav"><div class="topbar-in">' +
+      '<nav class="topbar is-site sticky-nav' + (way ? " has-back" : "") + '">' + wayBar + '<div class="topbar-in">' +
       '<a class="topbar-brand" href="#">' + esc(target.dataset.title || "") + "</a>" +
       '<div class="topbar-nav is-center is-wide">' + navLinks + "</div>" +
       '<a class="btn is-save is-wide" href="' + ctaHref + '">' + ctaLabel + "</a>" +
       '<button type="button" aria-label="Menu" aria-expanded="false" aria-controls="site-menu" class="mobile-menu-toggle">' +
       '<span></span> <span></span> <span></span></button>' +
       "</div></nav>" +
-      '<div class="mobile-menu" id="site-menu"><div class="mobile-menu-links">' + menuLinks +
+      '<div class="mobile-menu" id="site-menu"><div class="mobile-menu-links">' + wayMenu + menuLinks +
       '<a class="mobile-menu-cta" href="' + ctaHref + '">' + ctaLabel + "</a></div></div>" +
       '<div aria-hidden="true" class="mobile-menu-overlay"></div>';
   }

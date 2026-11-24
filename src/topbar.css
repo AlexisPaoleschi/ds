@@ -28,6 +28,12 @@
     .topbar-brand:hover, .topbar-link:hover, .topbar-icon:hover { color: var(--accent-text); }
     .topbar-link:hover::after { width: 100%; }
   }
+/* the way back at the bar's far left (.topbar.has-back, a .back-link.topbar-back before .topbar-in, 5.19.0): on a wide
+   screen it sits at the screen's edge, outside the content's width, which stays where the page's is; where there is no
+   room for it there, the content moves aside and it comes just before the name */
+  .topbar.has-back { display: grid; grid-template-columns: minmax(max-content, 1fr) minmax(0, var(--topbar-max, var(--page-max))) 1fr; align-items: center; }
+  .topbar.has-back > .topbar-in { grid-row: 1; grid-column: 2; width: 100%; }
+  .topbar-back { grid-row: 1; grid-column: 1; justify-self: start; margin: var(--safe-top) 0 0 max(var(--topbar-px), var(--safe-left)); }
 @media (max-width: 768px) {
   /* on a phone, what is marked .is-wide leaves the bar: the site puts its links and its action in its own menu */
   .topbar .is-wide { display: none; }

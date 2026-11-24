@@ -68,7 +68,15 @@ function stylesheets() {
     backText: (document.querySelector('.back-button') || {}).textContent,
     icon: window.ds.icon('mail', 'ico x'), land: document.documentElement.classList.contains('landscape-warning-disabled'),
     visible: document.querySelector('.sticky-nav').classList.contains('is-visible') }));
-  assert(built.bar && built.links === 2 && built.menu === 2 && built.cta === 'Book Now', 'the bar and its phone menu are built from <div id="nav">');
+  assert(built.bar && built.links === 2 && built.menu === 3 && built.cta === 'Book Now', 'the bar and its phone menu are built from <div id="nav">');
+  // the page's way back, in the bar and first in the menu, in the menu's own words (5.19.0)
+  const way = await phone.evaluate(() => ({ bar: (document.querySelector('.sticky-nav.has-back > a.back-link.topbar-back.is-wide') || {}).textContent,
+    barHref: (document.querySelector('.topbar-back') || { getAttribute: () => '' }).getAttribute('href'),
+    menu: (document.querySelector('.mobile-menu-links > .mobile-menu-link:first-child.is-back') || {}).textContent,
+    arrow: !!document.querySelector('.mobile-menu-link.is-back use[href$="#i-arrow-left"]'),
+    shown: getComputedStyle(document.querySelector('.topbar-back')).display }));
+  assert(way.bar && way.bar.trim() === 'Events' && way.barHref === '/' && way.menu && way.menu.trim() === 'All events' && way.arrow && way.shown === 'none',
+    'the way back is at the bar\'s far left, hidden on a phone, and first in its menu, in data-menu-label\'s words ' + JSON.stringify(way));
   // the bar's action spaced as every button (the button role, the large gap in Vitrine since 5.9.0: .15em, 2.1px at 14px)
   const ctaLs = await phone.evaluate(() => getComputedStyle(document.querySelector('.sticky-nav .btn')).letterSpacing);
   assert(ctaLs === '2.1px', 'the bar\'s « Book Now » spaced as every button ' + ctaLs);
@@ -122,7 +130,7 @@ function stylesheets() {
   assert(open, 'the button opens the menu, its veil, and holds the page still');
   const opened = await phone.evaluate(() => ({ expanded: document.querySelector('.mobile-menu-toggle').getAttribute('aria-expanded'),
     focus: document.activeElement.className, vis: getComputedStyle(document.querySelector('.mobile-menu')).visibility }));
-  assert(opened.expanded === 'true' && opened.focus === 'mobile-menu-link' && opened.vis === 'visible', 'opened, the menu says so and takes the keyboard to its first link ' + JSON.stringify(opened));
+  assert(opened.expanded === 'true' && opened.focus === 'mobile-menu-link is-back' && opened.vis === 'visible', 'opened, the menu says so and takes the keyboard to its first link ' + JSON.stringify(opened));
   await phone.keyboard.press('Escape');
   await phone.waitForTimeout(200);
   assert(await phone.evaluate(() => !document.querySelector('.mobile-menu').classList.contains('is-open') && document.body.style.overflow === ''), 'Escape closes the menu');
@@ -232,6 +240,20 @@ function stylesheets() {
   const onPhone = await airport(phone), onWide = await airport(wide);
   assert(JSON.stringify(onPhone[0]) === '["Dakar Airport"]' && onPhone[1] && JSON.stringify(onWide[0]) === '["Dakar-Blaise Diagne Airport"]' && onWide[1],
     'le nom d’un aéroport : entier dès 481px, court sur un téléphone, son code sur la même ligne ' + JSON.stringify([onPhone, onWide]));
+
+  // the bar's way back on a computer: at the screen's edge where there is room, the content staying where the page's is;
+  // just before the name where there is not, never over it, and nothing pushed off the screen (5.19.0)
+  const places = [];
+  for (const w of [1720, 1280, 1024, 800]) {
+    await wide.setViewportSize({ width: w, height: 900 });
+    await wide.waitForTimeout(100);
+    places.push(await wide.evaluate(w => { const r = s => document.querySelector(s).getBoundingClientRect();
+      const back = r('.topbar-back'), brand = r('.sticky-nav .topbar-brand'), inner = r('.sticky-nav .topbar-in'), last = r('.sticky-nav .btn');
+      return { w, gap: Math.round(brand.left - back.right), edge: Math.round(back.left), centred: Math.abs(Math.round(inner.left - (w - inner.width) / 2)) <= 1,
+        fits: last.right <= w && document.documentElement.scrollWidth <= w }; }, w));
+  }
+  assert(places.every(p => p.gap >= 16 && p.edge <= 40 && p.fits) && places[0].centred && places[0].gap > 100,
+    'the bar\'s way back sits at the screen\'s edge, the content centred where there is room, before the name where there is not ' + JSON.stringify(places));
 
   await browser.close();
   server.close();

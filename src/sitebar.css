@@ -34,6 +34,9 @@
     /* its colours only: a transition of everything would also fade in the visibility it takes from the menu, which keeps
        the keyboard out of it for a moment */
     transition: color var(--t-fast) ease, background-color var(--t-fast) ease, border-color var(--t-fast) ease; font-family: var(--type-caps-font); }
+  /* the page's way back, first in the menu (« ← All events »): its arrow, then its words, quieter than the page's parts (5.19.0) */
+  .mobile-menu-link.is-back { display: flex; align-items: center; gap: var(--s-8); color: var(--faint); }
+  .mobile-menu-link.is-back .ico { width: var(--ico-m); height: var(--ico-m); }
   @media (hover: hover) {
     .mobile-menu-link:hover { color: var(--accent); background: var(--accent-soft); border-left-color: var(--accent); }
   }
