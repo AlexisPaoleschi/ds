@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.9.1 · 24 novembre 2026
+
+- Le nom d’un modèle sur la page d’un événement (`.model-name`, « Katline Roddes ») est un titre 1 et non plus un grand titre : 28px en Vitrine, 24px sur un téléphone (56px et 31px avant ; le site d’origine l’écrivait à 42px).
+
 ## 5.9.0 · 24 novembre 2026
 
 - Cinq écarts entre les lettres et aucun autre (`--track-0`, `--track-s`, `--track-m`, `--track-l`, `--track-xl` : 0, 0,04, 0,10, 0,15 et 0,18 em) ; chaque rôle en prend un dans chaque thème, et `node checks/roles.js` refuse toute autre valeur.
