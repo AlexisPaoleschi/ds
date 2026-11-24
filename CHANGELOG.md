@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.17.1 · 24 novembre 2026
+
+- Les liens du photographe (`.portfolio-links`) passent au-dessus du portfolio, sous son titre, pour qu’on les voie avant les photos plutôt qu’après la grille.
+
 ## 5.17.0 · 24 novembre 2026
 
 - Sous le portfolio d’une page d’événement, les liens du photographe (son site, son Patreon) se centrent sous la grille (`.portfolio-links`) : quand deux personnes organisent, leurs liens communs restent à côté d’eux (`.organizer-links`), ceux du photographe vont avec ses photos. La vitrine le montre.
