@@ -150,9 +150,9 @@
   .pricing-header { margin-bottom: var(--s-48); }
   .price-display { display: flex; flex-direction: column; align-items: center; margin: var(--s-48) 0; padding: var(--s-48) 0;
     border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
-  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price as big
-     as a cover's title (84px, 48px on a phone), the biggest the site writes */
-  .price-display .big-fig-value { font: var(--type-cover-weight) var(--type-cover-size)/var(--lh-tight) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
+  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price in its
+     own role (70px, 40px on a phone), between the cover's title and the big title */
+  .price-display .big-fig-value { font: var(--type-price-weight) var(--type-price-size)/var(--lh-tight) var(--type-price-font); letter-spacing: var(--type-price-ls); text-transform: var(--type-price-case); }
   .pricing-includes { margin: var(--s-48) 0; }
   .includes-title { margin-bottom: var(--s-40); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
     color: var(--ink); text-transform: var(--type-title-2-case); }

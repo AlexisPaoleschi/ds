@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.16.0 · 24 novembre 2026
+
+- Un nouveau rôle de texte, le prix (`--type-price-*`) : en Vitrine, la police des titres à 70px (40px sur un téléphone, debout ou couché), entre le titre de couverture (84px) et le grand titre (56px) ; en Atelier, 56px. Le prix d’une page d’événement (`.price-display .big-fig-value`) le prend au lieu du titre de couverture. Le texte a seize rôles ; `node checks/roles.js` les vérifie, la vitrine les montre.
+- La vitrine écrit « Bring a companion » comme le site, en minuscules après la première lettre, comme « Payment terms ».
+
 ## 5.15.0 · 24 novembre 2026
 
 - Le prix d’une page d’événement (`.price-display .big-fig-value`) prend le titre de couverture, 84px (48px sur un téléphone) au lieu de 56px : la taille du titre de la couverture, la plus grande du site.

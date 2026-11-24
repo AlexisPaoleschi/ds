@@ -1,4 +1,4 @@
-/* ds 5.15.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.16.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -11,10 +11,10 @@
   @media (max-width: 480px) { :root { --site-gutter: var(--s-16); } }
   body { font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-loose); overflow-x: hidden;
     -webkit-text-size-adjust: 100%; text-size-adjust: 100%; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  /* a phone held sideways is still a phone here: the big title, a page's title and a cover's title keep their
+  /* a phone held sideways is still a phone here: the big title, a page's title, a cover's title and a price keep their
      phone size (tokens.css), so that a cover holds in the screen's height and its button stays on it (5.7.0) */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
-    :root, [data-theme] { --type-display-size: 36px; --type-cover-size: 48px; }
+    :root, [data-theme] { --type-display-size: 36px; --type-cover-size: 48px; --type-price-size: 40px; }
     [data-theme="vitrine"] { --type-title-1-size: 24px; }
   }
   /* Landscape warning */
@@ -346,9 +346,9 @@
   .pricing-header { margin-bottom: var(--s-48); }
   .price-display { display: flex; flex-direction: column; align-items: center; margin: var(--s-48) 0; padding: var(--s-48) 0;
     border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
-  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price as big
-     as a cover's title (84px, 48px on a phone), the biggest the site writes */
-  .price-display .big-fig-value { font: var(--type-cover-weight) var(--type-cover-size)/var(--lh-tight) var(--type-cover-font); letter-spacing: var(--type-cover-ls); text-transform: var(--type-cover-case); }
+  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price in its
+     own role (70px, 40px on a phone), between the cover's title and the big title */
+  .price-display .big-fig-value { font: var(--type-price-weight) var(--type-price-size)/var(--lh-tight) var(--type-price-font); letter-spacing: var(--type-price-ls); text-transform: var(--type-price-case); }
   .pricing-includes { margin: var(--s-48) 0; }
   .includes-title { margin-bottom: var(--s-40); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
     color: var(--ink); text-transform: var(--type-title-2-case); }
