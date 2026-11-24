@@ -1,5 +1,9 @@
 # Changelog
 
+## 5.11.0 · 24 novembre 2026
+
+- Les modèles d’une page d’événement alternent : un sur deux a son portrait à droite, son nom, sa description, ses liens et ses vignettes à gauche. Sur un téléphone, rien ne change.
+
 ## 5.10.0 · 24 novembre 2026
 
 - Le bloc d’un modèle sur la page d’un événement se dessine comme la présentation de l’organisateur : sa première photo en grand portrait à gauche, son nom, sa description et ses liens en haut à droite, alignés à gauche, ses trois autres photos en vignettes en bas à droite. Le bloc est un peu moins haut qu’avant et la description ne s’étire plus sur toute la largeur de la page. Sur un téléphone, il reste empilé, avec une description d’au plus 640px en lignes de même longueur.
