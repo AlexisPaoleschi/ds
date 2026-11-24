@@ -28,7 +28,12 @@
   /* a dense table of figures (Studio's people, a column a network): tighter rows, its cells in the quieter mono, flush
      left; the name column stays in the words' font (.tbl-name) */
   .tbl.is-dense :is(th, td) { padding: var(--s-6) var(--s-10) var(--s-6) 0; }
-  .tbl.is-dense td { color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .tbl.is-dense td { font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--mono); white-space: nowrap; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  /* its cells are grey unless they say something: a tone (.is-good, .is-bad, .is-mid, .tone.is-gold, .tone.is-ink) wins over
+     the grey, which weighs nothing (5.8.1: the grey had hidden Studio's colours since 4.14.0) */
+  :where(.tbl.is-dense) td { color: var(--dim); }
+  /* a cell's note under its figure, in the same mono as its figure (« 3j » over « prévu 28 nov. ») */
+  .tbl.is-dense small.cell-note { font-family: var(--mono); }
   .tbl.is-dense td.tbl-name { color: var(--ink); font: var(--type-strong-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* money in and money out, what is fresh and what is late */
   .tbl .is-good { color: var(--good); }

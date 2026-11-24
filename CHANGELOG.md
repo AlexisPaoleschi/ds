@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.8.1 · 24 novembre 2026
+
+- Dans un tableau serré (`.tbl.is-dense`, les personnes de Studio), une cellule qui dit quelque chose reprend sa couleur : vert, rouge ou orange (`.is-good`, `.is-bad`, `.is-mid`), or (`.tone.is-gold`, un jour prévu), encre (`.tone.is-ink`). Le gris de ses cellules les couvrait depuis 4.14.0.
+- La ligne sous un chiffre (`small.cell-note`, « prévu 28 nov. ») prend dans un tableau serré le même mono que son chiffre.
+
 ## 5.8.0 · 24 novembre 2026
 
 - Une phrase grise sous un titre redevient du texte, comme le site l’écrivait (sans capitales ni espacement) : sous « What Photographers Say » (`.testimonials-banner-subtitle`), « Portfolio Highlights » (`.portfolio-subtitle`) et « Explore the Venue » (`.gallery-subtitle`). Le sous-titre reste la ligne dorée en capitales (un lieu).
