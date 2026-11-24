@@ -38,10 +38,8 @@
   /* a card title with its tools (a period selector, tabs; ds.card): they go under the title on a narrow screen, the fold's
      chevron just after them, and a folded card hides them (its chevron back on the right) */
   .ct:has(> .ct-tools) { row-gap: var(--s-8); }
-  .ct.fold:has(> .ct-tools)::after { margin-left: var(--s-4); }
   .ct-tools :is(.tabs, .periodpick) { margin: 0; }
   .card.is-folded > .ct > .ct-tools { display: none; }
-  .card.is-folded > .ct.fold:has(> .ct-tools)::after { margin-left: auto; }
 /* a section that folds, its state kept by ds.fold: <details class="fold" data-fold="key"><summary>Courses
    <span class="fold-n">12</span></summary>…</details>; in a card, <details class="card fold"> with <summary class="ct">.
    Its chevron turns; a closed card's title takes no room below it. A card's title that folds its card itself, its state
@@ -56,9 +54,21 @@
   .ct.fold[aria-expanded="true"]:where(:not([data-theme="vitrine"] *))::after,
   details.fold[open] > summary.ct:where(:not([data-theme="vitrine"] *))::after { translate: 0 calc(-28% - 0.075em); }
   .ct.fold[aria-expanded] { cursor: pointer; user-select: none; }
-  /* a card's title that folds it keeps the height of a control, its tools (a period selector) shown or not: the gap down
-     to the card's content is the same in every card, and folding it moves nothing (Studio's) */
-  .ct.fold[aria-expanded] { min-height: var(--control-h); }
+  /* a card's title that folds it, with its tools (a period selector): the tools on the right, the chevron just after them,
+     and folded, the tools hidden and the chevron back on the right; the title stays as high as its words, with its tools
+     or without: as much room above it as on its left (5.19.2) */
+  .ct.fold[aria-expanded]:has(> .ct-tools)::after { margin-left: var(--s-4); }
+  .card.is-folded > .ct.fold[aria-expanded]:has(> .ct-tools)::after { margin-left: auto; }
+  /* the tools stand on the title's line and centre on it without making it taller, so that the title sits at the same
+     place with tools or without (as much room above it as on its left), and the content keeps its room under them;
+     folded, the tools hidden, nothing moves. On a phone the title's words go on two lines rather than push the tools
+     (a period list) under it */
+  .ct.fold[aria-expanded]:has(> .ct-tools) { --ct-tools-out: calc((var(--type-smallcaps-size) * var(--lh-tight) - var(--control-h)) / 2); }
+  .ct.fold[aria-expanded] > .ct-tools { margin-block: var(--ct-tools-out); }
+  .card:not(.is-folded) > .ct.fold[aria-expanded]:has(> .ct-tools) { margin-bottom: calc(var(--s-12) - var(--ct-tools-out)); }
+  @media (max-width: 768px) {
+    .ct.fold[aria-expanded]:has(> .ct-tools) { flex-wrap: nowrap; }
+  }
   /* sections that fold, one under the other (Bank's rules, by who made them): a line between them, room around each
      title: <div class="folds"><details class="fold">… */
   .folds > details.fold { border-top: 1px solid var(--line); }

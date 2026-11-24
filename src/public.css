@@ -14,6 +14,11 @@
   .section-head h2::after { content: ""; position: absolute; left: 50%; bottom: 0; width: 60px; height: 1px; background: var(--accent); transform: translateX(-50%); }
   .section-head .section-sub { margin: 0 0 var(--s-48); color: var(--accent-text);
     font: var(--type-subtitle-weight) var(--type-subtitle-size)/var(--title-lh) var(--type-subtitle-font); letter-spacing: var(--type-subtitle-ls); text-transform: var(--type-subtitle-case); }
+  /* a page with the site's footer fills at least one screen, and a short page (the newsletter's) keeps its footer at the
+     bottom of the screen instead of half-way up: the footer is held no higher than the screen's foot, inside its page,
+     which leaves a long page as it is (5.19.2) */
+  body:has(> .site-footer) { min-height: 100vh; min-height: 100dvh; }
+  body > .site-footer { position: sticky; top: 100vh; top: 100dvh; }
   /* a block of its own, not the row of an app's footer */
   .site-footer { display: block; padding: var(--footer-py) calc(var(--s-20) + var(--safe-right)) calc(var(--footer-py) + var(--safe-bottom)) calc(var(--s-20) + var(--safe-left)); text-align: center; background: var(--band); border-top: 1px solid var(--line); }
   .site-footer p { margin: 0 0 var(--s-16); color: var(--faint); font: var(--type-text-weight) var(--type-text-size)/var(--title-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }

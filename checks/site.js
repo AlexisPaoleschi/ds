@@ -255,6 +255,18 @@ function stylesheets() {
   assert(places.every(p => p.gap >= 16 && p.edge <= 40 && p.fits) && places[0].centred && places[0].gap > 100,
     'the bar\'s way back sits at the screen\'s edge, the content centred where there is room, before the name where there is not ' + JSON.stringify(places));
 
+  // a short page keeps the site's footer at the screen's foot; a long one leaves it where it is (5.19.2)
+  const foot = await browser.newPage({ viewport: { width: 1280, height: 1000 } });
+  const footAt = async lines => {
+    await foot.setContent(`<link rel="stylesheet" href="${base}/dist/ds.css"><link rel="stylesheet" href="${base}/dist/ds-site.css">
+      <body><main>${'<p>Line</p>'.repeat(lines)}</main><footer class="site-footer"><p>© Footer</p></footer></body>`);
+    return foot.evaluate(() => { const r = document.querySelector('.site-footer').getBoundingClientRect();
+      return { bottom: Math.round(r.bottom + scrollY), page: document.documentElement.scrollHeight, screen: innerHeight }; });
+  };
+  const short = await footAt(3), long = await footAt(200);
+  assert(short.bottom === short.screen && short.page === short.screen && long.bottom === long.page && long.page > long.screen,
+    'a short page keeps its footer at the screen\'s foot, a long one ends with it ' + JSON.stringify([short, long]));
+
   await browser.close();
   server.close();
 })();

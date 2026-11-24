@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.19.2 · 25 novembre 2026
+
+- Une page qui porte le pied de page du site (`.site-footer`, directement dans `<body>`) fait au moins la hauteur de l’écran, et son pied de page reste en bas de l’écran quand elle est courte (la page de la newsletter sur un grand écran) au lieu de remonter à mi-hauteur. Une page longue ne change pas. `node checks/site.js` le vérifie.
+- Le titre d’une carte qui se plie (`.ct.fold`, Studio) : ses outils, comme le choix de période, se rangent à droite contre la flèche au lieu de se mettre au milieu, et se centrent sur la ligne du titre sans la grandir. Le titre est donc toujours au même endroit, avec ou sans outils, avec autant de place au-dessus qu’à gauche, sa flèche sur sa ligne. Sur un téléphone, les outils passent sous le titre.
+
 ## 5.19.1 · 24 novembre 2026
 
 - Le lien retour de la barre (`.topbar-back`) prend le cadre de celui de la photo d’en-tête (`.back-link.on-photo`) : blanc, un fin bord doré et une ombre douce, doré au survol. Le retour aux événements a la même allure en haut de la page et dans la barre.
