@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.10.0 · 24 novembre 2026
+
+- Le bloc d’un modèle sur la page d’un événement se dessine comme la présentation de l’organisateur : sa première photo en grand portrait à gauche, son nom, sa description et ses liens en haut à droite, alignés à gauche, ses trois autres photos en vignettes en bas à droite. Le bloc est un peu moins haut qu’avant et la description ne s’étire plus sur toute la largeur de la page. Sur un téléphone, il reste empilé, avec une description d’au plus 640px en lignes de même longueur.
+- Le nom d’un modèle (`.model-name`) passe en or, comme celui de l’organisateur.
+
 ## 5.9.1 · 24 novembre 2026
 
 - Le nom d’un modèle sur la page d’un événement (`.model-name`, « Katline Roddes ») est un titre 1 et non plus un grand titre : 28px en Vitrine, 24px sur un téléphone (56px et 31px avant ; le site d’origine l’écrivait à 42px).
