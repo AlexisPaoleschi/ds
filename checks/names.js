@@ -17,7 +17,7 @@ const server = http.createServer((req, res) => {
 const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.exitCode = 1; } else console.log('ok  ', what); };
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 
-// the names 3.0 took away (MIGRATION-3.md): none may be left in a stylesheet or a script of dist
+// the names 3.0 took away (CHANGELOG.md, 3.0.0): none may be left in a stylesheet or a script of dist
 const OLD = ['on', 'active', 'open', 'is-active', 'is-sel', 'visible', 'hidden', 'loading', 'loading-done', 'gone', 'failed', 'off', 'out', 'run',
   'good', 'bad', 'ok', 'up', 'down', 'neg', 'n', 'is-weak', 'warn', 'lwarn', 'lbad', 't', 'v', 'x', 'pl', 'ttl', 'late', 'empty', 'kv', 'u', 'h', 'd',
   'dot', 'sn', 'sw', 'sf', 'sd', 'sl', 'okc', 'pc', 'bt', 'boot-t', 'boot-s', 'boot-p', 'boot-x', 'dialog-x', 'sheet-x', 'll', 'lt', 'lx', 'mx', 'sum',
