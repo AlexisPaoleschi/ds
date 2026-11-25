@@ -1,7 +1,4 @@
 name: Tag
-# Each version gets its tag (v + the VERSION file) as soon as main is pushed, so no one has to push it by hand:
-# scripts/sync.sh downloads a version through its tag. main is a single commit, amended and force-pushed, so a
-# push that keeps the same VERSION (a fix of the showcase page, say) moves its tag onto the new commit.
 on:
   push:
     branches: [main]
@@ -12,9 +9,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Tag the version
+        with:
+          fetch-depth: 0
+      # each version's tag goes on the commit that published it (the first one to carry that VERSION), never on a later
+      # commit that only touches the showcase or the docs; a tag that points elsewhere is moved there
+      - name: Tag every version on the commit that published it
         run: |
-          version="v$(cat VERSION)"
-          git tag -f "$version"
-          git push -f origin "refs/tags/$version"
-          echo "$version on $(git rev-parse --short HEAD)"
+          git fetch --force --tags origin
+          declare -A first
+          for c in $(git rev-list --reverse HEAD -- VERSION); do
+            v="v$(git show "$c:VERSION")"
+            [ -n "${first[$v]}" ] || first[$v]=$c
+          done
+          moved=()
+          for v in "${!first[@]}"; do
+            if [ "$(git rev-parse -q --verify "refs/tags/$v^{commit}")" != "${first[$v]}" ]; then
+              git tag -f "$v" "${first[$v]}" >/dev/null
+              moved+=("refs/tags/$v")
+            fi
+          done
+          if [ ${#moved[@]} -gt 0 ]; then
+            git push -f origin "${moved[@]}"
+          fi
+          echo "${#first[@]} versions, ${#moved[@]} tags moved or added"
