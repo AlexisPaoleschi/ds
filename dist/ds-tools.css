@@ -1,4 +1,4 @@
-/* ds 5.19.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
@@ -26,6 +26,13 @@
      some moves nothing under the title; on a phone they stay on the title's line */
   .periodhead.is-steady .periodnav:not(:has(> :not(.is-off))) { display: flex; visibility: hidden; }
   .periodhead.is-steady .periodnav .is-off { display: inline-flex; visibility: hidden; }
+  /* a month between the arrows to the month before and the month after (Bank's spending and bills account), the three on
+     one line: <span class="periodnav is-step ct-tools"><button class="btn is-icon">…</button><label class="pill">…</label>
+     <button class="btn is-icon">…</button></span>. At the end of a card's title it stands on the title's right; on a phone,
+     where a long title and the month do not fit side by side, it takes a line of its own under the title, the arrows at
+     its two ends and the month between them (5.20.0) */
+  .periodnav.is-step { flex-wrap: nowrap; }
+  .periodnav.is-step > .pill { margin-left: 0; }
   /* the picker under the title: a panel, and buttons that light up in gold when chosen */
   .periodpop { position: absolute; top: calc(100% + var(--s-8)); left: 0; z-index: var(--z-bar); width: min(340px, calc(100vw - 32px)); box-sizing: border-box;
     background: var(--panel); border: 1px solid var(--line-2); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); padding: var(--s-12); }
@@ -37,6 +44,9 @@
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
+    .ct:has(> .periodnav.is-step) { row-gap: var(--s-12); }
+    .ct > .periodnav.is-step { flex: 1 1 100%; margin-left: 0; }
+    .ct > .periodnav.is-step > .pill { flex: 1 1 auto; justify-content: center; }
 }
 /* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
    periods would not fit beside a card's title, the design system's menu (.pill, « 1 an ▾ »), the same as a month's or a

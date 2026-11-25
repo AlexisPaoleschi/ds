@@ -1,4 +1,4 @@
-/* ds 5.19.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -105,6 +105,8 @@
   /* a panel under a button of the top bar (.pop-panel, Selecta's bell): its width on a computer and its highest; the
      figure on such a button (.pop-count), a small round of this height */
   --pop-w: 380px; --pop-h: min(70vh, 560px); --count-h: 16px;
+  /* the window that asks (.dialog): its width on a computer, a phone's being its width */
+  --dialog-w: 420px;
   /* the photo kit: a file's bar in the list of files sent, a photo framed alone (a cover) and the small dropzone beside it on a computer, a button on a tile's veil at most, the gold ring of a chosen
      photo, the light round behind a thumbnail's cross on a phone, the dark at the foot of a tile under its caption */
   --upload-meter-w: 120px; --photo-frame-h: 220px; --tile-act-w: 170px; --pick-ring: 1px; --thumb-x-r: 11px; --caption-veil: color-mix(in srgb, var(--black) 82%, transparent);
@@ -356,6 +358,9 @@
   /* the slider's soft track, the room of the buttons of a window, of a sheet's actions and of a list's selection bar */
   --zoom-track: var(--line);
   --dialog-btn-px: var(--s-24); --sheet-acts-btn-px: var(--s-20);
+  /* a window that asks, wider: its title's wide letters on one line (« Retirer la couverture de cette galerie ? »), and
+     its two buttons side by side (5.20.0) */
+  --dialog-w: var(--read-m);
   --selbar-field-py: var(--s-8); --selbar-field-px: var(--s-12);
   /* a tab shown, at 18 % of the gold: its 5 % ground would hardly show on white (a framed choice keeps it) */
   --tab-on-bg: color-mix(in srgb, var(--accent) 18%, transparent);
@@ -1112,7 +1117,7 @@
 /* The window that asks before something that cannot be undone, or for a short text: the question over a veil,
    then « Annuler » and the answer. ds.confirm puts it on the page. */
   .dialog-veil { position: fixed; inset: 0; z-index: var(--z-dialog); display: grid; place-items: center; padding: var(--s-16); background: var(--veil); }
-  .dialog { width: min(420px, 100%); box-sizing: border-box; display: grid; align-content: start; gap: var(--s-12); padding: var(--sheet-pad); background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); }
+  .dialog { width: min(var(--dialog-w), 100%); box-sizing: border-box; display: grid; align-content: start; gap: var(--s-12); padding: var(--sheet-pad); background: var(--panel); border: 1px solid var(--pop-line); border-radius: var(--r-l); box-shadow: var(--shadow-sheet); }
   .dialog-t { margin: 0; font: var(--type-title-2-weight) var(--type-title-2-size)/var(--head-lh) var(--type-title-2-font); color: var(--ink); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
   .dialog-text { margin: 0; font: var(--type-text-weight) var(--type-text-size)/var(--text-lh) var(--type-text-font); color: var(--dim); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .dialog-in { width: 100%; box-sizing: border-box; }

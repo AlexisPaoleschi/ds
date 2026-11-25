@@ -93,7 +93,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 
 | Fichier | Ce qu’il dessine |
 |:--|:--|
-| `period.css` | l’en-tête de période de Bank et Studio : le grand titre qui ouvre le sélecteur, les flèches à droite |
+| `period.css` | l’en-tête de période de Bank et Studio : le grand titre qui ouvre le sélecteur, les flèches à droite ; un mois entre ses flèches au bout du titre d’une carte (`.periodnav.is-step`), sous le titre sur un téléphone |
 | `periodpick.css` | le choix de période : des onglets sur ordinateur, une pilule sur téléphone (« 1 an ▾ ») |
 | `datepick.css` | le choix de date et de période, venu de Bank |
 | `reorder.css` | déplacer à la poignée (`.grip`) |

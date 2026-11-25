@@ -88,6 +88,8 @@
   /* a panel under a button of the top bar (.pop-panel, Selecta's bell): its width on a computer and its highest; the
      figure on such a button (.pop-count), a small round of this height */
   --pop-w: 380px; --pop-h: min(70vh, 560px); --count-h: 16px;
+  /* the window that asks (.dialog): its width on a computer, a phone's being its width */
+  --dialog-w: 420px;
   /* the photo kit: a file's bar in the list of files sent, a photo framed alone (a cover) and the small dropzone beside it on a computer, a button on a tile's veil at most, the gold ring of a chosen
      photo, the light round behind a thumbnail's cross on a phone, the dark at the foot of a tile under its caption */
   --upload-meter-w: 120px; --photo-frame-h: 220px; --tile-act-w: 170px; --pick-ring: 1px; --thumb-x-r: 11px; --caption-veil: color-mix(in srgb, var(--black) 82%, transparent);
@@ -339,6 +341,9 @@
   /* the slider's soft track, the room of the buttons of a window, of a sheet's actions and of a list's selection bar */
   --zoom-track: var(--line);
   --dialog-btn-px: var(--s-24); --sheet-acts-btn-px: var(--s-20);
+  /* a window that asks, wider: its title's wide letters on one line (« Retirer la couverture de cette galerie ? »), and
+     its two buttons side by side (5.20.0) */
+  --dialog-w: var(--read-m);
   --selbar-field-py: var(--s-8); --selbar-field-px: var(--s-12);
   /* a tab shown, at 18 % of the gold: its 5 % ground would hardly show on white (a framed choice keeps it) */
   --tab-on-bg: color-mix(in srgb, var(--accent) 18%, transparent);

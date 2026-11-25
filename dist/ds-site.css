@@ -1,4 +1,4 @@
-/* ds 5.19.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -399,6 +399,8 @@
   .faq-answer { font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* Organizer */
   .organizer-intro { display: grid; grid-template-columns: 1fr 2fr; align-items: start; gap: var(--s-48); margin-bottom: var(--s-80); }
+  /* alone in its box, with no portfolio under it (the events list): as much room under it as over the title (5.20.0) */
+  .organizer-intro:last-child { margin-bottom: 0; }
   .organizer-photo { position: relative; width: 100%; max-width: 400px; aspect-ratio: 3/4; overflow: hidden; border: 1px solid var(--line);
     box-shadow: var(--shadow-pop); }
   .organizer-image { display: block; width: 100%; height: 100%; object-fit: cover; image-rendering: auto; backface-visibility: hidden;
@@ -724,6 +726,9 @@
   /* Event Card: the design system's card with a cover photo (.card.has-cover.is-link), its title and details
      (.card-title, .card-meta); the site's card rises 6px */
   .event-card { --card-lift: calc(-1 * var(--s-6)); }
+  /* who organizes the events, under them: an event page's box (.elegant-box, .organizer-intro), as wide as the grid and
+     as far from what follows as the grid is from it (5.20.0) */
+  .events-main > .elegant-box { margin-bottom: var(--s-80); }
   /* Highlights */
   .event-card-highlights { display: flex; flex-wrap: wrap; gap: var(--s-12); margin-top: var(--s-4); }
   .event-card-highlight { display: inline-flex; align-items: center; gap: var(--s-6); padding: var(--s-6) var(--s-14); font-family: var(--type-smallcaps-font);
@@ -745,6 +750,7 @@
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .events-grid { gap: var(--s-32); margin-top: var(--s-48); margin-bottom: var(--s-60); }
+    .events-main > .elegant-box { margin-bottom: var(--s-60); }
   }
   /* ─── Landscape phone wider than 768px: a phone's hero and card, as the design system draws them from 768px down ─── */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
@@ -759,6 +765,7 @@
   @media (max-width: 480px) {
     .events-main { padding: 0 var(--s-16); }
     .events-grid { gap: var(--s-24); margin-top: var(--s-36); margin-bottom: var(--s-48); }
+    .events-main > .elegant-box { margin-bottom: var(--s-48); }
     .event-card-highlights { gap: var(--s-8); }
     .event-card-highlight { padding: calc(var(--s-10) / 2) var(--s-10); }
   }

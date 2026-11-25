@@ -1,5 +1,11 @@
 # Changelog
 
+## 5.20.0 · 25 novembre 2026
+
+- Un mois entre ses flèches (le mois d’avant, le mois d’après) au bout du titre d’une carte : `.periodnav.is-step`, dans `src/period.css`. Sur un ordinateur, il reste à droite du titre, sur sa ligne. Sur un téléphone, où un long titre et le mois ne tiennent pas côte à côte, il passe sur sa propre ligne sous le titre, les flèches aux deux bords et le mois étiré entre elles, au lieu de descendre à moitié collé à droite. Les dépenses par catégorie et le compte facture de Bank s’en servent. La vitrine le montre ; `node checks/showcase.js` vérifie sa place sur ordinateur et sur téléphone.
+- La fenêtre qui demande avant d’agir (`.dialog`, `ds.confirm`) prend sa largeur d’un jeton, `--dialog-w` : 420px, comme avant, et 640px en Vitrine, où les lettres des titres sont plus larges. Dans Selecta, « Retirer la couverture de cette galerie ? » ou « Supprimer les 12 photos cochées ? » tiennent sur une ligne, et « Annuler » et la réponse côte à côte, au lieu de passer sur deux lignes. Sur un téléphone, la fenêtre garde toute la largeur de l’écran.
+- La liste des événements du site peut présenter ses organisateurs sous ses cartes, dans le cadre d’une page d’événement (`.elegant-box`, `.organizer-intro`) : à la largeur de la grille, aussi loin des témoignages que la grille l’est du cadre. Une présentation seule dans son cadre, sans portfolio dessous, ne garde plus sa place (`.organizer-intro:last-child`). La vitrine le montre.
+
 ## 5.19.2 · 25 novembre 2026
 
 - Une page qui porte le pied de page du site (`.site-footer`, directement dans `<body>`) fait au moins la hauteur de l’écran, et son pied de page reste en bas de l’écran quand elle est courte (la page de la newsletter sur un grand écran) au lieu de remonter à mi-hauteur. Une page longue ne change pas. `node checks/site.js` le vérifie.

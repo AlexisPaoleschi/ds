@@ -179,6 +179,17 @@ async function tools(b, base) {
   const sd2 = await steady();
   await p.setViewportSize({ width: 1440, height: 900 });
   assert(JSON.stringify(sd1[0]) === JSON.stringify(sd1[1]) && JSON.stringify(sd2[0]) === JSON.stringify(sd2[1]), 'page vitrine, .periodhead.is-steady : avec ou sans flèches, la même tête, sur ordinateur et téléphone ' + JSON.stringify([sd1, sd2]));
+  // a month between its arrows at the end of a card's title: on the title's line and at its end on a computer; on a phone,
+  // a line of its own under the title, from the card's left edge to its right, the arrows at both ends (5.20.0)
+  const step = async () => p.evaluate(c => { const h = document.querySelector(c + '[data-tools="step"] .ct'), n = h.querySelector('.periodnav.is-step'), t = h.querySelector('.ico').getBoundingClientRect(),
+    r = h.getBoundingClientRect(), b = n.getBoundingClientRect(), a = [...n.querySelectorAll('.btn.is-icon')].map(x => x.getBoundingClientRect()), m = n.querySelector('.pill').getBoundingClientRect();
+    return { under: Math.round(b.top - t.bottom), left: Math.round(b.left - r.left), right: Math.round(r.right - b.right), ends: [Math.round(a[0].left - b.left), Math.round(b.right - a[1].right)], fill: Math.round(a[1].left - a[0].right - m.width), oneLine: Math.round(a[0].top) === Math.round(a[1].top) && Math.round(m.top) === Math.round(a[0].top) }; }, col);
+  const st1 = await step();
+  await p.setViewportSize({ width: 375, height: 812 }); await p.waitForTimeout(300);
+  const st2 = await step();
+  await p.setViewportSize({ width: 1440, height: 900 });
+  assert(st1.under < 0 && st1.right === 0 && st1.oneLine && st2.under > 0 && st2.left === 0 && st2.right === 0 && st2.ends.join() === '0,0' && st2.fill <= 16 && st2.oneLine,
+    'page vitrine, .periodnav.is-step : au bout du titre sur ordinateur, sur sa propre ligne d’un bord à l’autre sur téléphone ' + JSON.stringify([st1, st2]));
   // the formats, and the avatars with their initial
   const fm = await p.evaluate(c => [...document.querySelectorAll(c + '[data-tools="formats"] .row-value')].map(x => x.textContent), col);
   const av = await p.evaluate(c => [...document.querySelectorAll(c + '[data-tools="avatars"] .avatar')].map(x => x.textContent).join(''), col);
