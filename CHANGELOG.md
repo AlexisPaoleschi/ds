@@ -1,5 +1,10 @@
 # Changelog
 
+## 5.21.0 · 25 novembre 2026
+
+- Un film à la place de la photo d’une couverture : `<video class="hero-img" autoplay muted loop playsinline>`, sa source donnée pour un ordinateur seulement (`media="(min-width: 769px) and (prefers-reduced-motion: no-preference)"`). Un téléphone, et qui demande moins de mouvement, ne chargent rien et gardent la photo de la page (`--hero-photo`) ; le film est caché pour eux.
+- Un film dans une page, cadré comme ses photos : `.video-frame`, son image d’attente jusqu’à ce qu’on le lance, ses propres commandes, rien de chargé avant (`preload="none"`). La page d’événement de la vitrine le montre.
+
 ## 5.20.0 · 25 novembre 2026
 
 - Un mois entre ses flèches (le mois d’avant, le mois d’après) au bout du titre d’une carte : `.periodnav.is-step`, dans `src/period.css`. Sur un ordinateur, il reste à droite du titre, sur sa ligne. Sur un téléphone, où un long titre et le mois ne tiennent pas côte à côte, il passe sur sa propre ligne sous le titre, les flèches aux deux bords et le mois étiré entre elles, au lieu de descendre à moitié collé à droite. Les dépenses par catégorie et le compte facture de Bank s’en servent. La vitrine le montre ; `node checks/showcase.js` vérifie sa place sur ordinateur et sur téléphone.

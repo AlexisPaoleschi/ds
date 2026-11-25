@@ -1,4 +1,4 @@
-/* ds 5.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.21.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }

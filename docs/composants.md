@@ -73,8 +73,8 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 
 | Fichier | Ce qu’il dessine |
 |:--|:--|
-| `public.css` | la pastille (`.badge`), l’en-tête de section (`.section-head`, `.section-sub`), le pied de page (`.site-footer`), qui reste en bas d’une page courte |
-| `hero.css` | le bandeau photo (`.hero`) : `.is-full`, `.is-band`, `.is-short`, `.is-bottom`, `.is-parallax` ; ses tailles en jetons `--hero-*` |
+| `public.css` | la pastille (`.badge`), l’en-tête de section (`.section-head`, `.section-sub`), le pied de page (`.site-footer`), qui reste en bas d’une page courte ; un film cadré comme une photo (`.video-frame`) |
+| `hero.css` | le bandeau photo (`.hero`) : `.is-full`, `.is-band`, `.is-short`, `.is-bottom`, `.is-parallax` ; ses tailles en jetons `--hero-*` ; un film à la place de la photo (`video.hero-img`), sur ordinateur seulement |
 | `topbar.css` | la barre du haut (`.topbar`, `.topbar-in`, `.topbar-brand`, `.topbar-nav`, `.topbar-link`, `.topbar-icon`), `.is-site`, `.has-back` |
 | `backlink.css` | le lien retour (`.back-link`), `.on-photo` sur une photo |
 | `photogrid.css` | la grille de photos (`.photogrid`, `.is-flush`), son zoom (`.photogrid-zoom`, `input.zoom-slider`) |

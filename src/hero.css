@@ -23,6 +23,10 @@
     background-color: var(--night-800); background-image: var(--hero-photo, none); background-position: center; background-size: cover; background-repeat: no-repeat; }
   .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero-img img { position: static; }
+  /* a film as the hero's photo (5.21.0): <video class="hero-img" autoplay muted loop playsinline poster="…"> with its
+     <source media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">, so that a phone and whoever asks for
+     less motion load nothing and keep the page's photo (--hero-photo) */
+  video.hero-img { pointer-events: none; }
   /* the veil, over the photo and under the words */
   .hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-veil); pointer-events: none; }
   /* as wide as its words, up to --hero-in-max; a word longer than the screen stays whole, centred over the hero's edges */
@@ -81,6 +85,7 @@
   }
 }
 @media (max-width: 768px) {
+  video.hero-img { display: none; }
   .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; }
   .hero.is-band { --hero-h: 50vh; }
@@ -92,6 +97,7 @@
   .hero > .back-link { top: max(var(--s-16), var(--safe-top)); left: max(var(--s-16), var(--safe-left)); }
 }
 @media (prefers-reduced-motion: reduce) {
+  video.hero-img { display: none; }
   .hero.is-parallax { background-attachment: scroll; }
   .hero.is-parallax .hero-img { top: 0; height: 100%; animation: none; }
 }

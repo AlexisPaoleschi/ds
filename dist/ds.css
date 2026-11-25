@@ -1,4 +1,4 @@
-/* ds 5.20.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 5.21.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1709,6 +1709,11 @@
   .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-32); }
   .site-footer a { color: var(--accent-text); text-decoration: none; font: var(--type-strong-weight) var(--type-text-size)/var(--title-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); transition: color var(--t-fast) ease; text-transform: var(--type-text-case); }
   @media (hover: hover) { .site-footer a:hover { color: var(--accent-strong); } }
+  /* a film in a page (an event's house, seen from the sky), framed as the page's photos: its poster until it is played,
+     its own controls, nothing loaded before (5.21.0):
+     <figure class="video-frame"><video controls playsinline preload="none" poster="…"><source src="…" type="video/mp4"></video></figure> */
+  .video-frame { margin: var(--s-48) 0 0; aspect-ratio: 16 / 9; overflow: hidden; background: var(--night-800); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
+  .video-frame > video { display: block; width: 100%; height: 100%; object-fit: cover; }
 /* The hero: a photo across the page with its title over it, taken from alexispaoleschi.com's events (the event pages, the
    events and the newsletter) and Selecta's gallery cover. <section class="hero"> holds <img class="hero-img"> (or a
    <picture class="hero-img">, or the page's own background-image, or its photo given by the page itself:
@@ -1734,6 +1739,10 @@
     background-color: var(--night-800); background-image: var(--hero-photo, none); background-position: center; background-size: cover; background-repeat: no-repeat; }
   .hero-img, .hero-img img { position: absolute; inset: 0; display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero-img img { position: static; }
+  /* a film as the hero's photo (5.21.0): <video class="hero-img" autoplay muted loop playsinline poster="…"> with its
+     <source media="(min-width: 769px) and (prefers-reduced-motion: no-preference)">, so that a phone and whoever asks for
+     less motion load nothing and keep the page's photo (--hero-photo) */
+  video.hero-img { pointer-events: none; }
   /* the veil, over the photo and under the words */
   .hero::after { content: ""; position: absolute; inset: 0; background: var(--hero-veil); pointer-events: none; }
   /* as wide as its words, up to --hero-in-max; a word longer than the screen stays whole, centred over the hero's edges */
@@ -1792,6 +1801,7 @@
   }
 }
 @media (max-width: 768px) {
+  video.hero-img { display: none; }
   .hero { --hero-h: 360px; --hero-pad: var(--s-60); --hero-side: var(--s-24); }
   .hero.is-full { --hero-h: 100vh; --hero-pad: 0px; --hero-side: 0px; }
   .hero.is-band { --hero-h: 50vh; }
@@ -1803,6 +1813,7 @@
   .hero > .back-link { top: max(var(--s-16), var(--safe-top)); left: max(var(--s-16), var(--safe-left)); }
 }
 @media (prefers-reduced-motion: reduce) {
+  video.hero-img { display: none; }
   .hero.is-parallax { background-attachment: scroll; }
   .hero.is-parallax .hero-img { top: 0; height: 100%; animation: none; }
 }

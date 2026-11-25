@@ -25,3 +25,8 @@
   .site-footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-32); }
   .site-footer a { color: var(--accent-text); text-decoration: none; font: var(--type-strong-weight) var(--type-text-size)/var(--title-lh) var(--type-text-font); letter-spacing: var(--type-text-ls); transition: color var(--t-fast) ease; text-transform: var(--type-text-case); }
   @media (hover: hover) { .site-footer a:hover { color: var(--accent-strong); } }
+  /* a film in a page (an event's house, seen from the sky), framed as the page's photos: its poster until it is played,
+     its own controls, nothing loaded before (5.21.0):
+     <figure class="video-frame"><video controls playsinline preload="none" poster="…"><source src="…" type="video/mp4"></video></figure> */
+  .video-frame { margin: var(--s-48) 0 0; aspect-ratio: 16 / 9; overflow: hidden; background: var(--night-800); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
+  .video-frame > video { display: block; width: 100%; height: 100%; object-fit: cover; }
