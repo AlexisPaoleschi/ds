@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.1.0 · 25 novembre 2026
+
+- Un formulaire dans la section de réservation d’une page d’événement (la demande d’inscription à un workshop) : la carte de formulaire du design system (`.card.is-form`), centrée, à l’écart de ce qui suit. La page d’événement de la vitrine le montre.
+- En Vitrine, un lien dans les mots d’une case (« I accept the Terms and Conditions ») est doré et souligné, comme un lien dans une phrase.
+
 ## 6.0.0 · 25 novembre 2026
 
 - Le site n’affiche plus aucun prix : on écrit à Alexis pour l’avoir. Le rôle du prix (`--type-price-…`) part, il reste quinze rôles du texte ; `checks/roles.js` les compte. Partent aussi les pièces de la section des prix d’une page d’événement, que plus rien n’utilise : `.pricing-section`, `.pricing-box`, `.pricing-header`, `.price-display` (et `.is-pair`, `.price-option`, `.price-divider`, `.price-label`), `.pricing-includes`, `.includes-title`, `.includes-grid`, `.include-item`, `.include-icon`, `.pricing-note`, et le prix d’une carte d’événement (`.event-card-price`). Une appli qui s’en servirait doit les retirer avant de passer à 6.0.0 ; aucune des quatre ne s’en sert.

@@ -1,4 +1,4 @@
-/* ds 6.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -348,6 +348,9 @@
   .companion-info { margin: var(--s-40) 0; text-align: left; }
   /* Booking & Contact */
   .booking-box { padding: var(--s-80) var(--s-48); }
+  /* a form in the booking section (a workshop's request, 6.1.0): the design system's form card, centred, set apart from
+     what follows */
+  .booking-box > .card.is-form { margin: var(--s-48) auto; }
   .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-48) 0; }
   .contact-card { display: block; padding: var(--s-48) var(--s-40); text-align: center; text-decoration: none; background: var(--accent-soft);
     border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }

@@ -45,8 +45,9 @@
   :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
 /* running text on the public sites: paragraphs at 85%, their links in gold, a little heavier and underlined */
   :where([data-theme="vitrine"]) p { color: var(--dim); }
-  :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: var(--type-strong-weight); text-decoration: underline; transition: color var(--t-fast) ease; }
-  @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
+  /* a link in a sentence, or in a box's words (« I accept the Terms and Conditions », 6.1.0): gold, underlined */
+  :where([data-theme="vitrine"]) :is(p, .check) a { color: var(--accent-text); font-weight: var(--type-strong-weight); text-decoration: underline; transition: color var(--t-fast) ease; }
+  @media (hover: hover) { :where([data-theme="vitrine"]) :is(p, .check) a:hover { color: var(--accent-strong); } }
 /* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
   .field-label { display: block; color: var(--faint); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
     letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }

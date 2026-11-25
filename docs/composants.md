@@ -111,7 +111,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 | `sitebase.css` | la base d’une page, l’écran de chargement (`.page-loader`), `.landscape-warning`, `.subtitle`, `.golden-divider-after`, `.pill-link` |
 | `sitebar.css` | `.back-button`, la barre qui apparaît après l’en-tête (`.topbar.is-site.sticky-nav`), le menu du téléphone (`.mobile-menu`…) |
 | `banners.css` | les bandeaux du pied des pages : réseaux (`.social-banner`), newsletter (`.signup-banner`) |
-| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, réservation (avec l’accompagnant), FAQ, galeries |
+| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, réservation (son formulaire centré, l’accompagnant), FAQ, galeries |
 | `home.css` | l’accueil (`<body class="home">`), qui défile écran par écran |
 | `eventslist.css` | la liste des événements, en cartes à couverture ; le pied d’une carte, son bouton à droite, se cale en bas de la carte |
 | `newsletter.css` | la page de la newsletter |

@@ -1,4 +1,4 @@
-/* ds 6.0.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -452,8 +452,9 @@
   :where([data-theme="vitrine"]) input:not([type=checkbox]):not([type=radio]):focus, :where([data-theme="vitrine"]) select:focus, :where([data-theme="vitrine"]) textarea:focus { outline: none; border-color: var(--accent); box-shadow: var(--field-halo); }
 /* running text on the public sites: paragraphs at 85%, their links in gold, a little heavier and underlined */
   :where([data-theme="vitrine"]) p { color: var(--dim); }
-  :where([data-theme="vitrine"]) p a { color: var(--accent-text); font-weight: var(--type-strong-weight); text-decoration: underline; transition: color var(--t-fast) ease; }
-  @media (hover: hover) { :where([data-theme="vitrine"]) p a:hover { color: var(--accent-strong); } }
+  /* a link in a sentence, or in a box's words (« I accept the Terms and Conditions », 6.1.0): gold, underlined */
+  :where([data-theme="vitrine"]) :is(p, .check) a { color: var(--accent-text); font-weight: var(--type-strong-weight); text-decoration: underline; transition: color var(--t-fast) ease; }
+  @media (hover: hover) { :where([data-theme="vitrine"]) :is(p, .check) a:hover { color: var(--accent-strong); } }
 /* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
   .field-label { display: block; color: var(--faint); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
     letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
