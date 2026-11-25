@@ -49,10 +49,10 @@ Les scripts :
 
 | Fichier de `dist/` | Ses sources, dans l’ordre |
 |:--|:--|
-| `ds.js` | `core.js`, `ds.js`, `kit.js`, `build.js`, `forms.js`, `gestures.js`, `selection.js`, `images.js`, `sheet.js`, `pick.js`, `settings.js` |
+| `ds.js` | `core.js`, `ds.js`, `kit.js`, `build.js`, `forms.js`, `validate.js`, `gestures.js`, `selection.js`, `images.js`, `sheet.js`, `pick.js`, `settings.js` |
 | `ds-tools.js` | `tools.js`, `query.js`, `table.js`, `calendar.js`, `chart.js`, `figures.js`, `reorder.js`, `datepick.js`, `live.js` (sans noyau : il a besoin de `ds.js`) |
 | `ds-photo.js` | `core.js`, `viewer.js`, `photogrid.js`, `photokit.js` |
-| `ds-site.js` | `core.js`, `site.js` |
+| `ds-site.js` | `core.js`, `site.js`, `validate.js` |
 | `ds-icons.js` et `icons.svg` | `icons.js` |
 | `ds-mail.json` et `ds-mail.html` | `mail.json` et `mail.html`, copiés tels quels |
 

@@ -34,6 +34,7 @@ Sur iPhone et iPad, il ajoute `maximum-scale=1` à la balise viewport : toucher 
 | `kit.js` | `ds.text`, `ds.plural`, `ds.count`, `ds.list`, `ds.duration`, `ds.every`, `ds.since`, `ds.store`, `ds.poll`, `ds.onSeen`, `ds.boot`, `ds.ext`, `ds.delta` |
 | `build.js` | `ds.tile`, `ds.tiles`, `ds.card`, `ds.tabs`, `ds.meter`, `ds.legend`, `ds.median`, `ds.mean` |
 | `forms.js` | `ds.rows`, `ds.password`, `ds.autosave` |
+| `validate.js` | `ds.validate(form, {words})` : les contrôles d’un formulaire, dans les mots de la page plutôt que les bulles du navigateur (aussi dans `ds-site.js`) |
 | `gestures.js` | `ds.undo`, `ds.optimistic`, `ds.copy`, `ds.openAll`, `ds.pop`, `ds.enter`, `ds.leave`, `ds.redraw`, `ds.highlight`, `ds.suggest` |
 | `selection.js` | `ds.selection(holder, {bar, count, sum, onPick, cls})` : choisir des lignes ou des tuiles, par leur case `.sel-box` (`.sel-all` pour toutes) |
 | `images.js` | `ds.images.renew` : redemander l’adresse signée d’une image qui a expiré |
@@ -122,5 +123,6 @@ Sans `ds.js`, la visionneuse n’a pas de bulle pour dire qu’une photo n’a p
 | `ds.photo(src)`, `ds.images(root)` | attendent des photos |
 | `ds.screens()` | fait défiler l’accueil écran par écran, avec ses points |
 | `ds.newsletter(form, {url, fields, check, sending, done})` | le formulaire de la newsletter : l’adresse vérifiée, le bouton occupé, les mots du serveur sous le champ |
+| `ds.validate(form, {words})` | les contrôles d’un formulaire : à l’envoi, chaque champ obligatoire vide, chaque adresse fausse, chaque case à cocher le dit en rouge sous lui, et rien ne part ; ensuite il se corrige à mesure qu’on tape. Ses mots : le `data-error` du champ, sinon ceux de ds |
 
 Cachés, la barre et le menu fermé ne se laissent pas atteindre au clavier. Ouvrir le menu y mène le clavier ; Échap le ramène au bouton.

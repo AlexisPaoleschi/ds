@@ -513,10 +513,11 @@
                     and Conditions</a>. Please review them carefully before your reservation. A <a href="#" target="_blank">model release agreement</a> will also be signed
                     on-site with each model before the event begins. </p>
 </div>
-<form class="card is-form" onsubmit="return false">
-<div class="field-group"><label class="field-label" for="demo-request-name">Your name</label><input id="demo-request-name" type="text"></div>
-<div class="field-group"><label class="field-label" for="demo-request-email">Email</label><input id="demo-request-email" type="email"></div>
-<div class="checks"><label class="check"><input type="checkbox"> <span>I accept the <a href="#">Terms and Conditions</a></span></label></div>
+<form class="card is-form" id="demo-request" onsubmit="return false">
+<div class="field-group"><label class="field-label is-required" for="demo-request-name">Your name</label><input data-error="Please tell me your name." id="demo-request-name" required type="text"></div>
+<div class="field-group"><label class="field-label is-required" for="demo-request-email">Email</label><input id="demo-request-email" required type="email"></div>
+<div class="field-group"><label class="field-label" for="demo-request-message">Your message</label><textarea id="demo-request-message" rows="3"></textarea></div>
+<div class="checks"><label class="check"><input data-error="Please accept the Terms and Conditions." required type="checkbox"> <span class="is-required">I accept the <a href="#">Terms and Conditions</a></span></label></div>
 <button class="btn is-large is-save" type="submit">Send my request</button>
 <p class="field-note"></p>
 </form>
@@ -691,6 +692,7 @@
 </footer>
 
 <script src="dist/ds-site.js"></script>
+<script>ds.validate("#demo-request");</script>
 
 
 

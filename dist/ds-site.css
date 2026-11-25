@@ -1,4 +1,4 @@
-/* ds 6.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the

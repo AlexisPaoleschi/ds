@@ -1,4 +1,4 @@
-/* ds 6.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -458,6 +458,9 @@
 /* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
   .field-label { display: block; color: var(--faint); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
     letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+/* a field that must be filled says so after its label, or after a box's words, with a gold star that a screen reader
+   leaves out (the field's own required says it): .field-label.is-required, <span class="is-required"> in a .check (6.2.0) */
+  :is(.field-label, .check > span).is-required::after { content: "\a0*"; content: "\a0*" / ""; color: var(--accent-text); }
 /* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
    .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
   .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);
@@ -465,6 +468,8 @@
   .field-note.is-good { color: var(--good); }
   .field-note.is-bad { color: var(--bad); }
   .field-note.is-reserved { min-height: calc(var(--type-small-size) * var(--field-note-lh)); }
+  /* the line ds.validate writes under a field that had none takes no room while it has nothing to say */
+  .field-note[data-validate]:empty { display: none; }
   :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
 /* Something being saved or worked on (.is-busy on a photo's tile, a cover, a row): its picture steps back while it lasts;
    a button that works shows its wheel (buttons.css), a table's row steps back whole (table.css) */
@@ -556,6 +561,8 @@
   @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
   .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
+  /* the line that says what is wrong with a box (ds.validate), under its words as its hint is */
+  .checks > .field-note { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); }
   /* two fields side by side with their words (« du … au … »), one under the other on a phone */
   .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
   .field-pair > label { display: contents; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }

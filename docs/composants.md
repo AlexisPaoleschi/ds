@@ -9,7 +9,7 @@ Chaque feuille de style de `src/` et ce qu’elle dessine, rangée comme dans `d
 |:--|:--|
 | `tokens.css` | les couleurs, les polices, les arrondis (`--r-s`, `--r-m`, `--r-l`), la palette, les quinze rôles du texte, les deux thèmes |
 | `fonts.css` | les polices des deux thèmes, faites par `scripts/fonts.py` |
-| `base.css` | les champs, les cases à cocher et le focus, les mêmes partout ; la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`) |
+| `base.css` | les champs, les cases à cocher et le focus, les mêmes partout ; la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`) ; l’étoile dorée d’un champ obligatoire (`.field-label.is-required`, ou `<span class="is-required">` dans une `.check`) |
 | `heads.css` | les titres des parties d’une page (`.title-1`, `.title-2`, `.title-3`) ; l’en-tête d’une page (`.page-head`, `.eyebrow`, `.lede`) |
 | `forms.css` | un champ et son étiquette (`.field-group`, `.field-label`), un formulaire en carte (`.card.is-form`), `.field-row`, les cases (`.check`, ses mots dans un `<span>` quand ils portent un lien, sans quoi le lien s’écarte d’eux ; `.check-hint`, `.checks`), `.pager` |
 | `page.css` | la page de Bank et Studio : son en-tête et son chargement, sa largeur, la place de la barre d’onglets, ses boutons carrés `.btn.is-icon` |

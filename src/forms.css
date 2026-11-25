@@ -21,6 +21,8 @@
   @media (pointer: coarse) { .check { min-height: var(--touch-target); } }
   .checks { display: flex; flex-direction: column; gap: var(--s-8); min-width: 0; margin: 0; padding: 0; border: 0; }
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
+  /* the line that says what is wrong with a box (ds.validate), under its words as its hint is */
+  .checks > .field-note { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); }
   /* two fields side by side with their words (« du … au … »), one under the other on a phone */
   .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
   .field-pair > label { display: contents; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }

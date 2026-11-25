@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.2.0 · 25 novembre 2026
+
+- Un champ obligatoire le dit par une étoile dorée après son étiquette : `.field-label.is-required`, ou les mots d’une case dans un `<span class="is-required">` (« I accept the Terms and Conditions * »). Un lecteur d’écran ne lit pas l’étoile : le `required` du champ le dit déjà.
+- `ds.validate(form)` : les contrôles d’un formulaire, dans les mots de la page plutôt que les bulles du navigateur. À l’envoi, un champ obligatoire vide (ou rempli d’espaces), une adresse qui n’en est pas une, une case à cocher, une liste sans choix disent pourquoi en rouge sur la ligne sous eux (`.field-note.is-bad`, écrite là si le champ n’en a pas, et sous les mots d’une case), le premier prend le curseur, et rien ne part : `ds.newsletter` n’est même pas appelé. Ensuite chaque champ se corrige ou le redit à mesure qu’on tape, et un champ quitté après avoir été rempli est vérifié aussitôt. Ses mots : le `data-error` du champ, sinon ceux de ds, en français ou en anglais comme la page. Il est dans `ds.js` et dans `ds-site.js`.
+- La page d’événement de la vitrine le montre sur sa demande d’inscription : envoyer le formulaire vide.
+
 ## 6.1.0 · 25 novembre 2026
 
 - Un formulaire dans la section de réservation d’une page d’événement (la demande d’inscription à un workshop) : la carte de formulaire du design system (`.card.is-form`), centrée, à l’écart de ce qui suit. La page d’événement de la vitrine le montre.

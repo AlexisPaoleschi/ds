@@ -35,7 +35,7 @@ head="/* ds $version · github.com/AlexisPaoleschi/ds · do not edit this copy, 
 # the script every app links: the core, the shared behaviours (the bubble, the window, dates and figures, the server)
 # and the small tools every app wrote for itself (kit.js); the sheet, the search picker and its pills, and a settings
 # page's switch, connections and fields too (4.25.0), so that Selecta and the site have them
-{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js src/gestures.js src/selection.js src/images.js src/sheet.js src/pick.js src/settings.js; } > dist/ds.js
+{ echo "$head"; cat src/core.js src/ds.js src/kit.js src/build.js src/forms.js src/validate.js src/gestures.js src/selection.js src/images.js src/sheet.js src/pick.js src/settings.js; } > dist/ds.js
 { echo "$head"; cat $js_tools; } > dist/ds-tools.js
 # the mail kit (ds-mail): its values written plainly (a mail client reads no CSS variable) and its parts, for the mails
 # of Selecta and the site
@@ -46,9 +46,10 @@ cp src/mail.html dist/ds-mail.html
 { echo "$head"; cat src/icons.js; } > dist/ds-icons.js
 # the photo viewer and the grid of photos, for a page that shows photos (the site's events)
 { echo "$head"; cat src/core.js $js_photo; } > dist/ds-photo.js
-# the site kit, which the site links after ds.css (and ds-photo.js on its event pages)
+# the site kit, which the site links after ds.css (and ds-photo.js on its event pages), with a form's checks (ds.validate),
+# which the apps have in ds.js
 { echo "$head"; cat $css_site; } > dist/ds-site.css
-{ echo "$head"; cat src/core.js $js_site; } > dist/ds-site.js
+{ echo "$head"; cat src/core.js $js_site src/validate.js; } > dist/ds-site.js
 # the icons alone, in a file a page links to with no script: <svg class="ico"><use href="icons-X.Y.Z.svg#i-mail"/></svg>
 { echo '<svg xmlns="http://www.w3.org/2000/svg">'; echo "<!-- ds $version · github.com/AlexisPaoleschi/ds · the icons of src/icons.js -->";
   sed -n '/var sprite = `/,/^`;$/p' src/icons.js | sed '1d;$d'; echo '</svg>'; } > dist/icons.svg

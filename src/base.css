@@ -51,6 +51,9 @@
 /* A field's label over it, in the theme's small capitals (Selecta's sign-in): <label class="field-label" for="…"> */
   .field-label { display: block; color: var(--faint); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight);
     letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+/* a field that must be filled says so after its label, or after a box's words, with a gold star that a screen reader
+   leaves out (the field's own required says it): .field-label.is-required, <span class="is-required"> in a .check (6.2.0) */
+  :is(.field-label, .check > span).is-required::after { content: "\a0*"; content: "\a0*" / ""; color: var(--accent-text); }
 /* The line under a field: what happened to it, in gold for a success, in red for a refusal (the field then takes a red edge).
    .is-reserved keeps its line's height while it is empty, so that the message appearing moves nothing under it. */
   .field-note { display: block; margin: var(--s-12) 0 0; color: var(--dim);
@@ -58,6 +61,8 @@
   .field-note.is-good { color: var(--good); }
   .field-note.is-bad { color: var(--bad); }
   .field-note.is-reserved { min-height: calc(var(--type-small-size) * var(--field-note-lh)); }
+  /* the line ds.validate writes under a field that had none takes no room while it has nothing to say */
+  .field-note[data-validate]:empty { display: none; }
   :where(:has(> .field-note.is-bad)) :is(input:not([type=checkbox]):not([type=radio]), select, textarea) { border-color: var(--bad-line); }
 /* Something being saved or worked on (.is-busy on a photo's tile, a cover, a row): its picture steps back while it lasts;
    a button that works shows its wheel (buttons.css), a table's row steps back whole (table.css) */
