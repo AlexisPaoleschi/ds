@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.3.0 · 25 novembre 2026
+
+- Les étapes (`.steps`, dans `src/steps.css`) : comment se passe une chose, une étape après l’autre. Une liste numérotée (`<ol>`), chaque étape avec son picto dans un fin anneau (`.steps-dot`), son numéro (01, 02, 03, écrit par la liste au-dessus du titre), son titre (`.steps-title`) et ses mots (`.steps-text`). Côte à côte, un trait relie les anneaux ; sur un téléphone, elles passent l’une sous l’autre, les anneaux à gauche reliés de haut en bas.
+- Ce qu’il faut savoir avant de demander (`.key-facts`) : deux ou trois choses côte à côte sur un bandeau doré clair, chacune avec son picto à côté de son titre doré (`.key-facts-item`, `.key-facts-title`) et ses mots dessous (`.key-facts-text`). Sur un téléphone, l’une sous l’autre, les mots sur toute la largeur du bandeau.
+- Sur un téléphone, les mots des étapes et du bandeau sont justifiés, comme le texte courant du site.
+- La page d’événement de la vitrine les montre dans sa réservation : les trois étapes (envoyer sa demande, avoir les détails, réserver sa place), l’accompagnant et le paiement sur le bandeau, puis la demande, le contrat modèle sous la case des conditions. L’accompagnant, le paiement et le cadre des conditions d’avant (`.companion-info`, `.payment-info`, `.info-booking-terms-box`) restent, montrés sur la page du Sénégal de la vitrine.
+
 ## 6.2.0 · 25 novembre 2026
 
 - Un champ obligatoire le dit par une étoile dorée après son étiquette : `.field-label.is-required`, ou les mots d’une case dans un `<span class="is-required">` (« I accept the Terms and Conditions * »). Un lecteur d’écran ne lit pas l’étoile : le `required` du champ le dit déjà.

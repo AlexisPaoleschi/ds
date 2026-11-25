@@ -13,7 +13,7 @@ marks="src/marks.css"
 controls="src/buttons.css src/tabs.css src/pick.css"
 surfaces="src/card.css src/avatar.css src/msg.css src/toast.css src/dialog.css src/viewer.css src/pop.css src/sheet.css"
 data="src/tiles.css src/meter.css src/table.css src/rows.css"
-public="src/public.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css src/photokit.css src/gallery.css"
+public="src/public.css src/steps.css src/hero.css src/topbar.css src/backlink.css src/photogrid.css src/photokit.css src/gallery.css"
 pages="src/doc.css src/settings.css"
 states="src/chosen.css"
 # the tools: what only Bank and Studio draw (periods, the date picker, moving by the grip, the new version, the filters'

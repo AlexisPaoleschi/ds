@@ -1,4 +1,4 @@
-/* ds 6.2.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1721,6 +1721,55 @@
      <figure class="video-frame"><video controls playsinline preload="none" poster="…"><source src="…" type="video/mp4"></video></figure> */
   .video-frame { margin: var(--s-48) 0 0; aspect-ratio: 16 / 9; overflow: hidden; background: var(--night-800); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
   .video-frame > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+/* Steps and key facts (6.3.0): how something goes, one step after another, and what one must know before asking. A
+   workshop's booking shows both above its request: send your request, get the details, secure your spot; then the
+   companion and the payment terms. Selecta and the site can use them; in atelier they take atelier's fonts and colours. */
+
+/* The steps, numbered by the list itself (01, 02, 03 over each title):
+   <ol class="steps"><li><span class="steps-dot"><svg aria-hidden="true" class="ico">…</svg></span>
+   <h4 class="steps-title">…</h4><p class="steps-text">…</p></li>…</ol>
+   Side by side, each picto in a thin ring and a line from ring to ring; on a phone, one under the other, the rings on the
+   left linked from top to bottom and the words beside them. */
+  .steps { --steps-dot: calc(var(--picto-m) + 2 * var(--s-20)); --steps-gap: var(--s-32); display: grid; grid-auto-columns: minmax(0, 1fr);
+    grid-auto-flow: column; gap: var(--steps-gap); margin: var(--s-48) 0; padding: 0; list-style: none; text-align: center; counter-reset: steps; }
+  .steps > li { position: relative; min-width: 0; }
+  /* the line to the next ring, from this ring's middle to the next one's, under both rings */
+  .steps > li:not(:last-child)::after { content: ""; position: absolute; top: calc(var(--steps-dot) / 2); left: 50%; width: calc(100% + var(--steps-gap));
+    border-top: 1px solid var(--line); }
+  .steps-dot { position: relative; z-index: 1; display: flex; align-items: center; justify-content: center; box-sizing: border-box;
+    width: var(--steps-dot); height: var(--steps-dot); margin: 0 auto var(--s-16); background: var(--card-bg); border: 1px solid var(--line); border-radius: 50%; }
+  .steps-dot > .ico { width: var(--picto-m); height: var(--picto-m); color: var(--accent); stroke-width: 1; }
+  .steps-title { margin: 0 0 var(--s-12); color: var(--ink); line-height: var(--title-lh);
+    font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
+  .steps-title::before { counter-increment: steps; content: counter(steps, decimal-leading-zero); display: block; margin-bottom: var(--s-8); color: var(--accent-text);
+    font-family: var(--type-caps-font); font-size: var(--type-caps-size); font-weight: var(--type-caps-weight); letter-spacing: var(--type-caps-ls); text-transform: var(--type-caps-case); }
+  .steps-text { margin: 0; color: var(--dim); line-height: var(--lh-relaxed);
+    font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  @media (max-width: 768px) {
+    .steps { --steps-gap: var(--s-28); grid-auto-flow: row; text-align: left; }
+    .steps > li { display: grid; grid-template-columns: var(--steps-dot) minmax(0, 1fr); column-gap: var(--s-20); align-content: start; }
+    .steps-dot { grid-row: 1 / span 2; margin: 0; }
+    .steps-title, .steps-text { grid-column: 2; }
+    .steps > li:not(:last-child)::after { top: var(--steps-dot); bottom: calc(-1 * var(--steps-gap)); left: calc(var(--steps-dot) / 2); width: 0;
+      border-top: 0; border-left: 1px solid var(--line); }
+  }
+
+/* The key facts, side by side on a light gold band, each with its picto beside its gold title and its words under the title:
+   <div class="key-facts"><div class="key-facts-item"><svg aria-hidden="true" class="ico">…</svg><h4 class="key-facts-title">…</h4>
+   <p class="key-facts-text">…</p></div>…</div>
+   On a phone, one under the other, the words across the band's width under the picto and the title. */
+  .key-facts { display: grid; grid-auto-columns: minmax(0, 1fr); grid-auto-flow: column; gap: var(--s-40); margin: var(--s-40) 0; padding: var(--s-32) var(--s-40);
+    text-align: left; background: var(--accent-soft); border: 1px solid var(--line); border-radius: var(--r-l); }
+  .key-facts-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8) var(--s-16); align-content: start; min-width: 0; }
+  .key-facts-item > .ico { align-self: center; width: var(--picto-m); height: var(--picto-m); color: var(--accent); stroke-width: 1; }
+  .key-facts-title { margin: 0; color: var(--accent-text); line-height: var(--title-lh);
+    font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
+  .key-facts-text { grid-column: 2; margin: 0; color: var(--dim); line-height: var(--lh-relaxed);
+    font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  @media (max-width: 768px) {
+    .key-facts { grid-auto-flow: row; gap: var(--s-28); padding: var(--s-24) var(--s-20); }
+    .key-facts-text { grid-column: 1 / -1; }
+  }
 /* The hero: a photo across the page with its title over it, taken from alexispaoleschi.com's events (the event pages, the
    events and the newsletter) and Selecta's gallery cover. <section class="hero"> holds <img class="hero-img"> (or a
    <picture class="hero-img">, or the page's own background-image, or its photo given by the page itself:

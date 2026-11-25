@@ -4,5 +4,5 @@
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .section-text, .info-box.is-left p, .organizer-text, .day-description, .day-note, .info-list li span, .companion-text,
     .payment-text, .faq-answer, .location-transport-note span, .event-card-description, .signup-banner-subtitle,
-    .testimonial-text { text-align: justify; text-align-last: left; hyphens: manual; }
+    .testimonial-text, .steps-text, .key-facts-text { text-align: justify; text-align-last: left; hyphens: manual; }
   }
