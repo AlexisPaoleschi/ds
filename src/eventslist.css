@@ -1,5 +1,5 @@
 /* The site kit: the events list (/events/): its hero (the design system's page hero, its photo given by the page), the
-   grid of events, each the design system's card with a cover photo, its highlights, its models and its price. */
+   grid of events, each the design system's card with a cover photo, its highlights, its models and its booking button. */
   /* Hero: the design system's page hero (.hero), on the site's photo under a light veil */
   .events-hero { --hero-veil: var(--overlay-white-lighter); }
   /* Main */
@@ -26,11 +26,11 @@
   .event-card-model-avatar { width: 40px; height: 40px; border: 2px solid var(--line); }
   .event-card-model-name { font-family: var(--type-small-font); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); color: var(--faint); text-transform: var(--type-small-case); }
   /* Description */
-  .event-card-description { font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  /* Card Footer */
-  .event-card-footer { display: flex; align-items: center; justify-content: space-between; gap: var(--s-20); margin-top: var(--s-8);
+  .event-card-description { margin-bottom: var(--s-8); font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  /* Card Footer: its button on the right, at the bottom of the card, so that two cards side by side end on one line
+     whatever their height (6.0.0); no price (6.0.0) */
+  .event-card-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--s-20); margin-top: auto;
     padding-top: var(--s-24); border-top: 1px solid var(--line); }
-  .event-card-price { font-family: var(--type-figure-font); font-size: var(--type-figure-size); font-weight: var(--type-figure-weight); letter-spacing: var(--type-figure-ls); color: var(--ink); text-transform: var(--type-figure-case); }
   /* ─── Mobile shared: portrait ≤768px + landscape phone ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .events-grid { gap: var(--s-32); margin-top: var(--s-48); margin-bottom: var(--s-60); }

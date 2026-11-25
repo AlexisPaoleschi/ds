@@ -10,10 +10,10 @@
   @media (max-width: 480px) { :root { --site-gutter: var(--s-16); } }
   body { font-family: var(--type-text-font); font-size: var(--type-text-size); font-weight: var(--type-text-weight); line-height: var(--lh-loose); overflow-x: hidden;
     -webkit-text-size-adjust: 100%; text-size-adjust: 100%; letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  /* a phone held sideways is still a phone here: the big title, a page's title, a cover's title and a price keep their
+  /* a phone held sideways is still a phone here: the big title, a page's title and a cover's title keep their
      phone size (tokens.css), so that a cover holds in the screen's height and its button stays on it (5.7.0) */
   @media (min-width: 769px) and (max-width: 956px) and (orientation: landscape) {
-    :root, [data-theme] { --type-display-size: 36px; --type-cover-size: 48px; --type-price-size: 40px; }
+    :root, [data-theme] { --type-display-size: 36px; --type-cover-size: 48px; }
     [data-theme="vitrine"] { --type-title-1-size: 24px; }
   }
   /* Landscape warning */

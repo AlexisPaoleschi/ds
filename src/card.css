@@ -160,6 +160,8 @@
   @media (hover: hover) { .card.is-link:hover .card-cover img { transform: scale(var(--cover-zoom)); } }
   .card-body { display: flex; flex: 1; flex-direction: column; gap: var(--card-gap); padding: var(--card-pad); }
   .card-body > * { margin: 0; }
+  /* a card's title that leads where its cover leads, and keeps the title's look (6.0.0) */
+  .card-title > a { color: inherit; text-decoration: none; }
   /* a small card, for narrow columns (Selecta's galleries): the same card with a smaller title and less room */
   .card.is-small {--card-pad: var(--card-s-pad);
     --card-gap: var(--card-s-gap); --cover-badge: var(--card-s-badge); }

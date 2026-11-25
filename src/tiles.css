@@ -68,7 +68,7 @@
   .tiles.is-cols { grid-template-columns: repeat(var(--tile-cols-phone, 2), minmax(0, 1fr)); }
   [data-theme="vitrine"] .tiles.is-compact .tile { padding: var(--s-16); }
 }
-/* A figure put forward, alone on its line and centred (Bank's « Tous les comptes », a workshop's price on the site): its
+/* A figure put forward, alone on its line and centred (Bank's « Tous les comptes »): its
    small label above it (.big-fig-label), the figure in gold (.big-fig-value), what it stands for under it
    (.big-fig-note); the theme gives its font, Archivo heavy in Atelier, Gilda light and very large in Vitrine. A link
    (a.big-fig) lights its label under the pointer.

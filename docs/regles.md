@@ -35,18 +35,18 @@ seulement son élément, un composant rend `null`.
 * Un mot dans une couleur de la palette s’écrit avec `.tint` (ou `color-mix` avec `--tint-ink`) : en Vitrine, il prend de l’encre pour se lire sur le blanc.
 * Un mot en or prend `--accent-text`.
 
-## Le texte : seize rôles
+## Le texte : quinze rôles
 
-Aucune autre taille, graisse ou espacement de lettres, dans ds comme dans les applis (5.0.0, 5.6.0, 5.16.0).
+Aucune autre taille, graisse ou espacement de lettres, dans ds comme dans les applis (5.0.0, 5.6.0, 5.16.0 ; le prix
+est parti en 6.0.0, le site n’en affiche plus).
 
 | Rôle | Jetons | Pour |
 |:--|:--|:--|
 | le grand titre | `--type-display-…` | une couverture, un très grand chiffre |
 | le titre de couverture | `--type-cover-…` | le titre de la couverture plein écran d’une page d’événement |
 | la ligne de couverture | `--type-cover-line-…` | le lieu sur cette couverture |
-| le prix | `--type-price-…` | le prix d’une page d’événement, entre le titre de couverture et le grand titre (5.16.0) |
 | les titres 1, 2 et 3 | `--type-title-1-…` à `-3-…` | une page ; une section ou une fenêtre ; un bloc |
-| le chiffre | `--type-figure-…` | le chiffre d’une case, le prix sur la carte d’un événement |
+| le chiffre | `--type-figure-…` | le chiffre d’une case |
 | le sous-titre | `--type-subtitle-…` | la ligne espacée sous un grand titre, la date d’une couverture, la phrase d’un bandeau |
 | le texte | `--type-text-…` | le texte courant |
 | le texte fort | `--type-strong-…` | un nom, le titre d’une ligne |
@@ -65,7 +65,7 @@ Aucune autre taille, graisse ou espacement de lettres, dans ds comme dans les ap
 * Une phrase grise sous un titre est du texte, jamais un sous-titre : le sous-titre est la ligne en capitales espacées, dorée (un lieu).
 
 Sur un téléphone, debout ou couché (jusqu’à 956px de large à l’horizontale, dans le kit du site) : le grand titre fait
-36px au plus, le titre 1 22px, le titre de couverture 48px et le prix 40px.
+36px au plus, le titre 1 22px et le titre de couverture 48px.
 
 L’italique a un sens et jamais un rôle de décor : une citation (un témoignage), une note (celle d’une opération, en or) et
 le titre d’une œuvre (`<cite>`). `node checks/roles.js` refuse tout autre texte en italique.
@@ -81,7 +81,7 @@ Cinq écarts et aucun autre (5.9.0). Chaque rôle en prend un dans chaque thème
 |:--|:--|:--|:--|
 | `--track-0` | aucun | le texte, le texte fort, la légende | tous les rôles qui ne sont pas plus bas |
 | `--track-s` | petit, 0,04 em | le petit texte | |
-| `--track-m` | moyen, 0,10 em | le grand titre, les titres, le titre de couverture, le prix, le chiffre | les capitales, les petites capitales |
+| `--track-m` | moyen, 0,10 em | le grand titre, les titres, le titre de couverture, le chiffre | les capitales, les petites capitales |
 | `--track-l` | large, 0,15 em | les capitales, les petites capitales, le bouton | |
 | `--track-xl` | très large, 0,18 em | le sous-titre, la ligne de couverture | le sous-titre, la ligne de couverture |
 

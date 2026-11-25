@@ -1,16 +1,15 @@
 /* The site kit: the blocks of an event page (Lyon 2026, Senegal 2027): its sections, the models, the venue and its
-   features, the way there, the schedule, the prices, the booking, the FAQ, the organizer and the galleries, which
+   features, the way there, the schedule, the booking, the FAQ, the organizer and the galleries, which
    ds-site.js opens in the photo viewer when ds-photo.js is there. Each page's own sheet, linked after, gives its photos.
    The photo bands between the sections are the design system's (.hero.is-band.is-parallax). */
   /* The photo bands between the sections: the design system's (.hero.is-band.is-parallax); each page gives their photos */
   /* Content Sections */
   .content-section { max-width: var(--page-site); margin: 0 auto; padding: var(--s-80) var(--site-gutter); background-color: var(--white); }
   .dark-section { background: var(--band); }
-  .pricing-section { background: var(--white); }
   .elegant-box { padding: var(--s-80) var(--s-48); background: var(--white); border: 1px solid var(--line); box-shadow: var(--shadow-card); }
   /* Section Title, Subtitle, Text */
   /* the running text of every block: the text role */
-  .section-text, .model-bio, .organizer-text, .day-description, .schedule-list li, .day-note, .info-list li, .include-item span, .pricing-note p, .companion-text, .payment-text, .faq-answer, .location-transport-note span, .location-dest-name { font-size: var(--type-text-size); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
+  .section-text, .model-bio, .organizer-text, .day-description, .schedule-list li, .day-note, .info-list li, .companion-text, .payment-text, .faq-answer, .location-transport-note span, .location-dest-name { font-size: var(--type-text-size); font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* A section's head: the design system's (.section-head, its h2 and .section-sub) */
   .section-text { margin-bottom: var(--s-32); font-family: var(--type-text-font); font-weight: var(--type-text-weight); line-height: var(--lh-airy); text-align: justify;
     text-align-last: left; color: var(--dim); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
@@ -145,26 +144,8 @@
   .info-list li { display: flex; align-items: flex-start; gap: var(--s-12); padding: var(--s-8) 0; color: var(--dim); }
   /* its icon on its first line's middle, as the lists above (icon audit, 22 November 2026) */
   .info-list li svg { flex-shrink: 0; width: var(--ico-l); height: var(--ico-l); margin-top: calc((1lh - 20px) / 2); color: var(--accent); stroke-width: 1; }
-  /* Pricing */
-  .pricing-box { padding: var(--s-80) var(--s-48); text-align: center; }
-  .pricing-header { margin-bottom: var(--s-48); }
-  .price-display { display: flex; flex-direction: column; align-items: center; margin: var(--s-48) 0; padding: var(--s-48) 0;
-    border-top: 2px solid var(--line); border-bottom: 2px solid var(--line); }
-  /* its figure and what it stands for: the design system's figure put forward (.big-fig, tiles.css), the price in its
-     own role (70px, 40px on a phone), between the cover's title and the big title */
-  .price-display .big-fig-value { font: var(--type-price-weight) var(--type-price-size)/var(--lh-tight) var(--type-price-font); letter-spacing: var(--type-price-ls); text-transform: var(--type-price-case); }
-  .pricing-includes { margin: var(--s-48) 0; }
-  .includes-title { margin-bottom: var(--s-40); font-family: var(--type-title-2-font); font-size: var(--type-title-2-size); font-weight: var(--type-title-2-weight); letter-spacing: var(--type-title-2-ls);
-    color: var(--ink); text-transform: var(--type-title-2-case); }
-  .includes-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: var(--s-16); margin-bottom: var(--s-32); }
-  .include-item { display: flex; align-items: center; gap: var(--s-12); padding: var(--s-16); background: var(--accent-soft);
-    border-left: 3px solid var(--accent); }
-  .include-icon { flex-shrink: 0; width: var(--picto-s); height: var(--picto-s); color: var(--accent); stroke-width: 1; }
-  .include-item span { font-weight: var(--type-text-weight); text-align: left; color: var(--dim); font-family: var(--type-text-font); font-size: var(--type-text-size); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
-  .pricing-note { margin: var(--s-40) 0; padding: var(--s-32); background: var(--accent-soft); border: 1px solid var(--line); }
-  .pricing-note p { margin: 0; line-height: var(--lh-airy); color: var(--dim); }
-  /* Companion: the same box as the payment terms (below), a thin line around a gold title and words aligned left, though
-     the pricing box centres its own */
+  /* Companion: the same box as the payment terms (below), in the booking section: a thin line around a gold title and
+     words aligned left */
   .companion-info { margin: var(--s-40) 0; text-align: left; }
   /* Booking & Contact */
   .booking-box { padding: var(--s-80) var(--s-48); }
@@ -248,7 +229,7 @@
     .highlight-list { display: flex; }
     .highlight-separator { display: none; }
     /* Typography */
-    .section-text, .model-bio, .organizer-text, .day-description, .schedule-list li, .day-note, .info-list li, .include-item span, .pricing-note p, .companion-text, .payment-text, .faq-answer, .location-transport-note span, .location-dest-name { line-height: var(--lh-loose); }
+    .section-text, .model-bio, .organizer-text, .day-description, .schedule-list li, .day-note, .info-list li, .companion-text, .payment-text, .faq-answer, .location-transport-note span, .location-dest-name { line-height: var(--lh-loose); }
     .section-text { text-align: left; }
     /* People */
     .models-container { gap: var(--s-60); }
@@ -285,9 +266,8 @@
     /* Gallery */
     .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: var(--s-12); }
     .venue-gallery { margin-top: var(--s-60); padding-top: var(--s-40); }
-    /* Pricing */
-    .pricing-box, .booking-box { padding: var(--s-40) var(--s-24); }
-    .pricing-note { padding: var(--s-24) var(--s-20); }
+    /* Booking */
+    .booking-box { padding: var(--s-40) var(--s-24); }
     /* FAQ */
     .faq-item { padding: var(--s-24) var(--s-20); }
     /* Contact */
@@ -332,7 +312,7 @@
     .location-map-connector { display: block; }
     .location-info-map { margin: var(--s-40) 0 0; padding: var(--s-48) var(--s-40); }
   }
-  /* a section's second heading, in the site's gold capitals (the two sessions of a pricing) */
+  /* a section's second heading, in the site's gold capitals (the two sessions of a schedule) */
   .section-subtitle { margin-bottom: var(--s-48); font-family: var(--type-subtitle-font); font-size: var(--type-subtitle-size); font-weight: var(--type-subtitle-weight); letter-spacing: var(--type-subtitle-ls);
     text-align: center; text-transform: var(--type-subtitle-case); color: var(--accent); }
   /* the schedule of each session under its own heading, the second one set apart */
@@ -340,12 +320,6 @@
   .schedule-container + .session-title { margin-top: var(--s-48); }
   /* a box whose text reads from the left */
   .info-box.is-left p { text-align: left; }
-  /* two prices side by side (.price-display.is-pair: a 2:1 and a 1:1 session), a thin gold line between them */
-  .price-display.is-pair { flex-direction: row; justify-content: center; gap: 0; }
-  .price-option { display: flex; flex-direction: column; align-items: center; flex: 1; padding: 0 var(--s-40); }
-  .price-divider { width: 1px; height: 120px; background: color-mix(in srgb, var(--accent) 20%, transparent); flex-shrink: 0; }
-  .price-display.is-pair .big-fig-note { color: var(--ink); }
-  .price-label { margin-top: var(--s-8); font-size: var(--type-small-size); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); color: var(--faint); font-family: var(--type-small-font); text-transform: var(--type-small-case); }
   /* two landscape photos side by side (.gallery-grid-duo), stacked on a phone.
      The doubled class keeps it above the gallery-grid media query overrides. */
   .gallery-grid.gallery-grid-duo { grid-template-columns: repeat(2, 1fr); margin-top: var(--s-32); }
@@ -353,8 +327,4 @@
   /* ─── Mobile shared: portrait ≤768px + landscape ≤956px ─── */
   @media (max-width: 768px), (max-width: 956px) and (orientation: landscape) {
     .gallery-grid.gallery-grid-duo { grid-template-columns: 1fr; }
-    /* on a phone, the two prices one under the other */
-    .price-display.is-pair { flex-direction: column; gap: var(--s-40); }
-    .price-divider { width: 60px; height: 1px; }
-    .price-option { padding: 0; }
   }

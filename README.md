@@ -48,5 +48,5 @@ for c in checks/*.js; do node "$c"; done
 | 📦 [Dans une appli](docs/dans-une-appli.md) | ce que chaque appli copie et lie, le thème, comparer avant et après |
 | 🚀 [Publier](docs/publier.md) | d’un changement dans `src/` à la copie dans les quatre applis |
 | 🧪 [Vérifications](docs/verifications.md) | ce que vérifie chaque script de `checks/` |
-| 📐 [Règles](docs/regles.md) | une seule façon de nommer, les seize rôles du texte, les jetons, les largeurs |
+| 📐 [Règles](docs/regles.md) | une seule façon de nommer, les quinze rôles du texte, les jetons, les largeurs |
 | 🤖 [Consignes pour Claude](CLAUDE.md) | les règles à suivre dans ce dépôt |

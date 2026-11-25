@@ -134,7 +134,7 @@
 :root, [data-theme] {
   /* the gaps between letters: five, and every text role of either theme takes one of them, none other (5.9.0) */
   --track-0: 0; --track-s: .04em; --track-m: .1em; --track-l: .15em; --track-xl: .18em;
-  /* Text: sixteen roles and no other size, weight or letter spacing, in ds or in an app (5.0.0, 5.6.0, 5.16.0). Each has one font, one
+  /* Text: fifteen roles and no other size, weight or letter spacing, in ds or in an app (5.0.0, 5.6.0, 5.16.0; the price left in 6.0.0). Each has one font, one
      size, one weight, one spacing and one case, which the theme sets; a component picks a role, never a size. A word in a
      role may be in mono (a figure, a date) or take the strong weight (a word put forward); its line height stays the
      component's. Atelier's: Archivo for titles and figures, IBM Plex Sans for the rest.
@@ -151,8 +151,6 @@
   /* a cover as tall as the screen (the site's event pages): its title and the line under it (a place); its title smaller
      on a phone, below */
   --type-cover-font: var(--display); --type-cover-size: 64px; --type-cover-weight: 800; --type-cover-ls: var(--track-0); --type-cover-case: none;
-  /* a price put forward (an event's page), between the cover's title and the big title; smaller on a phone, below */
-  --type-price-font: var(--display); --type-price-size: 56px; --type-price-weight: 800; --type-price-ls: var(--track-0); --type-price-case: none;
   --type-cover-line-font: var(--body); --type-cover-line-size: 20px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
   /* sentences, lists, a table's cells, a field's value; then a name, a row's title, a box's words */
   --type-text-font: var(--body); --type-text-size: 15px; --type-text-weight: 400; --type-text-ls: var(--track-0); --type-text-case: none;
@@ -249,7 +247,7 @@
 /* vitrine: the public sites, alexispaoleschi.com and Selecta. Every value here is the site's own. */
 [data-theme="vitrine"] {
   color-scheme: light;
-  /* a figure put forward (.big-fig): the site's prices, what it stands for under it */
+  /* a figure put forward (.big-fig), what it stands for under it */
   --big-fig-gap: var(--s-12); --big-fig-pt: 0; --big-fig-pb: 0;
   /* the site's grounds: a cream page, white cards and fields, beige bands */
   --bg: var(--cream-50); --panel: var(--white); --panel-2: var(--white); --band: var(--beige-100); --row-lit: var(--band);
@@ -282,7 +280,6 @@
   --type-figure-size: 28px; --type-figure-weight: 400; --type-figure-ls: var(--track-m); --type-figure-case: none;
   --type-subtitle-size: 16px; --type-subtitle-weight: 400; --type-subtitle-ls: var(--track-xl); --type-subtitle-case: uppercase;
   --type-cover-size: 84px; --type-cover-weight: 400; --type-cover-ls: var(--track-m); --type-cover-case: uppercase;
-  --type-price-size: 70px; --type-price-weight: 400; --type-price-ls: var(--track-m); --type-price-case: none;
   --type-cover-line-size: 24px; --type-cover-line-weight: 400; --type-cover-line-ls: var(--track-xl); --type-cover-line-case: uppercase;
   --type-text-size: 16px; --type-text-weight: 300; --type-text-ls: var(--track-0); --type-text-case: none;
   --type-strong-size: 16px; --type-strong-weight: 500; --type-strong-ls: var(--track-0); --type-strong-case: none;
@@ -370,10 +367,10 @@
   [data-theme="vitrine"] { --badge-py: 5px; --badge-px: var(--s-12); --footer-py: var(--s-24); --card-pad: var(--s-24); }
 }
 /* the sizes of the text on a phone: the big title smaller (36px at most, less on a narrow phone, so that a long word in
-   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title and a price smaller, in both
+   capitals still holds: 30px at 375px), a page's title one step smaller, the cover's title smaller, in both
    themes (held sideways, the site kit gives a phone the same: sitebase.css, 5.7.0) */
 @media (max-width: 768px) {
-  :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; --type-price-size: 40px; }
+  :root, [data-theme] { --type-display-size: clamp(28px, 8vw, 36px); --type-title-1-size: 22px; --type-cover-size: 48px; }
   [data-theme="vitrine"] { --type-title-1-size: 24px; }
 }
 @media (max-width: 480px) {

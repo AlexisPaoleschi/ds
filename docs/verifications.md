@@ -34,7 +34,7 @@ Une ligne `ok` par point vérifié, `ÉCHEC` sinon. Les pages `checks/*.html` so
 | `mail.js` | le kit mail : ses morceaux n’écrivent que ses valeurs, son bouton est une cellule qu’Outlook colore |
 | `names.js` | une seule façon d’appeler et de nommer ; aucun ancien nom d’avant 3.0 dans `dist/` |
 | `photo.js` | la visionneuse, la grille de photos et son zoom, le bandeau photo et le lien retour |
-| `roles.js` | les seize rôles du texte, dans les sources et à l’écran, dans les deux thèmes ; l’italique |
+| `roles.js` | les quinze rôles du texte, dans les sources et à l’écran, dans les deux thèmes ; l’italique |
 | `showcase.js` | la vitrine : lisibilité, 11px au moins, une seule hauteur de contrôle, rien qui déborde ni rien de coupé sur un téléphone de 375px |
 | `site.js` | le kit du site : la barre et son menu, le lien retour, l’écran de chargement, les galeries, les icônes, la newsletter |
 | `studio.js` | les pièces de Studio : le calendrier, les graphiques, les classements, le choix de période, la nouvelle version, le direct |

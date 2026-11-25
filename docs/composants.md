@@ -7,7 +7,7 @@ Chaque feuille de style de `src/` et ce qu’elle dessine, rangée comme dans `d
 
 | Fichier | Ce qu’il dessine |
 |:--|:--|
-| `tokens.css` | les couleurs, les polices, les arrondis (`--r-s`, `--r-m`, `--r-l`), la palette, les seize rôles du texte, les deux thèmes |
+| `tokens.css` | les couleurs, les polices, les arrondis (`--r-s`, `--r-m`, `--r-l`), la palette, les quinze rôles du texte, les deux thèmes |
 | `fonts.css` | les polices des deux thèmes, faites par `scripts/fonts.py` |
 | `base.css` | les champs, les cases à cocher et le focus, les mêmes partout ; la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`) |
 | `heads.css` | les titres des parties d’une page (`.title-1`, `.title-2`, `.title-3`) ; l’en-tête d’une page (`.page-head`, `.eyebrow`, `.lede`) |
@@ -43,7 +43,7 @@ et restent gris sans s’allumer quand ils n’ont rien à faire (`disabled`).
 
 | Fichier | Ce qu’il dessine |
 |:--|:--|
-| `card.css` | `.card`, son filet doré `.is-ruled`, sa couleur `.is-tinted`, la carte qu’on clique `.is-link`, son titre `.ct`, `.card-title`, `.card-meta`, la carte pliée `.is-folded`, la photo de couverture (`.has-cover`, `.card-cover`, `.card-body`), `.is-small`, `.grid-cards` |
+| `card.css` | `.card`, son filet doré `.is-ruled`, sa couleur `.is-tinted`, la carte qu’on clique `.is-link`, son titre `.ct`, `.card-title` (un lien dedans garde l’allure du titre), `.card-meta`, la carte pliée `.is-folded`, la photo de couverture (`.has-cover`, `.card-cover`, `.card-body`), `.is-small`, `.grid-cards` |
 | `avatar.css` | le logo à initiale (`ds.avatar`) et ce que l’adresse désigne (`ds.seek`) |
 | `msg.css` | le message durable, avec son icône, son ton et son action |
 | `toast.css` | la bulle, en bas à droite ; au-dessus de la barre d’onglets sur téléphone, de sa largeur (`--tabbar-w`) |
@@ -111,13 +111,13 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 | `sitebase.css` | la base d’une page, l’écran de chargement (`.page-loader`), `.landscape-warning`, `.subtitle`, `.golden-divider-after`, `.pill-link` |
 | `sitebar.css` | `.back-button`, la barre qui apparaît après l’en-tête (`.topbar.is-site.sticky-nav`), le menu du téléphone (`.mobile-menu`…) |
 | `banners.css` | les bandeaux du pied des pages : réseaux (`.social-banner`), newsletter (`.signup-banner`) |
-| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, tarifs, réservation, FAQ, galeries |
+| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, réservation (avec l’accompagnant), FAQ, galeries |
 | `home.css` | l’accueil (`<body class="home">`), qui défile écran par écran |
-| `eventslist.css` | la liste des événements, en cartes à couverture |
+| `eventslist.css` | la liste des événements, en cartes à couverture ; le pied d’une carte, son bouton à droite, se cale en bas de la carte |
 | `newsletter.css` | la page de la newsletter |
 | `testimonials.css` | le bandeau des témoignages, chacun dans une carte |
 | `sitetext.css` | le texte courant justifié sur téléphone, sans couper un mot |
 
 * L’écran de chargement s’ôte par `window.hideLoader()`, au plus tard après 5 s.
 * L’invite à redresser un téléphone couché paraît quand `window.dsLandscapeWarning` est vrai.
-* Une page d’événement peut prendre deux prix côte à côte (`.price-display.is-pair`), `.section-subtitle`, `.info-box.is-left`, `.gallery-grid-duo`.
+* Une page d’événement peut prendre `.section-subtitle`, `.info-box.is-left`, `.gallery-grid-duo`. Elle n’a plus de prix (6.0.0).

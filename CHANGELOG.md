@@ -1,5 +1,13 @@
 # Changelog
 
+## 6.0.0 · 25 novembre 2026
+
+- Le site n’affiche plus aucun prix : on écrit à Alexis pour l’avoir. Le rôle du prix (`--type-price-…`) part, il reste quinze rôles du texte ; `checks/roles.js` les compte. Partent aussi les pièces de la section des prix d’une page d’événement, que plus rien n’utilise : `.pricing-section`, `.pricing-box`, `.pricing-header`, `.price-display` (et `.is-pair`, `.price-option`, `.price-divider`, `.price-label`), `.pricing-includes`, `.includes-title`, `.includes-grid`, `.include-item`, `.include-icon`, `.pricing-note`, et le prix d’une carte d’événement (`.event-card-price`). Une appli qui s’en servirait doit les retirer avant de passer à 6.0.0 ; aucune des quatre ne s’en sert.
+- L’accompagnant (`.companion-info`) passe dans la section de réservation, juste avant le paiement, avec le même cadre.
+- Le pied d’une carte d’événement (`.event-card-footer`) se cale en bas de la carte, son bouton à droite : deux cartes côte à côte finissent sur la même ligne, quelle que soit la longueur de leur texte. Sur un téléphone, le bouton garde toute la largeur.
+- Le titre d’une carte (`.card-title`) peut être un lien, vers là où mène sa photo : il garde l’allure du titre, sans couleur ni soulignement de lien.
+- La vitrine suit : plus de prix ni de section des prix sur ses pages du site, l’accompagnant dans la réservation, les titres des cartes d’événement en liens.
+
 ## 5.21.0 · 25 novembre 2026
 
 - Un film à la place de la photo d’une couverture : `<video class="hero-img" autoplay muted loop playsinline>`, sa source donnée pour un ordinateur seulement (`media="(min-width: 769px) and (prefers-reduced-motion: no-preference)"`). Un téléphone, et qui demande moins de mouvement, ne chargent rien et gardent la photo de la page (`--hero-photo`) ; le film est caché pour eux.
