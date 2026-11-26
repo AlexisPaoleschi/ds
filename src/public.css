@@ -8,6 +8,9 @@
   .badge.is-bad { color: var(--panel); background: var(--bad); }
   /* what is not open yet: a quiet word on a faint gold, inside a gold line */
   .badge.is-soft { color: var(--dim); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
+  /* what is over (6.7.0: a workshop that has ended), readable on a photo as on a page: the ink, solid, under the panel's
+     light (white on black in vitrine, the night on the mist in atelier) */
+  .badge.is-done { color: var(--panel); background: var(--ink); }
   .section-head { text-align: center; }
   .section-head h2 { position: relative; margin: 0 0 var(--s-32); padding-bottom: var(--s-24); color: var(--ink); text-wrap: balance;
     font: var(--type-display-weight) var(--type-display-size)/var(--title-lh) var(--type-display-font); letter-spacing: var(--type-display-ls); text-transform: var(--type-display-case); }

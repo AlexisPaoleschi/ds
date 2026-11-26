@@ -1,4 +1,4 @@
-/* ds 6.6.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1706,6 +1706,9 @@
   .badge.is-bad { color: var(--panel); background: var(--bad); }
   /* what is not open yet: a quiet word on a faint gold, inside a gold line */
   .badge.is-soft { color: var(--dim); background: var(--accent-soft); box-shadow: inset 0 0 0 1px var(--accent-line); }
+  /* what is over (6.7.0: a workshop that has ended), readable on a photo as on a page: the ink, solid, under the panel's
+     light (white on black in vitrine, the night on the mist in atelier) */
+  .badge.is-done { color: var(--panel); background: var(--ink); }
   .section-head { text-align: center; }
   .section-head h2 { position: relative; margin: 0 0 var(--s-32); padding-bottom: var(--s-24); color: var(--ink); text-wrap: balance;
     font: var(--type-display-weight) var(--type-display-size)/var(--title-lh) var(--type-display-font); letter-spacing: var(--type-display-ls); text-transform: var(--type-display-case); }

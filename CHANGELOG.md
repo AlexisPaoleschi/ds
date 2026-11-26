@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.7.0 · 26 novembre 2026
+
+- Une pastille pour ce qui est fini : `.badge.is-done`, à l'encre pleine sous la lumière du panneau (blanc sur noir en Vitrine). Elle se lit sur une photo comme sur une page, là où la pastille pâle (`.is-soft`) disparaît sur une photo. La carte d'un workshop terminé, sur la liste des événements du site, dit « Ended » avec elle. La page d'accueil de la vitrine la montre à côté des trois autres.
+
 ## 6.6.1 · 26 novembre 2026
 
 - La demande d'inscription, quand elle finit la section de réservation, ne garde plus de marge sous elle : seul l'espace de la section reste (80px au lieu de 128 sur un ordinateur), comme pour les cartes email et WhatsApp en 6.5.0.

@@ -73,7 +73,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 
 | Fichier | Ce qu’il dessine |
 |:--|:--|
-| `public.css` | la pastille (`.badge`), l’en-tête de section (`.section-head`, `.section-sub`), le pied de page (`.site-footer`), qui reste en bas d’une page courte ; un film cadré comme une photo (`.video-frame`) |
+| `public.css` | la pastille (`.badge`, rouge pour complet `.is-bad`, pâle pour bientôt `.is-soft`, à l’encre pour terminé `.is-done`), l’en-tête de section (`.section-head`, `.section-sub`), le pied de page (`.site-footer`), qui reste en bas d’une page courte ; un film cadré comme une photo (`.video-frame`) |
 | `steps.css` | les étapes (`.steps`, `.steps-dot`, `.steps-title`, `.steps-text`) : numérotées par la liste, un picto dans un anneau, un trait d’anneau en anneau, l’une sous l’autre sur téléphone ; ce qu’il faut savoir avant de demander (`.key-facts`, `.key-facts-item`, `.key-facts-title`, `.key-facts-text`), deux côte à côte sur un bandeau doré clair, et le plus important sur toute sa largeur au-dessus (`.key-facts-item.is-wide`) ; un bandeau à part, sans l’or, dans un trait fin (`.key-facts.is-outline`) |
 | `hero.css` | le bandeau photo (`.hero`) : `.is-full`, `.is-band`, `.is-short`, `.is-bottom`, `.is-parallax` ; ses tailles en jetons `--hero-*` ; un film à la place de la photo (`video.hero-img`), sur ordinateur seulement |
 | `topbar.css` | la barre du haut (`.topbar`, `.topbar-in`, `.topbar-brand`, `.topbar-nav`, `.topbar-link`, `.topbar-icon`), `.is-site`, `.has-back` |
