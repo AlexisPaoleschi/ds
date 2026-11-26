@@ -1,5 +1,16 @@
 # Changelog
 
+## 6.4.0 · 26 novembre 2026
+
+- Un nombre et ses mots s'accordent partout, en français (0 et 1 au singulier) comme en anglais (1 seul au singulier) :
+  - les phrases que lit un lecteur d'écran sous un graphique : « 1 barre », « 1 période », « 0 jour avec au moins 1 », « 1 valeur », « en 1 part » (« 1 bar », « 1 day »…) ;
+  - la question de `ds.openAll` pour un seul onglet : « Ouvrir 1 onglet ? », son bouton « Ouvrir » ;
+  - la barre d'une sélection, en anglais à 0 : « 0 rows selected » ;
+  - `ds.every(60)` : « toutes les minutes » au lieu de « toutes les 1 min » ;
+  - `ds.duration` en anglais pour un jour et demi : « 1.5 days ».
+- `ds.fields` : l'unité d'un champ peut être une paire, `["jour", "jours"]`, qui s'accorde avec son chiffre : « Par défaut 1 jour », et à côté du champ avec ce qu'on tape. Un seul mot (« min », « % ») reste écrit tel quel. Les réglages de la vitrine le montrent.
+- La vitrine suit : ses pages de Selecta n'écrivent plus de « (s) » (« 9 photos ajoutées · 1 retirée »), la démo de Bank dit « Courses pour 1 opération ».
+
 ## 6.3.0 · 25 novembre 2026
 
 - Les étapes (`.steps`, dans `src/steps.css`) : comment se passe une chose, une étape après l’autre. Une liste numérotée (`<ol>`), chaque étape avec son picto dans un fin anneau (`.steps-dot`), son numéro (01, 02, 03, écrit par la liste au-dessus du titre), son titre (`.steps-title`) et ses mots (`.steps-text`). Côte à côte, un trait relie les anneaux ; sur un téléphone, elles passent l’une sous l’autre, les anneaux à gauche reliés de haut en bas.

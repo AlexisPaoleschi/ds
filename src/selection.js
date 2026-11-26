@@ -12,8 +12,9 @@
   "use strict";
   var ds = window.ds, _ = ds._, find = _.find;
   var WORDS = _.table({
-    fr: { picked: function (n) { return n + (n > 1 ? " lignes choisies" : " ligne choisie"); } },
-    en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
+    // written at 0 too, while the bar is hidden: « 0 ligne choisie », « 0 rows selected »
+    fr: { picked: function (n) { return ds.count(n, "ligne choisie", "lignes choisies"); } },
+    en: { picked: function (n) { return ds.count(n, "row selected", "rows selected"); } }
   });
   function words() { return _.words(WORDS); }
   function selection(holder, o) {

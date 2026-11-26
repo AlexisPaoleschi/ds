@@ -20,7 +20,7 @@
     var ops = col.querySelector('[data-b="ops"]'), table = ops.querySelector("table.tbl");
     // the table: sorted by its titles, or by the pill on a phone; a box per row, the bar over the list
     ds.sortable(table, { by: "date", up: false, menu: ops.querySelector('[data-b="sortmenu"]') });
-    var sel = ds.selection(ops, { count: function (k) { return k + (k > 1 ? " opérations choisies" : " opération choisie"); },
+    var sel = ds.selection(ops, { count: function (k) { return ds.count(k, "opération choisie", "opérations choisies"); },
       // what the rows picked add up to, from their amounts
       sum: function (keys) {
         var total = keys.reduce(function (a, k) { var td = ops.querySelector('[data-key="' + k + '"] td.is-num'); return a + (td ? +td.getAttribute("data-value") : 0); }, 0);
@@ -29,12 +29,13 @@
     sel.set("op1", true);
     ops.querySelector('[data-b="bulkcat"]').addEventListener("change", function (e) {
       if (!e.target.value) return;
-      ds.toast({ type: "good", text: e.target.value + " pour " + sel.keys().length + " opérations" });
+      ds.toast({ type: "good", text: e.target.value + " pour " + ds.count(sel.keys().length, "opération") });
       e.target.value = "";
       sel.clear();
     });
     ops.querySelector('[data-b="bulkname"]').addEventListener("click", function () {
-      ds.confirm({ title: "Nom à donner aux " + sel.keys().length + " opérations", text: "Vide : nom automatique.", value: "", ok: "Renommer" });
+      var n = sel.keys().length;
+      ds.confirm({ title: "Nom à donner " + ds.plural(n, "à l’opération", "aux " + n + " opérations"), text: "Vide : nom automatique.", value: "", ok: "Renommer" });
     });
     // a row opens its sheet
     var sheetEl = ops.querySelector('[data-b="sheet"]'), sheet = ds.sheet(sheetEl), title = "b-sheet-t-" + n;

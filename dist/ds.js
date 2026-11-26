@@ -1,4 +1,4 @@
-/* ds 6.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -914,7 +914,7 @@
    ds.plural(n, one, many) the word for n (« opération », « opérations »; many is one + « s » when not given);
    ds.count(n, one, many) the figure and its word (« 3 opérations »); ds.list(items, {or}) « Léa, Irina et Zoé »;
    ds.duration(days) « 3 jours », « 2 mois », « 1 an et 3 mois »; ds.every(seconds) « toutes les heures », « toutes les
-   2h », « toutes les 30 min »; ds.since(t) the time gone by, « 3 min », « 2h05 », "" just now, null past six hours;
+   2h », « toutes les 30 min », « toutes les minutes »; ds.since(t) the time gone by, « 3 min », « 2h05 », "" just now, null past six hours;
    ds.date(key, "relative") « aujourd’hui », « demain », « hier », « dans 3 jours », « il y a 3 jours »;
    ds.date(key, "heading") a day over its rows, « Aujourd’hui », « Hier », « Vendredi 6 novembre » (its year when not this one).
    ds.store.get(key, fallback) and ds.store.set(key, value): a choice kept on the device as JSON (null takes it away); a
@@ -956,20 +956,23 @@
     var last = items.pop();
     return items.join(", ") + (o && o.or ? (english() ? " or " : " ou ") : (english() ? " and " : " et ")) + last;
   }
+  // each word by the rule above: a day and a half is still « jour » in French, already « days » in English
   function duration(days) {
     var en = english();
     if (days < 1) return en ? "less than a day" : "moins d'un jour";
-    if (days < 31) return days + (en ? (days > 1 ? " days" : " day") : (days > 1 ? " jours" : " jour"));
+    if (days < 31) return days + " " + plural(days, en ? "day" : "jour");
     var mo = Math.round(days / 30.44);
-    if (mo < 12) return mo + (en ? (mo > 1 ? " months" : " month") : " mois");
+    if (mo < 12) return mo + " " + (en ? plural(mo, "month") : "mois");
     var y = Math.floor(mo / 12), r = mo % 12;
-    if (en) return y + (y > 1 ? " years" : " year") + (r ? " and " + r + (r > 1 ? " months" : " month") : "");
-    return y + (y > 1 ? " ans" : " an") + (r ? " et " + r + " mois" : "");
+    if (en) return y + " " + plural(y, "year") + (r ? " and " + r + " " + plural(r, "month") : "");
+    return y + " " + plural(y, "an") + (r ? " et " + r + " mois" : "");
   }
   function every(sec) {
     var m = Math.round(sec / 60), en = english();
     if (m >= 1440 && m % 1440 === 0) return m === 1440 ? (en ? "every day" : "tous les jours") : (en ? "every " + m / 1440 + " days" : "tous les " + m / 1440 + " jours");
     if (m >= 60 && m % 60 === 0) return m === 60 ? (en ? "every hour" : "toutes les heures") : (en ? "every " + m / 60 + "h" : "toutes les " + m / 60 + "h");
+    // one minute is every minute, never « toutes les 1 min »
+    if (m === 1) return en ? "every minute" : "toutes les minutes";
     return (en ? "every " : "toutes les ") + m + " min";
   }
   function since(t) {
@@ -1504,14 +1507,15 @@
       redoing: "Rétablissement…", undone: "annulé", redone: "rétabli", undoFailed: "Annulation impossible : réessaie",
       redoFailed: "Rétablissement impossible : réessaie", notSaved: "Pas enregistré : réessaie.", copied: "Copié",
       notCopied: "Copie impossible : sélectionne le texte et copie-le toi-même.",
-      tabs: function (n) { return "Ouvrir " + n + " onglets ?"; }, openThem: function (n) { return "Ouvrir les " + n; },
+      // asked from one tab on when ask is 0: « Ouvrir 1 onglet ? », its button « Ouvrir »
+      tabs: function (n) { return "Ouvrir " + ds.count(n, "onglet") + " ?"; }, openThem: function (n) { return ds.plural(n, "Ouvrir", "Ouvrir les " + n); },
       blocked: function (n) { return "Le navigateur a bloqué " + (n > 1 ? n + " onglets" : "un onglet") +
         " : autorise les fenêtres pop-up pour ce site (l’icône au bout de la barre d’adresse), puis clique encore."; } },
     en: { undo: "Undo", redo: "Redo", noUndo: "Nothing to undo", noRedo: "Nothing to redo", undoing: "Undoing…",
       redoing: "Redoing…", undone: "undone", redone: "redone", undoFailed: "Could not undo: try again",
       redoFailed: "Could not redo: try again", notSaved: "Not saved: try again.", copied: "Copied",
       notCopied: "Could not copy: select the text and copy it yourself.",
-      tabs: function (n) { return "Open " + n + " tabs?"; }, openThem: function (n) { return "Open all " + n; },
+      tabs: function (n) { return "Open " + ds.count(n, "tab") + "?"; }, openThem: function (n) { return ds.plural(n, "Open", "Open all " + n); },
       blocked: function (n) { return "The browser blocked " + (n > 1 ? n + " tabs" : "a tab") +
         ": allow pop-up windows for this site (the icon at the end of the address bar), then click again."; } }
   });
@@ -1849,8 +1853,9 @@
   "use strict";
   var ds = window.ds, _ = ds._, find = _.find;
   var WORDS = _.table({
-    fr: { picked: function (n) { return n + (n > 1 ? " lignes choisies" : " ligne choisie"); } },
-    en: { picked: function (n) { return n + (n > 1 ? " rows selected" : " row selected"); } }
+    // written at 0 too, while the bar is hidden: « 0 ligne choisie », « 0 rows selected »
+    fr: { picked: function (n) { return ds.count(n, "ligne choisie", "lignes choisies"); } },
+    en: { picked: function (n) { return ds.count(n, "row selected", "rows selected"); } }
   });
   function words() { return _.words(WORDS); }
   function selection(holder, o) {
@@ -2252,7 +2257,8 @@
      a new tab, « ↗ », the app's own page « → »); ds.conn.html for a page that writes strings (name and details as HTML).
      ds.fields(holder, groups, {onChange}): number fields by group, [{group, key, label, help, value, default, min, max,
      unit}]: changed (is-changed) or out of bounds (aria-invalid) as typed; onChange({edited, wrong}) after each key;
-     gives back {edited(), wrong()}. */
+     gives back {edited(), wrong()}. unit: a word written as given (« min », « % »), or [one, many] (["jour", "jours"]),
+     which agrees with its figure: « Par défaut 1 jour », and beside the field with what is typed. */
   function settingSwitch(sw, save) {
     var h = window.ds.h, input = h("input", { type: "checkbox", role: "switch", "aria-label": sw.label });
     input.checked = !!sw.on;
@@ -2295,21 +2301,26 @@
     (list || []).forEach(function (f) { (groups[f.group || ""] = groups[f.group || ""] || []).push(f); });
     function wrong() { return holder ? holder.querySelectorAll('input[aria-invalid="true"]').length : 0; }
     function tell() { if (o.onChange) o.onChange({ edited: Object.assign({}, edited), wrong: wrong() }); }
+    // the unit for a figure: [one, many] by ds.plural (« 1 jour », « 30 jours »), a single word as the page wrote it
+    function unitOf(f, n) { return Array.isArray(f.unit) ? window.ds.plural(n, f.unit[0], f.unit[1]) : f.unit; }
     var out = Object.keys(groups).map(function (g) {
       return h("div", { class: "group" }, [g ? h("h3", { text: g }) : null].concat(groups[g].map(function (f) {
         var id = "f-" + f.key, input = h("input", { id: id, type: "number", inputmode: "numeric", min: f.min, max: f.max, step: 1, value: f.value });
+        var unit = f.unit ? h("span", { class: "unit", text: unitOf(f, f.value) }) : null;
         input.addEventListener("input", function () {
           var v = input.value.trim();
           if (v === "" || +v === f.value) delete edited[f.key]; else edited[f.key] = v;
           var bad = v !== "" && (!/^-?\d+$/.test(v) || (f.min != null && +v < f.min) || (f.max != null && +v > f.max));
           if (bad) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
           input.classList.toggle("is-changed", f.key in edited && !bad);
+          // the word beside the field follows the figure typed (the value kept while the field is empty)
+          if (unit) unit.textContent = unitOf(f, v !== "" && !isNaN(+v) ? +v : f.value);
           tell();
         });
         return h("div", { class: "field" }, [h("label", { class: "lab", for: id, text: f.label }),
-          h("div", { class: "help" }, [f.help ? f.help + " " : "", f.default != null ? h("span", { class: "def", text: (_.english() ? "Default " : "Par défaut ") + f.default + (f.unit ? " " + f.unit : "") +
+          h("div", { class: "help" }, [f.help ? f.help + " " : "", f.default != null ? h("span", { class: "def", text: (_.english() ? "Default " : "Par défaut ") + f.default + (f.unit ? " " + unitOf(f, f.default) : "") +
             (f.min != null && f.max != null ? (_.english() ? ", between " : ", entre ") + f.min + (_.english() ? " and " : " et ") + f.max : "") + "." }) : null]),
-          h("div", { class: "inp" }, [input, f.unit ? h("span", { class: "unit", text: f.unit }) : null])]);
+          h("div", { class: "inp" }, [input, unit])]);
       })));
     });
     if (holder) { holder.textContent = ""; out.forEach(function (x) { holder.append(x); }); }

@@ -12,7 +12,8 @@
      a new tab, « ↗ », the app's own page « → »); ds.conn.html for a page that writes strings (name and details as HTML).
      ds.fields(holder, groups, {onChange}): number fields by group, [{group, key, label, help, value, default, min, max,
      unit}]: changed (is-changed) or out of bounds (aria-invalid) as typed; onChange({edited, wrong}) after each key;
-     gives back {edited(), wrong()}. */
+     gives back {edited(), wrong()}. unit: a word written as given (« min », « % »), or [one, many] (["jour", "jours"]),
+     which agrees with its figure: « Par défaut 1 jour », and beside the field with what is typed. */
   function settingSwitch(sw, save) {
     var h = window.ds.h, input = h("input", { type: "checkbox", role: "switch", "aria-label": sw.label });
     input.checked = !!sw.on;
@@ -55,21 +56,26 @@
     (list || []).forEach(function (f) { (groups[f.group || ""] = groups[f.group || ""] || []).push(f); });
     function wrong() { return holder ? holder.querySelectorAll('input[aria-invalid="true"]').length : 0; }
     function tell() { if (o.onChange) o.onChange({ edited: Object.assign({}, edited), wrong: wrong() }); }
+    // the unit for a figure: [one, many] by ds.plural (« 1 jour », « 30 jours »), a single word as the page wrote it
+    function unitOf(f, n) { return Array.isArray(f.unit) ? window.ds.plural(n, f.unit[0], f.unit[1]) : f.unit; }
     var out = Object.keys(groups).map(function (g) {
       return h("div", { class: "group" }, [g ? h("h3", { text: g }) : null].concat(groups[g].map(function (f) {
         var id = "f-" + f.key, input = h("input", { id: id, type: "number", inputmode: "numeric", min: f.min, max: f.max, step: 1, value: f.value });
+        var unit = f.unit ? h("span", { class: "unit", text: unitOf(f, f.value) }) : null;
         input.addEventListener("input", function () {
           var v = input.value.trim();
           if (v === "" || +v === f.value) delete edited[f.key]; else edited[f.key] = v;
           var bad = v !== "" && (!/^-?\d+$/.test(v) || (f.min != null && +v < f.min) || (f.max != null && +v > f.max));
           if (bad) input.setAttribute("aria-invalid", "true"); else input.removeAttribute("aria-invalid");
           input.classList.toggle("is-changed", f.key in edited && !bad);
+          // the word beside the field follows the figure typed (the value kept while the field is empty)
+          if (unit) unit.textContent = unitOf(f, v !== "" && !isNaN(+v) ? +v : f.value);
           tell();
         });
         return h("div", { class: "field" }, [h("label", { class: "lab", for: id, text: f.label }),
-          h("div", { class: "help" }, [f.help ? f.help + " " : "", f.default != null ? h("span", { class: "def", text: (_.english() ? "Default " : "Par défaut ") + f.default + (f.unit ? " " + f.unit : "") +
+          h("div", { class: "help" }, [f.help ? f.help + " " : "", f.default != null ? h("span", { class: "def", text: (_.english() ? "Default " : "Par défaut ") + f.default + (f.unit ? " " + unitOf(f, f.default) : "") +
             (f.min != null && f.max != null ? (_.english() ? ", between " : ", entre ") + f.min + (_.english() ? " and " : " et ") + f.max : "") + "." }) : null]),
-          h("div", { class: "inp" }, [input, f.unit ? h("span", { class: "unit", text: f.unit }) : null])]);
+          h("div", { class: "inp" }, [input, unit])]);
       })));
     });
     if (holder) { holder.textContent = ""; out.forEach(function (x) { holder.append(x); }); }

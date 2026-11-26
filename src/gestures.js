@@ -35,14 +35,15 @@
       redoing: "Rétablissement…", undone: "annulé", redone: "rétabli", undoFailed: "Annulation impossible : réessaie",
       redoFailed: "Rétablissement impossible : réessaie", notSaved: "Pas enregistré : réessaie.", copied: "Copié",
       notCopied: "Copie impossible : sélectionne le texte et copie-le toi-même.",
-      tabs: function (n) { return "Ouvrir " + n + " onglets ?"; }, openThem: function (n) { return "Ouvrir les " + n; },
+      // asked from one tab on when ask is 0: « Ouvrir 1 onglet ? », its button « Ouvrir »
+      tabs: function (n) { return "Ouvrir " + ds.count(n, "onglet") + " ?"; }, openThem: function (n) { return ds.plural(n, "Ouvrir", "Ouvrir les " + n); },
       blocked: function (n) { return "Le navigateur a bloqué " + (n > 1 ? n + " onglets" : "un onglet") +
         " : autorise les fenêtres pop-up pour ce site (l’icône au bout de la barre d’adresse), puis clique encore."; } },
     en: { undo: "Undo", redo: "Redo", noUndo: "Nothing to undo", noRedo: "Nothing to redo", undoing: "Undoing…",
       redoing: "Redoing…", undone: "undone", redone: "redone", undoFailed: "Could not undo: try again",
       redoFailed: "Could not redo: try again", notSaved: "Not saved: try again.", copied: "Copied",
       notCopied: "Could not copy: select the text and copy it yourself.",
-      tabs: function (n) { return "Open " + n + " tabs?"; }, openThem: function (n) { return "Open all " + n; },
+      tabs: function (n) { return "Open " + ds.count(n, "tab") + "?"; }, openThem: function (n) { return ds.plural(n, "Open", "Open all " + n); },
       blocked: function (n) { return "The browser blocked " + (n > 1 ? n + " tabs" : "a tab") +
         ": allow pop-up windows for this site (the icon at the end of the address bar), then click again."; } }
   });

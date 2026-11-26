@@ -127,17 +127,17 @@ async function stays(p, key, n, sel) {
   })));
   const jobs = await p.evaluate(() => [...document.querySelectorAll('#jobs .sync-dot')].map(d => [d.getAttribute('role'), d.getAttribute('aria-label'), d.getAttribute('aria-hidden')].join('|')));
   console.log('     ', JSON.stringify(said));
-  assert(said.bars[0] === 'img' && said.bars[1] === '3 barres, de août 2026 à oct 2026 : la plus haute 2,4k€ (oct 2026), la plus basse 300€ (sept 2026), moyenne 1,3k€.'
-    && said.pairs[0] === 'img' && said.pairs[1] === '2 périodes, de sept 2026 à oct 2026 : Entrées 6\u00a0200€, Sorties 4\u00a0600€.'
-    && said.heat[0] === 'img' && /^Du .+ au 12 novembre 2026 : 3 jours avec au moins 1, dont 2 avec 2 et plus ; le plus chargé, le 5 novembre 2026 \(3\)\.$/.test(said.heat[1])
+  assert(said.bars[0] === 'img' && said.bars[1] === '3\u00a0barres, de août 2026 à oct 2026 : la plus haute 2,4k€ (oct 2026), la plus basse 300€ (sept 2026), moyenne 1,3k€.'
+    && said.pairs[0] === 'img' && said.pairs[1] === '2\u00a0périodes, de sept 2026 à oct 2026 : Entrées 6\u00a0200€, Sorties 4\u00a0600€.'
+    && said.heat[0] === 'img' && /^Du .+ au 12 novembre 2026 : 3\u00a0jours avec au moins 1, dont 2 avec 2 et plus ; le plus chargé, le 5 novembre 2026 \(3\)\.$/.test(said.heat[1])
     && said.line[0] === 'img' && /^Courbe du 1er oct\. au 30 oct\. : de 1 200 à 1 258, au plus haut 1 500, au plus bas 1 200\.$/.test(said.line[1])
-    && said.spark[0] === 'img' && said.spark[2] === null && said.spark[1] === '4 valeurs, de 120 vues à 1 400 vues, la dernière 600 vues.'
-    && said.donut[0] === 'group' && said.donut[1] === 'Total 1 262,30€ en 2 parts : Logement 67 % (850,00€), Courses 33 % (412,30€).',
+    && said.spark[0] === 'img' && said.spark[2] === null && said.spark[1] === '4\u00a0valeurs, de 120 vues à 1 400 vues, la dernière 600 vues.'
+    && said.donut[0] === 'group' && said.donut[1] === 'Total 1 262,30€ en 2\u00a0parts : Logement 67 % (850,00€), Courses 33 % (412,30€).',
     'chaque graphique se dit en une phrase de ses chiffres : barres, paires, chaleur, courbe, petites barres, donut');
   assert(JSON.stringify(jobs) === JSON.stringify(['img|dernier passage réussi|', 'img|dernier passage en erreur|', 'img|en cours|', 'img|pas encore passé|']),
     'une synchro dit son état en mots, pas seulement par la couleur de sa pastille ' + JSON.stringify(jobs));
   const own = await p.evaluate(() => ds.chart.bars(null, [{ key: 'a', value: 1 }, { key: 'b', value: 2 }], { summary: t => 'Revenus. ' + t }).getAttribute('aria-label'));
-  assert(/^Revenus\. 2 barres/.test(own), 'summary : la page dit le graphique avec ses mots ' + JSON.stringify(own));
+  assert(/^Revenus\. 2\u00a0barres/.test(own), 'summary : la page dit le graphique avec ses mots ' + JSON.stringify(own));
 
   // on a phone: the drawer, opened with Enter or Space on its tab, covers the page; Tab stays in it, Escape closes it
   // and gives the focus back to the tab

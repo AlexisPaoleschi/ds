@@ -6,7 +6,7 @@
    ds.plural(n, one, many) the word for n (« opération », « opérations »; many is one + « s » when not given);
    ds.count(n, one, many) the figure and its word (« 3 opérations »); ds.list(items, {or}) « Léa, Irina et Zoé »;
    ds.duration(days) « 3 jours », « 2 mois », « 1 an et 3 mois »; ds.every(seconds) « toutes les heures », « toutes les
-   2h », « toutes les 30 min »; ds.since(t) the time gone by, « 3 min », « 2h05 », "" just now, null past six hours;
+   2h », « toutes les 30 min », « toutes les minutes »; ds.since(t) the time gone by, « 3 min », « 2h05 », "" just now, null past six hours;
    ds.date(key, "relative") « aujourd’hui », « demain », « hier », « dans 3 jours », « il y a 3 jours »;
    ds.date(key, "heading") a day over its rows, « Aujourd’hui », « Hier », « Vendredi 6 novembre » (its year when not this one).
    ds.store.get(key, fallback) and ds.store.set(key, value): a choice kept on the device as JSON (null takes it away); a
@@ -48,20 +48,23 @@
     var last = items.pop();
     return items.join(", ") + (o && o.or ? (english() ? " or " : " ou ") : (english() ? " and " : " et ")) + last;
   }
+  // each word by the rule above: a day and a half is still « jour » in French, already « days » in English
   function duration(days) {
     var en = english();
     if (days < 1) return en ? "less than a day" : "moins d'un jour";
-    if (days < 31) return days + (en ? (days > 1 ? " days" : " day") : (days > 1 ? " jours" : " jour"));
+    if (days < 31) return days + " " + plural(days, en ? "day" : "jour");
     var mo = Math.round(days / 30.44);
-    if (mo < 12) return mo + (en ? (mo > 1 ? " months" : " month") : " mois");
+    if (mo < 12) return mo + " " + (en ? plural(mo, "month") : "mois");
     var y = Math.floor(mo / 12), r = mo % 12;
-    if (en) return y + (y > 1 ? " years" : " year") + (r ? " and " + r + (r > 1 ? " months" : " month") : "");
-    return y + (y > 1 ? " ans" : " an") + (r ? " et " + r + " mois" : "");
+    if (en) return y + " " + plural(y, "year") + (r ? " and " + r + " " + plural(r, "month") : "");
+    return y + " " + plural(y, "an") + (r ? " et " + r + " mois" : "");
   }
   function every(sec) {
     var m = Math.round(sec / 60), en = english();
     if (m >= 1440 && m % 1440 === 0) return m === 1440 ? (en ? "every day" : "tous les jours") : (en ? "every " + m / 1440 + " days" : "tous les " + m / 1440 + " jours");
     if (m >= 60 && m % 60 === 0) return m === 60 ? (en ? "every hour" : "toutes les heures") : (en ? "every " + m / 60 + "h" : "toutes les " + m / 60 + "h");
+    // one minute is every minute, never « toutes les 1 min »
+    if (m === 1) return en ? "every minute" : "toutes les minutes";
     return (en ? "every " : "toutes les ") + m + " min";
   }
   function since(t) {

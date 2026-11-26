@@ -41,21 +41,23 @@
   var SVG = "http://www.w3.org/2000/svg";
   var _ = window.ds._, day = window.ds.day, english = _.english, el = _.el, tone = _.tone;
   var at = day.at, addDays = day.add, weekStart = day.weekStart, parisToday = day.today;
+  // a figure and its word, agreeing (« 1 barre », « 0 jour », « 0 days »): ds.count, from ds.js, which this file follows
+  function count(n, one, many) { return window.ds.count(n, one, many); }
   var WORDS = _.table({
     fr: { none: "rien", one: "1", many: function (n) { return n + " et plus"; }, live: "en cours",
           line: function (a) { return "Courbe du " + a.from + " au " + a.to + " : de " + a.first + " à " + a.last + ", au plus haut " + a.hi + ", au plus bas " + a.lo + "."; },
-          bars: function (a) { return a.n + " barres, de " + a.from + " à " + a.to + " : la plus haute " + a.hi + " (" + a.hiAt + "), la plus basse " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", moyenne " + a.avg : "") + "."; },
-          pairs: function (a) { return a.n + " périodes, de " + a.from + " à " + a.to + " : " + a.sums + "."; },
-          heat: function (a) { return "Du " + a.from + " au " + a.to + " : " + a.days + " jours avec au moins " + a.one + (a.many ? ", dont " + a.many + " avec " + a.two + " et plus" : "") + (a.best ? " ; le plus chargé, le " + a.best + " (" + a.bestN + ")" : "") + "."; },
-          spark: function (a) { return a.n + " valeurs, de " + a.lo + " à " + a.hi + ", la dernière " + a.last + "."; },
-          donut: function (a) { return "Total " + a.total + " en " + a.n + " parts : " + a.parts + "."; } },
+          bars: function (a) { return count(a.n, "barre") + ", de " + a.from + " à " + a.to + " : la plus haute " + a.hi + " (" + a.hiAt + "), la plus basse " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", moyenne " + a.avg : "") + "."; },
+          pairs: function (a) { return count(a.n, "période") + ", de " + a.from + " à " + a.to + " : " + a.sums + "."; },
+          heat: function (a) { return "Du " + a.from + " au " + a.to + " : " + count(a.days, "jour") + " avec au moins " + a.one + (a.many ? ", dont " + a.many + " avec " + a.two + " et plus" : "") + (a.best ? " ; le plus chargé, le " + a.best + " (" + a.bestN + ")" : "") + "."; },
+          spark: function (a) { return count(a.n, "valeur") + ", de " + a.lo + " à " + a.hi + ", la dernière " + a.last + "."; },
+          donut: function (a) { return "Total " + a.total + " en " + count(a.n, "part") + " : " + a.parts + "."; } },
     en: { none: "none", one: "1", many: function (n) { return n + " or more"; }, live: "running",
           line: function (a) { return "Curve from " + a.from + " to " + a.to + ": from " + a.first + " to " + a.last + ", highest " + a.hi + ", lowest " + a.lo + "."; },
-          bars: function (a) { return a.n + " bars, from " + a.from + " to " + a.to + ": highest " + a.hi + " (" + a.hiAt + "), lowest " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", average " + a.avg : "") + "."; },
-          pairs: function (a) { return a.n + " periods, from " + a.from + " to " + a.to + ": " + a.sums + "."; },
-          heat: function (a) { return "From " + a.from + " to " + a.to + ": " + a.days + " days with at least " + a.one + (a.many ? ", " + a.many + " of them with " + a.two + " or more" : "") + (a.best ? "; the busiest, " + a.best + " (" + a.bestN + ")" : "") + "."; },
-          spark: function (a) { return a.n + " values, from " + a.lo + " to " + a.hi + ", the last " + a.last + "."; },
-          donut: function (a) { return "Total " + a.total + " in " + a.n + " parts: " + a.parts + "."; } }
+          bars: function (a) { return count(a.n, "bar") + ", from " + a.from + " to " + a.to + ": highest " + a.hi + " (" + a.hiAt + "), lowest " + a.lo + " (" + a.loAt + ")" + (a.avg ? ", average " + a.avg : "") + "."; },
+          pairs: function (a) { return count(a.n, "period") + ", from " + a.from + " to " + a.to + ": " + a.sums + "."; },
+          heat: function (a) { return "From " + a.from + " to " + a.to + ": " + count(a.days, "day") + " with at least " + a.one + (a.many ? ", " + a.many + " of them with " + a.two + " or more" : "") + (a.best ? "; the busiest, " + a.best + " (" + a.bestN + ")" : "") + "."; },
+          spark: function (a) { return count(a.n, "value") + ", from " + a.lo + " to " + a.hi + ", the last " + a.last + "."; },
+          donut: function (a) { return "Total " + a.total + " in " + count(a.n, "part") + ": " + a.parts + "."; } }
   });
   function words() { return _.words(WORDS); }
   function svg(name, attrs) {

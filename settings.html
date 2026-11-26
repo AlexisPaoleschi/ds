@@ -58,10 +58,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var n = Object.keys(typed.edited).length, m = document.getElementById("msg");
     document.getElementById("save").disabled = !n || typed.wrong > 0;
     m.className = "msg" + (cls ? " is-" + cls : typed.wrong ? " is-bad" : "");
-    m.textContent = text || (typed.wrong ? "Une valeur est hors des limites." : n ? ds.count(n, "réglage modifié", "réglages modifiés") + ", pas encore enregistré." : "");
+    m.textContent = text || (typed.wrong ? "Une valeur est hors des limites." : n ? ds.count(n, "réglage modifié", "réglages modifiés") + ", pas encore " + ds.plural(n, "enregistré", "enregistrés") + "." : "");
   }
   ds.fields(document.getElementById("fields"), [
-    { group: "Patreon", key: "stale", label: "Jours avant le rouge", help: "Une modèle pas publiée depuis plus longtemps est en rouge.", value: 21, default: 21, min: 7, max: 90, unit: "jours" },
+    { group: "Patreon", key: "stale", label: "Jours avant le rouge", help: "Une modèle pas publiée depuis plus longtemps est en rouge.", value: 21, default: 21, min: 7, max: 90, unit: ["jour", "jours"] },
     { group: "Patreon", key: "posts", label: "Posts par page", value: 24, default: 24, min: 6, max: 100 },
     { group: "Réseaux", key: "every", label: "Lecture des réseaux", help: "Entre deux passages.", value: 2, default: 2, min: 1, max: 24, unit: "h" }
   ], { onChange: function (st) { typed = st; bar(); } });

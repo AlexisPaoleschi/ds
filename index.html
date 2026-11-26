@@ -44,7 +44,7 @@
   });
   ds.photogrid(pkGrid, { sizes: [140, 190], size: 140, masonry: false });
   ds.selection(pkGrid, { cls: "is-picked" }).set("0", true);
-  ds.dropzone("#pk-drop", { onFiles: files => ds.toast({ type: "info", text: files.length + " fichier(s) déposé(s)" }) });
+  ds.dropzone("#pk-drop", { onFiles: files => ds.toast({ type: "info", text: ds.count(files.length, "fichier déposé", "fichiers déposés") }) });
   const undo = ds.undo({ undo: "#g-undo", redo: "#g-redo", key: "showcase", keys: false, run: (step, redo) => new Promise(ok => setTimeout(ok, 400)) });
   document.querySelector('[data-gestures="change"]').addEventListener("click", () => ds.toast({ key: "showcase", type: "good", text: "Catégorie enregistrée · Boulangerie Paul", action: undo.remember({ label: "Catégorie · Boulangerie Paul" }) }));
   ds.pop("#g-bell", "#g-panel");
