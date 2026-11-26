@@ -156,6 +156,11 @@
      box but its own padding (6.4.1) */
   .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-24) 0; }
   .booking-box > .contact-methods:last-child { margin-bottom: 0; }
+  /* the ways to write, at the foot of a request form (6.6.0): a sentence, then email and WhatsApp as two small pills, in
+     the middle, under a thin line: <div class="contact-links"><p>Prefer to write directly?</p><a class="btn is-pill">…</a>…</div> */
+  .contact-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s-12); padding-top: var(--s-24);
+    border-top: 1px solid var(--line); }
+  .contact-links > p { width: 100%; margin: 0; text-align: center; color: var(--dim); }
   .contact-card { display: block; padding: var(--s-48) var(--s-40); text-align: center; text-decoration: none; background: var(--accent-soft);
     border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }
   .contact-card:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }

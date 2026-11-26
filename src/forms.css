@@ -9,6 +9,13 @@
   .field-group input[type="date"] { max-width: 100%; text-align: left; -webkit-appearance: none; appearance: none; }
   .field-group > .field-note { margin-top: 0; }
   .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
+  /* a form card across its whole width (6.6.0: a workshop's application): its fields two by two, a long text alone on its
+     line, and all that is not a field (the boxes, the button, the line under it, its foot) across the card; the button in
+     the middle, half the card wide. On a phone, one field under the other and the button across, as any form */
+  .card.is-form.is-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md) var(--s-24); max-width: none; }
+  .card.is-form.is-wide > :not(.field-group), .card.is-form.is-wide > .field-group:has(> textarea) { grid-column: 1 / -1; }
+  .card.is-form.is-wide > .btn { justify-self: center; min-width: 50%; }
+  @media (max-width: 768px) { .card.is-form.is-wide { grid-template-columns: minmax(0, 1fr); } .card.is-form.is-wide > .btn { justify-self: stretch; } }
   .field-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
   .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
   .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--type-strong-size); font-family: var(--type-strong-font); font-weight: var(--type-strong-weight); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }

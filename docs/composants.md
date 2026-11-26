@@ -11,7 +11,7 @@ Chaque feuille de style de `src/` et ce qu’elle dessine, rangée comme dans `d
 | `fonts.css` | les polices des deux thèmes, faites par `scripts/fonts.py` |
 | `base.css` | les champs, les cases à cocher et le focus, les mêmes partout ; la ligne sous un champ (`.field-note`, `is-good`, `is-bad`, `is-reserved`) ; l’étoile dorée d’un champ obligatoire (`.field-label.is-required`, ou `<span class="is-required">` dans une `.check`) |
 | `heads.css` | les titres des parties d’une page (`.title-1`, `.title-2`, `.title-3`) ; l’en-tête d’une page (`.page-head`, `.eyebrow`, `.lede`) |
-| `forms.css` | un champ et son étiquette (`.field-group`, `.field-label`), un formulaire en carte (`.card.is-form`), `.field-row`, les cases (`.check`, ses mots dans un `<span>` quand ils portent un lien, sans quoi le lien s’écarte d’eux ; `.check-hint`, `.checks`), `.pager` |
+| `forms.css` | un champ et son étiquette (`.field-group`, `.field-label`), un formulaire en carte (`.card.is-form`), sur toute sa largeur avec ses champs deux par deux (`.is-wide`), `.field-row`, les cases (`.check`, ses mots dans un `<span>` quand ils portent un lien, sans quoi le lien s’écarte d’eux ; `.check-hint`, `.checks`), `.pager` |
 | `page.css` | la page de Bank et Studio : son en-tête et son chargement, sa largeur, la place de la barre d’onglets, ses boutons carrés `.btn.is-icon` |
 
 La palette nomme les banques, les catégories, les réseaux et les agendas : `--c-rouge`, `--c-corail`, `--c-orange`, `--c-ambre`,
@@ -74,7 +74,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 | Fichier | Ce qu’il dessine |
 |:--|:--|
 | `public.css` | la pastille (`.badge`), l’en-tête de section (`.section-head`, `.section-sub`), le pied de page (`.site-footer`), qui reste en bas d’une page courte ; un film cadré comme une photo (`.video-frame`) |
-| `steps.css` | les étapes (`.steps`, `.steps-dot`, `.steps-title`, `.steps-text`) : numérotées par la liste, un picto dans un anneau, un trait d’anneau en anneau, l’une sous l’autre sur téléphone ; ce qu’il faut savoir avant de demander (`.key-facts`, `.key-facts-item`, `.key-facts-title`, `.key-facts-text`), deux côte à côte sur un bandeau doré clair, et le plus important sur toute sa largeur au-dessus (`.key-facts-item.is-wide`) |
+| `steps.css` | les étapes (`.steps`, `.steps-dot`, `.steps-title`, `.steps-text`) : numérotées par la liste, un picto dans un anneau, un trait d’anneau en anneau, l’une sous l’autre sur téléphone ; ce qu’il faut savoir avant de demander (`.key-facts`, `.key-facts-item`, `.key-facts-title`, `.key-facts-text`), deux côte à côte sur un bandeau doré clair, et le plus important sur toute sa largeur au-dessus (`.key-facts-item.is-wide`) ; un bandeau à part, sans l’or, dans un trait fin (`.key-facts.is-outline`) |
 | `hero.css` | le bandeau photo (`.hero`) : `.is-full`, `.is-band`, `.is-short`, `.is-bottom`, `.is-parallax` ; ses tailles en jetons `--hero-*` ; un film à la place de la photo (`video.hero-img`), sur ordinateur seulement |
 | `topbar.css` | la barre du haut (`.topbar`, `.topbar-in`, `.topbar-brand`, `.topbar-nav`, `.topbar-link`, `.topbar-icon`), `.is-site`, `.has-back` |
 | `backlink.css` | le lien retour (`.back-link`), `.on-photo` sur une photo |
@@ -112,7 +112,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 | `sitebase.css` | la base d’une page, l’écran de chargement (`.page-loader`), `.landscape-warning`, `.subtitle`, `.golden-divider-after`, `.pill-link` |
 | `sitebar.css` | `.back-button`, la barre qui apparaît après l’en-tête (`.topbar.is-site.sticky-nav`), le menu du téléphone (`.mobile-menu`…) |
 | `banners.css` | les bandeaux du pied des pages : réseaux (`.social-banner`), newsletter (`.signup-banner`) |
-| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, réservation (son formulaire centré, l’accompagnant), FAQ, galeries |
+| `event.css` | les blocs d’une page d’événement : sections, modèles, lieu, accès, programme, réservation (son formulaire, l’accompagnant, les façons d’écrire en pastilles au pied du formulaire, `.contact-links`), FAQ, galeries |
 | `home.css` | l’accueil (`<body class="home">`), qui défile écran par écran |
 | `eventslist.css` | la liste des événements, en cartes à couverture ; le pied d’une carte, son bouton à droite, se cale en bas de la carte |
 | `newsletter.css` | la page de la newsletter |

@@ -1,4 +1,4 @@
-/* ds 6.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -549,6 +549,13 @@
   .field-group input[type="date"] { max-width: 100%; text-align: left; -webkit-appearance: none; appearance: none; }
   .field-group > .field-note { margin-top: 0; }
   .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
+  /* a form card across its whole width (6.6.0: a workshop's application): its fields two by two, a long text alone on its
+     line, and all that is not a field (the boxes, the button, the line under it, its foot) across the card; the button in
+     the middle, half the card wide. On a phone, one field under the other and the button across, as any form */
+  .card.is-form.is-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md) var(--s-24); max-width: none; }
+  .card.is-form.is-wide > :not(.field-group), .card.is-form.is-wide > .field-group:has(> textarea) { grid-column: 1 / -1; }
+  .card.is-form.is-wide > .btn { justify-self: center; min-width: 50%; }
+  @media (max-width: 768px) { .card.is-form.is-wide { grid-template-columns: minmax(0, 1fr); } .card.is-form.is-wide > .btn { justify-self: stretch; } }
   .field-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); }
   .field-row > :is(input, select, textarea) { flex: 1 1 12em; min-width: 0; }
   .check { display: flex; align-items: center; gap: var(--s-8); cursor: pointer; font-size: var(--type-strong-size); font-family: var(--type-strong-font); font-weight: var(--type-strong-weight); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
@@ -1758,11 +1765,17 @@
    the title: <div class="key-facts"><div class="key-facts-item"><svg aria-hidden="true" class="ico">…</svg>
    <h4 class="key-facts-title">…</h4><p class="key-facts-text">…</p></div>…</div>
    The one that matters most can take the band's whole width, above the others and a thin line (.key-facts-item.is-wide,
-   6.5.0: a workshop's price on request). On a phone, one under the other, the words across the band's width under the
+   6.5.0: a workshop's price on request), as does one alone. A fact apart from the others goes in a band of its own,
+   without the gold, inside a thin line (.key-facts.is-outline, 6.6.0: the companion, above the price and the payment), a
+   band right under another one close to it. On a phone, one under the other, the words across the band's width under the
    picto and the title. */
   .key-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-40); margin: var(--s-40) 0; padding: var(--s-32) var(--s-40);
     text-align: left; background: var(--accent-soft); border: 1px solid var(--line); border-radius: var(--r-l); }
   .key-facts-item.is-wide { grid-column: 1 / -1; padding-bottom: var(--s-28); border-bottom: 1px solid var(--line); }
+  .key-facts-item:only-child { grid-column: 1 / -1; }
+  .key-facts.is-outline { background: transparent; }
+  .key-facts:has(+ .key-facts) { margin-bottom: var(--s-24); }
+  .key-facts + .key-facts { margin-top: var(--s-24); }
   .key-facts-item { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8) var(--s-16); align-content: start; min-width: 0; }
   .key-facts-item > .ico { align-self: center; width: var(--picto-m); height: var(--picto-m); color: var(--accent); stroke-width: 1; }
   .key-facts-title { margin: 0; color: var(--accent-text); line-height: var(--title-lh);

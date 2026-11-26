@@ -1,5 +1,12 @@
 # Changelog
 
+## 6.6.0 · 26 novembre 2026
+
+- Un formulaire en carte sur toute sa largeur : `.card.is-form.is-wide`. Ses champs vont deux par deux, un long texte seul sur sa ligne, et tout ce qui n'est pas un champ (les cases, le bouton, la ligne dessous, son pied) prend toute la carte ; le bouton au milieu, la moitié de la carte. Sur un téléphone, un champ sous l'autre et le bouton sur toute la largeur. La demande d'inscription d'une page d'événement s'en sert.
+- Un bandeau de ce qu'il faut savoir sans l'or, dans un trait fin : `.key-facts.is-outline` (l'accompagnant, au-dessus du prix et du paiement réunis). Deux bandeaux qui se suivent se rapprochent ; une chose seule prend toute la largeur du bandeau.
+- Les façons d'écrire au pied d'un formulaire de demande : `.contact-links`, une phrase puis l'email et WhatsApp en deux pastilles, au milieu, sous un trait fin. Les grandes cartes (`.contact-methods`) restent.
+- La page d'événement de la vitrine montre la réservation ainsi : l'accompagnant, le prix et le paiement, puis la demande sur toute la largeur.
+
 ## 6.5.0 · 26 novembre 2026
 
 - Le bandeau de ce qu'il faut savoir (`.key-facts`) met ses choses deux par deux, et la plus importante peut prendre toute sa largeur, au-dessus des autres et d'un trait fin : `.key-facts-item.is-wide`. Les pages d'événement y disent le prix sur demande, avant l'accompagnant et le paiement. La page d'événement de la vitrine le montre.
