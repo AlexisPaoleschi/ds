@@ -152,7 +152,10 @@
   /* a form in the booking section (a workshop's request, 6.1.0): the design system's form card, centred, set apart from
      what follows */
   .booking-box > .card.is-form { margin: var(--s-48) auto; }
-  .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-48) 0; }
+  /* the email and WhatsApp cards: close to the sentence that brings them, and nothing under them at the end of the booking
+     box but its own padding (6.4.1) */
+  .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-24) 0; }
+  .booking-box > .contact-methods:last-child { margin-bottom: 0; }
   .contact-card { display: block; padding: var(--s-48) var(--s-40); text-align: center; text-decoration: none; background: var(--accent-soft);
     border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }
   .contact-card:hover { border-color: var(--accent); box-shadow: var(--shadow-pop); transform: translateY(-4px); }

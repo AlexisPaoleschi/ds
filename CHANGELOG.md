@@ -1,5 +1,10 @@
 # Changelog
 
+## 6.5.0 · 26 novembre 2026
+
+- Le bandeau de ce qu'il faut savoir (`.key-facts`) met ses choses deux par deux, et la plus importante peut prendre toute sa largeur, au-dessus des autres et d'un trait fin : `.key-facts-item.is-wide`. Les pages d'événement y disent le prix sur demande, avant l'accompagnant et le paiement. La page d'événement de la vitrine le montre.
+- Les cartes email et WhatsApp d'une réservation (`.contact-methods`) se rapprochent de la phrase qui les amène (24px au lieu de 48), et rien ne s'ajoute sous elles au bout de la section que son propre espace : 80px au lieu de 128 sur un ordinateur, 40 au lieu de 88 sur un téléphone.
+
 ## 6.4.0 · 26 novembre 2026
 
 - Un nombre et ses mots s'accordent partout, en français (0 et 1 au singulier) comme en anglais (1 seul au singulier) :
