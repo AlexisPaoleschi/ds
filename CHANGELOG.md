@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.6.1 · 26 novembre 2026
+
+- La demande d'inscription, quand elle finit la section de réservation, ne garde plus de marge sous elle : seul l'espace de la section reste (80px au lieu de 128 sur un ordinateur), comme pour les cartes email et WhatsApp en 6.5.0.
+
 ## 6.6.0 · 26 novembre 2026
 
 - Un formulaire en carte sur toute sa largeur : `.card.is-form.is-wide`. Ses champs vont deux par deux, un long texte seul sur sa ligne, et tout ce qui n'est pas un champ (les cases, le bouton, la ligne dessous, son pied) prend toute la carte ; le bouton au milieu, la moitié de la carte. Sur un téléphone, un champ sous l'autre et le bouton sur toute la largeur. La demande d'inscription d'une page d'événement s'en sert.

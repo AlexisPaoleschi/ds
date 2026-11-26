@@ -155,7 +155,8 @@
   /* the email and WhatsApp cards: close to the sentence that brings them, and nothing under them at the end of the booking
      box but its own padding (6.4.1) */
   .contact-methods { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: var(--s-32); margin: var(--s-24) 0; }
-  .booking-box > .contact-methods:last-child { margin-bottom: 0; }
+  /* nothing under the booking box's last piece, the form or the cards, but the box's own padding (6.6.1) */
+  .booking-box > :is(.contact-methods, .card.is-form):last-child { margin-bottom: 0; }
   /* the ways to write, at the foot of a request form (6.6.0): a sentence, then email and WhatsApp as two small pills, in
      the middle, under a thin line: <div class="contact-links"><p>Prefer to write directly?</p><a class="btn is-pill">…</a>…</div> */
   .contact-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s-12); padding-top: var(--s-24);
