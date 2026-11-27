@@ -2,6 +2,7 @@
 // Every word reads on what is under it (4.5:1, 3:1 from 24px; the site's gold and its quiet grey are kept by choice), none is under 11px, a field and a button side by side are
 // as high as each other, the site's bar keeps its name clear of its action, and no button of a sheet or a window is cut.
 // On a 375px phone neither index.html nor site.html scrolls sideways, and no button, field or menu is cut (3.1.0).
+// A card's title stays where it is with tools on its line or without, and a photo's caption above its buttons (7.3.1).
 // The tools the showcase shows work there (3.1.0): the drawer, the sources' state, the syncs and their journal, the
 // address after # and a card found again, the live feed, the steady period head, the formats, the avatars, a pill.
 // usage: node checks/showcase.js (Playwright installed); it serves the repository itself on a free port
@@ -130,6 +131,25 @@ async function tools(b, base) {
     'page vitrine, ds.route et ds.seek : un lien lu par ds.route, l’adresse vidée par ds.route.go ; l’agenda retrouvé et allumé ' + JSON.stringify([ro, ro2, sk]));
   // a list in its window (.sheet.is-list, 4.11.0): as high from one network to the other, 720 × 640px on a computer like every sheet, the
   // whole width on a phone; its head stays while its list scrolls
+  // a card's title sits at the same place with a tool on its line or without (a button, a period list, a month's
+  // arrows): its words do not move when its tools are taken away, in both themes, on a computer and on a phone
+  // (« les titres, qu'il y ait un truc ou pas, toujours avec le même écart vers le haut », 27 November 2026); and on a
+  // touch screen a photo's caption stands above the bar of its buttons, not under it
+  for (const opts of [{ viewport: { width: 1440, height: 900 } }, { viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true }]) {
+    const q = await b.newPage(opts); await q.goto(base + '/index.html'); await q.waitForLoadState('networkidle'); await q.waitForTimeout(600);
+    const moved = await q.evaluate(() => [...document.querySelectorAll('.card > .ct')].filter(t => t.querySelector(':scope > :is(.ct-tools, .periodpick)') && t.getBoundingClientRect().height).map(t => {
+      const words = () => { const w = document.createTreeWalker(t, NodeFilter.SHOW_TEXT, { acceptNode: n => n.textContent.trim() && !n.parentElement.closest('.ct-tools, .periodpick') ? 1 : 3 }), r = document.createRange();
+        r.selectNodeContents(w.nextNode()); return r.getBoundingClientRect().top; };
+      const tools = t.querySelectorAll(':scope > :is(.ct-tools, .periodpick)'), was = words(); tools.forEach(x => { x.style.display = 'none'; }); const now = words(); tools.forEach(x => { x.style.display = ''; });
+      return { t: t.textContent.trim().slice(0, 24), d: Math.round((was - now) * 10) / 10 }; }));
+    assert(moved.length >= 8 && moved.every(m => Math.abs(m.d) <= 0.5), `${opts.viewport.width}px, le titre d’une carte reste à sa place avec ses outils ou sans (${moved.length} titres) ` + JSON.stringify(moved.filter(m => Math.abs(m.d) > 0.5)));
+    if (opts.hasTouch) {
+      const cap = await q.evaluate(() => [...document.querySelectorAll('.photogrid > .has-tools')].filter(t => t.querySelector(':scope > .tile-caption') && t.querySelector(':scope > .tile-acts'))
+        .map(t => Math.round(t.querySelector(':scope > .tile-acts').getBoundingClientRect().top - t.querySelector(':scope > .tile-caption').getBoundingClientRect().bottom)));
+      assert(cap.length >= 1 && cap.every(g => g >= 0), 'téléphone, la légende d’une photo au-dessus de la barre de ses boutons ' + JSON.stringify(cap));
+    }
+    await q.close();
+  }
   for (const [w, h] of [[1440, 900], [375, 812]]) {
     const q = w === 1440 ? p : await b.newPage({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true });
     if (q !== p) { await q.goto(base + '/index.html'); await q.waitForLoadState('networkidle'); await q.waitForTimeout(600); }

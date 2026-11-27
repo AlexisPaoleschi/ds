@@ -52,6 +52,12 @@
 @media (hover: none) {
   .tile-acts { inset: auto 0 0 0; flex-direction: row; gap: var(--s-6); padding: var(--s-8); background: linear-gradient(to top, var(--overlay-black-strong), transparent); opacity: 1; pointer-events: auto; }
   .tile-acts .btn { flex: 1; min-width: 0; max-width: none; }
+  /* the buttons' bar lies over the tile's foot: a caption goes just above it rather than under its buttons; the bar
+     takes the strong veil, as dark as the foot of the caption above it, so that the two make one band and a red
+     button reads on it whatever the photo (7.3.1) */
+  .tile-acts ~ .tile-caption, .tile-caption:has(~ .tile-acts) { bottom: calc(var(--btn-h) + 2 * var(--s-8));
+    background: linear-gradient(to top, var(--overlay-black-strong), var(--overlay-black-medium)); }
+  .tile-caption ~ .tile-acts, .tile-acts:has(~ .tile-caption) { background: var(--overlay-black-strong); }
 }
   button.box.on-photo { position: absolute; top: var(--s-8); left: var(--s-8); z-index: calc(var(--z-raise) + 1); background: var(--overlay-black-soft); border-color: var(--overlay-white-strong);
     color: transparent; opacity: 0; transition: opacity var(--t-mid) ease, background-color var(--t-mid) ease, border-color var(--t-mid) ease; }

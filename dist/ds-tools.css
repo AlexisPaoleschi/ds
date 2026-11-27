@@ -1,4 +1,4 @@
-/* ds 7.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.3.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
@@ -44,7 +44,7 @@
     .periodhead { flex-direction: column; align-items: stretch; gap: var(--s-10); }
     .periodtitle > .ico:where(:not([data-theme="vitrine"] *)) { translate: 0 -0.06em; }
     .periodhead.is-steady { flex-direction: row; align-items: center; }
-    .ct:has(> .periodnav.is-step) { row-gap: var(--s-12); }
+    .ct:has(> .periodnav.is-step) { row-gap: calc(var(--s-12) - var(--ct-tools-out, 0px)); }
     .ct > .periodnav.is-step { flex: 1 1 100%; margin-left: 0; }
     .ct > .periodnav.is-step > .pill { flex: 1 1 auto; justify-content: center; }
 }

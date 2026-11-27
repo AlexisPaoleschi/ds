@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.3.1 · 27 novembre 2026
+
+- Le titre d'une carte reste à la même place, qu'il ait un outil sur sa ligne ou non (un bouton `.ct-tools`, une liste de périodes `.periodpick`, les flèches d'un mois `.periodnav.is-step`) : l'outil se centre sur la ligne du titre sans la rendre plus haute, comme dans une carte qui se plie depuis 5.19.2, et ce qui suit garde sa place sous lui. Le titre « Voyages » de Bank, « Dépenses par catégorie » et « Compte facture » ne descendent plus de 11px. Sur une ligne trop étroite, l'outil passe sous le titre, à 8px de ses mots.
+- Sur un écran tactile, la légende d'une photo (`.tile-caption`) se met juste au-dessus de la barre de ses boutons (`.tile-acts`) au lieu d'être cachée dessous, et les deux font une seule bande sombre.
+- `checks/showcase.js` vérifie qu'un titre de carte ne bouge pas quand on lui retire ses outils, sur un ordinateur et sur un téléphone, et qu'une légende de photo reste au-dessus de ses boutons sur un écran tactile.
+
 ## 7.3.0 · 27 novembre 2026
 
 - Le premier chargement attend les photos du premier écran : `ds.boot.done({images, wait})` ne s'en va qu'une fois arrivées (ou en échec) les images que montre le premier écran (celles de `images`, toute la page sinon), 3 s au plus (`wait`), et rend une promesse. La page se montre une fois, entière, au lieu de voir ses photos arriver une à une (Studio, Bank). Le loader du site (`ds.ready`) les attend aussi, en plus de la photo de son en-tête. Le calcul est commun, dans le noyau (`_.screenImages`).
