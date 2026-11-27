@@ -398,6 +398,15 @@
       <p class="row-place" style="margin: 0">La croix, le voile ou Échap la ferment ; les flèches, ← → ou le doigt tournent les photos, tirée vers le bas elle se ferme. Les deux voisines se chargent d’avance ; la quatrième se fait attendre, pour voir la roue.</p>
       <p class="row-place" style="margin: var(--s-8) 0 0; color: var(--accent-text)" data-photo="seen">Aucune photo montrée.</p>
     </div>
+    <div class="card"><h3 class="ct">Photos d’un post · ds.viewer.thumb</h3>
+      <p class="row-place" style="margin: 0 0 var(--s-12)">Au début de la ligne d’un post : sa première photo, combien il en a, la marque d’une vidéo ; un clic les ouvre toutes dans la visionneuse. Un post sans photo garde un carré vide, pour que les lignes restent alignées. Plus petite dans un classement (<code>.rank.has-thumb</code>).</p>
+      <ul class="rows" data-photo="posts"></ul>
+      <ol class="rank has-thumb" data-photo="rank" style="margin-top: var(--s-16)">
+        <li class="is-top"><span class="rank-n">1</span><div class="rank-name"><span class="rank-t">Le col au matin</span><small>25 nov.</small></div><span class="verdict is-good">×1,5</span></li>
+        <li><span class="rank-n">2</span><div class="rank-name"><span class="rank-t">Making-of à Saly</span><small>21 nov.</small></div><span class="verdict is-mid">×1</span></li>
+        <li><span class="rank-n">3</span><div class="rank-name"><span class="rank-t">Annonce du workshop</span><small>17 nov.</small></div><span class="verdict is-bad">×0,6</span></li>
+      </ol>
+    </div>
     <div class="card"><h3 class="ct">Grille de photos · ds.photogrid</h3>
       <div class="row" style="justify-content: space-between; margin-bottom: var(--s-12)"><span class="row-place">En colonnes de même hauteur ; un clic ouvre la visionneuse (<code>data-viewer</code>).</span>
         <label class="photogrid-zoom"><svg class="ico" aria-hidden="true"><use href="#i-zoom-out"/></svg><input type="range" class="zoom-slider" data-photo="zoom" aria-label="Taille des photos"><svg class="ico" aria-hidden="true"><use href="#i-zoom-in"/></svg></label></div>

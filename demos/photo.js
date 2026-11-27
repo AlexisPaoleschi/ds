@@ -53,6 +53,26 @@
       var it = { src: scene(20 + i, 1500, i % 3 === 1 ? 2000 : 1000), alt: "Sénégal 2027, photo " + (i + 1), caption: i % 2 ? "" : "Saly, la lagune · jour " + (i / 2 + 1) };
       return i === 3 ? function () { return new Promise(function (ok) { setTimeout(function () { ok(it); }, 1000); }); } : it;
     });
+    // the photos of a post at the head of its row (ds.viewer.thumb): a series of five, a video's cover, a post without a photo
+    var POSTS = [["Le col au matin", "25 nov.", 5], ["Making-of à Saly", "21 nov.", 1, true], ["Annonce du workshop", "17 nov.", 0]];
+    function photos(k, p) {
+      return Array.apply(null, Array(p[2])).map(function (_, i) {
+        return { thumb: scene(40 + k * 7 + i, 160, 160), src: scene(40 + k * 7 + i, 1500, 1000), video: !!p[3] };
+      });
+    }
+    var posts = col.querySelector('[data-photo="posts"]');
+    POSTS.forEach(function (p, k) {
+      var li = document.createElement("li"), title = document.createElement("span"), when = document.createElement("small");
+      title.className = "row-title";
+      title.textContent = p[0];
+      when.textContent = p[1];
+      title.appendChild(when);
+      li.append(ds.viewer.thumb(photos(k, p), { label: p[0], caption: p[0] }), title);
+      posts.appendChild(li);
+    });
+    col.querySelectorAll('[data-photo="rank"] > li').forEach(function (li, k) {
+      li.querySelector(".rank-n").after(ds.viewer.thumb(photos(k, POSTS[k]), { label: POSTS[k][0], caption: POSTS[k][0] }));
+    });
     col.querySelector('[data-photo="open"]').addEventListener("click", function (e) {
       ds.viewer(null, items, { start: 0, label: "Sénégal 2027", from: e.currentTarget,
         onChange: function (i) { seen.textContent = "Photo " + (i + 1) + " sur " + items.length + " montrée."; },

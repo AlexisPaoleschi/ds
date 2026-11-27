@@ -20,8 +20,10 @@
   if (window.ds && window.ds.viewer) return;
   var _ = window.ds._, reduced = _.reduced;
   var WORDS = _.table({
-    fr: { label: "Photos", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir." },
-    en: { label: "Photos", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened." }
+    fr: { label: "Photos", prev: "Photo précédente", next: "Photo suivante", failed: "Cette photo n’a pas pu s’ouvrir.",
+      one: "Voir la photo", many: "Voir les {n} photos" },
+    en: { label: "Photos", prev: "Previous photo", next: "Next photo", failed: "This photo could not be opened.",
+      one: "See the photo", many: "See the {n} photos" }
   });
   function words() { return _.words(WORDS); }
   // how far a finger travels to turn the photo, and to close the viewer when pulled down (the site's 50px)
@@ -323,7 +325,39 @@
     clicker(box, { item: box.getAttribute("data-viewer") || "", label: box.getAttribute("data-viewer-label") || "" })(e);
   });
 
+  // A post's photos as a small square at the head of its row (.row-thumb, 6.8.0): the first one, how many there are in
+  // its corner, a play mark on a video's cover (an item's video); a click opens them all in the viewer, from the first.
+  // An item is {thumb, src, alt, video}; without one, an empty square that keeps the rows aligned.
+  // opts: label (the viewer's and the square's name for a screen reader), caption (under each photo).
+  function thumb(items, o) {
+    o = o || {};
+    var list = [].filter.call(items || [], function (x) { return x && (x.thumb || x.src); });
+    if (!list.length) {
+      var none = _.el("span", "row-thumb is-empty");
+      none.setAttribute("aria-hidden", "true");
+      return none;
+    }
+    var w = words(), b = _.el("button", "row-thumb" + (list[0].video ? " is-video" : ""));
+    b.type = "button";
+    b.setAttribute("aria-label", (list.length > 1 ? w.many.replace("{n}", list.length) : w.one) + (o.label ? " · " + o.label : ""));
+    var img = _.el("img");
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.src = list[0].thumb || list[0].src;
+    b.appendChild(img);
+    if (list.length > 1) { var n = _.el("span", "row-thumb-n"); n.textContent = String(list.length); b.appendChild(n); }
+    b.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      viewer(null, list.map(function (x) { return { src: x.src || x.thumb, thumb: x.thumb || "", alt: x.alt || "", caption: o.caption || "" }; }),
+        { start: 0, from: b, label: o.label });
+    });
+    return b;
+  }
+
   viewer.bind = bind;
+  viewer.thumb = thumb;
   viewer.close = function () { if (open) shut(open); };
   window.ds = window.ds || {};
   window.ds.viewer = viewer;

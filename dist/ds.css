@@ -1,4 +1,4 @@
-/* ds 6.7.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1602,6 +1602,31 @@
   .row-note { color: var(--accent-text); display: block; font: italic var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); margin-top: var(--s-2); overflow-wrap: anywhere; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   /* a small picture at the head of a row (a photo a note is about), square, its corners the row's */
   .row-thumb { flex: none; width: var(--row-thumb, 48px); height: var(--row-thumb, 48px); object-fit: cover; border-radius: var(--r-s); background: var(--panel-2); }
+  /* the photos of a post at the head of its row (6.8.0, ds.viewer.thumb in ds-photo.js): the first one in the square, how
+     many there are in its corner, a play mark on a video's cover; a click opens them all in the viewer. A post without
+     a photo keeps an empty square with a quiet page, so that the rows stay aligned (.is-empty). Smaller in a ranking.
+     The marks are drawn here, as the viewer's: no icon sprite is needed.
+     <button class="row-thumb" type="button"><img alt="" src="…"><span class="row-thumb-n">5</span></button>,
+     .is-video on a video's cover, <span class="row-thumb is-empty" aria-hidden="true"></span> without a photo */
+  :is(button, span).row-thumb { position: relative; display: block; box-sizing: border-box; margin: 0; padding: 0; overflow: hidden;
+    border: 1px solid var(--line); color: var(--faint); }
+  button.row-thumb { cursor: zoom-in; }
+  @media (hover: hover) { button.row-thumb:hover { border-color: var(--accent); } }
+  .row-thumb > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .row-thumb-n { position: absolute; right: var(--s-2); bottom: var(--s-2); padding: 0 var(--s-4); border-radius: var(--r-s); color: var(--white);
+    background: var(--overlay-black-strong); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); }
+  .row-thumb.is-video::after, .row-thumb.is-empty::before { content: ""; position: absolute; inset: 0; margin: auto; background: currentColor;
+    -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
+  .row-thumb.is-video::after { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4v16l13-8z'/%3E%3C/svg%3E");
+    width: var(--ico-l); height: var(--ico-l); color: var(--white); filter: drop-shadow(0 0 var(--s-2) var(--overlay-black-strong)); }
+  .row-thumb.is-empty { cursor: default; }
+  .row-thumb.is-empty::before { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4'/%3E%3C/svg%3E");
+    width: var(--ico-m); height: var(--ico-m); }
+  .rank.has-thumb { grid-template-columns: 20px auto minmax(0, 1fr) auto; }
+  .rank .row-thumb { --row-thumb: var(--s-36); }
+@media (max-width: 768px) {
+  .row-thumb { --row-thumb: var(--s-40); }
+}
   /* rows under a row, indented (a trip's kinds of spending and their lines) */
   ul.rows.is-tree > li > ul.rows { flex-basis: 100%; margin-left: var(--s-16); }
   /* a row done (a task ticked, a bill paid) steps back, as a done line of the calendar */
