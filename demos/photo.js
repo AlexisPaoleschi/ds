@@ -73,6 +73,13 @@
     col.querySelectorAll('[data-photo="rank"] > li').forEach(function (li, k) {
       li.querySelector(".rank-n").after(ds.viewer.thumb(photos(k, POSTS[k]), { label: POSTS[k][0], caption: POSTS[k][0] }));
     });
+    // a day of four stories (ds.viewer.strip): each one's views, the colour of its verdict, the best one in gold, a video, a
+    // story whose photo the server never kept
+    var DAY = [[412, "mid"], [1433, "good", true], [301, "bad", false, true], [655, "mid", false, false, true]];
+    col.querySelector('[data-photo="strip"]').appendChild(ds.viewer.strip(DAY.map(function (d, i) {
+      return d[4] ? { figure: ds.number(d[0]), tone: d[1] } : { thumb: scene(70 + i, 90, 160), src: scene(70 + i, 900, 1600), video: !!d[3], tone: d[1], best: !!d[2],
+        figure: ds.number(d[0]), label: "Story " + (i + 1) + ", " + ds.count(d[0], "vue"), caption: "Story " + (i + 1) + " · " + ds.count(d[0], "vue") };
+    }), { label: "Stories du 25 nov." }));
     col.querySelector('[data-photo="open"]').addEventListener("click", function (e) {
       ds.viewer(null, items, { start: 0, label: "Sénégal 2027", from: e.currentTarget,
         onChange: function (i) { seen.textContent = "Photo " + (i + 1) + " sur " + items.length + " montrée."; },

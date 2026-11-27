@@ -445,8 +445,51 @@
     return b;
   }
 
+  /* ds.viewer.strip(items, {label, caption}): a row of portrait tiles, one per item (a day's stories), each its photo, a
+     figure under it (item.figure: words, or nodes as an icon and a number) and a bar of its tone at its foot (item.tone:
+     good, mid or bad, a verdict's); item.best rings the best one in gold. A click on a tile opens them all in the viewer,
+     at that one (item.caption, else o.caption, under each). An item without a photo keeps an empty tile, its figure
+     still there. The row scrolls sideways when it is longer than its room. Gives back the <ol class="thumb-strip">. */
+  function strip(items, o) {
+    o = o || {};
+    var list = [].slice.call(items || []), w = words(), shown = [], at = [];
+    list.forEach(function (x, i) { if (x && (x.thumb || x.src)) { at[i] = shown.length; shown.push(x); } });
+    var box = _.el("ol", "thumb-strip");
+    if (o.label) box.setAttribute("aria-label", o.label);
+    list.forEach(function (x, i) {
+      x = x || {};
+      var li = _.el("li", (x.tone ? "is-" + x.tone : "") + (x.best ? " is-best" : "")), has = at[i] != null;
+      var tile = _.el(has ? "button" : "span", "thumb-strip-photo" + (x.video ? " is-video" : "") + (has ? "" : " is-empty"));
+      if (has) {
+        tile.type = "button";
+        tile.setAttribute("aria-label", w.one + (x.label ? " · " + x.label : ""));
+        var img = _.el("img");
+        img.alt = "";
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.src = x.thumb || x.src;
+        tile.appendChild(img);
+        tile.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          viewer(null, shown.map(function (y) { return { src: y.src || y.thumb, thumb: y.thumb || "", alt: y.alt || "", caption: y.caption || o.caption || "" }; }),
+            { start: at[i], from: tile, label: o.label });
+        });
+      } else tile.setAttribute("aria-hidden", "true");
+      li.appendChild(tile);
+      if (x.figure != null) {
+        var fig = _.el("span", "thumb-strip-fig");
+        [].concat(x.figure).forEach(function (n) { if (n != null) fig.append(n); });
+        li.appendChild(fig);
+      }
+      box.appendChild(li);
+    });
+    return box;
+  }
+
   viewer.bind = bind;
   viewer.thumb = thumb;
+  viewer.strip = strip;
   viewer.close = function () { if (open) shut(open); };
   window.ds = window.ds || {};
   window.ds.viewer = viewer;

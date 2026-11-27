@@ -104,7 +104,7 @@ Il se lie après `ds.js`, dont il prend la bulle, le serveur et le noyau.
 
 | Source | Fonctions |
 |:--|:--|
-| `viewer.js` | `ds.viewer(holder, items, {start, onChange, onClose, label, from})` ; `ds.viewer.bind(container, {item, label, onChange, onClose})`, ou `<div data-viewer>` sans code ; `ds.viewer.thumb(items, {label, caption})`, le carré des photos d’un post en tête de sa ligne |
+| `viewer.js` | `ds.viewer(holder, items, {start, onChange, onClose, label, from})` ; `ds.viewer.bind(container, {item, label, onChange, onClose})`, ou `<div data-viewer>` sans code ; `ds.viewer.thumb(items, {label, caption})`, le carré des photos d’un post en tête de sa ligne ; `ds.viewer.strip(items, {label, caption})`, une rangée de vignettes au format d’une story, chacune son chiffre dessous (`figure`), la couleur de son verdict (`tone`), la meilleure en or (`best`) |
 | `photogrid.js` | `ds.photogrid(grid, {sizes, size, key, slider, masonry})` |
 | `photokit.js` | `ds.dropzone(zone, {input, button, onFiles, one})`, `ds.upload(files, {url, part, list, field, concurrent, total, retry, done, fail})` : avec `part` (une taille en octets), un gros fichier part en morceaux, repris où le serveur l’attend (`409 {next}`) |
 

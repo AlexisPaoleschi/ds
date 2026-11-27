@@ -324,6 +324,23 @@ function stylesheets() {
     'ds.upload en morceaux (part) : chaque morceau tel quel, le premier avec son nom ; un morceau sans réponse renvoyé, un serveur qui a oublié le fichier le reprend du début ; la coche d’un fichier envoyé en vert ' + JSON.stringify({ parts, drop, lost }));
   await ctx.close();
 
+  // a day of stories (ds.viewer.strip), on the showcase: a tile per story at a story's shape, its figure under it, its
+  // verdict's colour at its foot, the best one in gold; a click opens them in the viewer at that one, the empty one left out
+  const show = await ctx2();
+  async function ctx2() { const c = await b.newContext({ viewport: { width: 1280, height: 900 } }); const pg = await c.newPage(); watch(pg);
+    await pg.goto(base + '/index.html'); await pg.waitForFunction(() => document.querySelector('.thumb-strip')); return pg; }
+  const st = await show.evaluate(() => { const s = document.querySelector('.thumb-strip'), li = [...s.children], r = e => e.getBoundingClientRect();
+    const ph = li[1].querySelector('.thumb-strip-photo'), tone = el => getComputedStyle(el.querySelector('.thumb-strip-photo'), '::after').backgroundColor;
+    return { n: li.length, ratio: Math.round(r(ph).height / r(ph).width * 100) / 100, fig: li[1].querySelector('.thumb-strip-fig').textContent,
+      best: li[1].classList.contains('is-best') && getComputedStyle(ph).borderColor === getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || getComputedStyle(ph).boxShadow !== 'none',
+      tones: li.map(tone), empty: li[3].querySelector('.thumb-strip-photo').tagName, video: li[2].querySelector('.thumb-strip-photo').classList.contains('is-video') }; });
+  await show.locator('.thumb-strip > li').nth(2).locator('button').click();
+  await show.waitForTimeout(300);
+  const stOpen = await show.evaluate(() => { const v = document.querySelector('.viewer.is-open'); return v && v.querySelector('.viewer-count').textContent; });
+  assert(st.n === 4 && Math.abs(st.ratio - 1.78) < 0.03 && st.fig.replace(/\s/g, '') === '1433' && st.best && new Set(st.tones).size === 3 && st.tones[0] === st.tones[3] && st.empty === 'SPAN' && st.video && stOpen === '3 / 3',
+    'ds.viewer.strip : une vignette par story au format d’une story, ses vues dessous, la couleur de son verdict, la meilleure en or ; un clic l’ouvre, la vide laissée de côté ' + JSON.stringify([st, stOpen]));
+  await show.context().close();
+
   // ---------- on a phone ----------
   const phone = await b.newContext({ viewport: { width: 375, height: 812 }, isMobile: true, hasTouch: true });
   const q = await phone.newPage();

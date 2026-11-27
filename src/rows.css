@@ -60,6 +60,33 @@
     background: var(--overlay-black-strong); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); }
   .row-thumb.is-video::after, .row-thumb.is-empty::before { content: ""; position: absolute; inset: 0; margin: auto; background: currentColor;
     -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
+  /* a row of portrait tiles, one per story of a day (ds.viewer.strip): its photo at a story's shape, its figure under it,
+     a bar of its tone at its foot (a verdict's colours), the best one ringed in gold; it scrolls sideways when too long.
+     <ol class="thumb-strip"><li class="is-good is-best"><button class="thumb-strip-photo" type="button"><img alt="" src="…"></button>
+     <span class="thumb-strip-fig">1 433</span></li>…</ol>, .is-video on a video's cover, span.thumb-strip-photo.is-empty without */
+  .thumb-strip { --strip-w: var(--s-56); display: flex; gap: var(--s-8); margin: 0; padding: 0 0 var(--s-4); list-style: none; overflow-x: auto; scrollbar-width: thin; }
+  .thumb-strip > li { flex: none; display: flex; flex-direction: column; gap: var(--s-4); width: var(--strip-w); margin: 0; padding: 0; border: 0; }
+  .thumb-strip-photo { position: relative; display: block; box-sizing: border-box; width: 100%; aspect-ratio: 9 / 16; margin: 0; padding: 0; overflow: hidden;
+    color: var(--faint); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-s); }
+  button.thumb-strip-photo { cursor: zoom-in; }
+  @media (hover: hover) { button.thumb-strip-photo:hover { border-color: var(--accent); } }
+  .thumb-strip-photo > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  /* its tone: a bar at its foot */
+  .thumb-strip-photo::after { content: ""; position: absolute; right: 0; bottom: 0; left: 0; height: var(--s-4); background: var(--strip-tone, transparent); }
+  .thumb-strip > .is-good { --strip-tone: var(--good); }
+  .thumb-strip > .is-mid { --strip-tone: var(--mid); }
+  .thumb-strip > .is-bad { --strip-tone: var(--bad); }
+  .thumb-strip > .is-best > .thumb-strip-photo { border-color: var(--accent); box-shadow: inset 0 0 0 var(--pick-ring) var(--accent); }
+  .thumb-strip-photo.is-video::before, .thumb-strip-photo.is-empty::before { content: ""; position: absolute; inset: 0; margin: auto; background: currentColor;
+    -webkit-mask: var(--sign) center / contain no-repeat; mask: var(--sign) center / contain no-repeat; }
+  .thumb-strip-photo.is-video::before { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4v16l13-8z'/%3E%3C/svg%3E");
+    z-index: var(--z-raise); width: var(--ico-l); height: var(--ico-l); color: var(--white); filter: drop-shadow(0 0 var(--s-2) var(--overlay-black-strong)); }
+  .thumb-strip-photo.is-empty::before { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4'/%3E%3C/svg%3E");
+    width: var(--ico-m); height: var(--ico-m); }
+  .thumb-strip-fig { display: flex; align-items: center; justify-content: center; gap: var(--s-2); color: var(--ink); white-space: nowrap;
+    font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); }
+  .thumb-strip-fig .ico { width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
+  .thumb-strip > .is-best > .thumb-strip-fig { color: var(--accent-text); }
   .row-thumb.is-video::after { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M7 4v16l13-8z'/%3E%3C/svg%3E");
     width: var(--ico-l); height: var(--ico-l); color: var(--white); filter: drop-shadow(0 0 var(--s-2) var(--overlay-black-strong)); }
   .row-thumb.is-empty { cursor: default; }
