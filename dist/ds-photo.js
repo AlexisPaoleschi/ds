@@ -1,4 +1,4 @@
-/* ds 7.0.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -823,7 +823,13 @@
    ul.rows.is-cards: li.upload-row, its name, its bar, what happened, « Réessayer » if it failed, the row going 1.2 s
    after it is done); total: {el, bar, label, words(done, all)} shows the batch's bar and « 3 sur 12 », hidden 2.5 s
    after the last file. done(result, file) after each file sent; fail(error, file) gives back the words shown on its
-   row (else « Échec »). Gives back nothing: rows and bars say how it goes. */
+   row (else « Échec »). Gives back nothing: rows and bars say how it goes.
+   With part (a size in bytes, 7.1.0), a file too big for one request (Studio's Instagram export, hundreds of MB sent
+   from a phone) goes in pieces of that size, each POSTed as it is, the file's own bytes, to url followed by
+   ?part=N&last=0|1, the first piece with &name=…&size=… too. A piece that meets no answer (the network, the server
+   restarting) is sent again every 3 s for a minute; a server that answers 409 with {next} names the piece it awaits,
+   and the file goes on from there ({next: 0}: it does not know the file, which starts again). « Réessayer » goes on
+   from the piece that failed. url can also be a function(file) that gives each file its own address. */
 (function () {
   "use strict";
   var ds = window.ds, _ = ds._;
@@ -850,6 +856,8 @@
     if (input) input.addEventListener("change", function () { give(input.files); input.value = ""; });
     return zone;
   }
+
+  function wait(ms) { return new Promise(function (ok) { setTimeout(ok, ms); }); }
 
   // the batch: each file sent and how much of it, so that the total bar follows them all
   var running = 0, waiting = [], batch = new Map(), batchTimer = null;
@@ -898,15 +906,42 @@
       retry.hidden = true;
       var row = _.el("li", "upload-row", [_.el("span", "upload-row-name", file.name), bar, status, retry]);
       if (list) list.appendChild(row);
+      var where = typeof o.url === "function" ? o.url(file) : o.url, from = 0;
       function enter() { batch.set(file, { loaded: 0, total: file.size || 1, state: "pending" }); showTotal(); }
-      function task() {
+      function moved(loaded, size) {
+        fill(bar, size ? Math.round(loaded / size * 100) : 100);
+        var b = batch.get(file);
+        if (b) { b.loaded = loaded; b.total = size || 1; showTotal(); }
+      }
+      // the file in pieces: from the piece the server awaits, each one tried again while no answer comes
+      function pieces() {
+        var size = file.size, count = Math.max(1, Math.ceil(size / o.part)), tries = 0, turns = 0;
+        function piece(k) {
+          var start = k * o.part, end = Math.min(size, start + o.part), last = k === count - 1;
+          var q = "part=" + k + "&last=" + (last ? 1 : 0) + (k === 0 ? "&name=" + encodeURIComponent(file.name) + "&size=" + size : "");
+          return ds.api("POST", where + (where.indexOf("?") >= 0 ? "&" : "?") + q, file.slice(start, end), { retry: false,
+            progress: function (loaded) { moved(start + Math.min(loaded, end - start), size); } }).then(function (result) {
+            tries = 0;
+            from = k + 1;
+            moved(end, size);
+            return last ? result : piece(k + 1);
+          }, function (error) {
+            var next = error.body && error.body.next;
+            // a few turns only, so that a server and a page that disagree never send pieces forever
+            if (error.status === 409 && typeof next === "number" && next >= 0 && next < count && turns++ < 5) { from = next; return piece(next); }
+            if ((error.code === "offline" || error.code === "restart") && tries++ < 20) return wait(3000).then(function () { return piece(k); });
+            throw error;
+          });
+        }
+        return piece(from);
+      }
+      function whole() {
         var data = new FormData();
         data.append(o.field || "file", file);
-        ds.api("POST", o.url, data, { retry: false, progress: function (loaded, size) {
-          fill(bar, Math.round(loaded / size * 100));
-          var b = batch.get(file);
-          if (b) { b.loaded = loaded; b.total = size; showTotal(); }
-        } }).then(function (result) {
+        return ds.api("POST", where, data, { retry: false, progress: moved });
+      }
+      function task() {
+        (o.part ? pieces() : whole()).then(function (result) {
           fill(bar, 100);
           status.textContent = "✓";
           var b = batch.get(file);

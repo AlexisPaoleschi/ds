@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.0 · 27 novembre 2026
+
+- `ds.upload` envoie un fichier trop gros pour une seule requête en morceaux : avec `part` (une taille en octets), chaque morceau part tel quel vers l’adresse suivie de `?part=N&last=0|1`, le premier avec `&name=…&size=…`. Un morceau sans réponse (le réseau, le serveur qui redémarre) repart toutes les 3 s pendant une minute ; un serveur qui répond 409 avec `{next}` dit le morceau qu’il attend, et l’envoi reprend de là (`{next: 0}` : il ne connaît pas le fichier, qui repart du début). « Réessayer » reprend au morceau qui a échoué. `url` peut aussi être une fonction qui donne à chaque fichier son adresse. Pour l’export Instagram que Studio reçoit depuis un téléphone, plusieurs centaines de Mo.
+
 ## 7.0.1 · 27 novembre 2026
 
 - Sur un téléphone, la photo de la visionneuse commence sous la croix : une photo qui prend toute la hauteur passait 8px sous elle, et le voile d'iOS (7.0.0) l'avait rendu visible. En bas, la photo n'a plus que 16px de marge : le compteur est dans la barre. La taille des boutons de la visionneuse est un jeton à elle, `--viewer-btn` (44px, 40px sur un téléphone).

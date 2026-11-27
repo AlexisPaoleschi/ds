@@ -106,7 +106,7 @@ Il se lie après `ds.js`, dont il prend la bulle, le serveur et le noyau.
 |:--|:--|
 | `viewer.js` | `ds.viewer(holder, items, {start, onChange, onClose, label, from})` ; `ds.viewer.bind(container, {item, label, onChange, onClose})`, ou `<div data-viewer>` sans code ; `ds.viewer.thumb(items, {label, caption})`, le carré des photos d’un post en tête de sa ligne |
 | `photogrid.js` | `ds.photogrid(grid, {sizes, size, key, slider, masonry})` |
-| `photokit.js` | `ds.dropzone(zone, {input, button, onFiles, one})`, `ds.upload(files, {url, list, field, concurrent, total, retry, done, fail})` |
+| `photokit.js` | `ds.dropzone(zone, {input, button, onFiles, one})`, `ds.upload(files, {url, part, list, field, concurrent, total, retry, done, fail})` : avec `part` (une taille en octets), un gros fichier part en morceaux, repris où le serveur l’attend (`409 {next}`) |
 
 Sans `ds.js`, la visionneuse n’a pas de bulle pour dire qu’une photo n’a pas pu s’ouvrir.
 

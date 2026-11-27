@@ -15,12 +15,34 @@ const photo = (n, w, h) => `<svg xmlns="http://www.w3.org/2000/svg" width="${w}"
 const cspPage = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><link rel="stylesheet" href="/dist/ds.css"><script src="/dist/ds.js" defer></script><script src="/dist/ds-photo.js" defer></script></head><body>
 <div class="photogrid" data-viewer data-viewer-label="Galerie du site"><a href="/photo/51.svg?w=900&amp;h=600"><img src="/photo/51.svg?w=300&amp;h=200" width="300" height="200" alt="Cinquante et un"></a>
 <a href="/photo/52.svg?w=600&amp;h=900"><img src="/photo/52.svg?w=200&amp;h=300" width="200" height="300" alt="Cinquante-deux"></a></div></body></html>`;
+const sends = {};
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://x');
   const m = url.pathname.match(/^\/photo\/(\d+)\.svg$/);
   if (m) {
     const w = +url.searchParams.get('w') || 300, h = +url.searchParams.get('h') || 200;
     return setTimeout(() => { res.writeHead(200, { 'Content-Type': 'image/svg+xml', 'Cache-Control': 'max-age=600' }); res.end(photo(+m[1], w, h)); }, +url.searchParams.get('ms') || 0);
+  }
+  // a server that takes a file in pieces (Studio's import): the piece it awaits, or 409 {next}; it drops the connection
+  // under the first piece 1 of « drop » and answers « lost » as if it had restarted ({next: 0}) once
+  const pm = url.pathname.match(/^\/api\/parts\/(\w+)$/);
+  if (pm && req.method === 'POST') {
+    const id = pm[1], k = +url.searchParams.get('part'), chunks = [];
+    req.on('data', c => chunks.push(c));
+    req.on('end', () => {
+      const json = (code, body) => { res.writeHead(code, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body)); };
+      if (k === 0 && url.searchParams.get('name')) sends[id] = Object.assign(sends[id] || { calls: 0 }, { next: 0, bytes: 0, name: url.searchParams.get('name'), size: +url.searchParams.get('size') });
+      const st = sends[id];
+      if (!st) return json(409, { next: 0 });
+      st.calls += 1;
+      if (id === 'drop' && k === 1 && !st.dropped) { st.dropped = true; return req.socket.destroy(); }
+      if (id === 'lost' && k === 2 && !sends.forgot) { sends.forgot = true; delete sends[id]; return json(409, { next: 0 }); }
+      if (k !== st.next) return json(409, { next: st.next });
+      st.bytes += Buffer.concat(chunks).length;
+      st.next += 1;
+      json(200, { next: st.next, bytes: st.bytes, last: url.searchParams.get('last') === '1' });
+    });
+    return;
   }
   if (url.pathname === '/csp.html') { res.writeHead(200, { 'Content-Type': 'text/html', 'Content-Security-Policy': "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:" }); return res.end(cspPage); }
   const file = path.join(root, decodeURIComponent(url.pathname));
@@ -62,7 +84,8 @@ function stylesheets() {
   const base = 'http://127.0.0.1:' + server.address().port;
   const b = await chromium.launch();
   const errors = [];
-  const watch = p => { p.on('pageerror', e => errors.push(String(e))); p.on('console', m => { if (m.type() === 'error') errors.push(m.text()); }); };
+  // the 409 of a piece the server did not await is the browser's line, not the page's error
+  const watch = p => { p.on('pageerror', e => errors.push(String(e))); p.on('console', m => { if (m.type() === 'error' && !/\/api\/parts\//.test((m.location() || {}).url || '')) errors.push(m.text()); }); };
 
   // ---------- on a computer ----------
   const ctx = await b.newContext({ viewport: { width: 1280, height: 900 } });
@@ -281,6 +304,22 @@ function stylesheets() {
   const calm = await looks();
   await p.emulateMedia({ reducedMotion: null });
   assert(calm.drift === 'none' && calm.fixed === 'scroll' && calm.covers, 'qui demande moins de mouvement : la photo du héros reste en place');
+  // a file in pieces: each one sent as it is, the first with its name; a lost connection sent again; a server that
+  // forgot the file starts it again; the file whole on the server, the row's bar at the end
+  const parts = await p.evaluate(() => new Promise(ok => {
+    const list = document.createElement('ul'), out = {}, size = 10 * 1024 + 7;
+    list.className = 'rows is-cards upload-list';
+    document.body.append(list);
+    const file = id => new File([new Uint8Array(size).fill(7)], id + '.zip', { type: 'application/zip' });
+    let left = 2;
+    ds.upload([file('drop'), file('lost')], { url: f => '/api/parts/' + f.name.replace('.zip', ''), part: 4096, list,
+      done: (result, f) => { out[f.name] = { result, bar: list.querySelector('[aria-label="' + f.name + '"]').getAttribute('aria-valuenow') }; if (!--left) ok(out); },
+      fail: (e, f) => { out[f.name] = { failed: e.message }; if (!--left) ok(out); return 'Échec'; } });
+  }));
+  const [drop, lost] = await Promise.all(['drop', 'lost'].map(id => fetch(base + '/api/parts/' + id + '?part=99', { method: 'POST' }).then(r => r.json())));
+  assert(parts['drop.zip'] && parts['drop.zip'].result && parts['drop.zip'].result.bytes === 10247 && parts['drop.zip'].result.next === 3 && parts['drop.zip'].bar === '100'
+    && parts['lost.zip'] && parts['lost.zip'].result && parts['lost.zip'].result.bytes === 10247 && drop.next === 3 && lost.next === 3,
+    'ds.upload en morceaux (part) : chaque morceau tel quel, le premier avec son nom ; un morceau sans réponse renvoyé, un serveur qui a oublié le fichier le reprend du début ' + JSON.stringify({ parts, drop, lost }));
   await ctx.close();
 
   // ---------- on a phone ----------
