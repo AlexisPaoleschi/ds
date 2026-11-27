@@ -1,4 +1,4 @@
-/* ds 7.5.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.5.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -630,6 +630,23 @@
     clicker(box, { item: box.getAttribute("data-viewer") || "", label: box.getAttribute("data-viewer-label") || "" })(e);
   });
 
+  // The photo of a square or a tile. One the page has already shown is put in again decoded with the page, so that a page
+  // drawn again does not blank its photos for a moment (7.5.1, Studio: « Pk ça clignote », the squares of a list going
+  // out and back at each new drawing); a new one waits until it nears the screen.
+  var painted = new Set();
+  function photo(src) {
+    var img = _.el("img");
+    img.alt = "";
+    if (painted.has(src)) img.decoding = "sync";
+    else {
+      img.loading = "lazy";
+      img.decoding = "async";
+      img.addEventListener("load", function () { painted.add(src); }, { once: true });
+    }
+    img.src = src;
+    return img;
+  }
+
   // A post's photos as a small square at the head of its row (.row-thumb, 6.8.0): the first one, how many there are in
   // its corner, a play mark on a video's cover (an item's video); a click opens them all in the viewer, from the first.
   // An item is {thumb, src, alt, video}; without one, an empty square that keeps the rows aligned.
@@ -645,12 +662,7 @@
     var w = words(), b = _.el("button", "row-thumb" + (list[0].video ? " is-video" : ""));
     b.type = "button";
     b.setAttribute("aria-label", (list.length > 1 ? w.many.replace("{n}", list.length) : w.one) + (o.label ? " · " + o.label : ""));
-    var img = _.el("img");
-    img.alt = "";
-    img.loading = "lazy";
-    img.decoding = "async";
-    img.src = list[0].thumb || list[0].src;
-    b.appendChild(img);
+    b.appendChild(photo(list[0].thumb || list[0].src));
     if (list.length > 1) { var n = _.el("span", "row-thumb-n"); n.textContent = String(list.length); b.appendChild(n); }
     b.addEventListener("click", function (e) {
       e.preventDefault();
@@ -679,12 +691,7 @@
       if (has) {
         tile.type = "button";
         tile.setAttribute("aria-label", w.one + (x.label ? " · " + x.label : ""));
-        var img = _.el("img");
-        img.alt = "";
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.src = x.thumb || x.src;
-        tile.appendChild(img);
+        tile.appendChild(photo(x.thumb || x.src));
         tile.addEventListener("click", function (e) {
           e.preventDefault();
           e.stopPropagation();

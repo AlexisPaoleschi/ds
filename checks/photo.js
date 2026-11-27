@@ -352,6 +352,18 @@ function stylesheets() {
     const t = [...ul.querySelectorAll('.thumb-strip > li')]; const out = { tops: t.map(x => Math.round(x.getBoundingClientRect().top)), rules: t.map(x => getComputedStyle(x).borderTopWidth) };
     ul.remove(); return out; });
   assert(new Set(inRow.tops).size === 1 && inRow.rules.every(w => w === '0px'), 'ds.viewer.strip dans une ligne de liste : ses vignettes côte à côte, au même haut, sans trait ' + JSON.stringify(inRow));
+  // a photo the page has shown is put in again at once when the page is drawn again (7.5.1, Studio: « Pk ça clignote »): no
+  // lazy loading for it, decoded with the page, while a photo never shown still waits to near the screen
+  const again = await show.evaluate(async () => {
+    const src = 'data:image/svg+xml,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8"><rect width="8" height="8" fill="gray"/></svg>');
+    const shown = ds.viewer.thumb([{ thumb: src }]); shown.style.position = 'fixed'; shown.style.top = '0'; document.body.appendChild(shown);
+    await new Promise(ok => { const im = shown.querySelector('img'); if (im.complete && im.naturalWidth) ok(); else im.addEventListener('load', ok); setTimeout(ok, 3000); });
+    shown.remove();
+    const first = ds.viewer.thumb([{ thumb: src }]).querySelector('img'), fresh = ds.viewer.thumb([{ thumb: 'never-shown.svg' }]).querySelector('img');
+    const strip = ds.viewer.strip([{ thumb: src }]).querySelector('img');
+    return { first: [first.loading, first.decoding], strip: [strip.loading, strip.decoding], fresh: [fresh.loading, fresh.decoding] }; });
+  assert(again.first[0] !== 'lazy' && again.first[1] === 'sync' && again.strip[1] === 'sync' && again.fresh[0] === 'lazy',
+    'ds.viewer.thumb et ds.viewer.strip : une photo déjà montrée revient sans s’effacer quand la page est redessinée ' + JSON.stringify(again));
   await show.locator('.thumb-strip > li').nth(2).locator('button').click();
   await show.waitForTimeout(300);
   const stOpen = await show.evaluate(() => { const v = document.querySelector('.viewer.is-open'); return v && v.querySelector('.viewer-count').textContent; });

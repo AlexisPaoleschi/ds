@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.5.1 · 27 novembre 2026
+
+- `ds.viewer.thumb` et `ds.viewer.strip` : une photo que la page a déjà montrée revient décodée avec la page, sans chargement différé, quand la page est redessinée. Les carrés d'une liste ne s'effacent plus un instant à chaque nouveau dessin (Studio : « Pk ça clignote »). Une photo jamais montrée attend toujours d'approcher de l'écran.
+
 ## 7.5.0 · 27 novembre 2026
 
 - `ds.busy.fail(word)` : un chargement qui échoue le dit. Le pourcentage laisse place à « Échec » (ou au mot donné) en rouge, que le lecteur d'écran entend, pendant quatre secondes. `done(false)` reste l'arrêt sans un mot d'une page passée ailleurs. Dans Bank, une lecture des banques qui échouait à 12 % disparaissait sans rien dire.
