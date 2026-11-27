@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.8.1 · 27 novembre 2026
+
+- La ligne au-dessus d'un bouton de la page d'accueil du site (`.announcement`, « Senegal 2027 just announced! », « Exclusive content on Patreon ») passe en petites capitales, 12px au lieu de 14, la taille des noms des réseaux sous leurs icônes.
+
 ## 6.8.0 · 27 novembre 2026
 
 - Les photos d’un post en tête de sa ligne : `ds.viewer.thumb(items, {label, caption})`, dans `ds-photo.js`, rend un petit carré (`.row-thumb` en bouton) avec la première photo, combien il y en a dans son coin (`.row-thumb-n`) et la marque d’une vidéo (`.is-video`). Un clic les ouvre toutes dans la visionneuse. Un post sans photo garde un carré vide avec une page discrète (`.is-empty`), pour que les lignes restent alignées. Les marques sont dessinées par la feuille de style, sans le fichier d’icônes. 48px, 40 sur un téléphone, 36 dans un classement (`.rank.has-thumb`). Studio s’en sert dans ses listes de posts. La page d’accueil de la vitrine le montre, près de la visionneuse.

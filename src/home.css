@@ -35,8 +35,9 @@
   .links-container { display: flex; flex-direction: column; gap: var(--s-24); width: 100%; }
   .link-item { display: flex; flex-direction: column; gap: var(--s-8); }
   .link-item.with-spacing { margin-bottom: var(--s-16); }
-  .announcement { padding: 0 var(--s-16); font-family: var(--type-caps-font); font-size: var(--type-caps-size); font-weight: var(--type-caps-weight); line-height: var(--lh-relaxed);
-    letter-spacing: var(--type-caps-ls); text-align: center; text-transform: var(--type-caps-case); color: var(--white); text-shadow: var(--text-shadow-sm); }
+  /* the line over a button, in the small capitals of the networks' names under their icons (6.8.1) */
+  .announcement { padding: 0 var(--s-16); font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); line-height: var(--lh-relaxed);
+    letter-spacing: var(--type-smallcaps-ls); text-align: center; text-transform: var(--type-smallcaps-case); color: var(--white); text-shadow: var(--text-shadow-sm); }
   .announcement:empty { display: none; }
   .button-icon { flex-shrink: 0; width: var(--ico-l); height: var(--ico-l); }
   /* Announcement Badge */
