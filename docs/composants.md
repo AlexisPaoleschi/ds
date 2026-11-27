@@ -61,7 +61,7 @@ Une carte se plie avec `details.fold`, ou par son titre avec `ds.foldCard`.
 | `tiles.css` | les chiffres en tuiles (`.tiles`, `.tile`), la forme compacte (`.tiles.is-compact`), `.is-cols`, `.tile.is-link`, `.is-shrink` |
 | `meter.css` | une barre par catégorie (`.meter`) |
 | `table.css` | le tableau qui se trie et se choisit (`table.tbl`, `.is-num`, `.tbl-ck`, `.tbl-main`, `.tbl-end`, `.tbl-wide`, `.tbl-phone`), en cartes sur téléphone (`.is-cards`, `.tbl-sortmenu`), la barre du choix (`.selbar`, `.selbar-n`, `.selbar-x`, `.selbar-acts`) |
-| `rows.css` | les lignes séparées d’un trait (`ul.rows`, `--row-py`), en cartes (`.is-cards`), `.rows-head`, `.late-tag`, `.tint`, les paires de mots (`dl.facts`) ; les photos d’un post en tête de sa ligne (`.row-thumb`, `.row-thumb-n`, `.is-video`, `.is-empty`, `.rank.has-thumb`) ; les stories d’un jour en vignettes (`.thumb-strip`, `.thumb-strip-photo`, `.thumb-strip-fig`, `.is-best`) |
+| `rows.css` | les lignes séparées d’un trait (`ul.rows`, `--row-py`), en cartes (`.is-cards`), `.rows-head`, `.late-tag`, `.tint`, les paires de mots (`dl.facts`) ; les photos d’un post en tête de sa ligne (`.row-thumb`, `.row-thumb-n`, `.is-video`, `.is-empty`, `.rank.has-thumb`) ; les stories d’un jour en vignettes (`.thumb-strip`, `.thumb-strip-photo`, `.thumb-strip-fig`, `.is-best`) ; une ligne sans heure (`.row-date.is-none`), sa colonne gardée sur un ordinateur, laissée au titre sur un téléphone |
 
 * `.tiles.is-compact` est pour le haut d’un écran. Vitrine la dessine en petites cartes ombrées, le chiffre au-dessus.
 * `.tiles.is-cols` fixe les colonnes : `--tile-cols` (4), `--tile-cols-phone` (2) sur téléphone.

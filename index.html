@@ -54,6 +54,11 @@
     ds.highlight("#g-rows", ".row-title, .row-note", search.terms(tree));
     const chips = search.terms(tree).map((t, i) => ({ key: String(i), label: "« " + t.v + " »" })); ds.filterChips("#g-chips", chips, { onClear: () => { document.getElementById("g-q").value = ""; find(); } }); };
   document.getElementById("g-q").addEventListener("input", find); find();
+  // ds.keepPlace: rows that come in above the one being read do not push it
+  document.querySelectorAll('[data-keep]').forEach(card => { const list = card.querySelector('ul.rows'); let n = 0;
+    card.querySelector('.ct-tools').addEventListener("click", () => ds.keepPlace(() => { n++;
+      list.prepend(...[1, 2].map(i => ds.h("li", {}, [ds.h("span", { class: "row-date", text: "0" + (6 + i) + "h00" }), ds.h("span", { class: "row-title", text: "Arrivée " + n + "." + i })])));
+    }, { root: list })); });
   document.querySelectorAll('#forms-demo [aria-pressed]').forEach(b => b.addEventListener("click", () => b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") === "true" ? "false" : "true"))); });</script>
 <script src="demos/studio.js" defer></script>
 <script src="demos/photo.js" defer></script>
@@ -518,6 +523,10 @@
       <ul class="rows" id="g-rows"><li><span class="row-title">Café de la Gare</span><span class="row-note">avec Léa</span></li><li><span class="row-title">Amazon Prime</span></li><li><span class="row-title">Boulangerie Paul</span><span class="row-note">un café</span></li></ul>
       <p class="note" id="g-said"></p>
       <p class="note">Aussi : ds.toast({key}) (une bulle par sujet), ds.optimistic, ds.openAll, ds.enter et ds.leave, ds.redraw, ds.suggest, ds.query (le langage de recherche de Bank), ds.filters (le panneau de filtres de Bank et Studio).</p>
+    </div>
+    <div class="card" data-keep><h3 class="ct">Garder sa place · ds.keepPlace <button class="btn is-act ct-tools" type="button">Ajouter au-dessus</button></h3>
+      <p class="note">Une page redessinée quand des données arrivent : les lignes venues au-dessus ne poussent pas celle qu’on lit. Descends dans la liste, puis ajoute.</p>
+      <ul class="rows"><li><span class="row-date">09h00</span><span class="row-title">Shooting avec Léa</span></li><li><span class="row-date">11h30</span><span class="row-title">Retouches de la série</span></li><li><span class="row-date">14h00</span><span class="row-title">Rendez-vous comptable</span></li><li><span class="row-date is-none">—</span><span class="row-title">Poster la série Ksenia</span></li><li><span class="row-date">18h00</span><span class="row-title">Pilates</span></li></ul>
     </div>
     <h2 class="cat" data-cat="photos">Photos et couvertures</h2>
     <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act ct-tools" type="button" data-photo="open">Ouvrir</button></h3>

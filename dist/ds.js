@@ -1,4 +1,4 @@
-/* ds 7.3.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -1524,6 +1524,11 @@
    ds.redraw(holder, signature, build, {key, scroll, focus}): build(holder) only when signature changed, so that a new
    read does not move a list under the finger; the scroll of scroll (the holder) is kept while key stays the same, the
    focus goes back to the element focus(holder, was) gives (else the one with the same id). ds.redraw.reset(holder).
+   ds.keepPlace(fn, {root, line}): fn() draws the page (or a part of it, root) again, and what one was looking at stays
+   where it was on the screen: the row crossing the line (a third of the way down the screen, line 0.33) is found again
+   after, by its day or its key (data-day, data-key) and its words, and the page scrolls by however much it moved.
+   Safari keeps no place by itself, and a page emptied then filled again loses it in every browser: rows that came in
+   above, a day grown taller, no longer push what one reads (7.4.0). Gives back what fn gave.
    ds.highlight(root, selector, terms): the words looked for lit in the text of the elements (mark.hit), accents and
    capitals aside; a {t: "phrase", v} as written, whole words. ds.text.exact(phrase) is that phrase's pattern.
    ds.suggest(word, vocabulary, {room}): the nearest word of vocabulary (a Map of words and how often they come, or a
@@ -1791,6 +1796,34 @@
   }
   redraw.reset = function (holder) { holder = _.find(holder); if (holder) { holder._dsDrawn = null; holder._dsKey = null; } };
 
+  /* ---------- a redraw that keeps what one is looking at where it was ---------- */
+  var KEEP_ROWS = "li, tr, h2, h3, h4, p, [data-day], [data-key]";
+  function holderOf(el) { return el.closest("[data-key], [data-day]"); }
+  function holderSel(k) { return k.hasAttribute("data-key") ? '[data-key="' + CSS.escape(k.getAttribute("data-key")) + '"]' : '[data-day="' + CSS.escape(k.getAttribute("data-day")) + '"]'; }
+  function wordsOf(el) { return (el.textContent || "").replace(/\s+/g, " ").trim().slice(0, 120); }
+  function keepPlace(fn, o) {
+    o = o || {};
+    var root = _.find(o.root) || document.body, y = Math.round(window.innerHeight * (o.line == null ? 0.33 : o.line));
+    var hit = window.scrollY > 0 ? document.elementFromPoint(window.innerWidth / 2, y) : null;
+    var row = hit && root.contains(hit) ? hit.closest(KEEP_ROWS) : null;
+    if (!row || !root.contains(row)) return fn();
+    var hold = holderOf(row), sel = hold && root.contains(hold) ? holderSel(hold) : null, tag = row.tagName, words = wordsOf(row);
+    // a day may hold several places (its square in a month and its panel under it): the one of the same rank
+    var nth = sel ? [].indexOf.call(root.querySelectorAll(sel), hold) : -1;
+    var rowTop = row.getBoundingClientRect().top, holdTop = sel ? hold.getBoundingClientRect().top : null;
+    var out = fn();
+    var scope = sel ? root.querySelectorAll(sel)[nth] : root, again = null, was = rowTop;
+    if (!scope) return out;
+    if (scope.tagName === tag && wordsOf(scope) === words) again = scope;
+    else again = [].find.call(scope.getElementsByTagName(tag), function (e) { return wordsOf(e) === words; }) || null;
+    // the row itself is gone (its words changed): its day or its key holds the place
+    if (!again && sel) { again = scope; was = holdTop; }
+    if (!again) return out;
+    var moved = Math.round(again.getBoundingClientRect().top - was);
+    if (moved) window.scrollBy(0, moved);
+    return out;
+  }
+
   /* ---------- what a search looked for, lit; the word it may have meant ---------- */
   var escape = function (s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); };
   // a phrase as whole words, accents counted, capitals aside
@@ -1866,7 +1899,7 @@
   suggest.distance = distance;
 
   ds.undo = undo; ds.optimistic = optimistic; ds.copy = copy; ds.openAll = openAll; ds.pop = pop;
-  ds.enter = enter; ds.leave = leave; ds.redraw = redraw; ds.highlight = highlight; ds.suggest = suggest;
+  ds.enter = enter; ds.leave = leave; ds.redraw = redraw; ds.keepPlace = keepPlace; ds.highlight = highlight; ds.suggest = suggest;
   ds.text.exact = exact;
 })();
 /* Picking rows or tiles, in ds.js since 4.21.0 (it was in ds-tools.js, for tables only).

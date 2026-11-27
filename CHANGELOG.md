@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.4.0 · 27 novembre 2026
+
+- `ds.keepPlace(fn, {root, line})` : une page redessinée garde à sa place ce qu'on lit. La ligne qui croise le tiers de l'écran est retrouvée après le redessin, par son jour ou sa clé (`data-day`, `data-key`) et ses mots, et la page défile d'autant qu'elle a bougé. Safari ne garde aucune place de lui-même, et une page vidée puis remplie la perd dans tous les navigateurs : des lignes arrivées au-dessus, un jour devenu plus haut ne poussent plus ce qu'on lit (l'agenda de Studio remontait tout seul quand ses données arrivaient).
+- Une ligne sans heure (`.row-date.is-none`, « — ») garde sa colonne sur un ordinateur et laisse sa place au titre sur un téléphone.
+- Dans la semaine d'un calendrier, les titres ne sont coupés entre deux syllabes que dans les colonnes étroites d'un ordinateur : sur un téléphone, les jours sont l'un sous l'autre, aussi larges que l'écran, et aucun mot n'est coupé.
+
 ## 7.3.1 · 27 novembre 2026
 
 - Le titre d'une carte reste à la même place, qu'il ait un outil sur sa ligne ou non (un bouton `.ct-tools`, une liste de périodes `.periodpick`, les flèches d'un mois `.periodnav.is-step`) : l'outil se centre sur la ligne du titre sans la rendre plus haute, comme dans une carte qui se plie depuis 5.19.2, et ce qui suit garde sa place sous lui. Le titre « Voyages » de Bank, « Dépenses par catégorie » et « Compte facture » ne descendent plus de 11px. Sur une ligne trop étroite, l'outil passe sous le titre, à 8px de ses mots.

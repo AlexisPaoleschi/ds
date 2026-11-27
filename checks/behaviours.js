@@ -1,7 +1,8 @@
 // The shared behaviour of ds.js in a real browser: the drawer, the sources' state, the time in words, the header's
 // loading wheel, a failing source's bubble, the main views' bar; and with the keyboard and a screen reader in mind: Tab
 // inside ds.confirm, a bubble that waits under the keyboard, a loading heard twice, the titles fitted only when they
-// change, an unreadable date, the wheels standing still when the device asks for less motion.
+// change, an unreadable date, the wheels standing still when the device asks for less motion; a redraw that keeps the
+// row one reads where it was (ds.keepPlace, 7.4.0).
 // usage: node checks/behaviours.js (Playwright installed); it serves the repository itself on a free port
 const { chromium } = require('playwright');
 const http = require('http'), fs = require('fs'), path = require('path');
@@ -734,6 +735,28 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   });
   assert(quick.made <= 6 && quick.first !== '' && quick.left === '13px' && quick.fitted !== '',
     'un format de date ou de chiffre se fait une fois, pas à chaque date ; redessiner des cases n’ajuste que celles-là ' + JSON.stringify(quick));
+  // ds.keepPlace (7.4.0, « quand je suis en bas et que ça charge, que ça arrête de bouger »): a list emptied and drawn
+  // again with rows come in above, or a day grown taller, leaves the row one reads where it was on the screen
+  const place = await p.evaluate(() => {
+    const list = document.createElement('div'); document.body.append(list);
+    const draw = extra => { list.textContent = ''; for (let d = 1; d <= 20; d++) { const sec = document.createElement('section'); sec.dataset.day = '2026-12-' + String(d).padStart(2, '0');
+      const ul = document.createElement('ul'); ul.className = 'rows'; const n = d <= 10 ? 4 + extra : 4;
+      for (let i = 0; i < n; i++) { const li = document.createElement('li'); li.innerHTML = '<span class="row-title">Ligne ' + i + ' du ' + d + '</span>'; ul.append(li); }
+      sec.append(ul); list.append(sec); } };
+    draw(0);
+    window.scrollTo(0, list.getBoundingClientRect().top + scrollY + 1200);
+    const at = () => { const el = document.elementFromPoint(innerWidth / 2, Math.round(innerHeight * 0.33)).closest('li'); return [el.textContent, Math.round(el.getBoundingClientRect().top)]; };
+    const before = at();
+    ds.keepPlace(() => draw(3), { root: list });
+    const after = at();
+    // without it, the same redraw pushes the row away
+    draw(0); window.scrollTo(0, list.getBoundingClientRect().top + scrollY + 1200);
+    const plain0 = at(); draw(3); const plain1 = at();
+    list.remove(); window.scrollTo(0, 0);
+    return { before, after, moved: plain0[0] !== plain1[0] || plain0[1] !== plain1[1] };
+  });
+  assert(place.before[0] === place.after[0] && Math.abs(place.before[1] - place.after[1]) <= 1 && place.moved,
+    'ds.keepPlace : une liste vidée puis redessinée, des lignes en plus au-dessus, garde à sa place la ligne qu’on lit ' + JSON.stringify(place));
   assert(errors.length === 0, 'aucune erreur dans la page ' + errors.join(' '));
   await b.close();
   server.close();

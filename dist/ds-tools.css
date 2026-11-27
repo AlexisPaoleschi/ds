@@ -1,4 +1,4 @@
-/* ds 7.3.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.4.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
@@ -531,8 +531,12 @@
   .cal-wcol h3 { margin: 0 0 var(--s-8); color: var(--faint); font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-ui) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
   .cal-wcol.is-today h3 { color: var(--accent-text); }
   .cal-wcol h3 { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--type-smallcaps-font); font-size: var(--type-smallcaps-size); font-weight: var(--type-smallcaps-weight); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
-  /* a narrow column cuts its titles between syllables, never in the middle of one */
-  .cal-wcol .row-title { overflow-wrap: break-word; hyphens: auto; }
+  /* a narrow column cuts its titles between syllables, never in the middle of one; on a phone the days stand one under
+     the other, as wide as the screen, and no word is cut (7.4.0) */
+  .cal-wcol .row-title { overflow-wrap: break-word; }
+@media (min-width: 769px) {
+  .cal-wcol .row-title { hyphens: auto; }
+}
   .cal-wdate { display: block; margin-top: var(--s-2); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* the list: the week before folded above its first day */
   .cal-prev { display: inline-flex; align-items: center; gap: var(--s-8); width: 100%; margin: 0; padding: var(--s-8) var(--s-12); background: none; border: 1px dashed var(--line-2); border-radius: var(--r-m);

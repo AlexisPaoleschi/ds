@@ -35,7 +35,7 @@ Sur iPhone et iPad, il ajoute `maximum-scale=1` à la balise viewport : toucher 
 | `build.js` | `ds.tile`, `ds.tiles`, `ds.card`, `ds.tabs`, `ds.meter`, `ds.legend`, `ds.median`, `ds.mean` |
 | `forms.js` | `ds.rows`, `ds.password`, `ds.autosave` |
 | `validate.js` | `ds.validate(form, {words})` : les contrôles d’un formulaire, dans les mots de la page plutôt que les bulles du navigateur (aussi dans `ds-site.js`) |
-| `gestures.js` | `ds.undo`, `ds.optimistic`, `ds.copy`, `ds.openAll`, `ds.pop`, `ds.enter`, `ds.leave`, `ds.redraw`, `ds.highlight`, `ds.suggest` |
+| `gestures.js` | `ds.undo`, `ds.optimistic`, `ds.copy`, `ds.openAll`, `ds.pop`, `ds.enter`, `ds.leave`, `ds.redraw`, `ds.keepPlace`, `ds.highlight`, `ds.suggest` |
 | `selection.js` | `ds.selection(holder, {bar, count, sum, onPick, cls})` : choisir des lignes ou des tuiles, par leur case `.sel-box` (`.sel-all` pour toutes) |
 | `images.js` | `ds.images.renew` : redemander l’adresse signée d’une image qui a expiré |
 | `sheet.js` | `ds.sheet(el, {onOpen, onClose})` : ouvrir et fermer la fiche |
