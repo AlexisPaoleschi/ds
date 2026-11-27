@@ -267,6 +267,22 @@ function stylesheets() {
   assert(short.bottom === short.screen && short.page === short.screen && long.bottom === long.page && long.page > long.screen,
     'a short page keeps its footer at the screen\'s foot, a long one ends with it ' + JSON.stringify([short, long]));
 
+  // a workshop's application (the form card across its width): its big button a step further from the boxes than two
+  // fields are from each other, the line under it as far, nothing for the empty line of the sending (7.1.3)
+  const room = async width => { const form = await browser.newPage({ viewport: { width, height: 900 } });
+    await form.goto(base + '/site-event.html', { waitUntil: 'networkidle' });
+    const got = await form.evaluate(() => { const f = document.getElementById('demo-request'), r = el => el.getBoundingClientRect();
+    const groups = f.querySelectorAll('.field-group'), btn = f.querySelector(':scope > .btn.is-large'), line = f.querySelector('.contact-links');
+    const under0 = [...groups].find(g => r(g).top > r(groups[0]).bottom);
+    return { fields: Math.round(r(under0).top - r(groups[0]).bottom), above: Math.round(r(btn).top - r(f.querySelector('.checks')).bottom),
+      under: Math.round(r(line).top - r(btn).bottom), text: Math.round(r(line.querySelector('p')).top - r(line).top - 1) }; });
+    await form.close();
+    return got; };
+  const big = await room(1280), small = await room(390);
+  const near = (a, b) => Math.abs(a - b) <= 1;
+  assert(near(big.fields, 20) && near(big.above, 32) && near(big.under, 32) && near(big.text, 32) && near(small.fields, 16) && near(small.above, 24) && near(small.under, 24) && near(small.text, 24),
+    'le gros bouton d’un formulaire : à un cran de plus des cases que deux champs entre eux, le trait aussi loin dessous, sans place pour la ligne vide de l’envoi ' + JSON.stringify([big, small]));
+
   await browser.close();
   server.close();
 })();

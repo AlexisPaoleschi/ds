@@ -1,4 +1,4 @@
-/* ds 7.1.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.1.3 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The site kit (dist/ds-site.css), the pieces that alexispaoleschi.com shares between its pages and that no app
    needs, kept here so that they live in one place with the rest; the apps do not load this file. Vitrine only.
    First its base: the reset, the page loader over the page until it is ready (ds-site.js, window.hideLoader), the
@@ -360,6 +360,9 @@
      the middle, under a thin line: <div class="contact-links"><p>Prefer to write directly?</p><a class="btn is-pill">…</a>…</div> */
   .contact-links { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: var(--s-12); padding-top: var(--s-24);
     border-top: 1px solid var(--line); }
+  /* at the foot of a form card: its line as far under the big button as the button is under the fields, and as far again
+     above the sentence (7.1.3) */
+  .card.is-form > .contact-links { margin-top: calc(var(--space-lg) - var(--space-md)); padding-top: var(--space-lg); }
   .contact-links > p { width: 100%; margin: 0; text-align: center; color: var(--dim); }
   .contact-card { display: block; padding: var(--s-48) var(--s-40); text-align: center; text-decoration: none; background: var(--accent-soft);
     border: 1px solid var(--line); cursor: pointer; transition: all var(--t-mid) ease; }

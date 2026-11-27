@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.3 · 27 novembre 2026
+
+- Le gros bouton d'un formulaire (`.card.is-form > .btn.is-large`, la demande d'un atelier) est à un cran de plus des cases au-dessus de lui que deux champs entre eux : 32px sur un ordinateur, 24px sur un téléphone (il était à 20px, l'écart le plus petit avant un gros bouton sur le site). La ligne qui dit comment l'envoi s'est passé ne prend plus de place tant qu'elle est vide (hors du flux, toujours lue quand elle parle) : le bouton n'était plus au milieu, à 20px des cases et 52px du trait sous lui. Le trait des « Prefer to write directly? » (`.contact-links`) est à 32px sous le bouton, et la phrase à 32px sous le trait (24px sur un téléphone).
+
 ## 7.1.2 · 27 novembre 2026
 
 - Sur un téléphone, la photo d'à côté arrive dans la visionneuse à la hauteur de la photo, et ne descend plus une fois en place : elle gardait les marges d'avant 7.0.1 (48px en haut et en bas), quand la photo commence sous la croix. La place laissée au-dessus et au-dessous de la photo a ses jetons, `--viewer-top` et `--viewer-bottom`, que la photo et sa voisine prennent toutes les deux.
