@@ -296,7 +296,7 @@
   /* titles, and running text, with room between their lines */
   --title-lh: var(--lh-loose); --head-lh: var(--lh-loose); --text-lh: var(--lh-airy);
   --title-wrap-lh: var(--lh-ui); --title-wrap-pad: calc((var(--lh-loose) - var(--lh-ui)) * .5em);
-  --lede-color: var(--ink); --check-box: 20px;
+  --lede-color: var(--ink);
   --box-bg: var(--accent-soft);
   /* a control is 45px high, Selecta's: the site's 63px buttons are kept for its calls to act (.is-large) */
   --control-h: 45px;
@@ -383,6 +383,10 @@
 /* Less motion, when the device asks for it, in one place: nothing takes time, nothing lifts or zooms on hover, and every
    animation, the looping ones included (the wheels, the site's pulses and bounces), stands still at once. A component
    that must not even show its last frame (the header's tick) says so in its own file. */
+/* the box to tick, a little bigger under a finger: the hint under it follows */
+@media (pointer: coarse) {
+  :root, [data-theme] { --check-box: 20px; }
+}
 @media (prefers-reduced-motion: reduce) {
   :root, [data-theme] { --t-fast: 0s; --t-mid: 0s; --t-slow: 0s; --t-loop: 0s; --btn-lift: 0px; --card-lift: 0px; --cover-zoom: 1; }
   *, *::before, *::after { animation-duration: 0s !important; animation-delay: 0s !important; animation-iteration-count: 1 !important;

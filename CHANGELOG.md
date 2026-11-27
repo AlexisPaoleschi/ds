@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.7.1 · 26 novembre 2026
+
+- La ligne sous une case à cocher (`.check-hint`, et une `.field-note` dans `.checks`) commence pile sous les mots de la case : en Vitrine, sur un ordinateur, elle était 4px trop à droite (son retrait comptait une case de 20px, qui en fait 16). La taille de la case et ce retrait viennent maintenant du même jeton, `--check-box`, 16px partout et 20px sous un doigt ; le bouton-case (`button.box`) le prend aussi.
+
 ## 6.7.0 · 26 novembre 2026
 
 - Une pastille pour ce qui est fini : `.badge.is-done`, à l'encre pleine sous la lumière du panneau (blanc sur noir en Vitrine). Elle se lit sur une photo comme sur une page, là où la pastille pâle (`.is-soft`) disparaît sur une photo. La carte d'un workshop terminé, sur la liste des événements du site, dit « Ended » avec elle. La page d'accueil de la vitrine la montre à côté des trois autres.
