@@ -1,4 +1,4 @@
-/* ds 7.1.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.1.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1154,13 +1154,16 @@
    (.viewer-name), as in Selecta's: ds.viewer builds the same bar when the page has none, so the count never covers the
    photo. Alone in the stage's bottom right corner, the pill keeps its old place.
    It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
+  /* the room the photo leaves above and under it (--viewer-top, --viewer-bottom): the stage's padding, and the box of the
+     next photo while a finger drags it, so that both are at the same height */
   .viewer { --viewer-gap: var(--s-24); --viewer-btn: var(--touch-target); --viewer-side: calc(var(--viewer-btn) + 2 * var(--viewer-gap));
+    --viewer-top: var(--s-48); --viewer-bottom: var(--s-48);
     position: fixed; inset: 0; z-index: var(--z-viewer); display: grid; grid-template-rows: minmax(0, 1fr) auto;
     /* one column as wide as the screen: a long title in the bar is cut, it does not widen the viewer past the screen */
     grid-template-columns: minmax(0, 1fr); padding-top: var(--safe-top); }
   .viewer-veil { position: absolute; inset: 0; background: var(--overlay-black-strong); }
   /* a flex box, so that the photo can be as high as the room it has, and no higher */
-  .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }
+  .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--viewer-top) var(--viewer-side) var(--viewer-bottom); }
   .viewer-stage img { max-width: 100%; max-height: 100%; object-fit: contain; box-shadow: var(--shadow-sheet); user-select: none; -webkit-user-select: none; }
   .viewer-stage .spinner { position: absolute; }
   .viewer-btn { position: absolute; z-index: var(--z-raise); display: grid; place-items: center; width: var(--viewer-btn); height: var(--viewer-btn); padding: 0; color: var(--viewer-ink);
@@ -1186,9 +1189,9 @@
 }
 @media (max-width: 768px) {
   /* on a phone the photo takes the width, and the arrows sit over it */
-  .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); --viewer-btn: var(--s-40); }
   /* the photo takes the width: it starts under the cross, not beside it; at its foot, the count is in the bar */
-  .viewer-stage { padding-top: calc(var(--viewer-gap) + var(--viewer-btn) + var(--s-8)); padding-bottom: var(--s-16); }
+  .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); --viewer-btn: var(--s-40);
+    --viewer-top: calc(var(--viewer-gap) + var(--viewer-btn) + var(--s-8)); --viewer-bottom: var(--s-16); }
 }
 /* What ds.viewer (src/viewer.js) adds to its look: it fades in, the page behind
    stays still while it is open, the photo hides behind the spinner while it loads (or shows its thumbnail, blurred),
@@ -1207,8 +1210,8 @@
   /* while a finger holds it, the photo follows it at once */
   .viewer.is-dragging .viewer-stage img, .viewer.is-dragging .viewer-veil { transition: none; }
   /* the next photo, beside it while a finger drags it, at the same size in the same room (the stage's padding) */
-  .viewer-stage .viewer-peek { position: absolute; inset: var(--s-48) var(--viewer-side); margin: auto; max-width: calc(100% - 2 * var(--viewer-side));
-    max-height: calc(100% - 2 * var(--s-48)); pointer-events: none; }
+  .viewer-stage .viewer-peek { position: absolute; inset: var(--viewer-top) var(--viewer-side) var(--viewer-bottom); margin: auto; max-width: calc(100% - 2 * var(--viewer-side));
+    max-height: calc(100% - var(--viewer-top) - var(--viewer-bottom)); pointer-events: none; }
   .viewer-stage .viewer-peek[hidden] { display: none; }
   /* let go: both go on to their place, a little slower, slowing down at the end */
   .viewer.is-sliding .viewer-stage img { transition: transform var(--t-mid) ease-out; }

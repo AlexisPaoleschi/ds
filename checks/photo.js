@@ -352,16 +352,17 @@ function stylesheets() {
   for (let i = 1; i <= 8; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 300 - 120 * i / 8, y: 402 }] }); await q.waitForTimeout(16); }
   const held = await q.evaluate(() => { const im = document.querySelector('.viewer-stage img:not(.viewer-peek)'), pk = document.querySelector('.viewer-peek');
     const a = im.getBoundingClientRect(), b = pk.getBoundingClientRect();
-    return { shown: !pk.hidden, right: b.left > a.left + 100, high: Math.abs(b.height - a.height) < 2 || Math.abs(b.width - a.width) < 2 }; });
+    return { shown: !pk.hidden, right: b.left > a.left + 100, high: Math.abs(b.height - a.height) < 2 || Math.abs(b.width - a.width) < 2,
+      level: Math.abs(b.top + b.height / 2 - (a.top + a.height / 2)) < 2 }; });
   await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
   const moves = [];
   for (let i = 0; i < 6; i++) { moves.push(await q.evaluate(() => Math.round(new DOMMatrix(getComputedStyle(document.querySelector('.viewer-stage img:not(.viewer-peek)')).transform).m41))); await q.waitForTimeout(40); }
   await q.waitForTimeout(600);
   const turned = await q.evaluate(() => ({ count: document.querySelector('.viewer-count').textContent, peek: document.querySelector('.viewer-peek').hidden,
     still: getComputedStyle(document.querySelector('.viewer-stage img:not(.viewer-peek)')).transform }));
-  assert(held.shown && held.right && held.high && moves.every((m, i) => i === 0 || m <= moves[i - 1] + 1) && moves[moves.length - 1] < -120 &&
+  assert(held.shown && held.right && held.high && held.level && moves.every((m, i) => i === 0 || m <= moves[i - 1] + 1) && moves[moves.length - 1] < -120 &&
     turned.count === '4 / 5' && turned.peek && turned.still === 'none',
-    'au doigt, la suivante arrive par la droite ; lâchée, la photo continue vers la gauche sans revenir, puis la suivante est en place ' + JSON.stringify([held, moves, turned]));
+    'au doigt, la suivante arrive par la droite, à la hauteur de la photo ; lâchée, la photo continue vers la gauche sans revenir, puis la suivante est en place ' + JSON.stringify([held, moves, turned]));
   await swipe(80, 400, 280, 395);
   await swipe(300, 400, 120, 410);
   const s1 = await cnt();

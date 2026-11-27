@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.2 · 27 novembre 2026
+
+- Sur un téléphone, la photo d'à côté arrive dans la visionneuse à la hauteur de la photo, et ne descend plus une fois en place : elle gardait les marges d'avant 7.0.1 (48px en haut et en bas), quand la photo commence sous la croix. La place laissée au-dessus et au-dessous de la photo a ses jetons, `--viewer-top` et `--viewer-bottom`, que la photo et sa voisine prennent toutes les deux.
+
 ## 7.1.1 · 27 novembre 2026
 
 - La coche d'un fichier envoyé (`ds.upload`, `.upload-row-status`) est verte : elle était rouge, de la couleur d'un échec. Ce que dit un échec reste rouge (`.upload-row-status.is-bad`, que `ds.upload` pose).
