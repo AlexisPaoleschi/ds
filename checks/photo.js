@@ -322,6 +322,18 @@ function stylesheets() {
   assert(parts['drop.zip'] && parts['drop.zip'].result && parts['drop.zip'].result.bytes === 10247 && parts['drop.zip'].result.next === 3 && parts['drop.zip'].bar === '100' && parts['drop.zip'].tick
     && parts['lost.zip'] && parts['lost.zip'].result && parts['lost.zip'].result.bytes === 10247 && drop.next === 3 && lost.next === 3,
     'ds.upload en morceaux (part) : chaque morceau tel quel, le premier avec son nom ; un morceau sans réponse renvoyé, un serveur qui a oublié le fichier le reprend du début ; la coche d’un fichier envoyé en vert ' + JSON.stringify({ parts, drop, lost }));
+  // the first loading (ds.boot) stays until the photo the first screen shows is in, then goes (7.3.0)
+  const booting = await p.evaluate(() => new Promise(ok => {
+    const b = document.createElement('div'); b.className = 'boot'; document.body.appendChild(b);
+    const im = document.createElement('img'); im.src = '/photo/91.svg?w=300&h=200&ms=900'; im.style.cssText = 'position: fixed; top: 0; left: 0; width: 100px; height: 60px';
+    document.body.appendChild(im);
+    const t0 = Date.now(), out = {};
+    ds.boot.done().then(() => { out.waited = Date.now() - t0; out.loaded = im.complete; });
+    setTimeout(() => { out.early = b.classList.contains('is-gone'); }, 300);
+    setTimeout(() => { out.late = b.classList.contains('is-gone'); b.remove(); im.remove(); ok(out); }, 1600);
+  }));
+  assert(booting.early === false && booting.late === true && booting.loaded && booting.waited >= 800,
+    'le premier chargement (ds.boot.done) attend la photo du premier écran, puis s’en va ' + JSON.stringify(booting));
   await ctx.close();
 
   // a day of stories (ds.viewer.strip), on the showcase: a tile per story at a story's shape, its figure under it, its

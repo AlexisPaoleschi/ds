@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.3.0 · 27 novembre 2026
+
+- Le premier chargement attend les photos du premier écran : `ds.boot.done({images, wait})` ne s'en va qu'une fois arrivées (ou en échec) les images que montre le premier écran (celles de `images`, toute la page sinon), 3 s au plus (`wait`), et rend une promesse. La page se montre une fois, entière, au lieu de voir ses photos arriver une à une (Studio, Bank). Le loader du site (`ds.ready`) les attend aussi, en plus de la photo de son en-tête. Le calcul est commun, dans le noyau (`_.screenImages`).
+
 ## 7.2.1 · 27 novembre 2026
 
 - Dans une ligne de liste (`ul.rows`, un jour de stories de Studio), les vignettes d'une rangée (`ds.viewer.strip`) restent au même haut, sans le trait ni la place d'une ligne : la règle des lignes (`ul.rows li`) les atteignait, et la deuxième descendait sous un trait.

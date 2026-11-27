@@ -18,8 +18,8 @@
    builds a node and ds.esc(text) makes a text harmless in HTML (the core's, src/core.js), for what a page writes from a Gist.
    ds.json(url) reads a JSON file (the site's Gists), asked for afresh on every visit (?t=…) and once per page however
    many scripts ask for it. ds.photo(src) and ds.images(root) settle once a photo, or every <img> under root, has loaded
-   or failed. ds.ready(...waits) takes the page loader away once these and the photo the page gives its header
-   (--hero-photo) have settled, failed or not.
+   or failed. ds.ready(...waits) takes the page loader away once these, the photo the page gives its header
+   (--hero-photo) and the photos the first screen shows (7.3.0) have settled, failed or not.
    ds.screens(), once the screens are written: a page that scrolls by screens (.scroll-container of .scroll-section, the
    home page) gets a dot per screen in .scroll-dots (the first one may be in the page already), the dot of the screen shown lit, the dots shown once
    past the first screen, the hint (.scroll-hint) on the first screen when there are more, a dot or the hint going to its
@@ -234,7 +234,8 @@
 
   // the loader goes once the page's waits and its header photo have settled, whichever comes last
   function ready() {
-    var waits = Array.prototype.slice.call(arguments);
+    // the page's own waits, its header's photo, and the photos the first screen shows (7.3.0)
+    var waits = Array.prototype.slice.call(arguments).concat([window.ds._.screenImages(document)]);
     var el = document.querySelector('[style*="--hero-photo"]');
     var m = el && el.getAttribute("style").match(/--hero-photo:\s*url\((['"]?)([^'")]+)\1\)/);
     if (m) waits.push(photo(m[2]));

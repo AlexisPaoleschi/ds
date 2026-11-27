@@ -1,4 +1,4 @@
-/* ds 7.2.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -178,11 +178,35 @@
     }
   });
 
+  /* _.screenImages(root, wait): once the images of root (the page) that the first screen shows are in, or have failed,
+     wait ms at most (3 s): a page's loader goes then, so that the page shows once, whole, instead of its photos coming
+     one by one (7.3.0). An image under the loader still loads: the loader covers it, the page is drawn. */
+  function screenImages(root, wait) {
+    root = root && root.querySelectorAll ? root : document;
+    var high = window.innerHeight || 0, wide = window.innerWidth || 0;
+    var waiting = [].filter.call(root.querySelectorAll("img"), function (im) {
+      if (im.complete || !im.getAttribute("src")) return false;
+      var r = im.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < high && r.right > 0 && r.left < wide;
+    });
+    if (!waiting.length) return Promise.resolve();
+    return Promise.race([
+      Promise.all(waiting.map(function (im) {
+        return new Promise(function (ok) {
+          if (im.complete) return ok();
+          im.addEventListener("load", ok, { once: true });
+          im.addEventListener("error", ok, { once: true });
+        });
+      })),
+      new Promise(function (ok) { setTimeout(ok, wait == null ? 3000 : wait); })
+    ]);
+  }
+
   /* ds.today(): Paris's day, "2026-11-12", whatever the device's clock says (the same as ds.day.today()). */
   function today() { return day.today(); }
 
   ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
-    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top, intl: intl };
+    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top, intl: intl, screenImages: screenImages };
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
@@ -210,8 +234,8 @@
    builds a node and ds.esc(text) makes a text harmless in HTML (the core's, src/core.js), for what a page writes from a Gist.
    ds.json(url) reads a JSON file (the site's Gists), asked for afresh on every visit (?t=…) and once per page however
    many scripts ask for it. ds.photo(src) and ds.images(root) settle once a photo, or every <img> under root, has loaded
-   or failed. ds.ready(...waits) takes the page loader away once these and the photo the page gives its header
-   (--hero-photo) have settled, failed or not.
+   or failed. ds.ready(...waits) takes the page loader away once these, the photo the page gives its header
+   (--hero-photo) and the photos the first screen shows (7.3.0) have settled, failed or not.
    ds.screens(), once the screens are written: a page that scrolls by screens (.scroll-container of .scroll-section, the
    home page) gets a dot per screen in .scroll-dots (the first one may be in the page already), the dot of the screen shown lit, the dots shown once
    past the first screen, the hint (.scroll-hint) on the first screen when there are more, a dot or the hint going to its
@@ -426,7 +450,8 @@
 
   // the loader goes once the page's waits and its header photo have settled, whichever comes last
   function ready() {
-    var waits = Array.prototype.slice.call(arguments);
+    // the page's own waits, its header's photo, and the photos the first screen shows (7.3.0)
+    var waits = Array.prototype.slice.call(arguments).concat([window.ds._.screenImages(document)]);
     var el = document.querySelector('[style*="--hero-photo"]');
     var m = el && el.getAttribute("style").match(/--hero-photo:\s*url\((['"]?)([^'")]+)\1\)/);
     if (m) waits.push(photo(m[2]));

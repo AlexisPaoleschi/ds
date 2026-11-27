@@ -1,4 +1,4 @@
-/* ds 7.2.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.3.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -178,11 +178,35 @@
     }
   });
 
+  /* _.screenImages(root, wait): once the images of root (the page) that the first screen shows are in, or have failed,
+     wait ms at most (3 s): a page's loader goes then, so that the page shows once, whole, instead of its photos coming
+     one by one (7.3.0). An image under the loader still loads: the loader covers it, the page is drawn. */
+  function screenImages(root, wait) {
+    root = root && root.querySelectorAll ? root : document;
+    var high = window.innerHeight || 0, wide = window.innerWidth || 0;
+    var waiting = [].filter.call(root.querySelectorAll("img"), function (im) {
+      if (im.complete || !im.getAttribute("src")) return false;
+      var r = im.getBoundingClientRect();
+      return r.width > 0 && r.height > 0 && r.bottom > 0 && r.top < high && r.right > 0 && r.left < wide;
+    });
+    if (!waiting.length) return Promise.resolve();
+    return Promise.race([
+      Promise.all(waiting.map(function (im) {
+        return new Promise(function (ok) {
+          if (im.complete) return ok();
+          im.addEventListener("load", ok, { once: true });
+          im.addEventListener("error", ok, { once: true });
+        });
+      })),
+      new Promise(function (ok) { setTimeout(ok, wait == null ? 3000 : wait); })
+    ]);
+  }
+
   /* ds.today(): Paris's day, "2026-11-12", whatever the device's clock says (the same as ds.day.today()). */
   function today() { return day.today(); }
 
   ds._ = { english: english, words: words, table: table, el: el, find: find, read: read, write: write, reduced: reduced,
-    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top, intl: intl };
+    ms: ms, tone: tone, focusables: focusables, layer: layer, unlayer: unlayer, top: top, intl: intl, screenImages: screenImages };
   ds.h = h;
   ds.esc = esc;
   ds.ico = ico;
@@ -923,8 +947,9 @@
    page is seen again if its time has come; until: a time (ms) or a test that ends it; now: once at once. Gives back
    {stop(), now()}. ds.onSeen(fn, {after}): fn when the page is seen again after being away at least after ms.
    ds.boot: the first loading in the middle of the page (.boot, with its .boot-title and .boot-text): say(title, text),
-   done() (it fades, then is hidden), fail(title, why, retry) (its failed look, and a « Réessayer » button that reloads
-   the page or runs retry), shown().
+   done({images, wait}) (once the images the first screen shows are in, those of images, the page by default, wait ms
+   at most, 3 s: it fades, then is hidden; a promise, 7.3.0), fail(title, why, retry) (its failed look, and a
+   « Réessayer » button that reloads the page or runs retry), shown().
    ds.ext(url, text, {cls}): a link to another site, in a new tab, only for an https address; plain text otherwise.
    ds.delta(n, {format, decimals, min, max, unit, invert}): a change, signed and in its tone (.delta, is-good when it
    rose, is-bad when it fell, the other way round with invert), « ±0 » without a tone; format "money", "percent" or a
@@ -1066,12 +1091,17 @@
       if (s && text != null) s.textContent = text;
     },
     shown: function () { var b = boot(); return !!b && !b.hidden && !b.classList.contains("is-gone"); },
-    done: function () {
+    done: function (o) {
       var b = boot();
-      if (!b || b.hidden || b.classList.contains("is-gone")) return;
-      b.classList.add("is-gone");
-      var wait = parseFloat(getComputedStyle(b).transitionDuration) || 0;
-      setTimeout(function () { b.hidden = true; }, _.reduced() ? 0 : wait * (/ms/.test(getComputedStyle(b).transitionDuration) ? 1 : 1000));
+      if (!b || b.hidden || b.classList.contains("is-gone")) return Promise.resolve();
+      o = o || {};
+      // the page is drawn under it: it goes once the photos of the first screen are in, so that the page shows once, whole
+      return _.screenImages(o.images, o.wait).then(function () {
+        if (b.hidden || b.classList.contains("is-gone") || b.classList.contains("is-failed")) return;
+        b.classList.add("is-gone");
+        var wait = parseFloat(getComputedStyle(b).transitionDuration) || 0;
+        setTimeout(function () { b.hidden = true; }, _.reduced() ? 0 : wait * (/ms/.test(getComputedStyle(b).transitionDuration) ? 1 : 1000));
+      });
     },
     fail: function (title, why, retry) {
       var b = boot();

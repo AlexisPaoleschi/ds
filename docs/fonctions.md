@@ -31,7 +31,7 @@ Sur iPhone et iPad, il ajoute `maximum-scale=1` à la balise viewport : toucher 
 | Source | Fonctions |
 |:--|:--|
 | `ds.js` | `ds.toast`, `ds.confirm`, `ds.when`, `ds.ago`, `ds.soon`, `ds.date`, `ds.time`, `ds.number`, `ds.money`, `ds.percent`, `ds.compact`, `ds.api`, `ds.avatar`, `ds.fold`, `ds.foldCard`, `ds.fitFigures`, `ds.route`, `ds.seek` |
-| `kit.js` | `ds.text`, `ds.plural`, `ds.count`, `ds.list`, `ds.duration`, `ds.every`, `ds.since`, `ds.store`, `ds.poll`, `ds.onSeen`, `ds.boot`, `ds.ext`, `ds.delta` |
+| `kit.js` | `ds.text`, `ds.plural`, `ds.count`, `ds.list`, `ds.duration`, `ds.every`, `ds.since`, `ds.store`, `ds.poll`, `ds.onSeen`, `ds.boot` (`done({images, wait})` attend les photos du premier écran avant de s’en aller), `ds.ext`, `ds.delta` |
 | `build.js` | `ds.tile`, `ds.tiles`, `ds.card`, `ds.tabs`, `ds.meter`, `ds.legend`, `ds.median`, `ds.mean` |
 | `forms.js` | `ds.rows`, `ds.password`, `ds.autosave` |
 | `validate.js` | `ds.validate(form, {words})` : les contrôles d’un formulaire, dans les mots de la page plutôt que les bulles du navigateur (aussi dans `ds-site.js`) |
