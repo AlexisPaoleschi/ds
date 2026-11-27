@@ -9,13 +9,13 @@
   var WORDS = _.table({
     fr: { openFilters: "Ouvrir les filtres", closeFilters: "Fermer les filtres",
           journal: "Journal", run: "Lancer", runNow: " maintenant", started: "Lancé", running: "En cours", allLogs: "Tout sur Render ↗",
-          live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé",
+          live: "En direct, passage en cours", lastRuns: "Derniers passages", loading: "Chargement…", loaded: "Chargement terminé", failed: "Échec",
           nothing: "Rien d’écrit depuis le démarrage du serveur.", journalOf: function (x) { return "Journal : " + x; },
           retry: "Réessayer", tryingAgain: "nouvel essai…", stillFailing: "toujours impossible.", upToDate: "à jour",
           jobGood: "dernier passage réussi", jobBad: "dernier passage en erreur", jobRun: "en cours", jobNone: "pas encore passé" },
     en: { openFilters: "Open the filters", closeFilters: "Close the filters",
           journal: "Log", run: "Run", runNow: " now", started: "Started", running: "Running", allLogs: "All on Render ↗",
-          live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done",
+          live: "Live, running now", lastRuns: "Last runs", loading: "Loading…", loaded: "Loading done", failed: "Failed",
           nothing: "Nothing written since the server started.", journalOf: function (x) { return "Log: " + x; },
           retry: "Try again", tryingAgain: "trying again…", stillFailing: "still failing.", upToDate: "up to date",
           jobGood: "last run fine", jobBad: "last run failed", jobRun: "running", jobNone: "not run yet" }
@@ -239,7 +239,9 @@
      expected ms the first time. pct(p) says how much of the work is done (Studio: the rows read): the first time, with no
      length known, the end is then foreseen from the work too, and the speed bends towards it gently, never a jump.
      It never goes back, and waits at 99% for a loading longer than foreseen. done() runs on to 100% in a moment, then
-     shows a green tick that fades, and remembers how long it took; done(false) just stops. say(word) shows a word in
+     shows a green tick that fades, and remembers how long it took; done(false) just stops (the page went elsewhere).
+     fail(word) says the loading failed: word (« Échec ») in red where the share was, for four seconds, then nothing
+     (7.5.0: a reading that failed at 12 % vanished without a word). say(word) shows a word in
      place of the share (Studio's « calcul… » once every read is in, while the page draws), until done(). While a first
      loading covers the page, its share (#boot-pc) is the same. The share and the word are only seen: screen readers hear
      the words of start() once, then « Chargement terminé » from done(), not every step of the share. */
@@ -272,7 +274,7 @@
       bz.known = !!(bz.key && busyTimes()[bz.key]);
       bz.expected = (bz.key && busyTimes()[bz.key]) || o.expected || 3000;
       bz.arrive = bz.start + bz.expected;
-      top.classList.remove("is-loaded");
+      top.classList.remove("is-loaded", "is-failed");
       top.classList.add("is-loading");
       var bt = top.querySelector(".busy .busy-text");
       if (bt) bt.textContent = text || words().loading;
@@ -316,6 +318,20 @@
           bz.end = setTimeout(function () { top.classList.remove("is-loaded"); }, 2000);
         }, 100);
       }, STEP);
+    },
+    fail: function (word) {
+      var top = busyTop();
+      clearInterval(bz.tick); bz.tick = null; clearTimeout(bz.end);
+      if (!top) return;
+      word = word || words().failed;
+      top.classList.remove("is-loading", "is-loaded");
+      busyText(word);
+      // the one word screen readers hear: the region shows again with it
+      var bt = top.querySelector(".busy .busy-text");
+      if (bt) bt.textContent = word;
+      void top.offsetWidth;
+      top.classList.add("is-failed");
+      bz.end = setTimeout(function () { top.classList.remove("is-failed"); busyText(""); }, 4000);
     },
     say: function (word) {
       var top = busyTop();

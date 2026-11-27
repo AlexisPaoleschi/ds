@@ -124,6 +124,19 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(flat && gentle, 'le pourcentage monte à vitesse régulière, et l’avance des sources lues la corrige en douceur ' + JSON.stringify(even));
   // a word in place of the share (Studio's « calcul… »): it stays while the time passes and a share is given, until the end
   await p.waitForTimeout(2100);
+  // a loading that fails says so (7.5.0, « il a fait de 0 à 12 % et a disparu ») : « Échec » in red where the share
+  // was, heard once, gone after four seconds; the next loading starts clean
+  await p.evaluate(() => { ds.busy.start('Lecture des banques…', { expected: 3000 }); });
+  await p.waitForTimeout(300);
+  await p.evaluate(() => ds.busy.fail());
+  const bf = await p.evaluate(() => { const top = document.querySelector('header.top'), share = top.querySelector('.busy .busy-share'), probe = document.createElement('i');
+    probe.style.color = 'var(--bad)'; top.append(probe); const bad = getComputedStyle(probe).color; probe.remove();
+    return { failed: top.classList.contains('is-failed'), on: ds.busy.active(), seen: getComputedStyle(top.querySelector('.busy')).visibility, word: share.textContent,
+      red: getComputedStyle(share).color === bad, heard: top.querySelector('.busy .busy-text').textContent }; });
+  await p.waitForTimeout(4200);
+  const bf2 = await p.evaluate(() => ({ failed: document.querySelector('header.top').classList.contains('is-failed'), word: document.querySelector('.busy .busy-share').textContent }));
+  assert(bf.failed && !bf.on && bf.seen === 'visible' && bf.word === 'Échec' && bf.red && bf.heard === 'Échec' && !bf2.failed && bf2.word === '',
+    'ds.busy.fail : un chargement qui échoue le dit, « Échec » en rouge à la place du pourcentage, quatre secondes ' + JSON.stringify([bf, bf2]));
   await p.evaluate(() => { ds.busy.start('Analyse', { expected: 400 }); ds.busy.say('calcul…'); ds.busy.pct(80); });
   await p.waitForTimeout(400);
   const w1 = await p.evaluate(() => [document.querySelector('.busy .busy-share').textContent, document.getElementById('boot-pc').textContent]);

@@ -471,7 +471,7 @@
       <div class="toast is-bad" role="alert"><span class="mark" aria-hidden="true"></span><span class="txt">BoursoBank n’a pas répondu</span><button type="button" class="act">Réessayer</button><button type="button" class="toast-close" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button></div>
     </div>
     <div class="dialog" role="dialog" aria-label="Exemple de fenêtre"><h2 class="dialog-t">Supprimer le voyage « Vendée 2026 » ?</h2><p class="dialog-text">Ses opérations restent, sans voyage.</p><div class="dialog-b"><button type="button" class="btn dialog-no">Annuler</button><button type="button" class="btn dialog-ok is-danger">Supprimer</button></div></div>
-    <div class="row"><button class="btn" type="button" data-demo="busy">Charger</button><button class="btn" type="button" data-demo="trouble">Source en panne</button></div>
+    <div class="row"><button class="btn" type="button" data-demo="busy">Charger</button><button class="btn" type="button" data-demo="busyfail">Chargement en échec</button><button class="btn" type="button" data-demo="trouble">Source en panne</button></div>
     <div class="card"><h3 class="ct">L’état des sources · ds.status</h3><footer data-tools="status"></footer></div>
     <div class="card"><h3 class="ct">Les synchros · ds.jobs</h3><div class="settings" data-tools="jobs"></div></div>
     <div class="card"><h3 class="ct">Les connexions · .conn</h3><div class="settings">
@@ -736,6 +736,10 @@
   document.addEventListener("click", e => {
     const b = e.target.closest("[data-demo]");
     if (!b) return;
+    if (b.dataset.demo === "busyfail") {
+      ds.busy.start("Lecture des banques…", { header: b.closest(".theme").querySelector("header.top"), expected: 2500 });
+      setTimeout(() => ds.busy.fail(), 1200);
+    }
     if (b.dataset.demo === "busy") {
       ds.busy.start("Lecture des banques…", { header: b.closest(".theme").querySelector("header.top"), expected: 2500 });
       setTimeout(() => ds.busy.pct(60), 1200);

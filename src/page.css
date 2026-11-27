@@ -36,6 +36,11 @@
   @keyframes okpop { from { transform: scale(.6); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes okdraw { to { stroke-dashoffset: 0; } }
   @keyframes okfade { 0%, 70% { opacity: 1; } 100% { opacity: 0; } }
+  /* a loading that failed (ds.busy.fail): its word in red where the share was, for four seconds (7.5.0) */
+  header.top.is-failed .busy { visibility: visible; animation: failfade 4s ease forwards; }
+  header.top.is-failed .busy .spin, header.top.is-failed .busy .busy-ok { display: none; }
+  header.top.is-failed .busy .busy-share { color: var(--bad); }
+  @keyframes failfade { 0%, 85% { opacity: 1; } 100% { opacity: 0; } }
   
   header.top .busy .spin { --spin-size: 14px; display: block; }
 /* the first loading, in the middle of the page: what is being read, then it fades as the page is drawn */
@@ -64,7 +69,7 @@
    header.top .tabs button { padding: var(--s-8) var(--s-8); }
 }
 @media (prefers-reduced-motion: reduce) {
-   header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok { animation: none; }
+   header.top.is-loaded .busy, header.top.is-loaded .busy .busy-ok, header.top.is-failed .busy { animation: none; }
    /* the tick is drawn at once and stays, as Studio did (the wheels stand still through tokens.css) */
    header.top.is-loaded .busy .busy-ok svg { stroke-dashoffset: 0; animation: none; }
 }

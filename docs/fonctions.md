@@ -94,7 +94,7 @@ Il se lie après `ds.js`, dont il prend la bulle, le serveur et le noyau.
 | `live.js` | `ds.version`, le témoin de nouvelle version ; `ds.stream`, le direct du serveur ; `ds.keep`, la copie sur l’appareil (`get`, `put`, `del`, `fresh`) |
 
 * `ds.drawer` : sa mise en page `.side-layout[data-drawer]`, `data-drawer-toggle`, `data-drawer-close` ; `mark(true)` pose le point d’or `.filter-pip`.
-* `ds.busy` : `start(text, {key})`, `pct(p)`, `say(word)`, `done()`. Un lecteur d’écran entend les mots de `start`, puis « Chargement terminé ».
+* `ds.busy` : `start(text, {key})`, `pct(p)`, `say(word)`, `done()`, `done(false)` (s’arrête sans rien dire, la page est passée ailleurs), `fail(word)` (le chargement a échoué : « Échec » en rouge quatre secondes). Un lecteur d’écran entend les mots de `start`, puis « Chargement terminé » ou le mot de l’échec.
 * `ds.jobs` dessine des boutons de ds, `[data-job="run"]` et `[data-job="journal"]`, et le point `.sync-dot` dans son ton.
 * `ds.chart.line` prend `format`, `formatDay`, `floor` (une échelle jusqu’à 0) et `ref` (un niveau à sa vraie hauteur).
 * `bars` et `donut` prennent `value` et `onPick` ; `heat` et `spark` prennent `tip` ; `bars` avec `pairs` dessine des barres en paires.
