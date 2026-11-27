@@ -1,8 +1,9 @@
 /* The photo viewer, taken from alexispaoleschi.com: a photo over a black veil, a cross to close it, an arrow on each side,
    all three square buttons in the dark glass of its count, the cross and the arrows those of the icons (Lucide's, as the
    site's « ← Home »), filled with gold on hover as the site's buttons are. Under the photo, room for an app's own bar
-   (Selecta's name, heart and note). The position (.viewer-count) sits in the bottom right corner, under the arrow to
-   the next photo; an app with a bar puts it in its tools, beside the heart: the same pill, elsewhere.
+   (Selecta's name, heart and note). The position (.viewer-count) sits in that bar, on the right of the photo's title
+   (.viewer-name), as in Selecta's: ds.viewer builds the same bar when the page has none, so the count never covers the
+   photo. Alone in the stage's bottom right corner, the pill keeps its old place.
    It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
   .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(var(--touch-target) + 2 * var(--viewer-gap));
     position: fixed; inset: 0; z-index: var(--z-viewer); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
@@ -26,6 +27,12 @@
     font: var(--type-small-weight) var(--type-small-size)/var(--lh-loose) var(--type-small-font); letter-spacing: var(--type-small-ls); white-space: nowrap; text-transform: var(--type-small-case); }
   /* in an app's tools (Selecta's bar), beside the heart: the same pill, in the bar's row instead of the corner */
   .viewer-tools .viewer-count { position: static; }
+/* a web app on an iPhone's home screen: iOS shades the top of the screen under its status bar, a little lower than its
+   safe area; the cross and the photo start below that shade */
+@media (display-mode: standalone) {
+  .viewer { padding-top: calc(var(--safe-top) + var(--s-24)); }
+  .viewer-close { top: calc(var(--viewer-gap) + var(--safe-top) + var(--s-24)); }
+}
 @media (max-width: 768px) {
   /* on a phone the photo takes the width, and the arrows sit over it */
   .viewer { --viewer-gap: var(--s-16); --viewer-side: var(--s-10); }
@@ -47,10 +54,15 @@
   .viewer-stage img.is-placeholder { filter: blur(var(--blur-m)); }
   /* while a finger holds it, the photo follows it at once */
   .viewer.is-dragging .viewer-stage img, .viewer.is-dragging .viewer-veil { transition: none; }
-  /* under the photo, in the row viewer.css keeps for an app's bar: a caption, when an item has one */
+  /* the next photo, beside it while a finger drags it, at the same size in the same room (the stage's padding) */
+  .viewer-stage .viewer-peek { position: absolute; inset: var(--s-48) var(--viewer-side); margin: auto; max-width: calc(100% - 2 * var(--viewer-side));
+    max-height: calc(100% - 2 * var(--s-48)); pointer-events: none; }
+  .viewer-stage .viewer-peek[hidden] { display: none; }
+  /* let go: both go on to their place, a little slower, slowing down at the end */
+  .viewer.is-sliding .viewer-stage img { transition: transform var(--t-mid) ease-out; }
+  /* under the photo, in the row viewer.css keeps for it: the bar, an app's (Selecta's) or the one ds.viewer builds the same
+     way (.viewer-bar.is-tools, the photo's title on the left and the count on the right, src/photokit.css) */
   .viewer-bar { position: relative; touch-action: auto; padding: var(--s-12) var(--s-24) calc(var(--s-20) + var(--safe-bottom)); text-align: center; }
-  .viewer-caption { margin: 0 auto; max-width: 60ch; min-height: calc(var(--type-text-size) * var(--lh-text)); color: var(--viewer-ink); text-shadow: var(--text-shadow-sm);
-    font: var(--type-text-weight) var(--type-text-size)/var(--lh-text) var(--type-text-font); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   /* a field in the bar (Selecta's note on a photo), light on the dark veil, and the line under it */
   .viewer-bar :is(input:not([type=checkbox]):not([type=radio]), textarea) { width: 100%; color: var(--white); background: var(--overlay-black-soft); border-color: var(--viewer-line); }
   .viewer-bar :is(input, textarea)::placeholder { color: var(--viewer-ink); }

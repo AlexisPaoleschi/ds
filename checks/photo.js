@@ -39,7 +39,7 @@ function stylesheets() {
     const css = fs.readFileSync(path.join(root, f), 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
     if (/#[0-9a-f]{3,8}\b|\brgba?\(|\bhsla?\(/i.test(css)) wrong.push(f + ': a colour written out');
     for (const m of css.matchAll(/@media\s*([^{]+)\{/g)) {
-      if (!/^\((max-width: (480|768|1024)px|hover: hover|prefers-reduced-motion: reduce)\)\s*$/.test(m[1].trim())) wrong.push(f + ': @media ' + m[1].trim());
+      if (!/^\((max-width: (480|768|1024)px|hover: hover|prefers-reduced-motion: reduce|display-mode: standalone)\)\s*$/.test(m[1].trim())) wrong.push(f + ': @media ' + m[1].trim());
     }
     for (const m of css.matchAll(/([a-z-]+)\s*:\s*([^;{}]+)/g)) {
       const [, prop, value] = m;
@@ -72,7 +72,7 @@ function stylesheets() {
   p.on('request', r => asked.push(r.url().replace(base, '')));
   const ready = async () => { await p.goto(base + '/checks/photo.html'); await p.waitForFunction(() => window.pg && window.bound); };
   await ready();
-  const vw = () => p.evaluate(() => { const v = document.querySelector('.viewer'), img = v && v.querySelector('.viewer-stage img'), cap = v && v.querySelector('.viewer-caption');
+  const vw = () => p.evaluate(() => { const v = document.querySelector('.viewer'), img = v && v.querySelector('.viewer-stage img'), cap = v && v.querySelector('.viewer-name');
     return v && { open: !v.hidden && v.classList.contains('is-open'), count: v.querySelector('.viewer-count').textContent, countShown: !v.querySelector('.viewer-count').hidden,
       src: img.getAttribute('src') || '', loading: img.classList.contains('is-loading'), placeholder: img.classList.contains('is-placeholder'),
       spin: !v.querySelector('.spinner.on-photo').hidden, focus: v.contains(document.activeElement), label: v.getAttribute('aria-label'),
@@ -116,7 +116,7 @@ function stylesheets() {
   const n35 = asked.filter(u => u === '/photo/35.svg?w=900&h=1200').length;
   assert(n35 === 1, 'une photo chargée d’avance n’est pas redemandée quand elle vient (' + n35 + ')');
   const capKeep = await p.evaluate(async () => { const st = document.querySelector('.viewer-stage'), h0 = st.offsetHeight; v.go(3); await new Promise(r => setTimeout(r, 50));
-    const c = document.querySelector('.viewer-caption'); return { text: c.textContent, bar: !c.closest('.viewer-bar').hidden, same: st.offsetHeight === h0 }; });
+    const c = document.querySelector('.viewer-name'); return { text: c.textContent, bar: !c.closest('.viewer-bar').hidden, same: st.offsetHeight === h0 }; });
   assert(capKeep.text === '' && capKeep.bar && capKeep.same, 'une photo sans légende garde la ligne vide : les photos ne changent pas de taille de l’une à l’autre ' + JSON.stringify(capKeep));
   // Tab stays in the viewer
   const inside = [];
@@ -132,7 +132,7 @@ function stylesheets() {
   const byVeil = await p.evaluate(() => document.querySelector('.viewer').hidden);
   await p.click('#open');
   await p.waitForTimeout(150);
-  const photoBox = await p.locator('.viewer-stage img').boundingBox();
+  const photoBox = await p.locator('.viewer-stage img:not(.viewer-peek)').boundingBox();
   await p.mouse.click(photoBox.x + photoBox.width / 2, photoBox.y + photoBox.height / 2);
   const onPhoto = await p.evaluate(() => !document.querySelector('.viewer').hidden);
   await p.click('.viewer-close');
@@ -300,10 +300,28 @@ function stylesheets() {
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: x0, y: y0 }] });
     for (let i = 1; i <= 8; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: x0 + (x1 - x0) * i / 8, y: y0 + (y1 - y0) * i / 8 }] }); await q.waitForTimeout(16); }
     await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
-    await q.waitForTimeout(120);
+    // the photo goes on out and its neighbour in (--t-mid) before the viewer turns
+    await q.waitForTimeout(700);
   };
   const cnt = () => q.evaluate(() => document.querySelector('.viewer-count').textContent);
   const s0 = await cnt();
+  // under the finger, the next photo comes in from the right at the photo's own size; let go, the photo goes on out to the
+  // left (it does not come back first), then the next one is the photo, its neighbour put away
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: 300, y: 400 }] });
+  for (let i = 1; i <= 8; i++) { await cdp.send('Input.dispatchTouchEvent', { type: 'touchMove', touchPoints: [{ x: 300 - 120 * i / 8, y: 402 }] }); await q.waitForTimeout(16); }
+  const held = await q.evaluate(() => { const im = document.querySelector('.viewer-stage img:not(.viewer-peek)'), pk = document.querySelector('.viewer-peek');
+    const a = im.getBoundingClientRect(), b = pk.getBoundingClientRect();
+    return { shown: !pk.hidden, right: b.left > a.left + 100, high: Math.abs(b.height - a.height) < 2 || Math.abs(b.width - a.width) < 2 }; });
+  await cdp.send('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] });
+  const moves = [];
+  for (let i = 0; i < 6; i++) { moves.push(await q.evaluate(() => Math.round(new DOMMatrix(getComputedStyle(document.querySelector('.viewer-stage img:not(.viewer-peek)')).transform).m41))); await q.waitForTimeout(40); }
+  await q.waitForTimeout(600);
+  const turned = await q.evaluate(() => ({ count: document.querySelector('.viewer-count').textContent, peek: document.querySelector('.viewer-peek').hidden,
+    still: getComputedStyle(document.querySelector('.viewer-stage img:not(.viewer-peek)')).transform }));
+  assert(held.shown && held.right && held.high && moves.every((m, i) => i === 0 || m <= moves[i - 1] + 1) && moves[moves.length - 1] < -120 &&
+    turned.count === '4 / 5' && turned.peek && turned.still === 'none',
+    'au doigt, la suivante arrive par la droite ; lâchée, la photo continue vers la gauche sans revenir, puis la suivante est en place ' + JSON.stringify([held, moves, turned]));
+  await swipe(80, 400, 280, 395);
   await swipe(300, 400, 120, 410);
   const s1 = await cnt();
   await swipe(80, 400, 280, 395);

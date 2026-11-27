@@ -110,6 +110,7 @@ Les largeurs d’écran sont les mêmes partout, celles d’alexispaoleschi.com.
 | 769px | plus large qu’un téléphone |
 | 1280px | un très grand écran |
 | `(max-width: 956px) and (orientation: landscape)` | le téléphone tenu couché, dans le seul kit du site ; les rôles y gardent leur taille de téléphone |
+| `(display-mode: standalone)` | une page posée sur l’écran d’accueil d’un iPhone (7.0.0) : la visionneuse descend sous le voile qu’iOS met sous sa barre d’état |
 
 ## Les boutons
 

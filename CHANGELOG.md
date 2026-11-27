@@ -1,5 +1,11 @@
 # Changelog
 
+## 7.0.0 · 27 novembre 2026
+
+- La visionneuse a la même barre sous la photo partout, celle de Selecta : le titre de la photo à gauche, en blanc (la légende d'un élément, `caption`, ou le `data-caption` d'un lien), le compteur « 3 / 9 » à droite. `ds.viewer` la construit (`.viewer-bar.is-tools`, `.viewer-tools`, `.viewer-name`, `.viewer-count`) quand la page n'a pas la sienne ; une photo sans titre n'en montre aucun. Le compteur ne passe donc plus sur la photo : il était dans le coin du bas à droite, par-dessus une photo qui prend toute la place (dans Studio, sur un téléphone). La légende centrée sous la photo, `.viewer-caption`, disparaît : d'où le numéro.
+- Sur une page posée sur l'écran d'accueil d'un iPhone (`display-mode: standalone`), la croix et la photo descendent sous le voile qu'iOS met sous sa barre d'état : la croix n'y est plus à moitié assombrie.
+- La visionneuse se feuillette au doigt comme les photos d'un téléphone : pendant le glissé, la photo d'à côté arrive par le bord, à sa taille, et suit le doigt avec la photo ; lâchée, la photo continue dans le sens du geste et sa voisine vient à sa place, sans que la photo revienne d'abord au milieu (avant, elle revenait au centre, puis la suivante apparaissait d'un coup). Un geste vif suffit, même court. Un geste trop petit les ramène toutes les deux. Les flèches et les touches changent de photo comme avant.
+
 ## 6.8.2 · 27 novembre 2026
 
 - La visionneuse passe toujours devant la fenêtre d'où on l'ouvre : elles étaient sur la même couche, et une fenêtre ouverte après la première visionneuse de la page passait devant elle (dans Studio, les photos d'un post s'ouvraient derrière la fenêtre des posts). La visionneuse a sa couche, `--z-viewer`, entre la fenêtre (`--z-sheet`) et la boîte qui demande (`--z-dialog`).
