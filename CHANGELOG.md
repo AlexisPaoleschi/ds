@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.0.1 · 27 novembre 2026
+
+- Sur un téléphone, la photo de la visionneuse commence sous la croix : une photo qui prend toute la hauteur passait 8px sous elle, et le voile d'iOS (7.0.0) l'avait rendu visible. En bas, la photo n'a plus que 16px de marge : le compteur est dans la barre. La taille des boutons de la visionneuse est un jeton à elle, `--viewer-btn` (44px, 40px sur un téléphone).
+- Un long titre sous la photo est coupé sur sa ligne (« … ») : il élargissait la visionneuse au-delà de l'écran, et le compteur « 12 / 60 » sortait à droite.
+
 ## 7.0.0 · 27 novembre 2026
 
 - La visionneuse a la même barre sous la photo partout, celle de Selecta : le titre de la photo à gauche, en blanc (la légende d'un élément, `caption`, ou le `data-caption` d'un lien), le compteur « 3 / 9 » à droite. `ds.viewer` la construit (`.viewer-bar.is-tools`, `.viewer-tools`, `.viewer-name`, `.viewer-count`) quand la page n'a pas la sienne ; une photo sans titre n'en montre aucun. Le compteur ne passe donc plus sur la photo : il était dans le coin du bas à droite, par-dessus une photo qui prend toute la place (dans Studio, sur un téléphone). La légende centrée sous la photo, `.viewer-caption`, disparaît : d'où le numéro.

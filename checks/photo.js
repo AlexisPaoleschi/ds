@@ -334,6 +334,15 @@ function stylesheets() {
   const s3 = await q.evaluate(() => ({ hidden: document.querySelector('.viewer').hidden, held: getComputedStyle(document.documentElement).overflow, log: log.filter(x => x.startsWith('v')).join(',') }));
   assert(s0 === '3 / 5' && s1 === '4 / 5' && s2 === '2 / 5' && small && btns, 'au doigt : vers la gauche la suivante, vers la droite la précédente ; un petit geste ne fait rien ' + [s0, s1, s2].join(' → '));
   assert(s3.hidden && s3.held !== 'hidden' && /vclose:1$/.test(s3.log), 'tirée vers le bas, la visionneuse se ferme ' + JSON.stringify(s3));
+  // a photo as tall as the room: it starts under the cross, its count in the bar under it, neither over it
+  // and a long title: cut on its line, the count still whole on the screen
+  await q.evaluate(() => ds.viewer(null, Array.apply(null, Array(60)).map((_, k) => ({ src: '/photo/7.svg?w=1000&h=2400', caption: 'FULL SERIES – Volcano with Les petits regards (60 photos)' })), { start: 11 }));
+  await q.waitForTimeout(500);
+  const tall = await q.evaluate(() => { const x = document.querySelector('.viewer-close').getBoundingClientRect(), i = document.querySelector('.viewer-stage img:not(.viewer-peek)').getBoundingClientRect(),
+    c = document.querySelector('.viewer-count').getBoundingClientRect(), n = document.querySelector('.viewer-name'), cut = n.scrollWidth > n.clientWidth; ds.viewer.close();
+    return { cross: Math.round(x.bottom), top: Math.round(i.top), bottom: Math.round(i.bottom), count: Math.round(c.top), right: Math.round(c.right), screen: innerWidth, cut: cut }; });
+  assert(tall.cross <= tall.top && tall.bottom <= tall.count && tall.right <= tall.screen - 16 && tall.cut,
+    'sur téléphone, une photo haute commence sous la croix et finit au-dessus du compteur ; un long titre est coupé, le compteur reste entier ' + JSON.stringify(tall));
   await phone.close();
 
   // ---------- a page with no script of its own, under script-src 'self' ----------
