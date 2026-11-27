@@ -334,6 +334,12 @@ function stylesheets() {
     return { n: li.length, ratio: Math.round(r(ph).height / r(ph).width * 100) / 100, fig: li[1].querySelector('.thumb-strip-fig').textContent,
       best: li[1].classList.contains('is-best') && getComputedStyle(ph).borderColor === getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || getComputedStyle(ph).boxShadow !== 'none',
       tones: li.map(tone), empty: li[3].querySelector('.thumb-strip-photo').tagName, video: li[2].querySelector('.thumb-strip-photo').classList.contains('is-video') }; });
+  // in a line of a list (ul.rows, a day of stories), its tiles stay side by side, on the same top, without a line's rule
+  const inRow = await show.evaluate(() => { const ul = document.createElement('ul'); ul.className = 'rows'; const li = document.createElement('li');
+    li.appendChild(ds.viewer.strip([{ thumb: 'x.svg', figure: '1' }, { thumb: 'y.svg', figure: '2' }, { figure: '3' }])); ul.appendChild(li); document.body.appendChild(ul);
+    const t = [...ul.querySelectorAll('.thumb-strip > li')]; const out = { tops: t.map(x => Math.round(x.getBoundingClientRect().top)), rules: t.map(x => getComputedStyle(x).borderTopWidth) };
+    ul.remove(); return out; });
+  assert(new Set(inRow.tops).size === 1 && inRow.rules.every(w => w === '0px'), 'ds.viewer.strip dans une ligne de liste : ses vignettes côte à côte, au même haut, sans trait ' + JSON.stringify(inRow));
   await show.locator('.thumb-strip > li').nth(2).locator('button').click();
   await show.waitForTimeout(300);
   const stOpen = await show.evaluate(() => { const v = document.querySelector('.viewer.is-open'); return v && v.querySelector('.viewer-count').textContent; });

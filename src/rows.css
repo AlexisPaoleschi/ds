@@ -65,7 +65,9 @@
      <ol class="thumb-strip"><li class="is-good is-best"><button class="thumb-strip-photo" type="button"><img alt="" src="…"></button>
      <span class="thumb-strip-fig">1 433</span></li>…</ol>, .is-video on a video's cover, span.thumb-strip-photo.is-empty without */
   .thumb-strip { --strip-w: var(--s-56); display: flex; gap: var(--s-8); margin: 0; padding: 0 0 var(--s-4); list-style: none; overflow-x: auto; scrollbar-width: thin; }
-  .thumb-strip > li { flex: none; display: flex; flex-direction: column; gap: var(--s-4); width: var(--strip-w); margin: 0; padding: 0; border: 0; }
+  /* as strong as the lines' own ul.rows li, and after it: a strip in a line (a day of stories) keeps its tiles side by side,
+     with no line's rule or room */
+  ol.thumb-strip > li { flex: none; display: flex; flex-direction: column; align-items: stretch; gap: var(--s-4); width: var(--strip-w); margin: 0; padding: 0; border: 0; }
   .thumb-strip-photo { position: relative; display: block; box-sizing: border-box; width: 100%; aspect-ratio: 9 / 16; margin: 0; padding: 0; overflow: hidden;
     color: var(--faint); background: var(--panel-2); border: 1px solid var(--line); border-radius: var(--r-s); }
   button.thumb-strip-photo { cursor: zoom-in; }

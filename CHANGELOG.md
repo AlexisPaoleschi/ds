@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.2.1 · 27 novembre 2026
+
+- Dans une ligne de liste (`ul.rows`, un jour de stories de Studio), les vignettes d'une rangée (`ds.viewer.strip`) restent au même haut, sans le trait ni la place d'une ligne : la règle des lignes (`ul.rows li`) les atteignait, et la deuxième descendait sous un trait.
+
 ## 7.2.0 · 27 novembre 2026
 
 - Une rangée de vignettes au format d'une story, `ds.viewer.strip(items, {label, caption})` (`.thumb-strip`) : une par story d'un jour, sa photo, son chiffre dessous (ses vues), une barre à son pied de la couleur de son verdict (`tone` : `good`, `mid` ou `bad`), la meilleure cerclée d'or (`best`). Un clic les ouvre dans la visionneuse, à celle-là ; une story sans photo garde une vignette vide. La rangée défile de côté quand elle est trop longue. Pour les stories de Studio, où un carré par jour et des barres minuscules ne disaient pas quelle story avait fait combien de vues.
