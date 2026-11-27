@@ -5,7 +5,7 @@
    the next photo; an app with a bar puts it in its tools, beside the heart: the same pill, elsewhere.
    It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
   .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(var(--touch-target) + 2 * var(--viewer-gap));
-    position: fixed; inset: 0; z-index: var(--z-sheet); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
+    position: fixed; inset: 0; z-index: var(--z-viewer); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
   .viewer-veil { position: absolute; inset: 0; background: var(--overlay-black-strong); }
   /* a flex box, so that the photo can be as high as the room it has, and no higher */
   .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }

@@ -53,8 +53,8 @@
   --s-32: 32px; --s-36: 36px; --s-40: 40px; --s-48: 48px;
   --s-56: 56px; --s-60: 60px; --s-80: 80px;
   /* layers, from the page up: raised, edge tab, overlay, tab bar, the veil under a phone's drawer, the drawer (above the
-     tab bar), a sheet and the photo viewer, a window over them, passing message */
-  --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-dialog: 55; --z-toast: 60;
+     tab bar), a sheet, the photo viewer (over the sheet it may be opened from), a window over them, passing message */
+  --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-viewer: 52; --z-dialog: 55; --z-toast: 60;
   /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
   --t-loop: 2s;
   /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or

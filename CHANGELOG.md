@@ -1,5 +1,9 @@
 # Changelog
 
+## 6.8.2 · 27 novembre 2026
+
+- La visionneuse passe toujours devant la fenêtre d'où on l'ouvre : elles étaient sur la même couche, et une fenêtre ouverte après la première visionneuse de la page passait devant elle (dans Studio, les photos d'un post s'ouvraient derrière la fenêtre des posts). La visionneuse a sa couche, `--z-viewer`, entre la fenêtre (`--z-sheet`) et la boîte qui demande (`--z-dialog`).
+
 ## 6.8.1 · 27 novembre 2026
 
 - La ligne au-dessus d'un bouton de la page d'accueil du site (`.announcement`, « Senegal 2027 just announced! », « Exclusive content on Patreon ») passe en petites capitales, 12px au lieu de 14, la taille des noms des réseaux sous leurs icônes.

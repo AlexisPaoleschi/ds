@@ -1,4 +1,4 @@
-/* ds 6.8.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 6.8.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -70,8 +70,8 @@
   --s-32: 32px; --s-36: 36px; --s-40: 40px; --s-48: 48px;
   --s-56: 56px; --s-60: 60px; --s-80: 80px;
   /* layers, from the page up: raised, edge tab, overlay, tab bar, the veil under a phone's drawer, the drawer (above the
-     tab bar), a sheet and the photo viewer, a window over them, passing message */
-  --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-dialog: 55; --z-toast: 60;
+     tab bar), a sheet, the photo viewer (over the sheet it may be opened from), a window over them, passing message */
+  --z-raise: 2; --z-edge: 25; --z-over: 30; --z-bar: 40; --z-scrim: 44; --z-drawer: 45; --z-sheet: 50; --z-viewer: 52; --z-dialog: 55; --z-toast: 60;
   /* one turn of an animation that loops (a badge that bounces, an arrow that beckons) */
   --t-loop: 2s;
   /* how much shows of what is turned off (a day outside the month, a source switched off), of what is being saved or
@@ -1154,7 +1154,7 @@
    the next photo; an app with a bar puts it in its tools, beside the heart: the same pill, elsewhere.
    It sits over a photo, so it looks the same in both themes. Opening, closing and the keys stay with each app for now. */
   .viewer { --viewer-gap: var(--s-24); --viewer-side: calc(var(--touch-target) + 2 * var(--viewer-gap));
-    position: fixed; inset: 0; z-index: var(--z-sheet); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
+    position: fixed; inset: 0; z-index: var(--z-viewer); display: grid; grid-template-rows: minmax(0, 1fr) auto; padding-top: var(--safe-top); }
   .viewer-veil { position: absolute; inset: 0; background: var(--overlay-black-strong); }
   /* a flex box, so that the photo can be as high as the room it has, and no higher */
   .viewer-stage { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: var(--s-48) var(--viewer-side); }
