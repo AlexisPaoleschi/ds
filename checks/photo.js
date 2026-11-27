@@ -308,18 +308,20 @@ function stylesheets() {
   // forgot the file starts it again; the file whole on the server, the row's bar at the end
   const parts = await p.evaluate(() => new Promise(ok => {
     const list = document.createElement('ul'), out = {}, size = 10 * 1024 + 7;
+    const tone = name => { const t = document.createElement('span'); t.style.color = 'var(' + name + ')'; document.body.append(t); const c = getComputedStyle(t).color; t.remove(); return c; };
     list.className = 'rows is-cards upload-list';
     document.body.append(list);
     const file = id => new File([new Uint8Array(size).fill(7)], id + '.zip', { type: 'application/zip' });
     let left = 2;
     ds.upload([file('drop'), file('lost')], { url: f => '/api/parts/' + f.name.replace('.zip', ''), part: 4096, list,
-      done: (result, f) => { out[f.name] = { result, bar: list.querySelector('[aria-label="' + f.name + '"]').getAttribute('aria-valuenow') }; if (!--left) ok(out); },
+      done: (result, f) => { const row = list.querySelector('[aria-label="' + f.name + '"]').closest('.upload-row');
+        out[f.name] = { result, bar: row.querySelector('.meter').getAttribute('aria-valuenow'), tick: getComputedStyle(row.querySelector('.upload-row-status')).color === tone('--good') }; if (!--left) ok(out); },
       fail: (e, f) => { out[f.name] = { failed: e.message }; if (!--left) ok(out); return 'Échec'; } });
   }));
   const [drop, lost] = await Promise.all(['drop', 'lost'].map(id => fetch(base + '/api/parts/' + id + '?part=99', { method: 'POST' }).then(r => r.json())));
-  assert(parts['drop.zip'] && parts['drop.zip'].result && parts['drop.zip'].result.bytes === 10247 && parts['drop.zip'].result.next === 3 && parts['drop.zip'].bar === '100'
+  assert(parts['drop.zip'] && parts['drop.zip'].result && parts['drop.zip'].result.bytes === 10247 && parts['drop.zip'].result.next === 3 && parts['drop.zip'].bar === '100' && parts['drop.zip'].tick
     && parts['lost.zip'] && parts['lost.zip'].result && parts['lost.zip'].result.bytes === 10247 && drop.next === 3 && lost.next === 3,
-    'ds.upload en morceaux (part) : chaque morceau tel quel, le premier avec son nom ; un morceau sans réponse renvoyé, un serveur qui a oublié le fichier le reprend du début ' + JSON.stringify({ parts, drop, lost }));
+    'ds.upload en morceaux (part) : chaque morceau tel quel, le premier avec son nom ; un morceau sans réponse renvoyé, un serveur qui a oublié le fichier le reprend du début ; la coche d’un fichier envoyé en vert ' + JSON.stringify({ parts, drop, lost }));
   await ctx.close();
 
   // ---------- on a phone ----------

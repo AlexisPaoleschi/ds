@@ -1,4 +1,4 @@
-/* ds 7.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.1.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -943,6 +943,7 @@
       function task() {
         (o.part ? pieces() : whole()).then(function (result) {
           fill(bar, 100);
+          status.classList.remove("is-bad");
           status.textContent = "✓";
           var b = batch.get(file);
           if (b) { b.state = "done"; b.loaded = b.total; }
@@ -953,6 +954,7 @@
           var b = batch.get(file);
           if (b) { b.state = "failed"; b.loaded = b.total; }
           showTotal();
+          status.classList.add("is-bad");
           status.textContent = (o.fail && o.fail(error, file)) || w.failed;
           retry.hidden = false;
         }).then(next, next);

@@ -127,6 +127,7 @@
       function task() {
         (o.part ? pieces() : whole()).then(function (result) {
           fill(bar, 100);
+          status.classList.remove("is-bad");
           status.textContent = "✓";
           var b = batch.get(file);
           if (b) { b.state = "done"; b.loaded = b.total; }
@@ -137,6 +138,7 @@
           var b = batch.get(file);
           if (b) { b.state = "failed"; b.loaded = b.total; }
           showTotal();
+          status.classList.add("is-bad");
           status.textContent = (o.fail && o.fail(error, file)) || w.failed;
           retry.hidden = false;
         }).then(next, next);

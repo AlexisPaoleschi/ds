@@ -1,4 +1,4 @@
-/* ds 7.1.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.1.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -2104,7 +2104,9 @@
   ul.rows.is-cards > li.upload-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-6) var(--s-12); }
   .upload-row-name { grid-column: 1 / -1; min-width: 0; overflow: hidden; font-size: var(--type-text-size); white-space: nowrap; text-overflow: ellipsis; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .upload-row .meter { grid-column: 1; width: 100%; }
-  .upload-row-status { grid-column: 2; min-width: var(--ico-l); color: var(--bad); font-size: var(--type-small-size); text-align: right; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .upload-row-status { grid-column: 2; min-width: var(--ico-l); color: var(--good); font-size: var(--type-small-size); text-align: right; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  /* the tick of a file sent is green; what a failure says, red */
+  .upload-row-status.is-bad { color: var(--bad); }
   .upload-row .btn { grid-column: 1 / -1; width: 100%; }
 @media (min-width: 769px) {
   ul.rows.is-cards > li.upload-row { display: flex; gap: var(--s-12); }

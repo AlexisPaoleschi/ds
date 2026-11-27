@@ -32,7 +32,9 @@
   ul.rows.is-cards > li.upload-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--s-6) var(--s-12); }
   .upload-row-name { grid-column: 1 / -1; min-width: 0; overflow: hidden; font-size: var(--type-text-size); white-space: nowrap; text-overflow: ellipsis; font-family: var(--type-text-font); font-weight: var(--type-text-weight); letter-spacing: var(--type-text-ls); text-transform: var(--type-text-case); }
   .upload-row .meter { grid-column: 1; width: 100%; }
-  .upload-row-status { grid-column: 2; min-width: var(--ico-l); color: var(--bad); font-size: var(--type-small-size); text-align: right; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .upload-row-status { grid-column: 2; min-width: var(--ico-l); color: var(--good); font-size: var(--type-small-size); text-align: right; font-family: var(--type-small-font); font-weight: var(--type-small-weight); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  /* the tick of a file sent is green; what a failure says, red */
+  .upload-row-status.is-bad { color: var(--bad); }
   .upload-row .btn { grid-column: 1 / -1; width: 100%; }
 @media (min-width: 769px) {
   ul.rows.is-cards > li.upload-row { display: flex; gap: var(--s-12); }

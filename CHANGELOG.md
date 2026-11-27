@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.1.1 · 27 novembre 2026
+
+- La coche d'un fichier envoyé (`ds.upload`, `.upload-row-status`) est verte : elle était rouge, de la couleur d'un échec. Ce que dit un échec reste rouge (`.upload-row-status.is-bad`, que `ds.upload` pose).
+
 ## 7.1.0 · 27 novembre 2026
 
 - `ds.upload` envoie un fichier trop gros pour une seule requête en morceaux : avec `part` (une taille en octets), chaque morceau part tel quel vers l’adresse suivie de `?part=N&last=0|1`, le premier avec `&name=…&size=…`. Un morceau sans réponse (le réseau, le serveur qui redémarre) repart toutes les 3 s pendant une minute ; un serveur qui répond 409 avec `{next}` dit le morceau qu’il attend, et l’envoi reprend de là (`{next: 0}` : il ne connaît pas le fichier, qui repart du début). « Réessayer » reprend au morceau qui a échoué. `url` peut aussi être une fonction qui donne à chaque fichier son adresse. Pour l’export Instagram que Studio reçoit depuis un téléphone, plusieurs centaines de Mo.
