@@ -83,6 +83,24 @@
   .theme > h2 { margin: 0; font: var(--type-title-2-weight) var(--type-title-2-size)/var(--lh-tight) var(--type-title-2-font); letter-spacing: var(--type-title-2-ls); text-transform: var(--type-title-2-case); }
   .theme > h2 small { display: block; margin-top: var(--s-4); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); color: var(--dim); }
   .row { display: flex; flex-wrap: wrap; gap: var(--s-8); align-items: center; }
+  /* a component's kinds, each beside its class in gold and what it is for, so that two alike are told apart (the
+     buttons, the titles); .is-stack puts each under its words, as a phone does for every one. .spec-k names the piece
+     that follows it in a card that shows several */
+  .spec { display: grid; grid-template-columns: fit-content(50%) minmax(0, 1fr); align-items: center; gap: var(--s-16) var(--s-20); margin: 0; }
+  .spec > dt { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-8); min-width: 0; }
+  .spec > dt > :is(.page-head, .lede) { margin: 0; }
+  .spec > dd { margin: 0; min-width: 0; }
+  .spec > dd, .spec-k { color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  .spec code, .spec-k code { color: var(--accent-text); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
+  .spec > dd > code:first-child { display: block; margin-bottom: var(--s-2); }
+  .spec.is-stack { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-8); }
+  .spec.is-stack > dd:not(:last-child) { margin-bottom: var(--s-16); padding-bottom: var(--s-16); border-bottom: 1px solid var(--line); }
+  .spec-k { margin: var(--s-32) 0 var(--s-10); }
+  .spec-k:first-child, .ct + .spec-k { margin-top: 0; }
+  @media (max-width: 480px) {
+    .spec { grid-template-columns: minmax(0, 1fr); row-gap: var(--s-8); }
+    .spec > dd:not(:last-child) { margin-bottom: var(--s-12); }
+  }
   .sw { display: grid; grid-template-columns: repeat(auto-fill, minmax(92px, 1fr)); gap: var(--s-8); }
   .sw div { border: 1px solid var(--line); border-radius: var(--r-m); overflow: hidden; font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); color: var(--dim); }
   .sw i { display: block; height: 30px; }
@@ -184,13 +202,37 @@
         <div style="box-shadow: var(--shadow-pop)">pop</div><div style="box-shadow: var(--shadow-sheet)">sheet</div>
       </div>
     </div>
+    <div class="card"><h3 class="ct">Titres</h3>
+      <dl class="spec is-stack">
+        <dt><div class="page-head"><p class="eyebrow">Bonjour Camille</p><h2 class="title-1">Mes galeries</h2><button class="btn is-act" type="button">Nouvelle galerie</button></div></dt>
+        <dd><code>.page-head</code>La tête d’une page : <code>.eyebrow</code> le petit mot doré au-dessus, <code>.title-1</code> le titre de la page, son action à droite.</dd>
+        <dt><p class="lede">Une phrase sous le titre, à la largeur de lecture : prends ton temps, rien ne part tant que tu n’as pas fini.</p></dt>
+        <dd><code>.lede</code>La phrase qui présente la page, sous son titre.</dd>
+        <dt><h3 class="title-2">Une section</h3></dt>
+        <dd><code>.title-2</code>Le titre d’une partie de la page, au-dessus de ses cartes.</dd>
+        <dt><h4 class="title-3">Un bloc</h4></dt>
+        <dd><code>.title-3</code>Le titre d’un bloc dans une partie : une colonne, un panneau.</dd>
+        <dt><h4 class="sect" style="margin: 0">Derniers posts</h4></dt>
+        <dd><code>h4.sect</code>Une partie dans une carte. Le titre d’une carte elle-même est <code>.ct</code>, comme « Titres » en haut de celle-ci.</dd>
+      </dl>
+      <p class="note">Les titres n’ont pas de marge : c’est la page qui donne la place autour.</p>
+    </div>
     <div class="card"><h3 class="ct">Icônes</h3>
       <div data-icons></div>
     </div>
     <h2 class="cat" data-cat="boutons">Boutons et liens</h2>
     <div class="card"><h3 class="ct">Boutons <button class="btn is-act ct-tools" type="button">Nouveau voyage</button></h3>
-      <div class="row"><a class="btn" href="#">Voir les opérations</a><button class="btn is-act" type="button">Modifier</button><button class="btn is-save" type="button">Enregistrer</button><button class="btn is-danger" type="button">Supprimer</button><button class="btn" type="button" disabled>Indisponible</button><button class="btn is-save" type="button" disabled>Enregistré</button><a class="btn is-save is-large" href="#">Réserver</a></div>
-      <div class="row"><a class="btn is-pill" href="#"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>Opérations</a><button class="btn is-pill" type="button"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Modifier</button><button class="btn is-pill is-danger" type="button"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Supprimer</button></div>
+      <dl class="spec">
+        <dt><a class="btn" href="#">Voir les opérations</a></dt><dd><code>.btn</code>Aller ailleurs : une autre page, une liste.</dd>
+        <dt><button class="btn is-act" type="button">Modifier</button></dt><dd><code>.btn.is-act</code>Agir sur ce qu’on voit, sans quitter la page.</dd>
+        <dt><button class="btn is-save" type="button">Enregistrer</button></dt><dd><code>.btn.is-save</code>L’action principale : une seule par écran.</dd>
+        <dt><button class="btn is-danger" type="button">Supprimer</button></dt><dd><code>.btn.is-danger</code>Supprimer, retirer, se déconnecter ; on demande d’abord (ds.confirm).</dd>
+        <dt><button class="btn" type="button" disabled>Indisponible</button><button class="btn is-save" type="button" disabled>Enregistré</button></dt><dd><code>disabled</code>Rien à faire pour l’instant, ou c’est déjà fait.</dd>
+        <dt><button class="btn is-icon" type="button" aria-label="Modifier"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg></button><button class="btn is-icon" type="button" aria-label="Recharger"><svg class="ico" aria-hidden="true"><use href="#i-reload"/></svg></button></dt><dd><code>.btn.is-icon</code>Une icône seule, carrée, avec son nom dans aria-label.</dd>
+        <dt><a class="btn is-pill" href="#"><svg class="ico" aria-hidden="true"><use href="#i-list"/></svg>Opérations</a><button class="btn is-pill" type="button"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Modifier</button><button class="btn is-pill is-danger" type="button"><svg class="ico" aria-hidden="true"><use href="#i-trash"/></svg>Supprimer</button></dt><dd><code>.btn.is-pill</code>Plusieurs actions du même rang, chacune avec son icône : la barre de sélection, un voyage ouvert. En rouge avec <code>.is-danger</code>.</dd>
+        <dt><a class="btn is-save is-large" href="#">Réserver</a></dt><dd><code>.btn.is-large</code>Le gros bouton d’un site public ; dans un outil, il garde la taille de tous.</dd>
+        <dt><span class="note" style="margin: 0">sur la ligne du titre</span></dt><dd><code>.ct-tools</code>Ce qui agit sur une carte se met dans son titre, à droite (« Nouveau voyage » ci-dessus) : le titre reste à la même place.</dd>
+      </dl>
     </div>
     <div class="card"><h3 class="ct">Lignes, liens et cases · 4.14.0</h3>
       <h4 class="sect is-ruled">Derniers posts</h4>
@@ -227,10 +269,8 @@
         <div class="tabs" role="radiogroup" aria-label="Disposition par défaut"><label><input type="radio" class="visually-hidden" name="demo-lay" value="grid" checked>Grille</label><label><input type="radio" class="visually-hidden" name="demo-lay" value="masonry">Mosaïque</label></div>
       </div>
     </div>
-    <div class="card" id="forms-demo"><h3 class="ct">Titres, listes et champs · 4.19.0</h3>
-      <div class="page-head"><p class="eyebrow">Bonjour Camille</p><h2 class="title-1">Mes galeries</h2><button class="btn is-act" type="button">Nouvelle galerie</button></div>
-      <p class="lede">Une phrase sous le titre, à la largeur de lecture : prends ton temps, rien ne part tant que tu n’as pas fini.</p>
-      <h3 class="title-2">Une section</h3><h4 class="title-3">Un bloc</h4>
+    <div class="card" id="forms-demo"><h3 class="ct">Formulaire</h3>
+      <p class="spec-k"><code>.card.is-form</code> un formulaire : <code>.field-group</code>, <code>.field-row</code>, <code>.field-note</code>, <code>.checks</code>, <code>.field-pair</code></p>
       <form class="card is-ruled is-form" data-forms="form" onsubmit="return false">
         <div class="field-group"><label class="field-label" for="demo-pw">Mot de passe</label>
           <div class="field-row"><input id="demo-pw" type="password" autocomplete="new-password"><button class="btn is-act" type="button" data-forms="show">Afficher</button><button class="btn is-act" type="button" data-forms="gen">Générer</button></div>
@@ -240,16 +280,6 @@
         <div class="field-pair"><label for="demo-from">du</label><input id="demo-from" type="date" value="2026-11-01"><label for="demo-to">au</label><input id="demo-to" type="date" value="2026-11-30"></div>
         <p><button class="btn is-act" type="button" aria-pressed="true">Choisies</button> <button class="btn is-act" type="button" aria-pressed="false">Avec une note</button></p>
       </form>
-      <div class="card is-ruled"><a class="sum-head" href="#"><span class="sum-name">BoursoBank</span><span class="sum-fig">4 210,00€</span></a>
-        <a class="sum-line" href="#"><span class="sum-name">Compte courant</span><span class="sum-fig">3 120,00€</span></a><a class="sum-line" href="#"><span class="sum-name">Compte facture</span><span class="sum-fig">1 090,00€</span></a>
-        <a class="sum-link" href="#"><span><b>320,00€</b><small>à envoyer</small></span></a></div>
-      <h4 class="sect is-ruled">Factures<span class="sect-sum">ce mois <b>1 090,00€</b></span></h4>
-      <div class="tbl-wrap"><table class="tbl is-dense"><tbody>
-        <tr class="tbl-group"><td colspan="2"><span class="tbl-group-head"><span>Vendredi 6 novembre</span><span class="tbl-group-sum tone is-good">+1 200,00€</span></span></td></tr>
-        <tr><td class="tbl-name">Loyer studio<span class="row-label">PRLV SEPA STUDIO 1106</span><span class="row-note">Novembre, charges comprises</span></td><td class="is-num">−800,00€</td></tr>
-        <tr><td class="tbl-name">Patreon</td><td class="is-num">+2 000,00€</td></tr></tbody></table></div>
-      <ul class="rows is-tree"><li><span class="row-title">Shopping<small>3 sous-catégories</small></span><ul class="rows"><li><span class="row-title">Vêtements</span></li><li><span class="row-title">Cadeaux</span></li></ul></li></ul>
-      <nav class="pager"><a class="go-link" href="#">← Plus récentes</a><a class="go-link" href="#">Plus anciennes →</a></nav>
       <p class="note">Aussi dans ds.js : ds.rows (des lignes qu’on ouvre d’un clic, d’Entrée ou d’Espace), ds.password (Afficher, Générer), ds.autosave (un champ enregistré quand on le quitte). Une carte en barre (.card.is-bar), un pli en tête (details.fold.is-lead), une vignette de ligne (.row-thumb), un champ dans la barre de la visionneuse.</p>
     </div>
     <div class="card"><h3 class="ct">Choisir <span data-studio="period"></span></h3>
@@ -282,6 +312,21 @@
       <p class="row-place" style="margin: 0">Le lien retour, en haut d’une page ou d’une carte : la flèche de la planche, puis le nom de la page d’avant. Sur une photo, il devient le bouton du site (<code>.on-photo</code>).</p>
     </div>
     <h2 class="cat" data-cat="cartes">Cartes, listes et tableaux</h2>
+    <div class="card"><h3 class="ct">Résumés, parties et arbres</h3>
+      <p class="spec-k"><code>.sum-head</code>, <code>.sum-line</code>, <code>.sum-link</code> le résumé d’un compte et de ses lignes</p>
+      <div class="card is-ruled"><a class="sum-head" href="#"><span class="sum-name">BoursoBank</span><span class="sum-fig">4 210,00€</span></a>
+        <a class="sum-line" href="#"><span class="sum-name">Compte courant</span><span class="sum-fig">3 120,00€</span></a><a class="sum-line" href="#"><span class="sum-name">Compte facture</span><span class="sum-fig">1 090,00€</span></a>
+        <a class="sum-link" href="#"><span><b>320,00€</b><small>à envoyer</small></span></a></div>
+      <p class="spec-k"><code>h4.sect.is-ruled</code> et <code>.sect-sum</code> une partie et son total, puis <code>.tbl.is-dense</code> son tableau, groupé par jour</p>
+      <h4 class="sect is-ruled">Factures<span class="sect-sum">ce mois <b>1 090,00€</b></span></h4>
+      <div class="tbl-wrap"><table class="tbl is-dense"><tbody>
+        <tr class="tbl-group"><td colspan="2"><span class="tbl-group-head"><span>Vendredi 6 novembre</span><span class="tbl-group-sum tone is-good">+1 200,00€</span></span></td></tr>
+        <tr><td class="tbl-name">Loyer studio<span class="row-label">PRLV SEPA STUDIO 1106</span><span class="row-note">Novembre, charges comprises</span></td><td class="is-num">−800,00€</td></tr>
+        <tr><td class="tbl-name">Patreon</td><td class="is-num">+2 000,00€</td></tr></tbody></table></div>
+      <p class="spec-k"><code>ul.rows.is-tree</code> des lignes et leurs sous-lignes, puis <code>.pager</code> les pages d’avant et d’après</p>
+      <ul class="rows is-tree"><li><span class="row-title">Shopping<small>3 sous-catégories</small></span><ul class="rows"><li><span class="row-title">Vêtements</span></li><li><span class="row-title">Cadeaux</span></li></ul></li></ul>
+      <nav class="pager"><a class="go-link" href="#">← Plus récentes</a><a class="go-link" href="#">Plus anciennes →</a></nav>
+    </div>
     <section class="card" data-demo-foldcard><h3 class="ct">Une carte qui se plie</h3><p class="note">Un clic sur son titre la plie, Entrée ou Espace aussi ; l’appareil s’en souvient (ds.foldCard).</p></section>
     <div class="card is-ruled"><h3 class="card-title">Lyon 2026</h3>
       <p class="card-meta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>8–12 juin 2026</p>
@@ -307,7 +352,9 @@
           <div class="fgroup"><span class="fhead">Sens</span><span class="frow"><button type="button" class="chip" aria-pressed="true">Entrées</button></span><span class="frow"><button type="button" class="chip" aria-pressed="true">Sorties</button></span></div>
         </div>
       </aside>
-      <div class="card"><h3 class="ct">Listes <button class="edgetab" aria-expanded="true" type="button" style="margin-left:auto" data-drawer-toggle="demo-side"><span class="edgetab-label">Filtres</span><i class="filter-pip"></i></button></h3>
+      <div class="card"><h3 class="ct">Listes</h3>
+        <p class="spec-k"><code>button.edgetab</code> l’onglet du tiroir des filtres : dans une appli, collé au bord gauche de l’écran ; ici dans la carte</p>
+        <button class="edgetab" aria-expanded="true" type="button" data-drawer-toggle="demo-side"><span class="edgetab-label">Filtres</span><i class="filter-pip"></i></button>
         <h4 class="sect"><svg class="ico"><use href="#i-cal"/></svg>15 août 2026</h4>
         <ul class="rows"><li><span class="row-date">15/08</span><span class="row-title">Magasins U</span><span class="who" style="--n:var(--c-ciel)">REVOLUT</span><span class="row-value">−119,89€</span></li><li><span class="row-date">16/08</span><span class="row-title">Remboursement</span><span class="row-value" style="color:var(--good)">+25,00€</span></li></ul>
         <p class="empty-note">Aucune opération pour ces filtres.</p>
@@ -339,7 +386,7 @@
       </table></div>
       <p class="note">Une ligne s’ouvre d’un clic n’importe où (son lien, .row-link, garde le texte de la ligne) ; la deuxième s’enregistre (.is-busy). Sur un téléphone, les lignes deviennent des cartes, sans le cadre.</p>
     </div>
-    <div class="card"><h3 class="ct">Une liste dans sa fenêtre · .sheet.is-list <button class="btn is-act" type="button" data-studio="listopen" style="margin-left: auto">Voir ses posts</button></h3>
+    <div class="card"><h3 class="ct">Une liste dans sa fenêtre · .sheet.is-list <button class="btn is-act ct-tools" type="button" data-studio="listopen">Voir ses posts</button></h3>
       <p class="note">La fenêtre garde sa hauteur d’un réseau à l’autre, 24 posts ou un seul : son haut reste en place, seule la liste défile.</p>
       <div class="sheet is-list" data-studio="listsheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true" aria-label="Les posts d’Irina"><button class="sheet-close" type="button" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="sheet-head"><p class="sheet-sub">Modèle · ses posts</p><h2 class="sheet-t">Irina</h2><span data-studio="listnets"></span><h4 class="sect is-ruled">Du plus récent au plus ancien</h4></div><div class="sheet-list"><ul class="rows" data-studio="listrows"></ul></div></div></div>
     </div>
@@ -473,7 +520,7 @@
       <p class="note">Aussi : ds.toast({key}) (une bulle par sujet), ds.optimistic, ds.openAll, ds.enter et ds.leave, ds.redraw, ds.suggest, ds.query (le langage de recherche de Bank), ds.filters (le panneau de filtres de Bank et Studio).</p>
     </div>
     <h2 class="cat" data-cat="photos">Photos et couvertures</h2>
-    <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act" type="button" data-photo="open" style="margin-left: auto">Ouvrir</button></h3>
+    <div class="card"><h3 class="ct">Visionneuse · ds.viewer <button class="btn is-act ct-tools" type="button" data-photo="open">Ouvrir</button></h3>
       <p class="row-place" style="margin: 0">La croix, le voile ou Échap la ferment ; les flèches, ← → ou le doigt tournent les photos, tirée vers le bas elle se ferme. Les deux voisines se chargent d’avance ; la quatrième se fait attendre, pour voir la roue.</p>
       <p class="row-place" style="margin: var(--s-8) 0 0; color: var(--accent-text)" data-photo="seen">Aucune photo montrée.</p>
     </div>
@@ -567,7 +614,7 @@
     </div>
     <h2 class="cat is-part" data-cat="situations">Mises en situation<small>Les pièces assemblées comme dans les applis.</small></h2>
     <h2 class="cat" data-cat="bank">Bank</h2>
-    <div class="card" data-b="ops"><h3 class="ct">Opérations : trier, choisir, ouvrir <label class="pill is-filter"><span class="pill-value"></span><select aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option><option value="bourso">BoursoBank</option><option value="fortuneo">Fortuneo</option></select></label></h3>
+    <div class="card" data-b="ops"><h3 class="ct">Opérations : trier, choisir, ouvrir <span class="ct-tools"><label class="pill is-filter"><span class="pill-value"></span><select aria-label="Compte"><option value="">Tous les comptes</option><option value="revolut">Revolut</option><option value="bourso">BoursoBank</option><option value="fortuneo">Fortuneo</option></select></label></span></h3>
       <div class="pills" style="margin-bottom: var(--s-10)"><label class="pill tbl-sortmenu"><span class="pill-value"></span><select data-b="sortmenu" aria-label="Trier par"><option value="date|0">Récentes d’abord</option><option value="date|1">Anciennes d’abord</option><option value="montant|1">Grosses dépenses d’abord</option><option value="montant|0">Grosses entrées d’abord</option><option value="nom|1">Par nom</option><option value="categorie|1">Par catégorie</option><option value="compte|1">Par compte</option></select></label></div>
       <div class="selbar" hidden><span class="selbar-n"></span><span class="selbar-sum"></span><button class="btn is-icon selbar-x" type="button" data-sel-clear aria-label="Annuler le choix" title="Annuler le choix"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div class="selbar-acts"><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-tag"/></svg><span>Catégorie</span><select data-b="bulkcat" aria-label="Catégorie des opérations choisies"><option value="">Catégorie…</option><optgroup label="Courses"><option>Courses › Supermarché</option><option>Courses › Marché</option></optgroup><optgroup label="Loisirs"><option>Loisirs › Restaurant</option><option>Loisirs › Cinéma</option></optgroup></select></label><button class="btn" type="button" data-b="bulkname"><svg class="ico" aria-hidden="true"><use href="#i-pen"/></svg>Renommer</button><label class="btn is-select"><svg class="ico" aria-hidden="true"><use href="#i-plane"/></svg><span>Voyage</span><select data-b="bulktrip" aria-label="Voyage des opérations choisies"><option value="">Voyage…</option><option>Naples</option><option>Nouveau voyage…</option></select></label></div></div>
       <div class="tbl-wrap"><table class="tbl is-cards">
@@ -583,7 +630,7 @@
       </table></div>
       <div class="sheet" data-b="sheet" hidden><div class="sheet-panel" role="dialog" aria-modal="true"><button class="sheet-close" type="button" aria-label="Fermer"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button><div data-b="sheetbody"></div></div></div>
     </div>
-    <div class="card"><h3 class="ct">Fiche d’une opération <button class="btn is-act" type="button" data-b="opensheet" style="margin-left: auto">Ouvrir la fiche</button></h3>
+    <div class="card"><h3 class="ct">Fiche d’une opération <button class="btn is-act ct-tools" type="button" data-b="opensheet">Ouvrir la fiche</button></h3>
       <div class="sheet-panel" role="group" aria-label="Exemple de fiche">
         <button class="sheet-close" type="button" aria-label="Fermer" tabindex="-1"><svg class="ico" aria-hidden="true"><use href="#i-close"/></svg></button>
         <p class="sheet-sub">samedi 15 août 2026</p>
