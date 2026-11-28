@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.7.0 · 28 novembre 2026
+
+- Sur un téléphone, le choix de période (`ds.periodPick`) n'est plus une boîte de la hauteur d'un champ : c'est un mot doré en petites capitales et son chevron (« 90 JOURS ▾ »), sans cadre ni fond. Sur la ligne du titre d'une carte, il est aussi haut que les mots du titre, qui gardent leur écart avec le haut de la carte ; le menu caché dessous garde la hauteur d'un doigt (`--touch-target`), et le clavier son anneau. Partout où une carte a une période, dans Studio et dans Bank. Sur un ordinateur, les onglets restent tels quels.
+- La roue (`.spinner`, celle de l'en-tête, d'un bouton au travail, d'une bulle) fait son tour en quatre quarts. Allant de rien à `rotate(360deg)`, la même position aux deux bouts, Safari sur iPhone ne lui faisait faire qu'un huitième de tour, puis la remettait au départ, toutes les 0,8 s : la roue de l'en-tête de Bank semblait trembler sur place.
+
 ## 7.6.0 · 28 novembre 2026
 
 - `ul.rows.is-scored` : la ligne jugée, celle des posts de Studio. Elle a ses photos (`.row-thumb`), son nom et sa ligne (`.row-title`), ses chiffres (`.row-figs`, des `.figs` ou une `.row-value`) et son verdict. Sur un ordinateur, tout tient sur une ligne. Sur un téléphone, chaque ligne est présentée pareil : le nom à côté des photos, sur deux lignes au plus, avec sa date entière dessous ; le verdict à droite ; les chiffres sous le nom, sur toute la largeur. Les chiffres ne serrent plus le nom jusqu'à n'en laisser que deux lettres (« sur mobile on voit pas les textes »).

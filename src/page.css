@@ -20,7 +20,11 @@
   :where(header.top) .btn.is-icon { background: var(--panel); color: var(--faint); }
   :where(header.top) .btn.is-icon:disabled { opacity: var(--o-off); }
   header.top .busy { align-items: center; color: var(--accent-text); display: inline-flex; font: var(--type-strong-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); gap: var(--s-6); margin-right: auto; visibility: hidden; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
-  @keyframes spin { to { transform: rotate(360deg); } }
+  /* a whole turn in four quarters: from « none » to rotate(360deg), the same matrix at both ends, Safari on an iPhone
+     turned the header's wheel by an eighth of a turn and back, every 0.8s (Bank, 28 November 2026: « la roue ne tourne
+     pas »); a quarter at a time leaves no doubt of the way round */
+  @keyframes spin { from { transform: rotate(0deg); } 25% { transform: rotate(90deg); } 50% { transform: rotate(180deg); }
+    75% { transform: rotate(270deg); } to { transform: rotate(360deg); } }
 /* the loading, as on Studio: a spinner and how far it got, then a green tick that fades away */
   /* ds.busy puts the class loading on header.top while something loads; .busy-text says what, for screen readers only */
   header.top.is-loading .busy { visibility: visible; }

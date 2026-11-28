@@ -1,4 +1,4 @@
-/* ds 7.6.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The period header, the same in Bank's operations and Studio's calendar: a big title that opens a picker,
    and the arrows (and « Aujourd'hui ») on the right; on a phone the arrows go under the title. */
   .periodhead { position: relative; display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: var(--s-14); margin-bottom: var(--s-14); }
@@ -49,8 +49,7 @@
     .ct > .periodnav.is-step > .pill { flex: 1 1 auto; justify-content: center; }
 }
 /* The period selector (ds.periodPick), taken from Studio: the design system's tabs on a computer; on a phone, where four
-   periods would not fit beside a card's title, the design system's menu (.pill, « 1 an ▾ »), the same as a month's or a
-   sort's. In a card's title (.ct) it sits on the right. .is-tabs keeps its tabs on a phone too, those that scroll
+   periods would not fit beside a card's title, the design system's menu (.pill), drawn as a gold word (« 1 AN ▾ »). In a card's title (.ct) it sits on the right. .is-tabs keeps its tabs on a phone too, those that scroll
    sideways (.tabs.is-scroll). */
   .periodpick { display: inline-flex; min-width: 0; }
   .periodpick.is-tabs { max-width: 100%; }
@@ -61,6 +60,17 @@
   .periodpick .periodpick-list { display: inline-flex; }
   .periodpick.is-tabs .tabs { display: flex; }
   .periodpick.is-tabs .periodpick-list { display: none; }
+  /* the menu is a word in gold and its chevron, in small capitals, with no box (7.7.0, « C et tu le mets partout »): on a
+     card's title line it stands as high as the title's words, the line calm and far enough from the card's top. The
+     unseen menu over it keeps a finger's height, centred on the word, and the keyboard's ring stays */
+  .periodpick .periodpick-list { min-height: 0; padding: 0; gap: var(--s-4); border: 0; background: none; color: var(--accent-text);
+    font: var(--type-smallcaps-weight) var(--type-smallcaps-size)/var(--lh-tight) var(--type-smallcaps-font); letter-spacing: var(--type-smallcaps-ls); text-transform: var(--type-smallcaps-case); }
+  .periodpick .periodpick-list::after { background: currentColor; }
+  [data-theme="vitrine"] .periodpick .periodpick-list:has(select:focus-visible) { box-shadow: none; outline: var(--focus); outline-offset: var(--focus-offset); }
+  .periodpick .periodpick-list select { inset: auto 0; top: 50%; height: var(--touch-target); translate: 0 -50%; }
+  /* the tools of a card's title that are only this word take no more room than the title's line */
+  .ct:has(> .ct-tools > .periodpick:not(.is-tabs):only-child), .ct:has(> .periodpick:not(.is-tabs)) {
+    --ct-tools-out: min(0px, calc((var(--type-smallcaps-size) * var(--lh-tight) - var(--ico-s)) / 2)); }
 }
 /* The date and period picker, taken from Bank's operations (ds.datePick): the quick periods two by two, the units as tabs,
    then a head that steps (‹ novembre 2026 ›, the sprite's chevrons) over a grid of days, months or years. It wears the period head's popover

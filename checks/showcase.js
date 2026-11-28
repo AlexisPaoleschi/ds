@@ -66,8 +66,9 @@ function look() {
           if (ratio < (large ? 3 : 4.5)) R.faint.push([own.slice(0, 24), Math.round(ratio * 100) / 100]); }
       }
       // every field, menu and button: one height, the selection bar's and the side panel's too (4.0.0: no small button
-      // any more); only the site's large call to act (.is-large) and a field inside a menu stand apart
-      if (el.matches('.btn:not(.is-large), .pill, input:not([type=checkbox]):not([type=radio]):not([type=range]), select:not(.pill select):not(.is-select select)')
+      // any more); only the site's large call to act (.is-large), a field inside a menu and the period's menu on a phone
+      // (a gold word on its card's title line, no box, 7.7.0) stand apart
+      if (el.matches('.btn:not(.is-large), .pill:not(.periodpick-list), input:not([type=checkbox]):not([type=radio]):not([type=range]), select:not(.pill select):not(.is-select select)')
         && !el.closest('.hero-acts, .cal-head, .search-field, .topbar.is-site')) R.controls.push(Math.round(r.height));
       // and one font for the buttons (the button role; a menu's words are small text, checks/roles.js); a button of one icon, square
       if (el.matches('.btn:not(.is-large)') && !el.closest('.topbar.is-site')) R.fonts.push(`${c.fontSize} ${c.fontWeight}`);
