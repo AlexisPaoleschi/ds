@@ -85,7 +85,8 @@
     z-index: var(--z-raise); width: var(--ico-l); height: var(--ico-l); color: var(--white); filter: drop-shadow(0 0 var(--s-2) var(--overlay-black-strong)); }
   .thumb-strip-photo.is-empty::before { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4'/%3E%3C/svg%3E");
     width: var(--ico-m); height: var(--ico-m); }
-  .thumb-strip-fig { display: flex; align-items: center; justify-content: center; gap: var(--s-2); color: var(--ink); white-space: nowrap;
+  /* the icon 4px before its figure, as a row's figure (.fig) and a mini tile's unit (7.7.1) */
+  .thumb-strip-fig { display: flex; align-items: center; justify-content: center; gap: var(--s-4); color: var(--ink); white-space: nowrap;
     font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); }
   .thumb-strip-fig .ico { width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
   .thumb-strip > .is-best > .thumb-strip-fig { color: var(--accent-text); }

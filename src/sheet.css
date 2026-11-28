@@ -34,7 +34,9 @@
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); cursor: pointer; }
   .sheet-close:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
-  /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
+  /* its head: a short line that says what the sheet shows (« Opération », « Tous les posts »), a detail after « · » if
+     need be (a day, a network), then the title, the thing's own name, never an action; a big figure (an amount, in green
+     when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .sheet-sub::first-letter { text-transform: uppercase; }
   /* the sheet's name as large as its figure: smaller, the square buttons beside it (rename, see) looked bigger than it

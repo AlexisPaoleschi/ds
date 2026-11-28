@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.7.1 · 28 novembre 2026
+
+- Sous la vignette d'une story (`ds.viewer.strip`), l'œil a 4px avant son chiffre, comme le chiffre d'une ligne (`.fig`) et l'unité d'une petite case : le chiffre ne colle plus à l'œil.
+- Le commentaire de la fiche (`sheet.css`) dit la règle de sa petite ligne : ce que la fiche montre (« Opération », « Tous les posts »), un détail après « · » au besoin, puis le nom de la chose pour titre, jamais une action. La vitrine la suit.
+
 ## 7.7.0 · 28 novembre 2026
 
 - Sur un téléphone, le choix de période (`ds.periodPick`) n'est plus une boîte de la hauteur d'un champ : c'est un mot doré en petites capitales et son chevron (« 90 JOURS ▾ »), sans cadre ni fond. Sur la ligne du titre d'une carte, il est aussi haut que les mots du titre, qui gardent leur écart avec le haut de la carte ; le menu caché dessous garde la hauteur d'un doigt (`--touch-target`), et le clavier son anneau. Partout où une carte a une période, dans Studio et dans Bank. Sur un ordinateur, les onglets restent tels quels.

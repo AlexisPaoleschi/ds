@@ -1,4 +1,4 @@
-/* ds 7.7.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.7.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1305,7 +1305,9 @@
     margin: var(--sheet-x-at) var(--sheet-x-at) var(--s-8) var(--s-12); border: 1px solid var(--line); border-radius: var(--r-m);
     background: var(--panel-2); color: var(--dim); cursor: pointer; }
   .sheet-close:is(:hover, :active) { color: var(--accent-text); border-color: var(--accent-line); }
-  /* its head: a short line (a date), the title, a big figure (an amount, in green when it comes in) */
+  /* its head: a short line that says what the sheet shows (« Opération », « Tous les posts »), a detail after « · » if
+     need be (a day, a network), then the title, the thing's own name, never an action; a big figure (an amount, in green
+     when it comes in) */
   .sheet-sub { margin: 0; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-ui) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .sheet-sub::first-letter { text-transform: uppercase; }
   /* the sheet's name as large as its figure: smaller, the square buttons beside it (rename, see) looked bigger than it
@@ -1681,7 +1683,8 @@
     z-index: var(--z-raise); width: var(--ico-l); height: var(--ico-l); color: var(--white); filter: drop-shadow(0 0 var(--s-2) var(--overlay-black-strong)); }
   .thumb-strip-photo.is-empty::before { --sign: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8zM14 3v5h5M9 13h6M9 17h4'/%3E%3C/svg%3E");
     width: var(--ico-m); height: var(--ico-m); }
-  .thumb-strip-fig { display: flex; align-items: center; justify-content: center; gap: var(--s-2); color: var(--ink); white-space: nowrap;
+  /* the icon 4px before its figure, as a row's figure (.fig) and a mini tile's unit (7.7.1) */
+  .thumb-strip-fig { display: flex; align-items: center; justify-content: center; gap: var(--s-4); color: var(--ink); white-space: nowrap;
     font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--mono); letter-spacing: var(--type-caption-ls); }
   .thumb-strip-fig .ico { width: var(--ico-s); height: var(--ico-s); color: var(--faint); }
   .thumb-strip > .is-best > .thumb-strip-fig { color: var(--accent-text); }
