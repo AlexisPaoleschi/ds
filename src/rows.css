@@ -142,6 +142,33 @@
     font-variant-numeric: tabular-nums; gap: var(--s-4) var(--s-12); vertical-align: middle; letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
   .fig { align-items: center; display: inline-flex; gap: var(--s-4); white-space: nowrap; }
   .fig .ico { height: var(--ico-sm); width: var(--ico-sm); }
+/* A row that is judged (Studio's posts): its photos (.row-thumb), its name and its second line (.row-title), its figures
+   (.row-figs: .figs, or a .row-value), its verdict (.verdict). On a computer on one line, the name and its line cut to
+   one line each. On a phone, every row alike: the name and its line beside the photos, the name on two lines at most,
+   the verdict on their right; the figures under them, as wide as the row beside the photos, never squeezing the name
+   (« sur mobile on voit pas les textes », 28 November 2026). A row without figures (a post still to come) keeps its
+   verdict in the verdicts' column.
+   <ul class="rows is-scored"><li><button class="row-thumb">…</button><span class="row-title"><a href>Name</a><small>27 nov. ·
+   Léa</small></span><span class="row-figs"><span class="figs">…</span></span><span class="verdict is-tall">…</span></li></ul> */
+  ul.rows.is-scored > li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: var(--s-14); }
+  ul.rows.is-scored > li:has(> .row-thumb) { grid-template-columns: auto minmax(0, 1fr) auto auto; }
+  ul.rows.is-scored .row-title > :is(a, span), ul.rows.is-scored .row-title small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .row-figs { display: grid; gap: var(--s-2); justify-items: end; min-width: 0; text-align: right; }
+  .row-figs .figs { justify-content: flex-end; }
+  .row-figs .row-value { display: inline-flex; align-items: center; gap: var(--s-4); min-width: 0; margin: 0; }
+  ul.rows.is-scored > li > .verdict { grid-column: -2; }
+@media (max-width: 768px) {
+  ul.rows.is-scored > li { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "main verdict" "figs figs"; gap: var(--s-6) var(--s-10); }
+  ul.rows.is-scored > li:has(> .row-thumb) { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-areas: "thumb main verdict" "thumb figs figs"; }
+  ul.rows.is-scored > li > .row-thumb { grid-area: thumb; align-self: start; }
+  ul.rows.is-scored > li > .row-title { grid-area: main; }
+  ul.rows.is-scored > li > .row-figs { grid-area: figs; justify-items: start; text-align: left; }
+  ul.rows.is-scored .row-figs .figs { justify-content: flex-start; }
+  ul.rows.is-scored > li > .verdict { grid-area: verdict; align-self: start; }
+  /* the name on two lines at most, its second line whole */
+  ul.rows.is-scored .row-title > :is(a, span) { display: -webkit-box; white-space: normal; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+  ul.rows.is-scored .row-title small { white-space: normal; }
+}
 /* Key and value, one pair a row, under a line (an operation's account, its bank's label, its note): <dl class="kv">,
    each pair in a <div> with its <dt> and <dd>; a field in a value takes the row's width. */
   .facts { margin: 0; }

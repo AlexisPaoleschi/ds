@@ -364,6 +364,22 @@ function stylesheets() {
     return { first: [first.loading, first.decoding], strip: [strip.loading, strip.decoding], fresh: [fresh.loading, fresh.decoding] }; });
   assert(again.first[0] !== 'lazy' && again.first[1] === 'sync' && again.strip[1] === 'sync' && again.fresh[0] === 'lazy',
     'ds.viewer.thumb et ds.viewer.strip : une photo déjà montrée revient sans s’effacer quand la page est redessinée ' + JSON.stringify(again));
+  // a judged row (ul.rows.is-scored, 7.6.0): on a computer its name, its figures and its verdict on one line; on a phone,
+  // every row alike, the name beside the photos and the verdict, two lines at most, its figures under it
+  const scored = async () => show.evaluate(() => [...document.querySelectorAll('ul.rows.is-scored > li')].map(li => {
+    const r = s => li.querySelector(s).getBoundingClientRect(), name = li.querySelector('.row-title > span');
+    return { nameTop: Math.round(r('.row-title').top), figsTop: Math.round(r('.row-figs').top), nameBottom: Math.round(r('.row-title').bottom),
+      verdictTop: Math.round(r('.verdict').top), figsLeft: Math.round(r('.row-figs').left), nameLeft: Math.round(r('.row-title').left),
+      lines: Math.round(name.getBoundingClientRect().height / parseFloat(getComputedStyle(name).lineHeight)), cut: name.scrollHeight > name.clientHeight + 1 }; }));
+  const wide = await scored();
+  await show.setViewportSize({ width: 390, height: 844 });
+  await show.waitForTimeout(150);
+  const narrow = await scored();
+  await show.setViewportSize({ width: 1280, height: 900 });
+  // (three rows in each theme's column)
+  assert(wide.length === 6 && wide.every(x => x.figsTop < x.nameBottom && x.lines === 1)
+    && narrow.every(x => x.figsTop >= x.nameBottom && x.figsLeft === x.nameLeft && Math.abs(x.verdictTop - x.nameTop) <= 1 && x.lines <= 2) && narrow[0].lines === 2 && narrow[0].cut,
+    'ul.rows.is-scored : sur un ordinateur une ligne ; sur un téléphone le nom à côté des photos (deux lignes au plus), les chiffres dessous, le verdict à droite, pour chaque ligne ' + JSON.stringify({ wide, narrow }));
   await show.locator('.thumb-strip > li').nth(2).locator('button').click();
   await show.waitForTimeout(300);
   const stOpen = await show.evaluate(() => { const v = document.querySelector('.viewer.is-open'); return v && v.querySelector('.viewer-count').textContent; });

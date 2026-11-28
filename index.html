@@ -535,7 +535,8 @@
     </div>
     <div class="card"><h3 class="ct">Photos d’un post · ds.viewer.thumb</h3>
       <p class="row-place" style="margin: 0 0 var(--s-12)">Au début de la ligne d’un post : sa première photo, combien il en a, la marque d’une vidéo ; un clic les ouvre toutes dans la visionneuse. Un post sans photo garde un carré vide, pour que les lignes restent alignées. Plus petite dans un classement (<code>.rank.has-thumb</code>).</p>
-      <ul class="rows" data-photo="posts"></ul>
+      <p class="row-place" style="margin: 0 0 var(--s-12)">Une ligne jugée (<code>ul.rows.is-scored</code>) : ses photos, son nom et sa date, ses chiffres (<code>.row-figs</code>), son verdict. Sur un ordinateur tout tient sur une ligne ; sur un téléphone, le nom prend la place à côté des photos, sur deux lignes au plus, et les chiffres passent dessous, pour chaque ligne.</p>
+      <ul class="rows is-scored" data-photo="posts"></ul>
       <ol class="rank has-thumb" data-photo="rank" style="margin-top: var(--s-16)">
         <li class="is-top"><span class="rank-n">1</span><div class="rank-name"><span class="rank-t">Le col au matin</span><small>25 nov.</small></div><span class="verdict is-good">×1,5</span></li>
         <li><span class="rank-n">2</span><div class="rank-name"><span class="rank-t">Making-of à Saly</span><small>21 nov.</small></div><span class="verdict is-mid">×1</span></li>

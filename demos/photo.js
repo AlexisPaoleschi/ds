@@ -54,7 +54,16 @@
       return i === 3 ? function () { return new Promise(function (ok) { setTimeout(function () { ok(it); }, 1000); }); } : it;
     });
     // the photos of a post at the head of its row (ds.viewer.thumb): a series of five, a video's cover, a post without a photo
-    var POSTS = [["Le col au matin", "25 nov.", 5], ["Making-of à Saly", "21 nov.", 1, true], ["Annonce du workshop", "17 nov.", 0]];
+    // in a judged row (ul.rows.is-scored): its figures (likes, comments, shares, views) and its verdict
+    var POSTS = [["Le col au matin, dans la brume avant le lever du soleil", "25 nov. · Léa Martin", 5, false, [2314, 79, 55, 14600], 2.1],
+      ["Making-of à Saly", "21 nov. · Awa Diop", 1, true, [543, 15, 12, 7500], 0.5], ["Annonce du workshop", "17 nov.", 0, false, [851, 7, 28, 7162], 1.1]];
+    function figs(n) {
+      return ds._.el("span", "row-figs", [ds._.el("span", "figs", [["heart", "like"], ["chat", "commentaire"], ["send", "partage"], ["eye", "vue"]].map(function (f, i) {
+        var fig = ds._.el("span", "fig", [ds.ico(f[0]), ds.compact(n[i])]);
+        fig.title = ds.count(n[i], f[1]);
+        return fig;
+      }))]);
+    }
     function photos(k, p) {
       return Array.apply(null, Array(p[2])).map(function (_, i) {
         return { thumb: scene(40 + k * 7 + i, 160, 160), src: scene(40 + k * 7 + i, 1500, 1000), video: !!p[3] };
@@ -62,12 +71,8 @@
     }
     var posts = col.querySelector('[data-photo="posts"]');
     POSTS.forEach(function (p, k) {
-      var li = document.createElement("li"), title = document.createElement("span"), when = document.createElement("small");
-      title.className = "row-title";
-      title.textContent = p[0];
-      when.textContent = p[1];
-      title.appendChild(when);
-      li.append(ds.viewer.thumb(photos(k, p), { label: p[0], caption: p[0] }), title);
+      var li = document.createElement("li"), title = ds._.el("span", "row-title", [ds._.el("span", "", p[0]), ds._.el("small", "", p[1])]);
+      li.append(ds.viewer.thumb(photos(k, p), { label: p[0], caption: p[0] }), title, figs(p[4]), ds.verdict(null, p[5], { words: true }));
       posts.appendChild(li);
     });
     col.querySelectorAll('[data-photo="rank"] > li').forEach(function (li, k) {

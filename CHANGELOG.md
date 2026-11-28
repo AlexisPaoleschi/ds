@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.6.0 · 28 novembre 2026
+
+- `ul.rows.is-scored` : la ligne jugée, celle des posts de Studio. Elle a ses photos (`.row-thumb`), son nom et sa ligne (`.row-title`), ses chiffres (`.row-figs`, des `.figs` ou une `.row-value`) et son verdict. Sur un ordinateur, tout tient sur une ligne. Sur un téléphone, chaque ligne est présentée pareil : le nom à côté des photos, sur deux lignes au plus, avec sa date entière dessous ; le verdict à droite ; les chiffres sous le nom, sur toute la largeur. Les chiffres ne serrent plus le nom jusqu'à n'en laisser que deux lettres (« sur mobile on voit pas les textes »).
+- La vitrine montre la ligne jugée dans « Photos d’un post », et `checks/photo.js` vérifie les deux dispositions.
+
 ## 7.5.2 · 28 novembre 2026
 
 - Dans les petites cases (`ds.minitiles`), l'icône d'une unité garde 4px avant ses mots, comme le chiffre d'une ligne (`.fig`) : « 418 [icône] par story » ne colle plus l'icône à « par ». Les icônes pleines (des personnes, un cœur) touchaient presque le mot.
