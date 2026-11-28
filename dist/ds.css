@@ -1,4 +1,4 @@
-/* ds 7.7.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.7.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -1138,12 +1138,17 @@
   .toast.is-busy .mark { --spin-size: 12px; }
   .toast .txt { flex: 1 1 auto; min-width: 0; }
   .toast .act, .toast .toast-close { flex: none; min-width: var(--s-24); min-height: var(--s-24); background: none; border: 0; border-radius: var(--r-s); cursor: pointer; padding: var(--s-4) var(--s-6); }
-  .toast .act { color: var(--accent-text); font: var(--type-button-weight) var(--type-button-size)/var(--lh-tight) var(--type-button-font); letter-spacing: var(--type-button-ls); text-transform: var(--type-button-case); }
+  /* its action looks the same at every moment: the gold word in its thin gold frame (7.7.2; it was a bare word that took
+     its frame under the pointer, and an iPhone keeps that state after a tap, so a new bubble under the finger showed it
+     framed and the next one not) */
+  .toast .act { padding-inline: var(--s-8); color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); font: var(--type-button-weight) var(--type-button-size)/var(--lh-tight) var(--type-button-font); letter-spacing: var(--type-button-ls); text-transform: var(--type-button-case); }
   /* its cross: the sprite's, in the middle of a square */
   .toast .toast-close { display: inline-grid; place-items: center; width: var(--s-24); height: var(--s-24); padding: 0; color: var(--faint); }
   .toast .toast-close .ico { width: var(--ico-s); height: var(--ico-s); }
-  /* under the pointer and pressed, like every button: gold, and a gold edge drawn inside (they have no border) */
-  .toast .act:is(:hover, :active), .toast .toast-close:is(:hover, :active) { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent-line); }
+  /* pressed, and under a real pointer only (a touch screen keeps the hover after a tap): the cross in gold with the action's
+     frame, the action's frame in full gold */
+  .toast .toast-close:active, .toast .act:active { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent); }
+  @media (hover: hover) { .toast .toast-close:hover, .toast .act:hover { color: var(--accent-text); box-shadow: inset 0 0 0 1px var(--accent); } }
   @keyframes toast-in { from { opacity: 0; transform: translateY(var(--s-8)); } }
   @media (prefers-reduced-motion: reduce) { .toast, .toast.is-leaving { animation: none; transition: none; transform: none; } }
 @media (max-width: 768px) {

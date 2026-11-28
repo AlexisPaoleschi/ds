@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.7.2 · 28 novembre 2026
+
+- L'action d'une bulle (`ds.toast`, « Saisir le code », « Voir », « Annuler ») a toujours le même aspect : son mot doré dans un fin cadre doré. C'était un mot nu qui prenait son cadre sous le pointeur ; un iPhone garde cet état après un toucher, et une nouvelle bulle sous le doigt s'affichait encadrée, la suivante non. Pressée, ou sous un vrai pointeur, son cadre passe en or plein, et la croix prend le même cadre ; un écran tactile ne garde plus rien après un toucher.
+
 ## 7.7.1 · 28 novembre 2026
 
 - Sous la vignette d'une story (`ds.viewer.strip`), l'œil a 4px avant son chiffre, comme le chiffre d'une ligne (`.fig`) et l'unité d'une petite case : le chiffre ne colle plus à l'œil.

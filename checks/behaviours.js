@@ -699,12 +699,17 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   lit.dead = JSON.stringify(await look('dead')) === JSON.stringify(deadBefore);
   await p.evaluate(() => document.getElementById('lit').remove());
   const toastLit = await p.evaluate(() => { const t = ds.toast({ type: 'good', text: 'Or', action: { label: 'Annuler', run() {} }, duration: 0 }); return true; });
-  await p.hover('.toast .toast-close');
-  lit.toast = isGold(await p.$eval('.toast .toast-close', b => { const s = getComputedStyle(b); return [s.color, s.borderTopColor, s.boxShadow]; }), true);
+  // the bubble's action always in its gold frame; on a touch screen (this page), a hover left by a tap changes neither it
+  // nor the cross (7.7.2: an iPhone kept it, and a new bubble under the finger showed a frame the next one had not)
+  const tl = sel => p.$eval(sel, b => { const s = getComputedStyle(b); return [s.color, s.borderTopColor, s.boxShadow]; });
+  const crossRest = await tl('.toast .toast-close'), actRest = await tl('.toast .act');
+  await p.hover('.toast .toast-close'); const crossHover = await tl('.toast .toast-close');
+  await p.hover('.toast .act'); const actHover = await tl('.toast .act');
+  lit.toast = isGold(actRest, true) && JSON.stringify(actHover) === JSON.stringify(actRest) && JSON.stringify(crossHover) === JSON.stringify(crossRest);
   await p.evaluate(() => document.querySelectorAll('.toast .toast-close').forEach(b => b.click()));
   console.log('     ', JSON.stringify(lit));
   assert(Object.entries(lit).every(([k, v]) => k === 'dead' || k === 'toast' ? v === true : v.every(Boolean)) && toastLit,
-    'au survol et à l’appui, chaque bouton de l’Atelier a son icône ou son texte et son bord en or (en-tête, message, croix du tiroir et de la bulle) ; un bouton de l’en-tête sans rien à faire ne bouge pas ' + JSON.stringify(lit));
+    'au survol et à l’appui, chaque bouton de l’Atelier a son icône ou son texte et son bord en or (en-tête, message, croix du tiroir) ; un bouton de l’en-tête sans rien à faire ne bouge pas ; l’action d’une bulle toujours dans son cadre doré, et rien ne reste d’un survol sur un écran tactile ' + JSON.stringify(lit));
   assert(JSON.stringify(pieces.tabs) === JSON.stringify([true, false, true, false, true, false]), 'des onglets en liens et en boutons radio');
   assert(pieces.sortmenu === 'none', 'le menu de tri d’un tableau reste caché sur un ordinateur, après la règle des pastilles');
   // a search field's cross: shown once something is typed, it empties the field, tells the page (« input ») and gives
