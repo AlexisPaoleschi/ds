@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.7.4 · 28 novembre 2026
+
+- Le bouton d'un formulaire large (`.card.is-form.is-wide`) garde sa taille, centré, au lieu de prendre au moins la moitié de la largeur : « Send my application » des workshops était trop imposant. Sur un téléphone, il prend toujours toute la largeur.
+
 ## 7.7.3 · 28 novembre 2026
 
 - Dans une liste de réglages (`ds.fields`), une case sans unité garde la place d'une unité : toutes les cases sont dans une même colonne, qu'elles aient une unité, longue (« écritures ») ou courte (« % »), ou aucune. La case « Vérifications ratées » de Studio était plus à droite que les autres. `checks/kit.js` le vérifie.
