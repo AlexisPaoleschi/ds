@@ -45,7 +45,8 @@
   .tiles.is-fit .tile { display: flex; flex-direction: column; gap: var(--s-6); }
   .tiles.is-fit .tile dt { margin: 0; white-space: nowrap; }
   .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
-  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
+  /* an icon in the unit (« 418 [icon] par story ») keeps the room a row's figure gives it (.fig) before its words */
+  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-4); margin-left: var(--s-4); }
   .tiles.is-fit .tile .tile-unit .ico { width: var(--ico-s); height: var(--ico-s); }
   .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); opacity: .8; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,

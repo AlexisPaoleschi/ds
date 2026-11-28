@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.5.2 · 28 novembre 2026
+
+- Dans les petites cases (`ds.minitiles`), l'icône d'une unité garde 4px avant ses mots, comme le chiffre d'une ligne (`.fig`) : « 418 [icône] par story » ne colle plus l'icône à « par ». Les icônes pleines (des personnes, un cœur) touchaient presque le mot.
+- Une boîte où le focus entre à l'ouverture (une fiche, la visionneuse, le tiroir d'un téléphone : `tabindex="-1"`) ne montre plus de curseur de texte. Le mode curseur de texte du navigateur (F7) en posait un, qui clignotait devant son premier mot ou au coin de la photo, comme si l'on pouvait écrire. Un champ de la fiche garde le sien.
+
 ## 7.5.1 · 27 novembre 2026
 
 - `ds.viewer.thumb` et `ds.viewer.strip` : une photo que la page a déjà montrée revient décodée avec la page, sans chargement différé, quand la page est redessinée. Les carrés d'une liste ne s'effacent plus un instant à chaque nouveau dessin (Studio : « Pk ça clignote »). Une photo jamais montrée attend toujours d'approcher de l'écran.

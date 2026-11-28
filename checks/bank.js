@@ -151,6 +151,10 @@ function stylesheets() {
   const sh1 = await p.evaluate(() => { const panel = document.querySelector('#sheet .sheet-panel'), r = panel.getBoundingClientRect();
     return { open: !document.getElementById('sheet').hidden && sheet.isOpen, focus: document.activeElement === panel, w: Math.round(r.width), h: Math.round(r.height), gap: Math.round((document.getElementById('sheet').getBoundingClientRect().right - r.right) - (r.left - document.getElementById('sheet').getBoundingClientRect().left)), top: Math.round(r.top), bottom: Math.round(innerHeight - r.bottom), x: document.querySelector('#sheet .sheet-close').getAttribute('aria-label') }; });
   assert(sh1.open && sh1.focus && sh1.w === 720 && sh1.h === 640 && Math.abs(sh1.gap) <= 1 && sh1.top > 0 && sh1.bottom > 0 && sh1.x === 'Fermer', 'la fiche s’ouvre en fenêtre au milieu, de sa taille fixe (720 × 640), le curseur y entre, la croix dit « Fermer » ' + JSON.stringify(sh1));
+  // no text cursor in the sheet that has the focus (the browser's text cursor mode put one at its first word); its field keeps its own
+  const caret = await p.evaluate(() => { const before = getComputedStyle(document.querySelector('#sheet .sheet-panel')).caretColor; document.getElementById('note').focus();
+    const field = getComputedStyle(document.getElementById('note')).caretColor; document.querySelector('#sheet .sheet-panel').focus(); return [before, field]; });
+  assert(caret[0] === 'rgba(0, 0, 0, 0)' && caret[1] !== 'rgba(0, 0, 0, 0)', 'aucun curseur de texte dans la fiche qui a le focus, celui de son champ reste ' + JSON.stringify(caret));
   await p.focus('#last-act');
   await p.keyboard.press('Tab');
   const t1 = await p.evaluate(() => document.activeElement.classList.contains('sheet-close'));

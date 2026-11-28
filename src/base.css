@@ -7,6 +7,10 @@
   /* a field that cannot be changed (a finished selection), greyed; a textarea grows only downwards */
   :is(input:not([type=checkbox]):not([type=radio]), select, textarea):disabled { color: var(--faint); background: var(--band); cursor: not-allowed; }
   textarea { resize: vertical; }
+  /* a box the focus is moved into (a sheet, the photo viewer, a drawer on a phone, tabindex -1) shows no text cursor:
+     the browser's text cursor mode (F7) put one blinking at its first word, as if one could write there; a field keeps
+     its own, which it does not inherit while it has the focus */
+  [tabindex="-1"]:focus:not(input, textarea, select, [contenteditable]) { caret-color: transparent; }
   /* what a search looked for, lit in a list (ds.highlight) */
   mark.hit { background: var(--accent-soft); color: var(--accent-text); border-radius: var(--r-xs); }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */

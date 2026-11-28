@@ -1,4 +1,4 @@
-/* ds 7.5.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.5.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -418,6 +418,10 @@
   /* a field that cannot be changed (a finished selection), greyed; a textarea grows only downwards */
   :is(input:not([type=checkbox]):not([type=radio]), select, textarea):disabled { color: var(--faint); background: var(--band); cursor: not-allowed; }
   textarea { resize: vertical; }
+  /* a box the focus is moved into (a sheet, the photo viewer, a drawer on a phone, tabindex -1) shows no text cursor:
+     the browser's text cursor mode (F7) put one blinking at its first word, as if one could write there; a field keeps
+     its own, which it does not inherit while it has the focus */
+  [tabindex="-1"]:focus:not(input, textarea, select, [contenteditable]) { caret-color: transparent; }
   /* what a search looked for, lit in a list (ds.highlight) */
   mark.hit { background: var(--accent-soft); color: var(--accent-text); border-radius: var(--r-xs); }
 /* a field and a menu are as high as a button beside them (--control-h); a textarea and a list of several lines keep theirs */
@@ -1380,7 +1384,8 @@
   .tiles.is-fit .tile { display: flex; flex-direction: column; gap: var(--s-6); }
   .tiles.is-fit .tile dt { margin: 0; white-space: nowrap; }
   .tiles.is-fit .tile dd { color: var(--ink); line-height: var(--lh-tight); font-variant-numeric: tabular-nums; }
-  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-2); margin-left: var(--s-4); }
+  /* an icon in the unit (« 418 [icon] par story ») keeps the room a row's figure gives it (.fig) before its words */
+  .tiles.is-fit .tile .tile-unit { display: inline-flex; align-items: center; gap: var(--s-4); margin-left: var(--s-4); }
   .tiles.is-fit .tile .tile-unit .ico { width: var(--ico-s); height: var(--ico-s); }
   .tiles.is-fit .tile .tile-note { display: block; margin: 0; color: var(--dim); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-ui) var(--type-caption-font); opacity: .8; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   /* vitrine: the compact tiles are the site's small cards, as on Selecta's dashboard: apart, white, a soft shadow,

@@ -70,7 +70,7 @@
       ds.rank(null, people.map(p => ({ name: p[0], href: "https://www.patreon.com/", sub: "ventes", value: ds.money(p[1], { decimals: 0 }), share: p[1] / people[0][1] })), { title: "Par modèle", note: "30 jours" }),
       ds.rank(null, [{ name: "Série", sub: "9 posts", value: ds.verdict(null, 1.3) }], { title: "Par type", plain: true }),
       ds.rank(null, [], { title: "Vide" }));
-    ds.minitiles(document.getElementById("mini"), [{ label: "Médiane", value: "1 240", unit: "vues", note: "48 posts" }, { label: "Posts", value: "4,5" }, { label: "Gagnés", value: "+86" }, { label: "Payants", value: "+3" }]);
+    ds.minitiles(document.getElementById("mini"), [{ label: "Médiane", value: "1 240", unit: [ds.ico("users"), "par story"], note: "48 posts" }, { label: "Posts", value: "4,5" }, { label: "Gagnés", value: "+86" }, { label: "Payants", value: "+3" }]);
     window.verdicts = [ds.verdict(null, 1.43), ds.verdict(null, 1), ds.verdict(null, 0.62), ds.verdict(null, 1.25, { words: true }), ds.verdict(null, null),
       ds.verdict(null, null, { words: true, text: "Prévu", note: "dans 5j", title: "prévu le 28 novembre" })];
     document.getElementById("verdicts").append(...verdicts);

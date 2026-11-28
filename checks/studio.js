@@ -243,9 +243,12 @@ const assert = (ok, what) => { if (!ok) { console.log('ÉCHEC', what); process.e
   assert(soon[0] && soon[2] === 'prévu le 28 novembre', 'un verdict à venir : son mot en or, aussi large qu’un grand verdict ' + JSON.stringify(soon));
   const mt = await p.evaluate(() => { const box = document.querySelector('#mini .minitiles'), t = box.querySelector('.tile');
     return { n: box.querySelectorAll('.tile').length, flow: getComputedStyle(box).gridAutoFlow, tiles: box.matches('dl.tiles.is-compact.is-fit'),
-      unit: !!t.querySelector('dd .tile-unit'), note: !!box.querySelector('.tile .tile-note'), widths: [...box.querySelectorAll('.tile')].map(x => Math.round(x.getBoundingClientRect().width)) }; });
-  assert(mt.n === 4 && mt.flow === 'column' && mt.tiles && mt.unit && mt.note && new Set(mt.widths).size === 1,
-    'les mini-tuiles sont les petites cases (.tiles.is-compact.is-fit), sur une ligne sur ordinateur, toutes aussi larges ' + JSON.stringify(mt));
+      unit: !!t.querySelector('dd .tile-unit'), note: !!box.querySelector('.tile .tile-note'), widths: [...box.querySelectorAll('.tile')].map(x => Math.round(x.getBoundingClientRect().width)),
+      // the room between the unit's icon and its words, as a row's figure (.fig) leaves it
+      gap: (() => { const u = t.querySelector('.tile-unit'), i = u.querySelector('.ico').getBoundingClientRect(), r = document.createRange(); r.selectNodeContents(u.lastChild);
+        return Math.round(r.getBoundingClientRect().left - i.right); })() }; });
+  assert(mt.n === 4 && mt.flow === 'column' && mt.tiles && mt.unit && mt.note && new Set(mt.widths).size === 1 && mt.gap === 4,
+    'les mini-tuiles sont les petites cases (.tiles.is-compact.is-fit), sur une ligne sur ordinateur, toutes aussi larges, 4px entre l’icône de l’unité et ses mots ' + JSON.stringify(mt));
   // the period selector: buttons on a computer
   await p.locator('#period .tabs button', { hasText: '1 an' }).click();
   const pp = await p.evaluate(() => ({ periods, pressed: document.querySelector('#period [aria-pressed="true"]').textContent, list: getComputedStyle(document.querySelector('.periodpick-list')).display,
