@@ -1,4 +1,4 @@
-/* ds 7.7.2 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.7.3 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -2509,6 +2509,9 @@ main.page { max-width: var(--page-max); margin: 0 auto; padding-top: var(--space
   :where(.settings) .field input { background: var(--panel-2); border-radius: var(--r-m); border: 1px solid var(--line-2); color: var(--ink); font: var(--type-strong-weight) var(--type-strong-size)/var(--lh-tight) var(--mono); padding: var(--s-8) var(--s-10); text-align: right; width: 84px; letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
   :where(.settings) .field input.is-changed { border-color: var(--accent); }
   :where(.settings) .field input[aria-invalid="true"] { background: var(--bad-soft); border-color: var(--bad); }
+  /* a figure without a unit keeps the unit's room, so that every box of a list stands in one column (7.7.3: Studio's
+     « Vérifications ratées » stood further right than the boxes above it) */
+  :where(.settings) .field .inp:not(:has(> .unit))::after { content: ""; flex: none; width: 5.6em; font-size: var(--type-caption-size); }
   :where(.settings) .field .unit { color: var(--faint); font: var(--type-caption-weight) var(--type-caption-size)/var(--lh-tight) var(--type-caption-font); width: 5.6em; letter-spacing: var(--type-caption-ls); text-transform: var(--type-caption-case); }
   :where(.settings) .field .def { white-space: nowrap; }
   :where(.settings) .bar { align-items: center; background: var(--panel); border-radius: 0 0 var(--r-l) var(--r-l); border-top: 1px solid var(--line); bottom: 0; display: flex; gap: var(--s-12); justify-content: flex-end; margin: var(--s-16) calc(-1 * var(--s-16)) calc(-1 * var(--s-16)); padding: var(--s-12) var(--s-16); position: sticky; }

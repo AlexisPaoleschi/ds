@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.7.3 · 28 novembre 2026
+
+- Dans une liste de réglages (`ds.fields`), une case sans unité garde la place d'une unité : toutes les cases sont dans une même colonne, qu'elles aient une unité, longue (« écritures ») ou courte (« % »), ou aucune. La case « Vérifications ratées » de Studio était plus à droite que les autres. `checks/kit.js` le vérifie.
+
 ## 7.7.2 · 28 novembre 2026
 
 - L'action d'une bulle (`ds.toast`, « Saisir le code », « Voir », « Annuler ») a toujours le même aspect : son mot doré dans un fin cadre doré. C'était un mot nu qui prenait son cadre sous le pointeur ; un iPhone garde cet état après un toucher, et une nouvelle bulle sous le doigt s'affichait encadrée, la suivante non. Pressée, ou sous un vrai pointeur, son cadre passe en or plein, et la croix prend le même cadre ; un écran tactile ne garde plus rien après un toucher.

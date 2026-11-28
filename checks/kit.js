@@ -166,6 +166,13 @@ const same = (a, b) => JSON.stringify(a) === JSON.stringify(b);
       changes.map(x => x.wrong), f.edited(), field.classList.contains('is-changed'), box.querySelector('.def').textContent]; });
   assert(same(r, [false, true, false, 2, true, '_blank', 'Ouvrir ↗', [0, 1, 0], { every: '10' }, true, 'Par défaut 5 min, entre 1 et 60.']),
     'ds.switch goes back when refused, ds.conns, ds.fields (changed, out of bounds)', r);
+  // every box of a list of fields in one column, a figure with a unit or without, a long unit or a short one
+  r = await p.evaluate(() => { const box = document.createElement('div'); box.className = 'settings'; box.style.width = '343px'; document.body.append(box);
+    ds.fields(box, [{ group: 'G', key: 'a', label: 'Passage', value: 5, default: 5, min: 5, max: 240, unit: 'min' },
+      { group: 'G', key: 'b', label: 'Écritures au plus', value: 700, default: 700, min: 50, max: 5000, unit: 'écritures' },
+      { group: 'G', key: 'c', label: 'Vérifications ratées d’affilée avant « Échec »', value: 3, default: 3, min: 1, max: 12 }]);
+    const out = [...box.querySelectorAll('input[type=number]')].map(i => Math.round(i.getBoundingClientRect().right)); box.remove(); return out; });
+  assert(new Set(r).size === 1, 'ds.fields: every box in one column, with a unit or without', r);
 
   assert(errors.length === 0, 'no error in the page', errors);
   await b.close(); server.close();
