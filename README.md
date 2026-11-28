@@ -12,12 +12,13 @@
 
 ## En bref
 
-| | |
-|:--|:--|
-| **Ce qu’il fait** | Les jetons, les composants, les icônes et les polices des quatre applis, en deux thèmes : Atelier et Vitrine |
-| **Où il tourne** | La vitrine sur Render ; dans chaque appli, une copie figée d’une version |
-| **Versions** | La version en cours dans [`VERSION`](VERSION), chacune avec son tag `vX.Y.Z` et son histoire dans le [CHANGELOG](CHANGELOG.md) |
-| **Fait avec** | CSS · JavaScript · les icônes de Lucide et Simple Icons · Node et Playwright pour les vérifications |
+**Ce qu’il fait** · Les jetons, les composants, les icônes et les polices des quatre applis, en deux thèmes : Atelier et Vitrine
+
+**Où il tourne** · La vitrine sur Render ; dans chaque appli, une copie figée d’une version
+
+**Versions** · La version en cours dans [`VERSION`](VERSION), chacune avec son tag `vX.Y.Z` et son histoire dans le [CHANGELOG](CHANGELOG.md)
+
+**Fait avec** · CSS · JavaScript · les icônes de Lucide et Simple Icons · Node et Playwright pour les vérifications
 
 <br>
 
@@ -40,7 +41,7 @@ for c in checks/*.js; do node "$c"; done
 
 ## Documentation
 
-| | |
+| Page | Ce qu’on y trouve |
 |:--|:--|
 | 🗂️ [Contenu](docs/contenu.md) | les deux thèmes, les fichiers de `dist/` et leurs sources, les kits, la vitrine |
 | 🧩 [Composants](docs/composants.md) | chaque feuille de style et les classes qu’elle dessine |
