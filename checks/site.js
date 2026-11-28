@@ -283,6 +283,36 @@ function stylesheets() {
   assert(near(big.fields, 20) && near(big.above, 32) && near(big.under, 32) && near(big.text, 32) && near(small.fields, 16) && near(small.above, 24) && near(small.under, 24) && near(small.text, 24),
     'le gros bouton d’un formulaire : à un cran de plus des cases que deux champs entre eux, le trait aussi loin dessous, sans place pour la ligne vide de l’envoi ' + JSON.stringify([big, small]));
 
+  // a choice among a few in boxes (7.8.0): across a wide form as a long text, the boxes side by side and alike, one under
+  // the other on a phone; ds.validate says it once under the boxes, in the words of .choices, and is quiet once one is chosen
+  const boxes = async width => { const page = await browser.newPage({ viewport: { width, height: 900 } });
+    await page.goto(base + '/site-event.html', { waitUntil: 'networkidle' });
+    const got = await page.evaluate(() => { const f = document.getElementById('demo-request'), r = el => el.getBoundingClientRect();
+      const set = f.querySelector('.choices'), group = set.closest('.field-group'), text = f.querySelector('textarea').closest('.field-group');
+      const each = [...set.querySelectorAll('.choice')].map(r);
+      return { across: Math.round(r(group).width) === Math.round(r(text).width),
+        row: each.every(b => Math.round(b.top) === Math.round(each[0].top) && Math.abs(b.width - each[0].width) < 1),
+        column: each.every((b, i) => !i || b.top >= each[i - 1].bottom), full: each.every(b => Math.round(b.width) === Math.round(r(set).width)) }; });
+    if (width > 768) {
+      got.said = await page.evaluate(async () => { const f = document.getElementById('demo-request'), set = f.querySelector('.choices');
+        const radios = [...set.querySelectorAll('input')], click = () => f.querySelector(':scope > .btn.is-large').click();
+        click();
+        const notes = f.querySelectorAll('.choices + .field-note.is-bad'), edge = getComputedStyle(set.querySelector('.choice')).borderTopColor;
+        const out = { lines: notes.length, words: notes[0] && notes[0].textContent, invalid: radios.every(x => x.getAttribute('aria-invalid') === 'true'),
+          red: edge !== getComputedStyle(document.querySelector('#demo-request-portfolio')).borderTopColor };
+        radios[1].click();
+        await new Promise(r => setTimeout(r, 50));
+        const chosen = getComputedStyle(radios[1].closest('.choice'));
+        return Object.assign(out, { quiet: !f.querySelector('.choices + .field-note.is-bad') && radios.every(x => !x.hasAttribute('aria-invalid')),
+          gold: chosen.borderTopColor !== getComputedStyle(radios[0].closest('.choice')).borderTopColor }); });
+    }
+    await page.close();
+    return got; };
+  const wideBoxes = await boxes(1280), phoneBoxes = await boxes(390);
+  assert(wideBoxes.across && wideBoxes.row && !wideBoxes.column && phoneBoxes.column && phoneBoxes.full && !phoneBoxes.row
+    && JSON.stringify(wideBoxes.said) === JSON.stringify({ lines: 1, words: 'Please choose a session.', invalid: true, red: true, quiet: true, gold: true }),
+    'des cases à choisir : sur toute la largeur d’un formulaire large, côte à côte, l’une sous l’autre sur un téléphone ; une seule ligne pour dire qu’il faut choisir, tue dès qu’on choisit ' + JSON.stringify([wideBoxes, phoneBoxes]));
+
   await browser.close();
   server.close();
 })();

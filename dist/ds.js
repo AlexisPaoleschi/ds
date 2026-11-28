@@ -1,4 +1,4 @@
-/* ds 7.7.4 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The core every bundle of ds starts with (ds.js, ds-photo.js, ds-site.js): the small helpers its modules share, written
    once. A page that links several bundles keeps the first core, so that its listeners are wired once.
    Public: ds.h(tag, attrs, kids) builds a node: attrs.class, attrs.text, attrs.style, on… as real listeners (an inline
@@ -1396,6 +1396,8 @@
    not sent. From then on a field says it again or is quiet as it is typed in; a field left after being typed in is
    checked as well. Its words: the field's data-error, else words.missing, words.email, words.tick or words.choose, else
    ds's own (in English or French, as the page). A field that was quiet before keeps its own line once corrected.
+   Radios of one .choices (7.8.0) are one field: one line under the boxes, their words in the .choices' data-error, and
+   all quiet again once one of them is chosen.
    Gives back {check(): true when all is right, saying what is not, reset(): every field quiet again}.
    A required field's label says so with a gold star: .field-label.is-required, or the words of a box,
    <label class="check"><input required …> <span class="is-required">…</span></label>. */
@@ -1421,25 +1423,36 @@
 
     function said(field) {
       var w = Object.assign({}, _.words(WORDS), o.words || {});
-      var v = field.validity;
+      var v = field.validity, set = choices(field);
       if (field.dataset.error) return field.dataset.error;
-      if (v.valueMissing) return field.type === "checkbox" || field.type === "radio" ? w.tick : field.tagName === "SELECT" ? w.choose : w.missing;
+      if (set && set.dataset.error) return set.dataset.error;
+      if (v.valueMissing) return field.type === "checkbox" ? w.tick : field.type === "radio" || field.tagName === "SELECT" ? w.choose : w.missing;
       if (v.typeMismatch && field.type === "email") return w.email;
       return field.validationMessage || w.missing;
     }
-    // the line that speaks for a field: the one under it in its group, after its box, or one made for it
+    // the boxes a radio is chosen among, which speak as one field
+    function choices(field) { return field.type === "radio" ? field.closest(".choices") : null; }
+    // the radios chosen among with it: their state is the same (one chosen, all are)
+    function together(field) {
+      return field.type === "radio" && field.name
+        ? fields().filter(function (f) { return f.type === "radio" && f.name === field.name; }) : [field];
+    }
+    // the line that speaks for a field: the one under it in its group, after its box or its boxes, or one made for it
     function line(field) {
       if (field._dsLine) return field._dsLine;
-      var box = field.closest(".check"), group = !box && field.closest(".field-group");
+      var set = choices(field);
+      if (set && set._dsLine) return (field._dsLine = set._dsLine);
+      var box = !set && field.closest(".check"), group = !box && field.closest(".field-group");
       var note = group ? group.querySelector(":scope > .field-note") : null;
       if (!note) {
         note = _.el("p", "field-note");
         note.setAttribute("data-validate", "");
-        (box || field).after(note);
+        (set || box || field).after(note);
       }
       if (!note.id) note.id = "ds-check-" + (++count);
       note._dsWas = { text: note.textContent, cls: note.className };
       field._dsLine = note;
+      if (set) set._dsLine = note;
       return note;
     }
     function quiet(field) {
@@ -1486,7 +1499,7 @@
       e.stopImmediatePropagation();
     }, true);
     form.addEventListener("input", function (e) { if (e.target._dsChecked) speak(e.target); });
-    form.addEventListener("change", function (e) { if (e.target._dsChecked) speak(e.target); });
+    form.addEventListener("change", function (e) { together(e.target).forEach(function (f) { if (f._dsChecked) speak(f); }); });
     // a field left after being typed in is checked too, so the mistake is said before the end of the form
     form.addEventListener("focusout", function (e) {
       var f = e.target;

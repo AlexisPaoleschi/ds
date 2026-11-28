@@ -1,5 +1,10 @@
 # Changelog
 
+## 7.8.0 · 28 novembre 2026
+
+- Un choix parmi quelques-uns se fait dans des cases côte à côte (`.choices`, `.choice`, `.choice-title`, `.choice-text`) : chacune a son bouton radio, son nom et une ligne dessous, la choisie prend le bord doré et le fond doré clair, celle où est le clavier le halo d'un champ. Sur un téléphone, elles sont l'une sous l'autre ; dans un formulaire large (`.card.is-form.is-wide`), elles prennent toute la largeur, comme un long texte. Pour la session d'un workshop, qu'une liste déroulante laissait seule à gauche. La vitrine les montre dans les deux formulaires.
+- `ds.validate` prend les boutons radio d'un `.choices` pour un seul champ : une ligne rouge sous les cases, dans les mots du `data-error` du `.choices`, tue dès qu'on en choisit une. Un bouton radio oublié dit « Choisis une option. » plutôt que de demander de cocher une case. `checks/site.js` le vérifie.
+
 ## 7.7.4 · 28 novembre 2026
 
 - Le bouton d'un formulaire large (`.card.is-form.is-wide`) garde sa taille, centré, au lieu de prendre au moins la moitié de la largeur : « Send my application » des workshops était trop imposant. Sur un téléphone, il prend toujours toute la largeur.

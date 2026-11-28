@@ -123,6 +123,6 @@ Sans `ds.js`, la visionneuse n’a pas de bulle pour dire qu’une photo n’a p
 | `ds.photo(src)`, `ds.images(root)` | attendent des photos |
 | `ds.screens()` | fait défiler l’accueil écran par écran, avec ses points |
 | `ds.newsletter(form, {url, fields, check, sending, done})` | le formulaire de la newsletter : l’adresse vérifiée, le bouton occupé, les mots du serveur sous le champ |
-| `ds.validate(form, {words})` | les contrôles d’un formulaire : à l’envoi, chaque champ obligatoire vide, chaque adresse fausse, chaque case à cocher le dit en rouge sous lui, et rien ne part ; ensuite il se corrige à mesure qu’on tape. Ses mots : le `data-error` du champ, sinon ceux de ds |
+| `ds.validate(form, {words})` | les contrôles d’un formulaire : à l’envoi, chaque champ obligatoire vide, chaque adresse fausse, chaque case à cocher le dit en rouge sous lui, et rien ne part ; ensuite il se corrige à mesure qu’on tape. Les boutons radio d’un `.choices` sont un seul champ : une ligne sous les cases, tue dès qu’on en choisit une. Ses mots : le `data-error` du champ (ou du `.choices`), sinon ceux de ds |
 
 Cachés, la barre et le menu fermé ne se laissent pas atteindre au clavier. Ouvrir le menu y mène le clavier ; Échap le ramène au bouton.

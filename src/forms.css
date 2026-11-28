@@ -1,8 +1,8 @@
 /* A form's pieces outside a settings page (Selecta's admin, a sign-in): a field with its label above and its line under
    it (.field-group: .field-label, the control, .field-note); a card holding a form at reading width (.card.is-form); a
    field and its buttons on one line, in a column on a phone (.field-row); a box with its words (.check, a finger's height
-   on a touch screen, its hint under it, .check-hint) and a list of them (.checks, a fieldset whose legend is a .field-label, or a div); the
-   newer and older pages at the two ends of a list (.pager). A button that stays pressed is in buttons.css. */
+   on a touch screen, its hint under it, .check-hint) and a list of them (.checks, a fieldset whose legend is a .field-label, or a div); a
+   choice among a few in boxes side by side (.choices, .choice); the newer and older pages at the two ends of a list (.pager). A button that stays pressed is in buttons.css. */
   .field-group { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
   /* its control across the column; a date field without the phone's own frame, which would overflow the card (iOS) */
   .field-group > :is(input, select, textarea) { width: 100%; }
@@ -10,10 +10,10 @@
   .field-group > .field-note { margin-top: 0; }
   .card.is-form { display: flex; flex-direction: column; gap: var(--space-md); max-width: var(--read-s); }
   /* a form card across its whole width (6.6.0: a workshop's application): its fields two by two, a long text alone on its
-     line, and all that is not a field (the boxes, the button, the line under it, its foot) across the card; the button in
+     line as are boxes to choose from (7.8.0), and all that is not a field (the boxes, the button, the line under it, its foot) across the card; the button in
      the middle, at its own size (7.7.4: half the card wide was too much). On a phone, one field under the other and the button across, as any form */
   .card.is-form.is-wide { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-md) var(--s-24); max-width: none; }
-  .card.is-form.is-wide > :not(.field-group), .card.is-form.is-wide > .field-group:has(> textarea) { grid-column: 1 / -1; }
+  .card.is-form.is-wide > :not(.field-group), .card.is-form.is-wide > .field-group:has(> :is(textarea, .choices)) { grid-column: 1 / -1; }
   .card.is-form.is-wide > .btn { justify-self: center; }
   /* the big button of a form card (a workshop's application): set apart from the fields above it, a step more than two
      fields are from each other (7.1.3) */
@@ -36,6 +36,25 @@
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
   /* the line that says what is wrong with a box (ds.validate), under its words as its hint is */
   .checks > .field-note { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); }
+  /* a choice among a few, each in its own box (7.8.0: a workshop's session, its dates under its name): .choices, a div
+     role=radiogroup named by its .field-label (aria-labelledby), holding a label.choice per option with its radio, its name
+     (.choice-title) and, if need be, a line under it (.choice-text); a data-error on .choices gives ds.validate its words.
+     The boxes are side by side across the field, one under the other on a phone; the chosen one takes the gold edge and
+     the soft gold ground, the one the keyboard is on the gold edge and the halo of a field being typed in. In a wide form
+     card, it takes the whole width as a long text does (above). */
+  .choices { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--s-12); }
+  .choice { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; align-items: center; gap: var(--s-2) var(--s-12); padding: var(--s-14) var(--s-16);
+    border: 1px solid var(--field-line); border-radius: var(--r-m); background: var(--field-bg); color: var(--ink); cursor: pointer;
+    transition: border-color var(--t-fast) ease, background-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
+  .choice > input { accent-color: var(--accent); width: var(--check-box); height: var(--check-box); margin: 0; cursor: pointer; }
+  .choice-title { font-family: var(--type-strong-font); font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
+  .choice-text { grid-column: 2; color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--field-note-lh) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  @media (hover: hover) { .choice:hover { border-color: var(--accent-line); } }
+  .choice:has(> input:checked) { border-color: var(--accent); background: var(--accent-soft); }
+  .choice:has(> input:focus-visible) { border-color: var(--accent); box-shadow: var(--field-halo); }
+  .choice:has(> input:disabled) { color: var(--faint); background: var(--band); cursor: not-allowed; }
+  .choices:has(> .choice > input[aria-invalid="true"]) > .choice { border-color: var(--bad-line); }
+  @media (max-width: 768px) { .choices { grid-auto-flow: row; grid-auto-columns: auto; } }
   /* two fields side by side with their words (« du … au … »), one under the other on a phone */
   .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
   .field-pair > label { display: contents; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
