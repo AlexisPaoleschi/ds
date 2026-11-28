@@ -1,4 +1,4 @@
-/* ds 7.8.0 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
+/* ds 7.8.1 · github.com/AlexisPaoleschi/ds · do not edit this copy, change the ds repo */
 /* The fonts of both themes, served with the design system's copy (fonts/ next to ds-X.Y.Z.css): no page asks
    Google Fonts for them. Made by scripts/fonts.py; a browser downloads only the faces a page uses. */
   @font-face { font-family: "Archivo"; font-style: normal; font-weight: 600 800; font-display: swap; src: url("fonts/archivo-var-latin-ext.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF; }
@@ -549,7 +549,8 @@
    it (.field-group: .field-label, the control, .field-note); a card holding a form at reading width (.card.is-form); a
    field and its buttons on one line, in a column on a phone (.field-row); a box with its words (.check, a finger's height
    on a touch screen, its hint under it, .check-hint) and a list of them (.checks, a fieldset whose legend is a .field-label, or a div); a
-   choice among a few in boxes side by side (.choices, .choice); the newer and older pages at the two ends of a list (.pager). A button that stays pressed is in buttons.css. */
+   choice among a few in one bar cut in boxes (.choices, .choice); the newer and older pages at the two ends of a list
+   (.pager). A button that stays pressed is in buttons.css. */
   .field-group { display: flex; flex-direction: column; gap: var(--s-6); min-width: 0; }
   /* its control across the column; a date field without the phone's own frame, which would overflow the card (iOS) */
   .field-group > :is(input, select, textarea) { width: 100%; }
@@ -583,25 +584,33 @@
   .checks > legend { margin-bottom: var(--s-6); padding: 0; }
   /* the line that says what is wrong with a box (ds.validate), under its words as its hint is */
   .checks > .field-note { margin: calc(-1 * var(--s-4)) 0 0; padding-left: calc(var(--check-box) + var(--s-8)); }
-  /* a choice among a few, each in its own box (7.8.0: a workshop's session, its dates under its name): .choices, a div
-     role=radiogroup named by its .field-label (aria-labelledby), holding a label.choice per option with its radio, its name
-     (.choice-title) and, if need be, a line under it (.choice-text); a data-error on .choices gives ds.validate its words.
-     The boxes are side by side across the field, one under the other on a phone; the chosen one takes the gold edge and
-     the soft gold ground, the one the keyboard is on the gold edge and the halo of a field being typed in. In a wide form
-     card, it takes the whole width as a long text does (above). */
-  .choices { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: var(--s-12); }
-  .choice { display: grid; grid-template-columns: auto minmax(0, 1fr); align-content: start; align-items: center; gap: var(--s-2) var(--s-12); padding: var(--s-14) var(--s-16);
-    border: 1px solid var(--field-line); border-radius: var(--r-m); background: var(--field-bg); color: var(--ink); cursor: pointer;
-    transition: border-color var(--t-fast) ease, background-color var(--t-fast) ease, box-shadow var(--t-fast) ease; }
-  .choice > input { accent-color: var(--accent); width: var(--check-box); height: var(--check-box); margin: 0; cursor: pointer; }
+  /* a choice among a few, in one bar cut in as many boxes (7.8.0: a workshop's session, its dates under its name; 7.8.1:
+     one bar, the chosen box all gold, no round to tick): .choices, a div role=radiogroup named by its .field-label
+     (aria-labelledby), holding a label.choice per option with its radio (out of sight, still there for the keyboard and a
+     screen reader), its name (.choice-title) and, if need be, a line under it (.choice-text); a data-error on .choices
+     gives ds.validate its words. The bar has a field's edge and ground, a thin line between its boxes; the chosen box is
+     gold with its words in the colour a gold button writes in, the one the keyboard is on has the focus ring inside it.
+     One box under the other on a phone. In a wide form card, it takes the whole width as a long text does (above). */
+  .choices { display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); border: 1px solid var(--field-line); border-radius: var(--r-m);
+    background: var(--field-bg); overflow: hidden; transition: border-color var(--t-fast) ease; }
+  .choice { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--s-2); min-height: var(--control-h);
+    padding: var(--s-12) var(--s-16); text-align: center; color: var(--ink); cursor: pointer; transition: background-color var(--t-fast) ease, color var(--t-fast) ease; }
+  .choice + .choice { border-left: 1px solid var(--field-line); }
+  .choice > input { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip: rect(0 0 0 0); opacity: 0; }
   .choice-title { font-family: var(--type-strong-font); font-size: var(--type-strong-size); font-weight: var(--type-strong-weight); letter-spacing: var(--type-strong-ls); text-transform: var(--type-strong-case); }
-  .choice-text { grid-column: 2; color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--field-note-lh) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
-  @media (hover: hover) { .choice:hover { border-color: var(--accent-line); } }
-  .choice:has(> input:checked) { border-color: var(--accent); background: var(--accent-soft); }
-  .choice:has(> input:focus-visible) { border-color: var(--accent); box-shadow: var(--field-halo); }
+  .choice-text { color: var(--dim); font: var(--type-small-weight) var(--type-small-size)/var(--field-note-lh) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }
+  @media (hover: hover) { .choice:not(:has(> input:checked)):not(:has(> input:disabled)):hover { background: var(--accent-soft); } }
+  .choice:has(> input:checked) { color: var(--on-accent); background: var(--accent); }
+  .choice:has(> input:checked) > .choice-text { color: var(--on-accent); }
+  .choice:has(> input:focus-visible) { outline: var(--focus); outline-offset: calc(-1 * var(--s-4)); }
+  .choice:has(> input:checked:focus-visible) { outline-color: var(--on-accent); }
   .choice:has(> input:disabled) { color: var(--faint); background: var(--band); cursor: not-allowed; }
-  .choices:has(> .choice > input[aria-invalid="true"]) > .choice { border-color: var(--bad-line); }
-  @media (max-width: 768px) { .choices { grid-auto-flow: row; grid-auto-columns: auto; } }
+  .choice:has(> input:disabled) > .choice-text { color: var(--faint); }
+  .choices:has(> .choice > input[aria-invalid="true"]) { border-color: var(--bad-line); }
+  @media (max-width: 768px) {
+    .choices { grid-auto-flow: row; grid-auto-columns: auto; }
+    .choice + .choice { border-left: 0; border-top: 1px solid var(--field-line); }
+  }
   /* two fields side by side with their words (« du … au … »), one under the other on a phone */
   .field-pair { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s-8); align-items: center; }
   .field-pair > label { display: contents; color: var(--faint); font: var(--type-small-weight) var(--type-small-size)/var(--lh-tight) var(--type-small-font); letter-spacing: var(--type-small-ls); text-transform: var(--type-small-case); }

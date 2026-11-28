@@ -1,5 +1,9 @@
 # Changelog
 
+## 7.8.1 · 28 novembre 2026
+
+- Les cases à choisir (`.choices`) sont une seule barre coupée en cases, comme dans la maquette retenue : la case choisie est toute dorée, ses mots de la couleur d'un bouton doré, et il n'y a plus de rond à cocher (le bouton radio reste là, caché, pour le clavier et les lecteurs d'écran). Un trait fin sépare les cases ; sur un téléphone, elles sont l'une sous l'autre. Le clavier montre son anneau dans la case, une case oubliée met la barre en rouge. `checks/site.js` vérifie qu'aucun rond ne se voit et que la case choisie a l'or d'un bouton.
+
 ## 7.8.0 · 28 novembre 2026
 
 - Un choix parmi quelques-uns se fait dans des cases côte à côte (`.choices`, `.choice`, `.choice-title`, `.choice-text`) : chacune a son bouton radio, son nom et une ligne dessous, la choisie prend le bord doré et le fond doré clair, celle où est le clavier le halo d'un champ. Sur un téléphone, elles sont l'une sous l'autre ; dans un formulaire large (`.card.is-form.is-wide`), elles prennent toute la largeur, comme un long texte. Pour la session d'un workshop, qu'une liste déroulante laissait seule à gauche. La vitrine les montre dans les deux formulaires.
